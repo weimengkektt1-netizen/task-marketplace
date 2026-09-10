@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>TaskHub - 兼职任务平台</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- =========================
+         NAVBAR
+    ========================== -->
+
+    <header class="navbar">
+
+        <div class="logo">
+            <div class="logo-icon">T</div>
+            <span>TaskHub</span>
+        </div>
+
+        <nav>
+            <a href="#home">首页</a>
+            <a href="#tasks">任务</a>
+            <a href="#about">关于我们</a>
+        </nav>
+
+        <div class="nav-buttons">
+
+            <button
+                class="btn btn-outline"
+                onclick="openAuth('login')">
+                登录
+            </button>
+
+            <button
+                class="btn btn-primary"
+                onclick="openAuth('register')">
+                注册
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <!-- =========================
+         HERO
+    ========================== -->
+
+    <main>
+
+        <section class="hero" id="home">
+
+            <div class="hero-content">
+
+                <div class="badge">
+                    ● 简单 · 灵活 · 在线
+                </div>
+
+                <h1>
+                    找到适合你的
+                    <span>线上任务</span>
+                </h1>
+
+                <p>
+                    注册账号，浏览平台任务，
+                    选择适合自己的兼职工作。
+                    在空闲时间完成任务并获得报酬。
+                </p>
+
+                <div class="hero-buttons">
+
+                    <button
+                        class="btn btn-primary btn-large"
+                        onclick="openAuth('register')">
+                        立即开始
+                    </button>
+
+                    <button
+                        class="btn btn-outline btn-large"
+                        onclick="scrollToTasks()">
+                        浏览任务
+                    </button>
+
+                </div>
+
+                <div class="hero-stats">
+
+                    <div>
+                        <strong>100+</strong>
+                        <span>任务机会</span>
+                    </div>
+
+                    <div>
+                        <strong>24/7</strong>
+                        <span>在线平台</span>
+                    </div>
+
+                    <div>
+                        <strong>RM</strong>
+                        <span>灵活赚取</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="hero-card">
+
+                <div class="card-header">
+                    <span>任务大厅</span>
+                    <span class="online">● Online</span>
+                </div>
+
+                <div class="task-preview">
+
+                    <div class="task-icon">📱</div>
+
+                    <div class="task-info">
+                        <h3>TikTok 内容任务</h3>
+                        <p>完成指定内容任务</p>
+                    </div>
+
+                    <div class="reward">
+                        <small>奖励</small>
+                        <strong>RM25</strong>
+                    </div>
+
+                </div>
+
+
+                <div class="task-preview">
+
+                    <div class="task-icon">📝</div>
+
+                    <div class="task-info">
+                        <h3>资料整理任务</h3>
+                        <p>完成线上资料整理</p>
+                    </div>
+
+                    <div class="reward">
+                        <small>奖励</small>
+                        <strong>RM15</strong>
+                    </div>
+
+                </div>
+
+
+                <div class="task-preview">
+
+                    <div class="task-icon">💻</div>
+
+                    <div class="task-info">
+                        <h3>线上简单任务</h3>
+                        <p>适合新手参与</p>
+                    </div>
+
+                    <div class="reward">
+                        <small>奖励</small>
+                        <strong>RM10</strong>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             TASK SECTION
+        ========================== -->
+
+        <section class="tasks-section" id="tasks">
+
+            <div class="section-title">
+
+                <div>
+                    <span class="section-label">
+                        TASK MARKETPLACE
+                    </span>
+
+                    <h2>
+                        热门任务
+                    </h2>
+                </div>
+
+                <button
+                    class="btn btn-outline"
+                    onclick="openAuth('login')">
+                    登录查看更多
+                </button>
+
+            </div>
+
+
+            <div class="task-grid">
+
+                <div class="task-card">
+
+                    <div class="task-top">
+                        <span class="task-category">
+                            Social Media
+                        </span>
+
+                        <span class="task-status">
+                            可领取
+                        </span>
+                    </div>
+
+                    <h3>TikTok 内容任务</h3>
+
+                    <p>
+                        根据任务要求完成指定内容并提交证明。
+                    </p>
+
+                    <div class="task-bottom">
+
+                        <div>
+                            <small>任务奖励</small>
+                            <strong>RM25.00</strong>
+                        </div>
+
+                        <button
+                            class="claim-btn"
+                            onclick="openAuth('login')">
+                            查看任务
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div class="task-card">
+
+                    <div class="task-top">
+                        <span class="task-category">
+                            Data
+                        </span>
+
+                        <span class="task-status">
+                            可领取
+                        </span>
+                    </div>
+
+                    <h3>资料整理任务</h3>
+
+                    <p>
+                        完成平台指定的数据整理工作。
+                    </p>
+
+                    <div class="task-bottom">
+
+                        <div>
+                            <small>任务奖励</small>
+                            <strong>RM15.00</strong>
+                        </div>
+
+                        <button
+                            class="claim-btn"
+                            onclick="openAuth('login')">
+                            查看任务
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div class="task-card">
+
+                    <div class="task-top">
+                        <span class="task-category">
+                            Online
+                        </span>
+
+                        <span class="task-status">
+                            可领取
+                        </span>
+                    </div>
+
+                    <h3>线上简单任务</h3>
+
+                    <p>
+                        简单的线上任务，适合新用户参与。
+                    </p>
+
+                    <div class="task-bottom">
+
+                        <div>
+                            <small>任务奖励</small>
+                            <strong>RM10.00</strong>
+                        </div>
+
+                        <button
+                            class="claim-btn"
+                            onclick="openAuth('login')">
+                            查看任务
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             ABOUT
+        ========================== -->
+
+        <section class="about-section" id="about">
+
+            <div class="about-box">
+
+                <div>
+                    <span class="section-label">
+                        WHY TASKHUB
+                    </span>
+
+                    <h2>
+                        灵活安排你的时间
+                    </h2>
+
+                    <p>
+                        TaskHub 致力于提供一个简单、
+                        清晰的线上任务平台。
+                        用户可以根据自己的时间和能力选择任务。
+                    </p>
+                </div>
+
+                <div class="about-features">
+
+                    <div>
+                        <span>01</span>
+                        <strong>注册账号</strong>
+                        <p>创建你的个人账户。</p>
+                    </div>
+
+                    <div>
+                        <span>02</span>
+                        <strong>选择任务</strong>
+                        <p>浏览平台提供的任务。</p>
+                    </div>
+
+                    <div>
+                        <span>03</span>
+                        <strong>完成任务</strong>
+                        <p>按照任务要求完成工作。</p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- =========================
+         AUTH MODAL
+    ========================== -->
+
+    <div
+        class="modal-overlay"
+        id="authModal">
+
+        <div class="auth-modal">
+
+            <button
+                class="close-btn"
+                onclick="closeAuth()">
+                ×
+            </button>
+
+
+            <div class="auth-logo">
+                <div class="logo-icon">T</div>
+                <span>TaskHub</span>
+            </div>
+
+
+            <!-- LOGIN -->
+
+            <div id="loginForm">
+
+                <h2>欢迎回来</h2>
+
+                <p class="auth-subtitle">
+                    登录你的 TaskHub 账户
+                </p>
+
+
+                <label>
+                    Email
+                </label>
+
+                <input
+                    type="email"
+                    id="loginEmail"
+                    placeholder="your@email.com">
+
+
+                <label>
+                    密码
+                </label>
+
+                <input
+                    type="password"
+                    id="loginPassword"
+                    placeholder="请输入密码">
+
+
+                <button
+                    class="auth-submit"
+                    onclick="login()">
+                    登录
+                </button>
+
+
+                <p class="switch-auth">
+                    还没有账号？
+
+                    <button onclick="switchAuth('register')">
+                        立即注册
+                    </button>
+                </p>
+
+            </div>
+
+
+            <!-- REGISTER -->
+
+            <div
+                id="registerForm"
+                style="display:none;">
+
+                <h2>创建账户</h2>
+
+                <p class="auth-subtitle">
+                    免费注册 TaskHub
+                </p>
+
+
+                <label>
+                    Email
+                </label>
+
+                <input
+                    type="email"
+                    id="registerEmail"
+                    placeholder="your@email.com">
+
+
+                <label>
+                    密码
+                </label>
+
+                <input
+                    type="password"
+                    id="registerPassword"
+                    placeholder="至少 6 个字符">
+
+
+                <button
+                    class="auth-submit"
+                    onclick="register()">
+                    创建账户
+                </button>
+
+
+                <p class="switch-auth">
+                    已经有账号？
+
+                    <button onclick="switchAuth('login')">
+                        返回登录
+                    </button>
+                </p>
+
+            </div>
+
+
+            <div
+                class="auth-message"
+                id="authMessage">
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script src="app.js"></script>
+
+</body>
+</html>

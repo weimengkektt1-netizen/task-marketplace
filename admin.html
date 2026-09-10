@@ -1,0 +1,2881 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Dashboard - TaskHub</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        /* ========================================
+           Admin Page - 独立补充样式
+           ======================================== */
+
+        .admin-review-section {
+            margin-top: 32px;
+        }
+
+        .admin-review-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .admin-review-header h2 {
+            margin: 0 0 6px;
+        }
+
+        .admin-review-header p {
+            margin: 0;
+            opacity: .7;
+        }
+
+        .admin-review-card {
+            margin-bottom: 16px;
+        }
+
+        .admin-withdrawal-item {
+            padding: 20px;
+            margin-bottom: 14px;
+            border-radius: 14px;
+            border: 1px solid rgba(148, 163, 184, .25);
+            background: rgba(255, 255, 255, .03);
+        }
+
+        .withdrawal-amount {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .withdrawal-info {
+            display: grid;
+            gap: 7px;
+            color: #94a3b8;
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+
+        .withdrawal-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .admin-action-success {
+            padding: 9px 18px;
+            border: 0;
+            border-radius: 8px;
+            cursor: pointer;
+            background: #16a34a;
+            color: white;
+            font-weight: 600;
+        }
+
+        .admin-action-danger {
+            padding: 9px 18px;
+            border: 0;
+            border-radius: 8px;
+            cursor: pointer;
+            background: #dc2626;
+            color: white;
+            font-weight: 600;
+        }
+
+        .admin-action-success:disabled,
+        .admin-action-danger:disabled {
+            opacity: .6;
+            cursor: not-allowed;
+        }
+
+        .admin-proof-box {
+            margin-top: 18px;
+            padding: 16px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, .04);
+        }
+
+        .admin-proof-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .admin-proof-text {
+            line-height: 1.7;
+            color: #cbd5e1;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .admin-proof-image {
+            display: block;
+            max-width: 100%;
+            max-height: 500px;
+            border-radius: 10px;
+            object-fit: contain;
+            cursor: pointer;
+            margin-top: 12px;
+        }
+
+        .admin-error-box {
+            padding: 18px;
+            border-radius: 10px;
+            background: rgba(220, 38, 38, .08);
+            color: #f87171;
+        }
+
+        .admin-empty-box {
+            padding: 20px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, .03);
+            opacity: .7;
+        }
+
+        .admin-loading-box {
+            padding: 20px;
+            opacity: .7;
+        }
+
+        @media (max-width: 700px) {
+            .admin-review-header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .withdrawal-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+
+<body class="admin-body">
+
+    <div class="admin-layout">
+
+        <!-- ========================================
+             Sidebar
+             ======================================== -->
+
+        <aside class="admin-sidebar">
+
+            <div class="admin-logo">
+
+                <div class="logo-icon">
+                    T
+                </div>
+
+                <div>
+                    <div class="logo-text">
+                        TaskHub
+                    </div>
+
+                    <div class="admin-label">
+                        ADMIN PANEL
+                    </div>
+                </div>
+
+            </div>
+
+
+            <nav class="admin-nav">
+
+                <a href="#dashboard"
+                   class="admin-nav-item active">
+                    <span>📊</span>
+                    Dashboard
+                </a>
+
+                <a href="#tasks"
+                   class="admin-nav-item">
+                    <span>📋</span>
+                    任务管理
+                </a>
+
+                <a href="#create"
+                   class="admin-nav-item">
+                    <span>➕</span>
+                    发布任务
+                </a>
+
+                <a href="#reviews"
+                   class="admin-nav-item">
+                    <span>📝</span>
+                    任务审核
+                </a>
+
+                <a href="#withdrawals"
+                   class="admin-nav-item">
+                    <span>💰</span>
+                    提现审核
+                </a>
+
+            </nav>
+
+
+            <div class="admin-sidebar-bottom">
+
+                <a href="dashboard.html"
+                   class="admin-back">
+                    ← 用户中心
+                </a>
+
+                <button
+                    type="button"
+                    onclick="adminLogout()"
+                    class="admin-logout">
+                    🚪 登出
+                </button>
+
+            </div>
+
+        </aside>
+
+
+
+        <!-- ========================================
+             Main
+             ======================================== -->
+
+        <main class="admin-main">
+
+
+            <!-- ========================================
+                 Header
+                 ======================================== -->
+
+            <header class="admin-header">
+
+                <div>
+
+                    <h1>
+                        管理员后台
+                    </h1>
+
+                    <p>
+                        管理平台任务与任务状态
+                    </p>
+
+                </div>
+
+
+                <div class="admin-user">
+
+                    <div class="admin-avatar">
+                        A
+                    </div>
+
+                    <div>
+
+                        <div id="adminEmail">
+                            Loading...
+                        </div>
+
+                        <small>
+                            Administrator
+                        </small>
+
+                    </div>
+
+                </div>
+
+            </header>
+
+
+
+            <!-- ========================================
+                 Dashboard
+                 ======================================== -->
+
+            <section
+                id="dashboard"
+                class="admin-section">
+
+                <div class="admin-section-title">
+
+                    <div>
+
+                        <h2>
+                            Dashboard
+                        </h2>
+
+                        <p>
+                            平台任务概况
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="admin-stats">
+
+
+                    <!-- Total -->
+
+                    <div class="admin-stat-card">
+
+                        <div class="admin-stat-icon">
+                            📋
+                        </div>
+
+                        <div>
+
+                            <div class="admin-stat-label">
+                                总任务
+                            </div>
+
+                            <div
+                                class="admin-stat-value"
+                                id="totalTasks">
+                                0
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Open -->
+
+                    <div class="admin-stat-card">
+
+                        <div class="admin-stat-icon">
+                            🟢
+                        </div>
+
+                        <div>
+
+                            <div class="admin-stat-label">
+                                开放任务
+                            </div>
+
+                            <div
+                                class="admin-stat-value"
+                                id="openTasks">
+                                0
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Closed -->
+
+                    <div class="admin-stat-card">
+
+                        <div class="admin-stat-icon">
+                            🔴
+                        </div>
+
+                        <div>
+
+                            <div class="admin-stat-label">
+                                已关闭
+                            </div>
+
+                            <div
+                                class="admin-stat-value"
+                                id="closedTasks">
+                                0
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+            </section>
+
+
+
+            <!-- ========================================
+                 Create Task
+                 ======================================== -->
+
+            <section
+                id="create"
+                class="admin-section">
+
+                <div class="admin-section-title">
+
+                    <div>
+
+                        <h2>
+                            发布新任务
+                        </h2>
+
+                        <p>
+                            创建一个新的平台任务
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="admin-form-card">
+
+                    <form id="createTaskForm">
+
+                        <div class="admin-form-grid">
+
+
+                            <!-- Title -->
+
+                            <div class="admin-form-group full">
+
+                                <label>
+                                    任务标题
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="taskTitle"
+                                    placeholder="例如：点赞 TikTok 视频"
+                                    required>
+
+                            </div>
+
+
+                            <!-- Description -->
+
+                            <div class="admin-form-group full">
+
+                                <label>
+                                    任务描述
+                                </label>
+
+                                <textarea
+                                    id="taskDescription"
+                                    rows="5"
+                                    placeholder="详细说明用户需要完成什么任务..."
+                                    required></textarea>
+
+                            </div>
+
+
+                            <!-- Reward -->
+
+                            <div class="admin-form-group">
+
+                                <label>
+                                    任务奖励（RM）
+                                </label>
+
+                                <input
+                                    type="number"
+                                    id="taskReward"
+                                    placeholder="2.00"
+                                    step="0.01"
+                                    min="0"
+                                    required>
+
+                            </div>
+
+
+                            <!-- Max Claims -->
+
+                            <div class="admin-form-group">
+
+                                <label>
+                                    最大领取人数
+                                </label>
+
+                                <input
+                                    type="number"
+                                    id="taskMaxClaims"
+                                    placeholder="100"
+                                    min="1"
+                                    value="100"
+                                    required>
+
+                            </div>
+
+
+                            <!-- Status -->
+
+                            <div class="admin-form-group">
+
+                                <label>
+                                    任务状态
+                                </label>
+
+                                <select id="taskStatus">
+
+                                    <option value="open">
+                                        开放
+                                    </option>
+
+                                    <option value="closed">
+                                        关闭
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+                        </div>
+
+
+                        <div class="admin-form-actions">
+
+                            <button
+                                type="submit"
+                                class="admin-primary-btn">
+
+                                ➕ 发布任务
+
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- ========================================
+                 Tasks
+                 ======================================== -->
+
+            <section
+                id="tasks"
+                class="admin-section">
+
+                <div class="admin-section-title">
+
+                    <div>
+
+                        <h2>
+                            任务管理
+                        </h2>
+
+                        <p>
+                            查看及管理平台任务
+                        </p>
+
+                    </div>
+
+
+                    <button
+                        type="button"
+                        onclick="loadAdminTasks()"
+                        class="admin-refresh-btn">
+
+                        🔄 刷新
+
+                    </button>
+
+                </div>
+
+
+                <div
+                    id="adminTasksContainer"
+                    class="admin-tasks-container">
+
+                    <div class="admin-loading">
+                        正在加载任务...
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- ========================================
+                 Pending Task Reviews
+                 ======================================== -->
+
+            <section
+                id="reviews"
+                class="admin-section admin-review-section">
+
+                <div class="admin-review-header">
+
+                    <div>
+
+                        <h2>
+                            待审核任务
+                        </h2>
+
+                        <p>
+                            用户提交的任务会出现在这里
+                        </p>
+
+                    </div>
+
+
+                    <button
+                        type="button"
+                        onclick="loadPendingSubmissions()"
+                        class="admin-refresh-btn">
+
+                        🔄 刷新审核
+
+                    </button>
+
+                </div>
+
+
+                <div id="pendingSubmissionsContainer">
+
+                    <div class="admin-loading-box">
+                        正在加载待审核任务...
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- ========================================
+                 Withdrawal Reviews
+                 ======================================== -->
+
+            <section
+                id="withdrawals"
+                class="admin-section admin-review-section">
+
+                <div class="admin-review-header">
+
+                    <div>
+
+                        <h2>
+                            提现审核
+                        </h2>
+
+                        <p>
+                            审核用户的提现申请
+                        </p>
+
+                    </div>
+
+
+                    <button
+                        type="button"
+                        onclick="loadPendingWithdrawals()"
+                        class="admin-refresh-btn">
+
+                        🔄 刷新提现
+
+                    </button>
+
+                </div>
+
+
+                <div id="pendingWithdrawalsContainer">
+
+                    <div class="admin-loading-box">
+                        正在加载提现申请...
+                    </div>
+
+                </div>
+
+            </section>
+
+
+        </main>
+
+    </div>
+
+
+
+<script>
+
+/* ========================================
+   TaskHub Admin Panel
+   完整独立版本
+   ======================================== */
+
+
+/* ========================================
+   Supabase
+   ======================================== */
+
+const SUPABASE_URL =
+    "https://pkinowzrhteoduvrttdk.supabase.co";
+
+const SUPABASE_KEY =
+    "sb_publishable_aPZF0KY7OFoDaZ_wIT60tg_2Hc_ctLT";
+
+
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
+
+
+
+/* ========================================
+   页面初始化
+   ======================================== */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    async function () {
+
+        const form =
+            document.getElementById(
+                "createTaskForm"
+            );
+
+        if (form) {
+
+            form.addEventListener(
+                "submit",
+                createTask
+            );
+
+        }
+
+
+        await checkAdmin();
+
+    }
+);
+
+
+
+/* ========================================
+   检查管理员
+   ======================================== */
+
+async function checkAdmin() {
+
+    try {
+
+        const {
+            data: { user },
+            error
+        } =
+            await supabaseClient
+                .auth
+                .getUser();
+
+
+        if (error || !user) {
+
+            alert("请先登录");
+
+            window.location.href =
+                "index.html";
+
+            return;
+
+        }
+
+
+        const emailElement =
+            document.getElementById(
+                "adminEmail"
+            );
+
+
+        if (emailElement) {
+
+            emailElement.textContent =
+                user.email || "管理员";
+
+        }
+
+
+        const {
+            data: profile,
+            error: profileError
+        } =
+            await supabaseClient
+                .from("profiles")
+                .select("*")
+                .eq("id", user.id)
+                .single();
+
+
+        if (profileError) {
+
+            console.error(
+                "读取管理员资料失败：",
+                profileError
+            );
+
+            alert(
+                "无法读取管理员资料"
+            );
+
+            window.location.href =
+                "dashboard.html";
+
+            return;
+
+        }
+
+
+        if (
+            !profile ||
+            profile.role !== "admin"
+        ) {
+
+            alert(
+                "你没有管理员权限"
+            );
+
+            window.location.href =
+                "dashboard.html";
+
+            return;
+
+        }
+
+
+        await loadAdminTasks();
+
+        await loadPendingSubmissions();
+
+        await loadPendingWithdrawals();
+
+
+    } catch (error) {
+
+        console.error(
+            "管理员检查失败：",
+            error
+        );
+
+        alert(
+            "系统发生错误：\n" +
+            error.message
+        );
+
+    }
+
+}
+
+
+
+/* ========================================
+   发布任务
+   ======================================== */
+
+async function createTask(event) {
+
+    event.preventDefault();
+
+
+    const titleElement =
+        document.getElementById(
+            "taskTitle"
+        );
+
+    const descriptionElement =
+        document.getElementById(
+            "taskDescription"
+        );
+
+    const rewardElement =
+        document.getElementById(
+            "taskReward"
+        );
+
+    const maxClaimsElement =
+        document.getElementById(
+            "taskMaxClaims"
+        );
+
+    const statusElement =
+        document.getElementById(
+            "taskStatus"
+        );
+
+
+    const title =
+        titleElement
+            ? titleElement.value.trim()
+            : "";
+
+
+    const description =
+        descriptionElement
+            ? descriptionElement.value.trim()
+            : "";
+
+
+    const reward =
+        rewardElement
+            ? parseFloat(
+                rewardElement.value
+            )
+            : 0;
+
+
+    const maxClaims =
+        maxClaimsElement
+            ? parseInt(
+                maxClaimsElement.value,
+                10
+            )
+            : 0;
+
+
+    const status =
+        statusElement
+            ? statusElement.value
+            : "open";
+
+
+    if (!title) {
+
+        alert(
+            "请输入任务标题"
+        );
+
+        return;
+
+    }
+
+
+    if (!description) {
+
+        alert(
+            "请输入任务描述"
+        );
+
+        return;
+
+    }
+
+
+    if (
+        !Number.isFinite(reward) ||
+        reward <= 0
+    ) {
+
+        alert(
+            "请输入正确的任务奖励"
+        );
+
+        return;
+
+    }
+
+
+    if (
+        !Number.isInteger(maxClaims) ||
+        maxClaims <= 0
+    ) {
+
+        alert(
+            "请输入正确的领取人数"
+        );
+
+        return;
+
+    }
+
+
+    const form =
+        document.getElementById(
+            "createTaskForm"
+        );
+
+
+    const button =
+        form
+            ? form.querySelector(
+                "button[type='submit']"
+            )
+            : null;
+
+
+    if (button) {
+
+        button.disabled = true;
+
+        button.textContent =
+            "正在发布...";
+
+    }
+
+
+    try {
+
+        const {
+            data: { user }
+        } =
+            await supabaseClient
+                .auth
+                .getUser();
+
+
+        if (!user) {
+
+            alert(
+                "登录已失效"
+            );
+
+            window.location.href =
+                "index.html";
+
+            return;
+
+        }
+
+
+        const {
+            error
+        } =
+            await supabaseClient
+                .from("tasks")
+                .insert({
+
+                    title: title,
+
+                    description: description,
+
+                    reward: reward,
+
+                    max_claims: maxClaims,
+
+                    status: status,
+
+                    created_by: user.id
+
+                });
+
+
+        if (error) {
+
+            console.error(
+                "发布任务失败：",
+                error
+            );
+
+            alert(
+                "发布失败：\n" +
+                error.message
+            );
+
+            return;
+
+        }
+
+
+        alert(
+            "✅ 任务发布成功！"
+        );
+
+
+        if (form) {
+
+            form.reset();
+
+        }
+
+
+        if (maxClaimsElement) {
+
+            maxClaimsElement.value =
+                "100";
+
+        }
+
+
+        if (statusElement) {
+
+            statusElement.value =
+                "open";
+
+        }
+
+
+        await loadAdminTasks();
+
+
+        const tasksSection =
+            document.getElementById(
+                "tasks"
+            );
+
+
+        if (tasksSection) {
+
+            tasksSection.scrollIntoView({
+                behavior: "smooth"
+            });
+
+        }
+
+
+    } catch (error) {
+
+        console.error(
+            "发布任务异常：",
+            error
+        );
+
+        alert(
+            "系统错误：\n" +
+            error.message
+        );
+
+
+    } finally {
+
+        if (button) {
+
+            button.disabled = false;
+
+            button.textContent =
+                "➕ 发布任务";
+
+        }
+
+    }
+
+}
+
+
+
+/* ========================================
+   加载所有任务
+   ======================================== */
+
+async function loadAdminTasks() {
+
+    const container =
+        document.getElementById(
+            "adminTasksContainer"
+        );
+
+
+    if (!container) {
+
+        console.error(
+            "找不到 adminTasksContainer"
+        );
+
+        return;
+
+    }
+
+
+    container.innerHTML =
+        '<div class="admin-loading">正在加载任务...</div>';
+
+
+    try {
+
+        const {
+            data: tasks,
+            error
+        } =
+            await supabaseClient
+                .from("tasks")
+                .select("*")
+                .order(
+                    "created_at",
+                    {
+                        ascending: false
+                    }
+                );
+
+
+        if (error) {
+
+            console.error(
+                "读取任务失败：",
+                error
+            );
+
+            container.innerHTML =
+                `
+                <div class="admin-error-box">
+                    加载失败：<br>
+                    ${escapeHtml(
+                        error.message
+                    )}
+                </div>
+                `;
+
+            return;
+
+        }
+
+
+        const taskList =
+            tasks || [];
+
+
+        updateStatistics(
+            taskList
+        );
+
+
+        if (
+            taskList.length === 0
+        ) {
+
+            container.innerHTML =
+                `
+                <div class="admin-empty-box">
+                    目前还没有任何任务。
+                </div>
+                `;
+
+        } else {
+
+            container.innerHTML =
+                "";
+
+
+            taskList.forEach(
+                function (task) {
+
+                    container.appendChild(
+                        createTaskCard(task)
+                    );
+
+                }
+            );
+
+        }
+
+
+        await loadPendingSubmissions(
+            taskList
+        );
+
+
+        await loadPendingWithdrawals();
+
+
+    } catch (error) {
+
+        console.error(
+            "加载任务异常：",
+            error
+        );
+
+        container.innerHTML =
+            `
+            <div class="admin-error-box">
+                系统错误：<br>
+                ${escapeHtml(
+                    error.message
+                )}
+            </div>
+            `;
+
+    }
+
+}
+
+
+
+/* ========================================
+   待审核任务
+   ======================================== */
+
+async function loadPendingSubmissions(
+    tasks = null
+) {
+
+    const container =
+        document.getElementById(
+            "pendingSubmissionsContainer"
+        );
+
+
+    if (!container) {
+
+        return;
+
+    }
+
+
+    container.innerHTML =
+        '<div class="admin-loading-box">正在加载待审核任务...</div>';
+
+
+    try {
+
+        let taskList = tasks;
+
+
+        if (!Array.isArray(taskList)) {
+
+            const {
+                data,
+                error
+            } =
+                await supabaseClient
+                    .from("tasks")
+                    .select("*");
+
+
+            if (error) {
+
+                throw error;
+
+            }
+
+
+            taskList =
+                data || [];
+
+        }
+
+
+        const {
+            data: claims,
+            error: claimsError
+        } =
+            await supabaseClient
+                .from("task_claims")
+                .select("*")
+                .eq(
+                    "status",
+                    "submitted"
+                );
+
+
+        if (claimsError) {
+
+            throw claimsError;
+
+        }
+
+
+        if (
+            !claims ||
+            claims.length === 0
+        ) {
+
+            container.innerHTML =
+                `
+                <div class="admin-empty-box">
+                    🎉 目前没有待审核任务
+                </div>
+                `;
+
+            return;
+
+        }
+
+
+        const taskMap = {};
+
+
+        taskList.forEach(
+            function (task) {
+
+                taskMap[
+                    String(task.id)
+                ] = task;
+
+            }
+        );
+
+
+        const claimIds =
+            claims.map(
+                function (claim) {
+
+                    return claim.id;
+
+                }
+            );
+
+
+        const {
+            data: submissions,
+            error: submissionsError
+        } =
+            await supabaseClient
+                .from("submissions")
+                .select("*")
+                .in(
+                    "claim_id",
+                    claimIds
+                );
+
+
+        if (submissionsError) {
+
+            throw submissionsError;
+
+        }
+
+
+        const submissionMap = {};
+
+
+        (
+            submissions || []
+        ).forEach(
+            function (submission) {
+
+                submissionMap[
+                    String(
+                        submission.claim_id
+                    )
+                ] = submission;
+
+            }
+        );
+
+
+        container.innerHTML =
+            "";
+
+
+        claims.forEach(
+            function (claim) {
+
+                const task =
+                    taskMap[
+                        String(
+                            claim.task_id
+                        )
+                    ] || null;
+
+
+                const submission =
+                    submissionMap[
+                        String(
+                            claim.id
+                        )
+                    ] || null;
+
+
+                container.appendChild(
+                    createPendingSubmissionCard(
+                        claim,
+                        task,
+                        submission
+                    )
+                );
+
+            }
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "读取待审核资料失败：",
+            error
+        );
+
+
+        container.innerHTML =
+            `
+            <div class="admin-error-box">
+                无法读取待审核资料：<br>
+                ${escapeHtml(
+                    error.message
+                )}
+            </div>
+            `;
+
+    }
+
+}
+
+
+
+/* ========================================
+   创建待审核卡片
+   ======================================== */
+
+function createPendingSubmissionCard(
+    claim,
+    task,
+    submission
+) {
+
+    const card =
+        document.createElement(
+            "div"
+        );
+
+
+    card.className =
+        "admin-task-card admin-review-card";
+
+
+    const taskTitle =
+        task
+            ? task.title
+            : "任务 #" + claim.task_id;
+
+
+    const reward =
+        task
+            ? Number(
+                task.reward || 0
+            ).toFixed(2)
+            : "0.00";
+
+
+    const submittedTime =
+        claim.updated_at ||
+        claim.created_at ||
+        claim.claimed_at;
+
+
+    const formattedTime =
+        submittedTime
+            ? new Date(
+                submittedTime
+            ).toLocaleString(
+                "zh-CN"
+            )
+            : "-";
+
+
+    const proofText =
+        submission &&
+        submission.proof_text
+            ? submission.proof_text
+            : "用户没有填写完成说明";
+
+
+    const proofUrl =
+        submission &&
+        submission.proof_url
+            ? submission.proof_url
+            : "";
+
+
+    let proofHtml = "";
+
+
+    if (proofUrl) {
+
+        proofHtml =
+            `
+            <div class="admin-proof-box">
+
+                <div class="admin-proof-title">
+                    🖼️ 完成截图
+                </div>
+
+                <img
+                    src="${escapeHtml(
+                        proofUrl
+                    )}"
+                    alt="任务完成截图"
+                    class="admin-proof-image"
+                    onclick="window.open(
+                        '${escapeJs(
+                            proofUrl
+                        )}',
+                        '_blank'
+                    )"
+                >
+
+                <div style="margin-top:10px;">
+
+                    <a
+                        href="${escapeHtml(
+                            proofUrl
+                        )}"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style="
+                            color:#60a5fa;
+                            text-decoration:none;
+                        "
+                    >
+                        🔗 新窗口查看原图
+                    </a>
+
+                </div>
+
+            </div>
+            `;
+
+    } else {
+
+        proofHtml =
+            `
+            <div class="admin-proof-box">
+
+                <div
+                    style="
+                        color:#f59e0b;
+                    "
+                >
+                    ⚠️ 没有找到用户上传的截图
+                </div>
+
+            </div>
+            `;
+
+    }
+
+
+    card.innerHTML =
+        `
+
+        <div class="admin-task-top">
+
+            <div>
+
+                <div
+                    class="admin-task-status status-open"
+                >
+                    🟡 待审核
+                </div>
+
+                <h3>
+                    ${escapeHtml(
+                        taskTitle
+                    )}
+                </h3>
+
+            </div>
+
+
+            <div class="admin-task-reward">
+                RM ${reward}
+            </div>
+
+        </div>
+
+
+        <div class="admin-task-description">
+
+            <strong>
+                📝 完成说明
+            </strong>
+
+            <div class="admin-proof-text"
+                 style="margin-top:8px;">
+                ${escapeHtml(
+                    proofText
+                )}
+            </div>
+
+        </div>
+
+
+        ${proofHtml}
+
+
+        <div class="admin-task-info">
+
+            <div>
+                👤 用户 ID：
+                ${escapeHtml(
+                    claim.user_id
+                )}
+            </div>
+
+            <div>
+                📋 Claim ID：
+                ${escapeHtml(
+                    claim.id
+                )}
+            </div>
+
+            <div>
+                📅 提交时间：
+                ${escapeHtml(
+                    formattedTime
+                )}
+            </div>
+
+        </div>
+
+
+        <div class="admin-task-actions">
+
+            <button
+                type="button"
+                class="admin-small-btn"
+                onclick="approveSubmission(
+                    ${Number(
+                        claim.id
+                    )}
+                )"
+            >
+                ✅ 通过
+            </button>
+
+
+            <button
+                type="button"
+                class="admin-small-btn danger"
+                onclick="rejectSubmission(
+                    ${Number(
+                        claim.id
+                    )}
+                )"
+            >
+                ❌ 拒绝
+            </button>
+
+        </div>
+
+        `;
+
+
+    return card;
+
+}
+
+
+
+/* ========================================
+   通过任务审核 + 发放奖励
+   ======================================== */
+
+async function approveSubmission(
+    claimId
+) {
+
+    if (
+        !confirm(
+            "确定要通过这个任务吗？\n\n" +
+            "通过后，系统会自动把任务奖励加入用户钱包。"
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    try {
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient
+                .rpc(
+                    "approve_task_submission",
+                    {
+                        p_claim_id:
+                            Number(
+                                claimId
+                            )
+                    }
+                );
+
+
+        if (error) {
+
+            console.error(
+                "审核奖励失败：",
+                error
+            );
+
+            throw error;
+
+        }
+
+
+        console.log(
+            "审核奖励结果：",
+            data
+        );
+
+
+        let reward =
+            "0.00";
+
+
+        if (
+            data &&
+            typeof data === "object" &&
+            data.reward !== undefined
+        ) {
+
+            reward =
+                Number(
+                    data.reward
+                ).toFixed(2);
+
+        }
+
+
+        alert(
+            "✅ 审核通过！\n\n" +
+            "奖励 RM " +
+            reward +
+            " 已加入用户钱包。"
+        );
+
+
+        await loadAdminTasks();
+
+
+    } catch (error) {
+
+        console.error(
+            "审核失败：",
+            error
+        );
+
+
+        alert(
+            "审核失败：\n" +
+            error.message
+        );
+
+    }
+
+}
+
+
+
+/* ========================================
+   拒绝任务审核
+   ======================================== */
+
+async function rejectSubmission(
+    claimId
+) {
+
+    if (
+        !confirm(
+            "确定要拒绝这个任务吗？"
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    try {
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient
+                .from("task_claims")
+                .update({
+                    status: "rejected"
+                })
+                .eq(
+                    "id",
+                    claimId
+                )
+                .eq(
+                    "status",
+                    "submitted"
+                )
+                .select()
+                .single();
+
+
+        if (error) {
+
+            throw error;
+
+        }
+
+
+        if (!data) {
+
+            throw new Error(
+                "任务不存在，或者已经被处理"
+            );
+
+        }
+
+
+        alert(
+            "❌ 已拒绝这个任务提交。"
+        );
+
+
+        await loadAdminTasks();
+
+
+    } catch (error) {
+
+        console.error(
+            "拒绝任务失败：",
+            error
+        );
+
+
+        alert(
+            "拒绝失败：\n" +
+            error.message
+        );
+
+    }
+
+}
+
+
+
+/* ========================================
+   待审核提现
+   ======================================== */
+
+async function loadPendingWithdrawals() {
+
+    const container =
+        document.getElementById(
+            "pendingWithdrawalsContainer"
+        );
+
+
+    if (!container) {
+
+        return;
+
+    }
+
+
+    container.innerHTML =
+        '<div class="admin-loading-box">正在加载提现申请...</div>';
+
+
+    try {
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient
+                .rpc(
+                    "admin_get_pending_withdrawals"
+                );
+
+
+        if (error) {
+
+            console.error(
+                "加载提现申请失败：",
+                error
+            );
+
+
+            container.innerHTML =
+                `
+                <div class="admin-error-box">
+                    加载提现申请失败：<br>
+                    ${escapeHtml(
+                        error.message
+                    )}
+                </div>
+                `;
+
+            return;
+
+        }
+
+
+        if (
+            !data ||
+            data.length === 0
+        ) {
+
+            container.innerHTML =
+                `
+                <div class="admin-empty-box">
+                    🎉 暂时没有待审核提现
+                </div>
+                `;
+
+            return;
+
+        }
+
+
+        container.innerHTML =
+            "";
+
+
+        data.forEach(
+            function (item) {
+
+                const card =
+                    createWithdrawalCard(
+                        item
+                    );
+
+                container.appendChild(
+                    card
+                );
+
+            }
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "提现审核加载异常：",
+            error
+        );
+
+
+        container.innerHTML =
+            `
+            <div class="admin-error-box">
+                系统错误：<br>
+                ${escapeHtml(
+                    error.message
+                )}
+            </div>
+            `;
+
+    }
+
+}
+
+
+
+/* ========================================
+   创建提现卡片
+   ======================================== */
+
+function createWithdrawalCard(
+    item
+) {
+
+    const card =
+        document.createElement(
+            "div"
+        );
+
+
+    card.className =
+        "admin-withdrawal-item";
+
+
+    const amount =
+        Number(
+            item.amount || 0
+        ).toFixed(2);
+
+
+    const method =
+        item.method || "-";
+
+
+    const account =
+        item.account || "-";
+
+
+    const createdAt =
+        item.created_at
+            ? new Date(
+                item.created_at
+            ).toLocaleString(
+                "zh-CN"
+            )
+            : "-";
+
+
+    card.innerHTML =
+        `
+
+        <div class="withdrawal-amount">
+            💰 提现 RM ${amount}
+        </div>
+
+
+        <div class="withdrawal-info">
+
+            <div>
+                👤 用户 ID：
+                ${escapeHtml(
+                    item.user_id
+                )}
+            </div>
+
+            <div>
+                💳 提现方式：
+                ${escapeHtml(
+                    method
+                )}
+            </div>
+
+            <div>
+                🏦 收款账户：
+                ${escapeHtml(
+                    account
+                )}
+            </div>
+
+            <div>
+                📅 申请时间：
+                ${escapeHtml(
+                    createdAt
+                )}
+            </div>
+
+            <div>
+                🆔 提现 ID：
+                ${escapeHtml(
+                    item.id
+                )}
+            </div>
+
+        </div>
+
+
+        <div class="withdrawal-actions">
+
+            <button
+                type="button"
+                class="admin-action-success"
+                onclick="approveWithdrawal(
+                    ${Number(
+                        item.id
+                    )}
+                )"
+            >
+                ✅ 通过提现
+            </button>
+
+
+            <button
+                type="button"
+                class="admin-action-danger"
+                onclick="rejectWithdrawal(
+                    ${Number(
+                        item.id
+                    )}
+                )"
+            >
+                ❌ 拒绝提现
+            </button>
+
+        </div>
+
+        `;
+
+
+    return card;
+
+}
+
+
+
+/* ========================================
+   通过提现
+   ======================================== */
+
+async function approveWithdrawal(
+    withdrawalId
+) {
+
+    if (
+        !confirm(
+            "确定要通过这笔提现吗？\n\n" +
+            "通过后会自动扣除用户余额，并记录钱包交易。"
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    try {
+
+        const {
+            error
+        } =
+            await supabaseClient
+                .rpc(
+                    "admin_approve_withdrawal",
+                    {
+                        p_withdrawal_id:
+                            Number(
+                                withdrawalId
+                            ),
+
+                        p_admin_note:
+                            null
+                    }
+                );
+
+
+        if (error) {
+
+            console.error(
+                "通过提现失败：",
+                error
+            );
+
+            alert(
+                "通过提现失败：\n" +
+                error.message
+            );
+
+            return;
+
+        }
+
+
+        alert(
+            "✅ 提现已通过！\n\n" +
+            "用户余额已扣除，钱包交易已记录。"
+        );
+
+
+        await loadPendingWithdrawals();
+
+        await loadAdminTasks();
+
+
+    } catch (error) {
+
+        console.error(
+            "处理提现异常：",
+            error
+        );
+
+
+        alert(
+            "处理提现时发生错误：\n" +
+            error.message
+        );
+
+    }
+
+}
+
+
+
+/* ========================================
+   拒绝提现
+   ======================================== */
+
+async function rejectWithdrawal(
+    withdrawalId
+) {
+
+    const note =
+        prompt(
+            "请输入拒绝原因（可留空）："
+        );
+
+
+    if (note === null) {
+
+        return;
+
+    }
+
+
+    try {
+
+        const {
+            error
+        } =
+            await supabaseClient
+                .rpc(
+                    "admin_reject_withdrawal",
+                    {
+                        p_withdrawal_id:
+                            Number(
+                                withdrawalId
+                            ),
+
+                        p_admin_note:
+                            note.trim() ||
+                            null
+                    }
+                );
+
+
+        if (error) {
+
+            console.error(
+                "拒绝提现失败：",
+                error
+            );
+
+            alert(
+                "拒绝提现失败：\n" +
+                error.message
+            );
+
+            return;
+
+        }
+
+
+        alert(
+            "❌ 提现申请已拒绝。"
+        );
+
+
+        await loadPendingWithdrawals();
+
+
+    } catch (error) {
+
+        console.error(
+            "处理提现异常：",
+            error
+        );
+
+
+        alert(
+            "处理提现时发生错误：\n" +
+            error.message
+        );
+
+    }
+
+}
+
+
+
+/* ========================================
+   创建任务卡片
+   ======================================== */
+
+function createTaskCard(
+    task
+) {
+
+    const card =
+        document.createElement(
+            "div"
+        );
+
+
+    card.className =
+        "admin-task-card";
+
+
+    const isOpen =
+        task.status === "open";
+
+
+    const statusText =
+        isOpen
+            ? "开放"
+            : "关闭";
+
+
+    const statusClass =
+        isOpen
+            ? "status-open"
+            : "status-closed";
+
+
+    const createdTime =
+        task.created_at
+            ? new Date(
+                task.created_at
+            ).toLocaleString(
+                "zh-CN"
+            )
+            : "-";
+
+
+    const reward =
+        Number(
+            task.reward || 0
+        ).toFixed(2);
+
+
+    card.innerHTML =
+        `
+
+        <div class="admin-task-top">
+
+            <div>
+
+                <div
+                    class="admin-task-status ${statusClass}"
+                >
+                    ${statusText}
+                </div>
+
+
+                <h3>
+                    ${escapeHtml(
+                        task.title
+                    )}
+                </h3>
+
+            </div>
+
+
+            <div class="admin-task-reward">
+                RM ${reward}
+            </div>
+
+        </div>
+
+
+        <div class="admin-task-description">
+
+            ${escapeHtml(
+                task.description
+            )}
+
+        </div>
+
+
+        <div class="admin-task-info">
+
+            <div>
+                👥 最多
+                ${escapeHtml(
+                    task.max_claims || 0
+                )}
+                人
+            </div>
+
+
+            <div>
+                📅
+                ${escapeHtml(
+                    createdTime
+                )}
+            </div>
+
+
+            <div>
+                ID：
+                ${escapeHtml(
+                    task.id
+                )}
+            </div>
+
+        </div>
+
+
+        <div class="admin-task-actions">
+
+            <button
+                type="button"
+                class="admin-small-btn"
+                onclick="toggleTaskStatus(
+                    ${Number(
+                        task.id
+                    )},
+                    '${escapeJs(
+                        String(
+                            task.status
+                        )
+                    )}'
+                )"
+            >
+                ${
+                    isOpen
+                        ? "🔴 关闭任务"
+                        : "🟢 开放任务"
+                }
+            </button>
+
+
+            <button
+                type="button"
+                class="admin-small-btn danger"
+                onclick="deleteTask(
+                    ${Number(
+                        task.id
+                    )}
+                )"
+            >
+                🗑 删除
+            </button>
+
+        </div>
+
+        `;
+
+
+    return card;
+
+}
+
+
+
+/* ========================================
+   修改任务状态
+   ======================================== */
+
+async function toggleTaskStatus(
+    taskId,
+    currentStatus
+) {
+
+    const newStatus =
+        currentStatus === "open"
+            ? "closed"
+            : "open";
+
+
+    const actionText =
+        newStatus === "open"
+            ? "开放"
+            : "关闭";
+
+
+    if (
+        !confirm(
+            "确定要" +
+            actionText +
+            "这个任务吗？"
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    try {
+
+        const {
+            error
+        } =
+            await supabaseClient
+                .from("tasks")
+                .update({
+                    status:
+                        newStatus
+                })
+                .eq(
+                    "id",
+                    taskId
+                );
+
+
+        if (error) {
+
+            throw error;
+
+        }
+
+
+        alert(
+            "任务已" +
+            actionText
+        );
+
+
+        await loadAdminTasks();
+
+
+    } catch (error) {
+
+        console.error(
+            "修改任务状态失败：",
+            error
+        );
+
+
+        alert(
+            "操作失败：\n" +
+            error.message
+        );
+
+    }
+
+}
+
+
+
+/* ========================================
+   删除任务
+   ======================================== */
+
+async function deleteTask(
+    taskId
+) {
+
+    if (
+        !confirm(
+            "确定要删除这个任务吗？\n\n" +
+            "如果这个任务已经有人领取，删除可能受到数据库限制。"
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    try {
+
+        const {
+            error
+        } =
+            await supabaseClient
+                .from("tasks")
+                .delete()
+                .eq(
+                    "id",
+                    taskId
+                );
+
+
+        if (error) {
+
+            throw error;
+
+        }
+
+
+        alert(
+            "任务已删除"
+        );
+
+
+        await loadAdminTasks();
+
+
+    } catch (error) {
+
+        console.error(
+            "删除任务失败：",
+            error
+        );
+
+
+        alert(
+            "删除失败：\n" +
+            error.message
+        );
+
+    }
+
+}
+
+
+
+/* ========================================
+   更新统计
+   ======================================== */
+
+function updateStatistics(
+    tasks
+) {
+
+    const total =
+        tasks.length;
+
+
+    const open =
+        tasks.filter(
+            function (task) {
+
+                return task.status === "open";
+
+            }
+        ).length;
+
+
+    const closed =
+        tasks.filter(
+            function (task) {
+
+                return task.status !== "open";
+
+            }
+        ).length;
+
+
+    const totalElement =
+        document.getElementById(
+            "totalTasks"
+        );
+
+
+    const openElement =
+        document.getElementById(
+            "openTasks"
+        );
+
+
+    const closedElement =
+        document.getElementById(
+            "closedTasks"
+        );
+
+
+    if (totalElement) {
+
+        totalElement.textContent =
+            total;
+
+    }
+
+
+    if (openElement) {
+
+        openElement.textContent =
+            open;
+
+    }
+
+
+    if (closedElement) {
+
+        closedElement.textContent =
+            closed;
+
+    }
+
+}
+
+
+
+/* ========================================
+   管理员登出
+   ======================================== */
+
+async function adminLogout() {
+
+    try {
+
+        await supabaseClient
+            .auth
+            .signOut();
+
+    } catch (error) {
+
+        console.error(
+            "登出失败：",
+            error
+        );
+
+    }
+
+
+    window.location.href =
+        "index.html";
+
+}
+
+
+
+/* ========================================
+   HTML Escape
+   ======================================== */
+
+function escapeHtml(
+    value
+) {
+
+    if (
+        value === null ||
+        value === undefined
+    ) {
+
+        return "";
+
+    }
+
+
+    return String(value)
+
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+
+        .replace(
+            /</g,
+            "&lt;"
+        )
+
+        .replace(
+            />/g,
+            "&gt;"
+        )
+
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
+
+
+/* ========================================
+   JavaScript String Escape
+   ======================================== */
+
+function escapeJs(
+    value
+) {
+
+    if (
+        value === null ||
+        value === undefined
+    ) {
+
+        return "";
+
+    }
+
+
+    return String(value)
+
+        .replace(
+            /\\/g,
+            "\\\\"
+        )
+
+        .replace(
+            /'/g,
+            "\\'"
+        )
+
+        .replace(
+            /"/g,
+            '\\"'
+        )
+
+        .replace(
+            /\r/g,
+            "\\r"
+        )
+
+        .replace(
+            /\n/g,
+            "\\n"
+        );
+
+}
+
+</script>
+
+</body>
+</html>

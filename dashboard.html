@@ -1,0 +1,2734 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard - TaskHub</title>
+
+    <link rel="stylesheet" href="style.css">
+
+
+<style>
+/* =========================
+   WITHDRAW
+========================= */
+
+.withdraw-section {
+    scroll-margin-top: 30px;
+}
+
+.withdraw-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
+    gap: 24px;
+    margin-top: 20px;
+}
+
+.withdraw-card,
+.withdraw-info-card,
+.withdraw-history-card {
+    background: #fff;
+    border: 1px solid #e8e8e8;
+    border-radius: 18px;
+    padding: 26px;
+    box-sizing: border-box;
+}
+
+.withdraw-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.withdraw-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: #888;
+    margin-bottom: 8px;
+}
+
+.withdraw-card-header strong {
+    display: block;
+    font-size: 32px;
+    line-height: 1.2;
+}
+
+.withdraw-wallet-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    border: 1px solid #e8e8e8;
+    background: #f8f8f8;
+}
+
+.withdraw-divider {
+    height: 1px;
+    background: #eeeeee;
+    margin: 24px 0;
+}
+
+.withdraw-form-group {
+    margin-bottom: 20px;
+}
+
+.withdraw-form-group label {
+    display: block;
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.withdraw-form-group input,
+.withdraw-form-group select {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid #dddddd;
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 14px;
+    background: #fff;
+    outline: none;
+}
+
+.withdraw-form-group input:focus,
+.withdraw-form-group select:focus {
+    border-color: #999999;
+}
+
+.withdraw-form-group small {
+    display: block;
+    margin-top: 7px;
+    font-size: 12px;
+    color: #999;
+}
+
+.withdraw-input-wrap {
+    display: flex;
+    align-items: center;
+    border: 1px solid #dddddd;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #fff;
+}
+
+.withdraw-input-wrap:focus-within {
+    border-color: #999999;
+}
+
+.withdraw-input-wrap span {
+    padding-left: 14px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #555;
+}
+
+.withdraw-input-wrap input {
+    border: 0;
+    border-radius: 0;
+    flex: 1;
+}
+
+.withdraw-input-wrap input:focus {
+    border: 0;
+}
+
+.withdraw-submit-btn {
+    width: 100%;
+    border: 0;
+    border-radius: 10px;
+    padding: 13px 16px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    background: #111;
+    color: #fff;
+}
+
+.withdraw-submit-btn:hover {
+    opacity: 0.9;
+}
+
+.withdraw-info-card h3,
+.withdraw-history-card h3 {
+    margin: 0;
+    font-size: 22px;
+}
+
+.withdraw-info-list {
+    margin-top: 24px;
+}
+
+.withdraw-info-item {
+    display: flex;
+    gap: 14px;
+    padding: 16px 0;
+    border-bottom: 1px solid #eeeeee;
+}
+
+.withdraw-info-item:last-child {
+    border-bottom: 0;
+}
+
+.withdraw-info-item > span {
+    flex: 0 0 auto;
+    font-size: 12px;
+    font-weight: 800;
+    color: #999;
+}
+
+.withdraw-info-item strong {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.withdraw-info-item p {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.6;
+    color: #777;
+}
+
+.withdraw-history-card {
+    margin-top: 24px;
+}
+
+.withdraw-history-header {
+    margin-bottom: 20px;
+}
+
+.withdraw-history-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 16px 0;
+    border-top: 1px solid #eeeeee;
+}
+
+.withdraw-status {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 5px 9px;
+    border-radius: 999px;
+    background: #f5f5f5;
+}
+
+/* =========================
+   WITHDRAW TEXT COLORS
+========================= */
+
+.withdraw-section .dashboard-section-title h2 {
+    color: #f5f5f5 !important;
+}
+
+.withdraw-section .section-label {
+    color: #1769d1 !important;
+}
+
+.withdraw-card,
+.withdraw-info-card,
+.withdraw-history-card {
+    color: #111827;
+}
+
+.withdraw-card-header strong {
+    color: #1769d1 !important;
+}
+
+.withdraw-label {
+    color: #1769d1 !important;
+}
+
+.withdraw-form-group label {
+    color: #1769d1 !important;
+}
+
+.withdraw-form-group small {
+    color: #718096 !important;
+}
+
+.withdraw-form-group input,
+.withdraw-form-group select {
+    color: #1f2937 !important;
+}
+
+.withdraw-form-group input::placeholder {
+    color: #94a3b8 !important;
+}
+
+.withdraw-input-wrap {
+    color: #1f2937;
+}
+
+.withdraw-input-wrap span {
+    color: #47627d !important;
+}
+
+.withdraw-info-card h3 {
+    color: #111827 !important;
+}
+
+.withdraw-info-item > span {
+    color: #1769d1 !important;
+}
+
+.withdraw-info-item strong {
+    color: #1f2937 !important;
+}
+
+.withdraw-info-item p {
+    color: #5f7185 !important;
+}
+
+.withdraw-history-card h3 {
+    color: #111827 !important;
+}
+
+.withdraw-history-card .empty-box {
+    color: #718096 !important;
+}
+
+.withdraw-wallet-icon {
+    color: #1769d1 !important;
+    background: #eef6ff;
+    border-color: #d6e8ff;
+}
+
+.withdraw-submit-btn {
+    background: #111827 !important;
+    color: #ffffff !important;
+}
+
+@media (max-width: 800px) {
+    .withdraw-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .withdraw-card,
+    .withdraw-info-card,
+    .withdraw-history-card {
+        padding: 20px;
+    }
+}
+</style>
+
+</head>
+
+
+<body class="dashboard-body">
+
+
+<!-- =========================
+     SIDEBAR
+========================= -->
+
+<aside class="sidebar">
+
+    <div class="logo dashboard-logo">
+
+        <div class="logo-icon">T</div>
+
+        <span>TaskHub</span>
+
+    </div>
+
+
+    <nav class="side-nav">
+
+        <a
+            href="dashboard.html"
+            class="active">
+
+            <span>▦</span>
+
+            总览
+
+        </a>
+
+
+        <a href="#tasks">
+
+            <span>◈</span>
+
+            任务大厅
+
+        </a>
+
+
+        <a href="#mytasks">
+
+            <span>✓</span>
+
+            我的任务
+
+        </a>
+
+
+        <a href="#wallet">
+
+            <span>◇</span>
+
+            我的钱包
+
+        </a>
+
+
+            <a href="#withdraw">
+
+        <span>↗</span>
+
+        提现
+
+    </a>
+
+    <a
+    href="admin.html"
+    class="admin-nav-link"
+    id="adminNavLink"
+    style="display: none;">
+
+    <span>⚙</span>
+
+    管理后台
+
+</a>
+
+</nav>
+
+
+    <div class="sidebar-bottom">
+
+        <button
+            onclick="logout()"
+            class="logout-btn">
+
+            <span>↪</span>
+
+            登出
+
+        </button>
+
+    </div>
+
+</aside>
+
+
+
+<!-- =========================
+     MAIN
+========================= -->
+
+<main class="dashboard-main">
+
+
+    <!-- TOP BAR -->
+
+    <header class="dashboard-header">
+
+        <div>
+
+            <span class="section-label">
+                USER DASHBOARD
+            </span>
+
+            <h1>
+                欢迎回来 👋
+            </h1>
+
+        </div>
+
+
+        <div class="user-area">
+
+            <div class="user-avatar">
+                U
+            </div>
+
+            <div>
+
+                <strong id="userName">
+                    Loading...
+                </strong>
+
+                <small id="userEmail">
+                    Loading...
+                </small>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- =========================
+         BALANCE CARDS
+    ========================== -->
+
+    <section class="balance-grid">
+
+
+        <div class="balance-card main-balance">
+
+            <div class="balance-card-top">
+
+                <span>
+                    当前余额
+                </span>
+
+                <span class="balance-icon">
+                    RM
+                </span>
+
+            </div>
+
+
+            <strong id="userBalance">
+                RM0.00
+            </strong>
+
+
+            <p>
+                可用于提现的账户余额
+            </p>
+
+        </div>
+
+
+
+        <div class="balance-card">
+
+            <span>
+                已完成任务
+            </span>
+
+            <strong id="completedTasks">
+                0
+            </strong>
+
+            <p>
+                Total completed
+            </p>
+
+        </div>
+
+
+
+        <div class="balance-card">
+
+            <span>
+                进行中任务
+            </span>
+
+            <strong id="activeTasks">
+                0
+            </strong>
+
+            <p>
+                Currently working
+            </p>
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- =========================
+         TASK MARKETPLACE
+    ========================== -->
+
+    <section
+        class="dashboard-section"
+        id="tasks">
+
+        <div class="dashboard-section-title">
+
+            <div>
+
+                <span class="section-label">
+                    TASK MARKETPLACE
+                </span>
+
+                <h2>
+                    可领取任务
+                </h2>
+
+            </div>
+
+
+            <button
+                class="refresh-btn"
+                onclick="loadTasks()">
+
+                ↻ 刷新
+
+            </button>
+
+        </div>
+
+
+        <div
+            id="taskList"
+            class="dashboard-task-grid">
+
+            <div class="loading-box">
+                正在加载任务...
+            </div>
+
+        </div>
+
+    </section>
+	    <!-- =========================
+         MY TASKS
+    ========================== -->
+
+    <section
+        class="dashboard-section"
+        id="mytasks">
+
+        <div class="dashboard-section-title">
+
+            <div>
+
+                <span class="section-label">
+                    MY TASKS
+                </span>
+
+                <h2>
+                    我的任务
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <div
+            id="myTaskList"
+            class="my-task-list">
+
+            <div class="empty-box">
+
+                暂时没有领取任何任务
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =========================
+         WALLET
+    ========================== -->
+
+    <section
+        class="dashboard-section"
+        id="wallet">
+
+        <div class="dashboard-section-title">
+
+            <div>
+
+                <span class="section-label">
+                    WALLET
+                </span>
+
+                <h2>
+                    钱包记录
+                </h2>
+
+            </div>
+
+        </div>
+
+
+<div class="wallet-box">
+
+    <div id="walletTransactions">
+
+        <div class="empty-box">
+            正在加载交易记录...
+        </div>
+
+    </div>
+
+</div>
+
+    </section>
+
+
+
+<!-- =========================
+     WITHDRAW
+========================= -->
+
+<section class="dashboard-section withdraw-section" id="withdraw">
+
+    <div class="dashboard-section-title">
+        <div>
+            <span class="section-label">WITHDRAW</span>
+            <h2>提现</h2>
+        </div>
+    </div>
+
+    <div class="withdraw-layout">
+
+        <div class="withdraw-card">
+
+            <div class="withdraw-card-header">
+                <div>
+                    <span class="withdraw-label">AVAILABLE BALANCE</span>
+                    <strong id="withdrawBalance">RM0.00</strong>
+                </div>
+
+                <div class="withdraw-wallet-icon">
+                    RM
+                </div>
+            </div>
+
+
+            <div class="withdraw-divider"></div>
+
+
+            <div class="withdraw-form-group">
+
+                <label for="withdrawAmount">
+                    提现金额
+                </label>
+
+                <div class="withdraw-input-wrap">
+
+                    <span>
+                        RM
+                    </span>
+
+                    <input
+                        type="number"
+                        id="withdrawAmount"
+                        placeholder="0.00"
+                        min="0"
+                        step="0.01">
+
+                </div>
+
+                <small>
+                    请输入你希望提现的金额。
+                </small>
+
+            </div>
+
+
+            <div class="withdraw-form-group">
+
+                <label for="withdrawMethod">
+                    提现方式
+                </label>
+
+                <select id="withdrawMethod">
+
+                    <option value="">
+                        请选择提现方式
+                    </option>
+
+                    <option value="bank">
+                        银行转账
+                    </option>
+
+                    <option value="ewallet">
+                        电子钱包
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="withdraw-form-group">
+
+                <label for="withdrawAccount">
+                    收款账户
+                </label>
+
+                <input
+                    type="text"
+                    id="withdrawAccount"
+                    placeholder="请输入银行账号 / 电子钱包账号">
+
+                <small>
+                    请确认收款账户资料正确。
+                </small>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="withdraw-submit-btn"
+                onclick="submitWithdrawal()">
+
+                提交提现申请
+
+            </button>
+
+        </div>
+
+
+
+        <div class="withdraw-info-card">
+
+            <span class="withdraw-label">
+                WITHDRAWAL INFO
+            </span>
+
+            <h3>
+                提现说明
+            </h3>
+
+
+            <div class="withdraw-info-list">
+
+
+                <div class="withdraw-info-item">
+
+                    <span>
+                        01
+                    </span>
+
+                    <div>
+
+                        <strong>
+                            填写提现金额
+                        </strong>
+
+                        <p>
+                            输入你希望提现的余额金额。
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="withdraw-info-item">
+
+                    <span>
+                        02
+                    </span>
+
+                    <div>
+
+                        <strong>
+                            填写收款账户
+                        </strong>
+
+                        <p>
+                            选择提现方式并填写对应账户。
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="withdraw-info-item">
+
+                    <span>
+                        03
+                    </span>
+
+                    <div>
+
+                        <strong>
+                            等待审核处理
+                        </strong>
+
+                        <p>
+                            提交申请后由管理员审核提现。
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <div class="withdraw-history-card">
+
+        <div class="withdraw-history-header">
+
+            <span class="withdraw-label">
+                WITHDRAWAL HISTORY
+            </span>
+
+            <h3>
+                提现记录
+            </h3>
+
+        </div>
+
+
+        <div id="withdrawHistory">
+
+            <div class="empty-box">
+                暂时没有提现记录
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+</main>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="app.js"></script>
+
+
+<script>
+
+
+// ========================================
+// DASHBOARD
+// ========================================
+
+
+let currentUser = null;
+
+
+// ========================================
+// CHECK LOGIN
+// ========================================
+
+async function checkUser() {
+
+    const {
+        data,
+        error
+    } = await supabaseClient.auth.getUser();
+
+
+    if (error || !data.user) {
+
+        window.location.href = "index.html";
+
+        return;
+
+    }
+
+
+        currentUser = data.user;
+
+    document
+        .getElementById("userEmail")
+        .textContent = currentUser.email;
+
+    const { data: profile, error: profileError } =
+        await supabaseClient
+            .from("profiles")
+            .select("role")
+            .eq("id", currentUser.id)
+            .single();
+
+    if (!profileError && profile && profile.role === "admin") {
+        const adminNavLink =
+            document.getElementById("adminNavLink");
+
+        if (adminNavLink) {
+            adminNavLink.style.display = "flex";
+        }
+    }
+
+
+    await loadProfile();
+
+    await loadWalletTransactions();
+
+    await loadTasks();
+
+    await loadMyTasks();
+	
+	await loadWithdrawHistory();
+
+}
+
+
+// ========================================
+// LOAD PROFILE
+// ========================================
+
+async function loadProfile() {
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+        .from("profiles")
+        .select("*")
+        .eq("id", currentUser.id)
+        .single();
+
+
+    if (error) {
+
+        console.error(error);
+
+        return;
+
+    }
+
+
+    document
+        .getElementById("userName")
+        .textContent =
+        data.display_name ||
+        data.username ||
+        "User";
+
+
+    document
+        .getElementById("userBalance")
+        .textContent =
+        "RM" +
+        Number(data.balance || 0)
+        .toFixed(2);
+
+
+    const withdrawBalance =
+        document.getElementById("withdrawBalance");
+
+
+    if (withdrawBalance) {
+
+        withdrawBalance.textContent =
+            "RM" +
+            Number(data.balance || 0)
+            .toFixed(2);
+
+    }
+
+}
+
+
+// ========================================
+// LOAD WALLET TRANSACTIONS
+// ========================================
+
+async function loadWalletTransactions() {
+
+    const container =
+        document.getElementById(
+            "walletTransactions"
+        );
+
+
+    if (!container) return;
+
+
+    container.innerHTML = `
+        <div class="empty-box">
+            正在加载交易记录...
+        </div>
+    `;
+
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+        .from("wallet_transactions")
+        .select(
+            "id, amount, type, note, created_at"
+        )
+        .eq(
+            "user_id",
+            currentUser.id
+        )
+        .order(
+            "created_at",
+            {
+                ascending: false
+            }
+        )
+        .limit(20);
+
+
+    if (error) {
+
+        console.error(
+            "加载钱包记录失败：",
+            error
+        );
+
+
+        container.innerHTML = `
+            <div class="empty-box">
+                无法加载交易记录
+            </div>
+        `;
+
+        return;
+
+    }
+
+
+    if (!data || data.length === 0) {
+
+        container.innerHTML = `
+            <div class="empty-box">
+                暂时没有交易记录
+            </div>
+        `;
+
+        return;
+
+    }
+
+
+    container.innerHTML =
+        data.map(item => {
+
+            const amount =
+                Number(item.amount || 0);
+
+
+            const isIncome =
+                amount >= 0;
+
+
+            const sign =
+                isIncome ? "+" : "";
+
+
+            const date =
+                new Date(
+                    item.created_at
+                ).toLocaleString("zh-MY");
+
+
+            let typeText =
+                "钱包交易";
+
+
+            if (
+                item.type ===
+                "task_reward"
+            ) {
+
+                typeText =
+                    "任务奖励";
+
+            }
+
+
+            return `
+                <div class="wallet-transaction-item">
+
+                    <div>
+
+                        <strong>
+                            ${typeText}
+                        </strong>
+
+                        <p>
+                            ${item.note || ""}
+                        </p>
+
+                        <small>
+                            ${date}
+                        </small>
+
+                    </div>
+
+                    <strong>
+                        ${sign}RM${Math.abs(amount).toFixed(2)}
+                    </strong>
+
+                </div>
+            `;
+
+        }).join("");
+
+}
+
+
+// ========================================
+// LOAD TASKS
+// ========================================
+
+async function loadTasks() {
+
+    const taskList =
+        document.getElementById(
+            "taskList"
+        );
+
+
+    taskList.innerHTML =
+        `<div class="loading-box">
+            正在加载任务...
+        </div>`;
+
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+        .from("tasks")
+        .select("*")
+        .eq(
+            "status",
+            "open"
+        )
+        .order(
+            "created_at",
+            {
+                ascending: false
+            }
+        );
+
+
+    if (error) {
+
+        console.error(error);
+
+
+        taskList.innerHTML =
+            `<div class="empty-box">
+                无法加载任务
+            </div>`;
+
+
+        return;
+
+    }
+
+
+    if (
+        !data ||
+        data.length === 0
+    ) {
+
+        taskList.innerHTML =
+            `<div class="empty-box">
+                目前没有可领取的任务
+            </div>`;
+
+
+        return;
+
+    }
+
+
+    taskList.innerHTML = "";
+
+
+    data.forEach(task => {
+
+        const card =
+            document.createElement(
+                "div"
+            );
+
+
+        card.className =
+            "dashboard-task-card";
+
+
+        card.innerHTML = `
+
+            <div class="task-card-header">
+
+                <span class="task-category">
+                    TASK
+                </span>
+
+                <span class="task-status">
+                    可领取
+                </span>
+
+            </div>
+
+
+            <h3>
+                ${escapeHtml(task.title)}
+            </h3>
+
+
+            <p>
+                ${escapeHtml(
+                    task.description ||
+                    "暂无任务说明"
+                )}
+            </p>
+
+
+            <div class="dashboard-task-info">
+
+                <div>
+
+                    <small>
+                        任务奖励
+                    </small>
+
+                    <strong>
+                        RM${Number(task.reward).toFixed(2)}
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <small>
+                        剩余名额
+                    </small>
+
+                    <strong>
+                        ${task.remaining_slots}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <button
+                class="task-action-btn"
+                onclick="claimTask(${task.id})">
+
+                领取任务
+
+            </button>
+
+        `;
+
+
+        taskList.appendChild(
+            card
+        );
+
+    });
+
+}
+
+
+// ========================================
+// CLAIM TASK
+// ========================================
+
+async function claimTask(taskId) {
+
+    const {
+        data: existing
+    } =
+        await supabaseClient
+        .from("task_claims")
+        .select("id")
+        .eq(
+            "task_id",
+            taskId
+        )
+        .eq(
+            "user_id",
+            currentUser.id
+        )
+        .maybeSingle();
+
+
+    if (existing) {
+
+        alert(
+            "你已经领取过这个任务了。"
+        );
+
+        return;
+
+    }
+
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+        .from("task_claims")
+        .insert({
+
+            task_id:
+                taskId,
+
+            user_id:
+                currentUser.id,
+
+            status:
+                "claimed"
+
+        })
+        .select()
+        .single();
+
+
+    if (error) {
+
+        console.error(error);
+
+
+        alert(
+            "领取失败：" +
+            error.message
+        );
+
+
+        return;
+
+    }
+
+
+    alert(
+        "任务领取成功！"
+    );
+
+
+    await loadTasks();
+
+    await loadMyTasks();
+
+}
+// ========================================
+// LOAD MY TASKS
+// ========================================
+
+async function loadMyTasks() {
+
+    const list =
+        document.getElementById(
+            "myTaskList"
+        );
+
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+        .from("task_claims")
+        .select(`
+            *,
+            tasks (
+                title,
+                reward
+            )
+        `)
+        .eq(
+            "user_id",
+            currentUser.id
+        )
+        .order(
+            "claimed_at",
+            {
+                ascending: false
+            }
+        );
+
+
+    if (error) {
+
+        console.error(error);
+
+        return;
+
+    }
+
+
+    if (
+        !data ||
+        data.length === 0
+    ) {
+
+        list.innerHTML =
+            `<div class="empty-box">
+                暂时没有领取任何任务
+            </div>`;
+
+        return;
+
+    }
+
+
+    list.innerHTML = "";
+
+
+    let completed = 0;
+
+    let active = 0;
+
+
+    data.forEach(item => {
+
+        if (
+            item.status ===
+            "approved"
+        ) {
+
+            completed++;
+
+        }
+
+
+        if (
+            item.status ===
+            "claimed" ||
+            item.status ===
+            "submitted"
+        ) {
+
+            active++;
+
+        }
+
+
+        const row =
+            document.createElement(
+                "div"
+            );
+
+
+        row.className =
+            "my-task-row";
+
+
+        row.innerHTML = `
+
+            <div class="my-task-title">
+
+                <strong>
+                    ${escapeHtml(
+                        item.tasks?.title ||
+                        "任务"
+                    )}
+                </strong>
+
+                <small>
+                    领取时间：
+                    ${new Date(
+                        item.claimed_at
+                    ).toLocaleString()}
+                </small>
+
+            </div>
+
+
+            <strong>
+                RM${Number(
+                    item.tasks?.reward || 0
+                ).toFixed(2)}
+            </strong>
+
+
+            <span class="status-${item.status}">
+                ${getStatusText(
+                    item.status
+                )}
+            </span>
+
+
+            ${
+                item.status === "claimed"
+                    ? `
+                        <button
+                            class="task-action-btn"
+                            onclick="submitTask(${item.id})">
+
+                            提交任务
+
+                        </button>
+                      `
+                    : ""
+            }
+
+        `;
+
+
+        list.appendChild(
+            row
+        );
+
+    });
+
+
+    document
+        .getElementById(
+            "completedTasks"
+        )
+        .textContent =
+        completed;
+
+
+    document
+        .getElementById(
+            "activeTasks"
+        )
+        .textContent =
+        active;
+
+}
+
+
+// ========================================
+// OPEN SUBMIT TASK
+// ========================================
+
+let currentSubmitTask = null;
+
+
+function submitTask(taskId) {
+
+    currentSubmitTask =
+        taskId;
+
+
+    const modal =
+        document.getElementById(
+            "submitTaskModal"
+        );
+
+
+    const taskName =
+        document.getElementById(
+            "submitTaskName"
+        );
+
+
+    taskName.textContent =
+        "正在提交任务 #" +
+        taskId;
+
+
+    modal.classList.add(
+        "active"
+    );
+
+}
+
+
+// ========================================
+// CLOSE SUBMIT TASK
+// ========================================
+
+function closeSubmitTask() {
+
+    const modal =
+        document.getElementById(
+            "submitTaskModal"
+        );
+
+
+    modal.classList.remove(
+        "active"
+    );
+
+}
+
+
+// ========================================
+// SUBMIT PROOF
+// 上传截图 + 保存说明 + 提交审核
+// ========================================
+
+async function submitProof() {
+
+    if (!currentSubmitTask) {
+
+        alert(
+            "没有选择任务"
+        );
+
+        return;
+
+    }
+
+
+    const imageInput =
+        document.getElementById(
+            "proofImage"
+        );
+
+
+    const descriptionInput =
+        document.getElementById(
+            "proofDescription"
+        );
+
+
+    const file =
+        imageInput.files[0];
+
+
+    const proofText =
+        descriptionInput.value.trim();
+
+
+    // ================================
+    // 基本检查
+    // ================================
+
+    if (!file) {
+
+        alert(
+            "请先选择完成截图"
+        );
+
+        return;
+
+    }
+
+
+    if (!proofText) {
+
+        alert(
+            "请填写完成说明"
+        );
+
+        return;
+
+    }
+
+
+    // 只允许图片
+
+    if (
+        !file.type.startsWith(
+            "image/"
+        )
+    ) {
+
+        alert(
+            "请上传图片格式的截图"
+        );
+
+        return;
+
+    }
+
+
+    // 限制图片大小 10MB
+
+    if (
+        file.size >
+        10 * 1024 * 1024
+    ) {
+
+        alert(
+            "图片不能超过 10MB"
+        );
+
+        return;
+
+    }
+
+
+    const submitButton =
+        document.querySelector(
+            "#submitTaskModal .task-action-btn"
+        );
+
+
+    if (submitButton) {
+
+        submitButton.disabled =
+            true;
+
+        submitButton.textContent =
+            "正在提交...";
+
+    }
+
+
+    try {
+
+        // ================================
+        // 获取当前用户
+        // ================================
+
+        const {
+            data: {
+                user
+            },
+            error: userError
+        } =
+            await supabaseClient
+            .auth
+            .getUser();
+
+
+        if (
+            userError ||
+            !user
+        ) {
+
+            throw new Error(
+                "登录已经失效，请重新登录"
+            );
+
+        }
+
+
+        // ================================
+        // 生成图片文件名
+        // ================================
+
+        const originalName =
+            file.name ||
+            "proof";
+
+
+        const extension =
+            originalName.includes(".")
+                ? originalName
+                    .split(".")
+                    .pop()
+                    .toLowerCase()
+                : "jpg";
+
+
+        const safeExtension =
+            /^[a-z0-9]+$/.test(
+                extension
+            )
+                ? extension
+                : "jpg";
+
+
+        const fileName =
+            user.id +
+            "_" +
+            currentSubmitTask +
+            "_" +
+            Date.now() +
+            "." +
+            safeExtension;
+
+
+        const filePath =
+            user.id +
+            "/" +
+            fileName;
+
+
+        // ================================
+        // 上传截图到 task-proofs
+        // ================================
+
+        const {
+            error: uploadError
+        } =
+            await supabaseClient
+            .storage
+            .from(
+                "task-proofs"
+            )
+            .upload(
+                filePath,
+                file,
+                {
+                    cacheControl:
+                        "3600",
+
+                    upsert:
+                        false,
+
+                    contentType:
+                        file.type
+                }
+            );
+
+
+        if (uploadError) {
+
+            console.error(
+                "图片上传失败：",
+                uploadError
+            );
+
+
+            throw new Error(
+                "截图上传失败：\n" +
+                uploadError.message
+            );
+
+        }
+
+
+        // ================================
+        // 获取公开图片网址
+        // ================================
+
+        const {
+            data:
+                publicUrlData
+        } =
+            supabaseClient
+            .storage
+            .from(
+                "task-proofs"
+            )
+            .getPublicUrl(
+                filePath
+            );
+
+
+        const proofUrl =
+            publicUrlData.publicUrl;
+
+
+        if (!proofUrl) {
+
+            throw new Error(
+                "无法获取截图网址"
+            );
+
+        }
+
+
+        // ================================
+        // 保存提交记录
+        // submissions
+        // ================================
+
+        const {
+            data: submission,
+            error: submissionError
+        } =
+            await supabaseClient
+            .from(
+                "submissions"
+            )
+            .insert({
+
+                claim_id:
+                    currentSubmitTask,
+
+                user_id:
+                    user.id,
+
+                proof_text:
+                    proofText,
+
+                proof_url:
+                    proofUrl
+
+            })
+            .select()
+            .single();
+
+
+        if (submissionError) {
+
+            console.error(
+                "保存提交记录失败：",
+                submissionError
+            );
+
+
+            // 尝试删除刚刚上传的图片
+
+            await supabaseClient
+                .storage
+                .from(
+                    "task-proofs"
+                )
+                .remove([
+                    filePath
+                ]);
+
+
+            throw new Error(
+                "保存提交资料失败：\n" +
+                submissionError.message
+            );
+
+        }
+
+
+        // ================================
+        // 修改任务状态
+        // claimed → submitted
+        // ================================
+
+        const {
+            error: claimError
+        } =
+            await supabaseClient
+            .from(
+                "task_claims"
+            )
+            .update({
+                status:
+                    "submitted"
+            })
+            .eq(
+                "id",
+                currentSubmitTask
+            )
+            .eq(
+                "user_id",
+                user.id
+            )
+            .eq(
+                "status",
+                "claimed"
+            );
+
+
+        if (claimError) {
+
+            console.error(
+                "更新任务状态失败：",
+                claimError
+            );
+
+
+            // 尝试删除提交记录
+
+            if (submission) {
+
+                await supabaseClient
+                    .from(
+                        "submissions"
+                    )
+                    .delete()
+                    .eq(
+                        "id",
+                        submission.id
+                    );
+
+            }
+
+
+            // 尝试删除图片
+
+            await supabaseClient
+                .storage
+                .from(
+                    "task-proofs"
+                )
+                .remove([
+                    filePath
+                ]);
+
+
+            throw new Error(
+                "任务状态更新失败：\n" +
+                claimError.message
+            );
+
+        }
+
+
+        // ================================
+        // 提交成功
+        // ================================
+
+        alert(
+            "✅ 提交成功！\n\n" +
+            "截图和完成说明已经保存。\n" +
+            "现在等待管理员审核。"
+        );
+
+
+        // 关闭窗口
+
+        closeSubmitTask();
+
+
+        // 清空表单
+
+        imageInput.value =
+            "";
+
+
+        descriptionInput.value =
+            "";
+
+
+        // 清除当前任务
+
+        currentSubmitTask =
+            null;
+
+
+        // 刷新我的任务
+
+        await loadMyTasks();
+
+
+    } catch (error) {
+
+        console.error(
+            "submitProof error:",
+            error
+        );
+
+
+        alert(
+            "提交失败：\n\n" +
+            error.message
+        );
+
+
+    } finally {
+
+        if (submitButton) {
+
+            submitButton.disabled =
+                false;
+
+            submitButton.textContent =
+                "提交审核";
+
+        }
+
+    }
+
+}
+
+
+// ========================================
+// STATUS
+// ========================================
+
+function getStatusText(status) {
+
+    const map = {
+
+        claimed:
+            "🟡 已领取",
+
+        submitted:
+            "🟠 待审核",
+
+        approved:
+            "🟢 审核通过",
+
+        rejected:
+            "🔴 审核不通过",
+
+        cancelled:
+            "⚪ 已取消"
+
+    };
+
+
+    return map[status] ||
+        status;
+
+}
+
+
+// ========================================
+// ESCAPE HTML
+// ========================================
+
+function escapeHtml(text) {
+
+    const div =
+        document.createElement(
+            "div"
+        );
+
+
+    div.textContent =
+        text;
+
+
+    return div.innerHTML;
+
+}
+
+
+// ========================================
+// WITHDRAW
+// SUBMIT WITHDRAWAL
+// ========================================
+
+async function submitWithdrawal() {
+
+    const amountInput =
+        document.getElementById("withdrawAmount");
+
+    const methodInput =
+        document.getElementById("withdrawMethod");
+
+    const accountInput =
+        document.getElementById("withdrawAccount");
+
+    const amount =
+        Number(amountInput.value);
+
+    const method =
+        methodInput.value;
+
+    const account =
+        accountInput.value.trim();
+
+
+    // ========================================
+    // 基本检查
+    // ========================================
+
+    if (!amount || amount <= 0) {
+
+        alert("请输入正确的提现金额。");
+
+        return;
+
+    }
+
+
+    if (!method) {
+
+        alert("请选择提现方式。");
+
+        return;
+
+    }
+
+
+    if (!account) {
+
+        alert("请输入收款账户。");
+
+        return;
+
+    }
+
+
+    if (!currentUser) {
+
+        alert("登录状态已经失效，请重新登录。");
+
+        return;
+
+    }
+
+
+    // ========================================
+    // 检查当前余额
+    // ========================================
+
+    const {
+        data: profile,
+        error: profileError
+    } =
+        await supabaseClient
+        .from("profiles")
+        .select("balance")
+        .eq("id", currentUser.id)
+        .single();
+
+
+    if (profileError) {
+
+        console.error(
+            "读取余额失败：",
+            profileError
+        );
+
+        alert(
+            "无法读取当前余额：\n" +
+            profileError.message
+        );
+
+        return;
+
+    }
+
+
+    const balance =
+        Number(profile.balance || 0);
+
+
+    if (amount > balance) {
+
+        alert(
+            "提现金额不能超过当前余额。\n\n" +
+            "当前余额：RM" +
+            balance.toFixed(2)
+        );
+
+        return;
+
+    }
+
+
+    // ========================================
+    // 防止重复点击
+    // ========================================
+
+    const button =
+        document.querySelector(
+            ".withdraw-submit-btn"
+        );
+
+
+    if (button) {
+
+        button.disabled = true;
+
+        button.textContent =
+            "正在提交...";
+
+    }
+
+
+    try {
+
+        // ========================================
+        // 创建提现申请
+        // ========================================
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient
+            .from("withdrawals")
+            .insert({
+
+                user_id:
+                    currentUser.id,
+
+                amount:
+                    amount,
+
+                method:
+                    method,
+
+                account:
+                    account,
+
+                status:
+                    "pending"
+
+            })
+            .select()
+            .single();
+
+
+        if (error) {
+
+            console.error(
+                "提现申请失败：",
+                error
+            );
+
+            throw new Error(
+                error.message
+            );
+
+        }
+
+
+        // ========================================
+        // 成功
+        // ========================================
+
+        alert(
+            "✅ 提现申请提交成功！\n\n" +
+            "金额：RM" +
+            amount.toFixed(2) +
+            "\n" +
+            "状态：等待管理员审核"
+        );
+
+
+        // 清空表单
+
+        amountInput.value = "";
+
+        methodInput.value = "";
+
+        accountInput.value = "";
+
+
+        // 刷新提现记录
+
+        await loadWithdrawHistory();
+
+
+    } catch (error) {
+
+        console.error(
+            "submitWithdrawal error:",
+            error
+        );
+
+
+        alert(
+            "提现申请失败：\n\n" +
+            error.message
+        );
+
+
+    } finally {
+
+        if (button) {
+
+            button.disabled = false;
+
+            button.textContent =
+                "提交提现申请";
+
+        }
+
+    }
+
+}
+
+
+// ========================================
+// LOAD WITHDRAW HISTORY
+// ========================================
+
+async function loadWithdrawHistory() {
+
+    const container =
+        document.getElementById(
+            "withdrawHistory"
+        );
+
+
+    if (!container || !currentUser) {
+
+        return;
+
+    }
+
+
+    container.innerHTML = `
+        <div class="empty-box">
+            正在加载提现记录...
+        </div>
+    `;
+
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+        .from("withdrawals")
+        .select(`
+            id,
+            amount,
+            method,
+            account,
+            status,
+            admin_note,
+            created_at,
+            reviewed_at
+        `)
+        .eq(
+            "user_id",
+            currentUser.id
+        )
+        .order(
+            "created_at",
+            {
+                ascending: false
+            }
+        )
+        .limit(20);
+
+
+    if (error) {
+
+        console.error(
+            "加载提现记录失败：",
+            error
+        );
+
+
+        container.innerHTML = `
+            <div class="empty-box">
+                无法加载提现记录
+            </div>
+        `;
+
+        return;
+
+    }
+
+
+    if (!data || data.length === 0) {
+
+        container.innerHTML = `
+            <div class="empty-box">
+                暂时没有提现记录
+            </div>
+        `;
+
+        return;
+
+    }
+
+
+    container.innerHTML =
+        data.map(item => {
+
+            const amount =
+                Number(
+                    item.amount || 0
+                ).toFixed(2);
+
+
+            const date =
+                new Date(
+                    item.created_at
+                ).toLocaleString(
+                    "zh-MY"
+                );
+
+
+            let methodText =
+                "未知方式";
+
+
+            if (
+                item.method === "bank"
+            ) {
+
+                methodText =
+                    "银行转账";
+
+            }
+
+
+            if (
+                item.method === "ewallet"
+            ) {
+
+                methodText =
+                    "电子钱包";
+
+            }
+
+
+            let statusText =
+                "审核中";
+
+
+            if (
+                item.status ===
+                "approved"
+            ) {
+
+                statusText =
+                    "审核通过";
+
+            }
+
+
+            if (
+                item.status ===
+                "rejected"
+            ) {
+
+                statusText =
+                    "审核拒绝";
+
+            }
+
+
+            if (
+                item.status ===
+                "cancelled"
+            ) {
+
+                statusText =
+                    "已取消";
+
+            }
+
+
+            return `
+                <div class="withdraw-history-item">
+
+                    <div>
+
+                        <strong>
+                            RM${amount}
+                        </strong>
+
+                        <p>
+                            ${methodText}
+                        </p>
+
+                        <small>
+                            ${date}
+                        </small>
+
+                    </div>
+
+
+                    <div style="text-align:right;">
+
+                        <span class="withdraw-status">
+                            ${statusText}
+                        </span>
+
+                    </div>
+
+                </div>
+            `;
+
+        }).join("");
+
+}
+
+
+// ========================================
+// LOGOUT
+// ========================================
+
+async function logout() {
+
+    await supabaseClient
+        .auth
+        .signOut();
+
+
+    window.location.href =
+        "index.html";
+
+}
+
+
+// ========================================
+// START
+// ========================================
+
+checkUser();
+
+</script>
+<!-- =========================
+     SUBMIT TASK MODAL
+========================= -->
+
+<div
+    id="submitTaskModal"
+    class="modal-overlay">
+
+    <div class="modal-box">
+
+
+        <div class="modal-header">
+
+            <h2>
+                提交任务
+            </h2>
+
+
+            <button
+                type="button"
+                onclick="closeSubmitTask()"
+                class="modal-close">
+
+                ×
+
+            </button>
+
+        </div>
+
+
+
+        <div class="modal-body">
+
+
+            <p id="submitTaskName">
+                正在提交任务...
+            </p>
+
+
+
+            <label>
+                完成截图
+            </label>
+
+
+            <input
+                type="file"
+                id="proofImage"
+                accept="image/*">
+
+
+
+            <label>
+                完成说明
+            </label>
+
+
+            <textarea
+                id="proofDescription"
+                rows="4"
+                placeholder="请简单说明你是如何完成这个任务的"></textarea>
+
+
+
+            <button
+                type="button"
+                class="task-action-btn"
+                onclick="submitProof()">
+
+                提交审核
+
+            </button>
+
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+</body>
+
+</html>
