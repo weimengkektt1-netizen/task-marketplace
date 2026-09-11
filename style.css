@@ -4,6 +4,57 @@
     box-sizing: border-box;
 }
 
+/* =========================
+   DESIGN TOKENS
+   TaskHub 统一设计变量
+========================= */
+
+:root {
+    /* 品牌色 */
+    --brand: #6d5dfc;
+    --brand-2: #4c8dff;
+    --brand-gradient: linear-gradient(135deg, #6d5dfc, #4c8dff);
+    --brand-soft: rgba(109, 93, 252, 0.13);
+    --brand-border: rgba(109, 93, 252, 0.45);
+    --brand-text: #b3a8ff;
+
+    /* 背景 */
+    --bg: #080a0f;
+    --bg-sidebar: #0c0f15;
+    --bg-card: #10131a;
+    --bg-input: #0b0e13;
+    --bg-hover: #181c24;
+
+    /* 边框 */
+    --border: #222731;
+    --border-strong: #303641;
+
+    /* 文字 */
+    --text: #f5f7fa;
+    --text-2: #8b949e;
+    --text-3: #666e7b;
+
+    /* 状态色 */
+    --success: #83cf91;
+    --warning: #d9b66f;
+    --danger: #d77d7d;
+    --info: #7fa8d9;
+
+    /* 形状 */
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-full: 999px;
+
+    /* 阴影 */
+    --shadow-card: 0 8px 28px rgba(0, 0, 0, 0.35);
+    --shadow-btn: 0 4px 14px rgba(109, 93, 252, 0.35);
+
+    /* 字体 */
+    --font: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+
 html {
     scroll-behavior: smooth;
 }
@@ -1967,4 +2018,2334 @@ body {
         width: 100%;
     }
 
+}
+
+
+/* ========================================
+   TASKHUB UI POLISH
+   统一视觉覆盖层（P0–P4）
+   删除本区块（保留顶部 :root 变量块）即可整体回滚
+   ======================================== */
+
+/* ---------- 通用按钮 ---------- */
+
+.btn-primary {
+    background: var(--brand-gradient);
+    color: #fff;
+    box-shadow: var(--shadow-btn);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(109, 93, 252, 0.45);
+}
+
+.btn-outline:hover {
+    background: var(--brand-soft);
+    border-color: var(--brand-border);
+    color: #fff;
+}
+
+/* ---------- 落地页品牌化 ---------- */
+
+.logo-icon {
+    background: var(--brand-gradient);
+    color: #fff;
+}
+
+.hero h1 span {
+    background: linear-gradient(135deg, #a78bfa, #60a5fa);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.badge {
+    border-color: var(--brand-border);
+    background: var(--brand-soft);
+    color: var(--brand-text);
+}
+
+.claim-btn {
+    transition: 0.2s;
+}
+
+.claim-btn:hover {
+    background: var(--brand-soft);
+    border-color: var(--brand-border);
+}
+
+.task-card:hover {
+    border-color: var(--brand-border);
+    box-shadow: var(--shadow-card);
+}
+
+/* ---------- 认证弹窗 ---------- */
+
+.auth-submit {
+    background: var(--brand-gradient);
+    color: #fff;
+    transition: 0.2s;
+}
+
+.auth-submit:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-btn);
+}
+
+.auth-modal input:focus {
+    border-color: var(--brand);
+}
+
+.switch-auth button:hover {
+    color: var(--brand-text);
+}
+
+/* ---------- Dashboard 侧边栏 ---------- */
+
+.side-nav a {
+    transition: 0.2s;
+}
+
+.side-nav a.active {
+    background: var(--brand-soft);
+    color: #fff;
+    box-shadow: inset 3px 0 0 var(--brand);
+}
+
+/* ---------- 余额卡 ---------- */
+
+.balance-card {
+    border-radius: var(--radius-lg);
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.25);
+}
+
+.main-balance {
+    background:
+        linear-gradient(135deg, rgba(109, 93, 252, 0.30), rgba(76, 141, 255, 0.10)),
+        linear-gradient(145deg, #171b23, #0e1117);
+    border-color: var(--brand-border);
+}
+
+.balance-icon {
+    border-color: var(--brand-border);
+    background: var(--brand-soft);
+    color: var(--brand-text) !important;
+}
+
+/* ---------- 状态徽章 pill ---------- */
+
+.status-claimed,
+.status-submitted,
+.status-approved,
+.status-rejected,
+.status-cancelled {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: var(--radius-full);
+    white-space: nowrap;
+    width: fit-content;
+}
+
+.status-claimed {
+    color: #e0b96f;
+    background: rgba(217, 182, 111, 0.14);
+}
+
+.status-submitted {
+    color: #8fb6e8;
+    background: rgba(127, 168, 217, 0.14);
+}
+
+.status-approved {
+    color: var(--success);
+    background: rgba(131, 207, 145, 0.14);
+}
+
+.status-rejected {
+    color: #e58a8a;
+    background: rgba(215, 125, 125, 0.14);
+}
+
+.status-cancelled {
+    color: var(--text-2);
+    background: rgba(139, 148, 158, 0.14);
+}
+
+/* ---------- 任务操作按钮 ---------- */
+
+.task-action-btn {
+    background: var(--brand-gradient);
+    color: #fff;
+    border-radius: 8px;
+    transition: 0.2s;
+    box-shadow: 0 3px 10px rgba(109, 93, 252, 0.25);
+}
+
+.task-action-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(109, 93, 252, 0.40);
+}
+
+.task-action-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* ---------- 刷新按钮 ---------- */
+
+.refresh-btn {
+    transition: 0.2s;
+}
+
+.refresh-btn:hover {
+    border-color: var(--brand-border);
+    background: var(--brand-soft);
+    color: #fff;
+}
+
+/* ---------- 任务卡 hover ---------- */
+
+.dashboard-task-card:hover {
+    border-color: var(--brand-border);
+    box-shadow: var(--shadow-card);
+}
+
+/* ---------- Admin 字体与统计卡 ---------- */
+
+.admin-body {
+    font-family: var(--font);
+}
+
+.admin-stat-card {
+    transition: 0.2s;
+}
+
+.admin-stat-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(109, 93, 252, 0.35);
+}
+
+/* ---------- 移动端汉堡按钮（dashboard） ---------- */
+
+.sidebar-toggle {
+    display: none;
+    width: 40px;
+    height: 40px;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-card);
+    border: 1px solid var(--border-strong);
+    color: var(--text);
+    border-radius: 10px;
+    font-size: 18px;
+    cursor: pointer;
+    margin-bottom: 16px;
+}
+
+/* ---------- 落地页移动端菜单 ---------- */
+
+.nav-toggle {
+    display: none;
+    width: 40px;
+    height: 40px;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 1px solid var(--border-strong);
+    color: #fff;
+    border-radius: 9px;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.mobile-nav {
+    display: none;
+}
+
+@media (max-width: 800px) {
+
+    .nav-toggle {
+        display: flex;
+    }
+
+    .mobile-nav {
+        display: none;
+        flex-direction: column;
+        gap: 4px;
+        padding: 14px 20px 18px;
+        background: rgba(8, 10, 15, 0.97);
+        border-bottom: 1px solid #1c2029;
+    }
+
+    .mobile-nav.open {
+        display: flex;
+    }
+
+    .mobile-nav a {
+        color: #9da4b2;
+        text-decoration: none;
+        padding: 12px 4px;
+        font-size: 14px;
+        border-bottom: 1px solid #1a1e27;
+    }
+
+    .mobile-nav a:hover {
+        color: #fff;
+    }
+
+    .mobile-nav-buttons {
+        display: flex;
+        gap: 10px;
+        margin-top: 14px;
+    }
+
+    .mobile-nav-buttons .btn {
+        flex: 1;
+    }
+
+}
+
+/* ---------- 响应式：平板 2 列 ---------- */
+
+@media (max-width: 900px) and (min-width: 601px) {
+
+    .dashboard-task-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .task-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .balance-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .main-balance {
+        grid-column: 1 / -1;
+    }
+
+}
+
+/* ---------- 响应式：手机抽屉导航 ---------- */
+
+@media (max-width: 600px) {
+
+    .sidebar-toggle {
+        display: flex;
+    }
+
+    .sidebar {
+        width: 240px;
+        transform: translateX(-100%);
+        transition: transform 0.25s ease;
+        padding: 25px 18px;
+        box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
+        z-index: 200;
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+    }
+
+    .sidebar .dashboard-logo span {
+        display: inline;
+    }
+
+    .sidebar .side-nav a {
+        display: flex;
+        justify-content: flex-start;
+    }
+
+    .sidebar .side-nav a:not(.active) {
+        display: flex;
+    }
+
+    .sidebar .side-nav a span {
+        margin: 0;
+    }
+
+    .sidebar .logout-btn {
+        justify-content: flex-start;
+    }
+
+    .dashboard-main {
+        margin-left: 0;
+        padding: 20px 16px;
+    }
+
+    .dashboard-header {
+        padding: 0;
+    }
+
+}
+
+
+/* ========================================
+   I18N - 语言切换按钮 + 认证弹窗滚动适配
+   ======================================== */
+
+.lang-btn {
+    min-width: 46px;
+    height: 36px;
+    padding: 0 14px;
+    border-radius: 10px;
+    border: 1px solid #2a303a;
+    background: rgba(109, 93, 252, 0.10);
+    color: #b3a8ff;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    font-family: inherit;
+}
+
+.lang-btn:hover {
+    background: rgba(109, 93, 252, 0.22);
+    border-color: #6d5dfc;
+    color: #ffffff;
+}
+
+/* 认证弹窗在窄屏/多字段时允许滚动 */
+.auth-modal {
+    max-height: 92vh;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+}
+
+@media (max-width: 640px) {
+    .auth-modal {
+        margin: 16px;
+        max-height: 88vh;
+    }
+}
+
+
+/* ========================================
+   SUBMIT TASK MODAL - 美化覆盖层
+   覆盖：#submitTaskModal 弹窗样式
+   删除本块即可回滚到原弹窗样式
+   ======================================== */
+
+#submitTaskModal .modal-box {
+    width: 460px;
+    max-width: 92%;
+    background: #11141b;
+    border: 1px solid #2b303a;
+    border-radius: 20px;
+    padding: 0;
+    box-shadow: 0 30px 100px rgba(0, 0, 0, 0.6);
+    overflow: hidden;
+    animation: taskhub-modal-in 0.22s ease-out;
+}
+
+@keyframes taskhub-modal-in {
+    from { opacity: 0; transform: translateY(14px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+#submitTaskModal .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 22px 26px 16px;
+    border-bottom: 1px solid #1d222c;
+}
+
+#submitTaskModal .modal-header h2 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+#submitTaskModal .modal-close {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 1px solid #2a303a;
+    background: rgba(255, 255, 255, 0.04);
+    color: #8a92a0;
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+#submitTaskModal .modal-close:hover {
+    background: rgba(255, 82, 82, 0.12);
+    border-color: rgba(255, 82, 82, 0.4);
+    color: #ff6b6b;
+}
+
+#submitTaskModal .modal-body {
+    padding: 24px 26px 28px;
+}
+
+#submitTaskName {
+    margin: 0 0 22px;
+    padding: 12px 16px;
+    background: rgba(109, 93, 252, 0.08);
+    border: 1px solid rgba(109, 93, 252, 0.25);
+    border-radius: 12px;
+    color: #b3a8ff;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+#submitTaskModal .modal-body label {
+    display: block;
+    margin: 0 0 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #9ba2af;
+}
+
+#submitTaskModal .modal-body input[type="file"] {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 14px;
+    margin-bottom: 20px;
+    background: #0b0e13;
+    border: 1px dashed #2f3642;
+    border-radius: 12px;
+    color: #8a92a0;
+    font-size: 13px;
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+}
+
+#submitTaskModal .modal-body input[type="file"]:hover {
+    border-color: #6d5dfc;
+}
+
+#submitTaskModal .modal-body textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 14px;
+    margin-bottom: 24px;
+    background: #0b0e13;
+    border: 1px solid #2a303a;
+    border-radius: 12px;
+    color: #f5f7fa;
+    font-size: 14px;
+    line-height: 1.6;
+    resize: vertical;
+    outline: none;
+    transition: border-color 0.2s ease;
+    font-family: inherit;
+}
+
+#submitTaskModal .modal-body textarea:focus {
+    border-color: #6d5dfc;
+    box-shadow: 0 0 0 3px rgba(109, 93, 252, 0.15);
+}
+
+#submitTaskModal .modal-body textarea::placeholder {
+    color: #5c6470;
+}
+
+#submitTaskModal .modal-box .task-action-btn {
+    width: 100%;
+    padding: 14px 16px;
+    border: 0;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    background: linear-gradient(135deg, #6d5dfc, #4c8dff);
+    color: #ffffff;
+    transition: opacity 0.2s ease, transform 0.1s ease;
+}
+
+#submitTaskModal .modal-box .task-action-btn:hover {
+    opacity: 0.92;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(109, 93, 252, 0.40);
+}
+
+#submitTaskModal .modal-box .task-action-btn:active {
+    transform: scale(0.98);
+}
+
+#submitTaskModal .modal-box .task-action-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+@media (max-width: 520px) {
+    #submitTaskModal .modal-box {
+        max-height: 88vh;
+        overflow-y: auto;
+    }
+}
+
+
+/* ========================================
+   SIDEBAR - 美化覆盖层
+   覆盖：左侧导航栏视觉
+   删除本块即可回滚
+   ======================================== */
+
+.sidebar {
+    background: linear-gradient(180deg, #0d1017 0%, #0a0d13 100%);
+}
+
+.dashboard-logo {
+    margin-bottom: 34px;
+}
+
+.dashboard-logo .logo-icon {
+    background: linear-gradient(135deg, #6d5dfc, #4c8dff);
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(109, 93, 252, 0.35);
+}
+
+.side-nav {
+    gap: 4px;
+}
+
+.side-nav a,
+.logout-btn {
+    border-radius: 10px;
+    transition: background 0.18s ease, color 0.18s ease;
+    font-weight: 500;
+}
+
+.side-nav a span,
+.logout-btn span {
+    font-size: 15px;
+}
+
+.side-nav a:hover,
+.logout-btn:hover {
+    background: rgba(109, 93, 252, 0.12);
+    color: #ffffff;
+}
+
+.side-nav a.active {
+    background: linear-gradient(90deg, rgba(109, 93, 252, 0.22), rgba(76, 141, 255, 0.08));
+    color: #ffffff;
+    box-shadow: inset 3px 0 0 #6d5dfc;
+    font-weight: 600;
+}
+
+.side-nav a.active span:first-child {
+    color: #b3a8ff;
+}
+
+/* 管理员入口：显示时与普通导航项区分 */
+.admin-nav-link {
+    margin-top: 8px;
+    border-top: 1px solid #1d222c;
+    border-radius: 0;
+    padding-top: 14px;
+}
+
+.admin-nav-link span:first-child {
+    color: #b3a8ff;
+}
+
+.admin-nav-link:hover {
+    background: rgba(109, 93, 252, 0.16);
+}
+
+.logout-btn:hover {
+    background: rgba(255, 82, 82, 0.12);
+}
+
+.logout-btn:hover span:first-child {
+    color: #ff6b6b;
+}
+
+
+/* ========================================
+   NAV-TEXT 修复 - 导航文字横排
+   覆盖任何使导航文字竖排的来源
+   删除本块即可回滚
+   ======================================== */
+
+.side-nav a .nav-text {
+    display: inline-block !important;
+    width: auto !important;
+    white-space: nowrap !important;
+    text-align: left !important;
+    vertical-align: middle;
+}
+
+
+/* ========================================
+   ADMIN USER BAR - 审核卡片用户信息条
+   删除本块即可回滚
+   ======================================== */
+
+.admin-user-bar {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 18px;
+    padding: 14px 16px;
+    background: rgba(109, 93, 252, 0.07);
+    border: 1px solid rgba(109, 93, 252, 0.22);
+    border-radius: 14px;
+}
+
+.admin-user-avatar {
+    flex-shrink: 0;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
+    font-weight: 700;
+    color: #ffffff;
+    background: linear-gradient(135deg, #6d5dfc, #4c8dff);
+    box-shadow: 0 4px 12px rgba(109, 93, 252, 0.35);
+}
+
+.admin-user-meta {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.admin-user-line {
+    font-size: 13px;
+    color: #9ba2af;
+}
+
+.admin-user-line strong {
+    color: #f5f7fa;
+    font-weight: 600;
+    margin-left: 4px;
+}
+
+
+/* ========================================
+   WALLET 交易记录 - 美化覆盖层
+   覆盖：#wallet 记录列表排版
+   删除本块即可回滚
+   ======================================== */
+
+.wallet-box {
+    border-radius: 16px;
+    border: 1px solid #222a36;
+    background: #10131a;
+    overflow: hidden;
+}
+
+.wallet-transaction-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 17px 20px;
+    border-bottom: 1px solid #1c212b;
+    transition: background 0.15s ease;
+}
+
+.wallet-transaction-item:last-child {
+    border-bottom: none;
+}
+
+.wallet-transaction-item:hover {
+    background: rgba(109, 93, 252, 0.05);
+}
+
+.wallet-transaction-item > div:first-child {
+    min-width: 0;
+    flex: 1;
+}
+
+.wallet-transaction-item > div:first-child strong {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #f5f7fa;
+}
+
+.wallet-transaction-item p {
+    margin: 5px 0 0;
+    font-size: 12px;
+    color: #8a92a0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 520px;
+}
+
+.wallet-transaction-item small {
+    display: block;
+    margin-top: 6px;
+    font-size: 11px;
+    color: #5c6470;
+}
+
+.wallet-transaction-amount {
+    flex-shrink: 0;
+    font-size: 14px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+.wallet-transaction-amount.income {
+    color: #83cf91;
+}
+
+.wallet-transaction-amount.expense {
+    color: #e58a8a;
+}
+
+
+/* ========================================
+   FAQ 常见问题 - 手风琴
+   用于 index.html 与 dashboard.html
+   删除本块即可回滚
+   ======================================== */
+
+.faq-section {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 60px 24px 30px;
+}
+
+.faq-section .dashboard-section-title {
+    margin-bottom: 8px;
+}
+
+.faq-subtitle {
+    margin: 6px 0 28px;
+    font-size: 13px;
+    color: #8a92a0;
+}
+
+.faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.faq-item {
+    border: 1px solid #222a36;
+    border-radius: 14px;
+    background: #10131a;
+    overflow: hidden;
+    transition: border-color 0.2s ease;
+}
+
+.faq-item.open {
+    border-color: rgba(109, 93, 252, 0.45);
+}
+
+.faq-q {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    width: 100%;
+    padding: 16px 20px;
+    background: none;
+    border: 0;
+    color: #e8ecf2;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.faq-q:hover {
+    color: #ffffff;
+}
+
+.faq-icon {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(109, 93, 252, 0.12);
+    color: #b3a8ff;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1;
+    transition: transform 0.25s ease;
+}
+
+.faq-item.open .faq-icon {
+    transform: rotate(45deg);
+}
+
+.faq-a {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.faq-a p {
+    margin: 0;
+    padding: 0 20px 18px;
+    color: #9ba2af;
+    font-size: 13px;
+    line-height: 1.75;
+}
+
+.faq-item.open .faq-a {
+    max-height: 340px;
+}
+
+
+/* ========================================
+   可领取任务 - 更多任务按钮
+   删除本块即可回滚
+   ======================================== */
+
+.more-tasks-btn {
+    text-decoration: none;
+    margin-left: 8px;
+    color: #c6ccd6;
+}
+
+.more-tasks-btn:hover {
+    color: #ffffff;
+    border-color: rgba(109, 93, 252, 0.55);
+    background: rgba(109, 93, 252, 0.08);
+}
+
+.more-tasks-btn span:last-child {
+    margin-left: 2px;
+    transition: transform 0.2s ease;
+}
+
+.more-tasks-btn:hover span:last-child {
+    transform: translateX(3px);
+}
+
+
+/* ========================================
+   HomeTask 风格任务卡片
+   用于 tasks.html / dashboard.html 任务卡
+   删除本块即可回滚
+   ======================================== */
+
+.ht-task-card {
+    padding: 0 !important;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.ht-card-media {
+    position: relative;
+    height: 150px;
+    flex-shrink: 0;
+    overflow: hidden;
+    background: #141a26;
+}
+
+.ht-card-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.ht-card-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 38px;
+    background: linear-gradient(135deg, #171d2b, #232b3d);
+    color: #3a4356;
+}
+
+.ht-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    padding: 4px 11px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+}
+
+.ht-badge-recruiting {
+    background: rgba(34, 197, 94, 0.16);
+    color: #4ade80;
+}
+
+.ht-badge-limited {
+    background: rgba(251, 191, 36, 0.16);
+    color: #fbbf24;
+}
+
+.ht-badge-ended {
+    background: rgba(148, 163, 184, 0.18);
+    color: #94a3b8;
+}
+
+.ht-deadline {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 4px 11px;
+    border-radius: 999px;
+    background: rgba(8, 10, 14, 0.55);
+    color: #dbe1ea;
+    font-size: 11px;
+    font-weight: 600;
+    backdrop-filter: blur(4px);
+}
+
+.ht-card-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 14px 16px 16px;
+}
+
+.ht-card-body h3 {
+    margin: 0 0 4px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #f0f3f8;
+    line-height: 1.35;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.ht-card-desc {
+    margin: 0 0 10px;
+    font-size: 12px;
+    color: #8a92a0;
+    line-height: 1.55;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.ht-reward {
+    font-size: 18px;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: 0.2px;
+}
+
+.ht-reward small {
+    margin-left: 4px;
+    font-size: 11px;
+    font-weight: 500;
+    color: #8a92a0;
+}
+
+.ht-slots {
+    margin: 6px 0 14px;
+    font-size: 12px;
+    color: #9aa1ad;
+}
+
+.ht-slots strong {
+    color: #cdd3dc;
+    font-weight: 700;
+}
+
+.ht-card-body .task-action-btn {
+    margin-top: auto;
+    width: 100%;
+}
+
+.ht-card-body .task-action-btn:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+/* 任务图片上传（admin 表单） */
+
+.task-image-uploader {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.admin-image-btn {
+    padding: 9px 16px;
+    font-size: 13px;
+}
+
+.admin-image-name {
+    font-size: 12px;
+    color: #8a92a0;
+    word-break: break-all;
+}
+
+.admin-image-remove {
+    width: 26px;
+    height: 26px;
+    border: 1px solid #333c4b;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.04);
+    color: #e07a7a;
+    font-size: 13px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.admin-image-remove:hover {
+    border-color: #e07a7a;
+}
+
+.task-image-preview {
+    margin-top: 10px;
+    max-width: 240px;
+    max-height: 150px;
+    border-radius: 10px;
+    border: 1px solid #2a303a;
+    object-fit: cover;
+}
+
+
+/* ================= TaskHub Footer + 联系客服悬浮按钮（新增区块，删除本区块即可回滚） ================= */
+.site-footer {
+    margin-top: 64px;
+    padding: 32px 28px 24px;
+    border-top: 1px solid var(--border);
+    background: linear-gradient(180deg, transparent, rgba(109, 93, 252, 0.05));
+}
+.site-footer .footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+}
+.footer-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.footer-logo-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 9px;
+    background: var(--brand-gradient);
+    color: #fff;
+    font-weight: 800;
+    font-size: 17px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(109, 93, 252, 0.4);
+}
+.footer-brand-name {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: 0.2px;
+}
+.footer-copy {
+    font-size: 12px;
+    color: var(--text-3);
+    letter-spacing: 0.3px;
+}
+
+/* 联系客服悬浮按钮（半透明玻璃质感） */
+.wa-float {
+    position: fixed;
+    right: 22px;
+    bottom: 22px;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 12px 18px;
+    border-radius: var(--radius-full);
+    background: rgba(37, 211, 102, 0.16);
+    border: 1px solid rgba(37, 211, 102, 0.38);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    color: #eafff2;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+.wa-float svg {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+}
+.wa-float:hover {
+    background: rgba(37, 211, 102, 0.28);
+    transform: translateY(-2px);
+    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.45);
+}
+@media (max-width: 640px) {
+    .wa-float { right: 14px; bottom: 14px; padding: 11px 14px; font-size: 13px; }
+}
+
+
+/* ================= Dashboard Liquid Glass（iOS 26 风格，新增区块，删除本区块即可回滚） ================= */
+
+/* 1. 页面背景：彩色光斑 + 深色底（光斑即玻璃背后的光源） */
+body.dashboard-body {
+    background:
+        radial-gradient(1100px 620px at 88% -12%, rgba(109, 93, 252, 0.34), transparent 62%),
+        radial-gradient(900px 540px at -8% 26%, rgba(76, 141, 255, 0.26), transparent 60%),
+        radial-gradient(860px 620px at 55% 112%, rgba(38, 188, 255, 0.20), transparent 62%),
+        radial-gradient(700px 480px at 30% -8%, rgba(255, 120, 200, 0.10), transparent 60%),
+        #07090f;
+    background-attachment: fixed;
+}
+
+/* 2. 侧边栏玻璃 */
+body.dashboard-body .sidebar {
+    background: rgba(13, 16, 23, 0.10);
+    backdrop-filter: blur(24px) saturate(1.5);
+    -webkit-backdrop-filter: blur(24px) saturate(1.5);
+    border-right: 1px solid rgba(255, 255, 255, 0.07);
+    box-shadow: inset -1px 0 0 rgba(255, 255, 255, 0.03);
+}
+
+/* 3. 导航项：胶囊 hover + 玻璃 active */
+body.dashboard-body .side-nav a,
+body.dashboard-body .sidebar-bottom a {
+    border-radius: 14px;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+body.dashboard-body .side-nav a:hover,
+body.dashboard-body .sidebar-bottom a:hover {
+    background: rgba(255, 255, 255, 0.07);
+    transform: translateX(2px);
+}
+body.dashboard-body .side-nav a.active {
+    background: linear-gradient(135deg, rgba(109, 93, 252, 0.55), rgba(76, 141, 255, 0.45));
+    box-shadow: 0 6px 18px rgba(109, 93, 252, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+}
+
+/* 4. 顶栏玻璃条 */
+body.dashboard-body .dashboard-header {
+    background: rgba(13, 16, 23, 0.5);
+    backdrop-filter: blur(18px) saturate(1.4);
+    -webkit-backdrop-filter: blur(18px) saturate(1.4);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    box-shadow: 0 10px 34px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.10);
+}
+
+/* 5. 玻璃卡片通用（内高光 + 大圆角 + 柔和大阴影） */
+body.dashboard-body .balance-card,
+body.dashboard-body .dashboard-task-card.ht-task-card,
+body.dashboard-body .wallet-box,
+body.dashboard-body .withdraw-card,
+body.dashboard-body .withdraw-info-card,
+body.dashboard-body .withdraw-history-card,
+body.dashboard-body .my-task-row,
+body.dashboard-body .empty-box,
+body.dashboard-body .loading-box {
+    background: linear-gradient(165deg, rgba(255, 255, 255, 0.10), rgba(255, 255, 255, 0.035) 55%, rgba(255, 255, 255, 0.07));
+    border: 1px solid rgba(255, 255, 255, 0.13);
+    border-radius: 24px;
+    backdrop-filter: blur(20px) saturate(1.55);
+    -webkit-backdrop-filter: blur(20px) saturate(1.55);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.16), inset 0 -1px 0 rgba(255, 255, 255, 0.04);
+}
+
+/* 主余额卡：更亮的渐变玻璃，突出层级 */
+body.dashboard-body .balance-card.main-balance {
+    background: linear-gradient(150deg, rgba(109, 93, 252, 0.42), rgba(76, 141, 255, 0.30) 45%, rgba(38, 188, 255, 0.22));
+    border-color: rgba(255, 255, 255, 0.22);
+}
+
+/* 任务卡图片：圆角融进玻璃 */
+body.dashboard-body .ht-card-media {
+    border-radius: 18px 18px 0 0;
+    overflow: hidden;
+}
+
+/* 6. 钱包 / 我的任务列表行 */
+body.dashboard-body .wallet-transaction-item {
+    border-radius: 16px;
+    transition: background 0.2s ease;
+}
+body.dashboard-body .wallet-transaction-item:hover {
+    background: rgba(255, 255, 255, 0.06);
+}
+
+/* 7. 输入框玻璃 */
+body.dashboard-body .withdraw-input-wrap input,
+body.dashboard-body .withdraw-input-wrap select,
+body.dashboard-body .withdraw-input-wrap textarea {
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 14px;
+    box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.25);
+    transition: border-color 0.2s ease, background 0.2s ease;
+}
+body.dashboard-body .withdraw-input-wrap input:focus,
+body.dashboard-body .withdraw-input-wrap select:focus,
+body.dashboard-body .withdraw-input-wrap textarea:focus {
+    background: rgba(255, 255, 255, 0.10);
+    border-color: rgba(140, 130, 255, 0.65);
+    outline: none;
+}
+
+/* 8. 按钮玻璃胶囊 */
+body.dashboard-body .task-action-btn,
+body.dashboard-body .withdraw-submit-btn,
+body.dashboard-body .refresh-btn,
+body.dashboard-body .logout-btn {
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+body.dashboard-body .task-action-btn:hover,
+body.dashboard-body .withdraw-submit-btn:hover,
+body.dashboard-body .refresh-btn:hover,
+body.dashboard-body .logout-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 12px 26px rgba(0, 0, 0, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+}
+body.dashboard-body .withdraw-submit-btn,
+body.dashboard-body .task-action-btn {
+    background: linear-gradient(135deg, rgba(109, 93, 252, 0.85), rgba(76, 141, 255, 0.8));
+}
+
+/* 9. 语言按钮 / 头像微调 */
+body.dashboard-body .lang-btn,
+body.dashboard-body .user-avatar {
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14);
+}
+
+/* 10. 移动端：背景光斑简化避免渲染卡顿 */
+@media (max-width: 768px) {
+    body.dashboard-body {
+        background:
+            radial-gradient(600px 420px at 90% -8%, rgba(109, 93, 252, 0.30), transparent 62%),
+            radial-gradient(560px 400px at -6% 30%, rgba(76, 141, 255, 0.22), transparent 60%),
+            #07090f;
+        background-attachment: scroll;
+    }
+}
+
+
+/* ================= Dashboard 弱文字对比度提升（新增区块，删除本区块即可回滚） ================= */
+body.dashboard-body .section-label {
+    color: #bcc9de;
+    text-shadow: 0 1px 10px rgba(0, 0, 0, 0.7);
+}
+body.dashboard-body .balance-card > span {
+    color: #aab7cc;
+}
+body.dashboard-body .balance-card p {
+    color: #8b98ad;
+}
+body.dashboard-body .wallet-transaction-item p {
+    color: #9dabc0;
+}
+body.dashboard-body .wallet-transaction-item small {
+    color: #8391a6;
+}
+body.dashboard-body .ht-slots {
+    color: #aab7cc;
+}
+body.dashboard-body .empty-box,
+body.dashboard-body .loading-box {
+    color: #b6c3d8;
+}
+body.dashboard-body .withdraw-info-item strong {
+    color: #dde3ee;
+}
+body.dashboard-body .withdraw-info-item p {
+    color: #97a5ba;
+}
+body.dashboard-body .withdraw-form-group label {
+    color: #cdd8ea;
+}
+body.dashboard-body .withdraw-form-group small {
+    color: #8f9db2;
+}
+body.dashboard-body .my-task-row small,
+body.dashboard-body .my-task-row p {
+    color: #97a5ba;
+}
+
+
+/* ================= Dashboard 弱文字对比度提升（新增区块，删除本区块即可回滚） ================= */
+body.dashboard-body .section-label {
+    color: #bcc9de;
+    text-shadow: 0 1px 10px rgba(0, 0, 0, 0.7);
+}
+body.dashboard-body .balance-card > span {
+    color: #aab7cc;
+}
+body.dashboard-body .balance-card p {
+    color: #8b98ad;
+}
+body.dashboard-body .wallet-transaction-item p {
+    color: #9dabc0;
+}
+body.dashboard-body .wallet-transaction-item small {
+    color: #8391a6;
+}
+body.dashboard-body .ht-slots {
+    color: #aab7cc;
+}
+body.dashboard-body .empty-box,
+body.dashboard-body .loading-box {
+    color: #b6c3d8;
+}
+body.dashboard-body .withdraw-info-item strong {
+    color: #dde3ee;
+}
+body.dashboard-body .withdraw-info-item p {
+    color: #97a5ba;
+}
+body.dashboard-body .withdraw-form-group label {
+    color: #cdd8ea;
+}
+body.dashboard-body .withdraw-form-group small {
+    color: #8f9db2;
+}
+body.dashboard-body .my-task-row small,
+body.dashboard-body .my-task-row p {
+    color: #97a5ba;
+}
+
+
+/* ================= Index 落地页重设计（质感版，新增区块，删除本区块即可回滚） ================= */
+
+/* ---- 内容层浮于光斑之上 ---- */
+/* ---- 背景光斑 + 网格 ---- */
+.index-body .site-glow {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+        radial-gradient(950px 520px at 80% -12%, rgba(109, 93, 252, 0.32), transparent 62%),
+        radial-gradient(820px 500px at -8% 34%, rgba(76, 141, 255, 0.18), transparent 60%),
+        radial-gradient(720px 480px at 108% 80%, rgba(38, 188, 255, 0.13), transparent 62%),
+        radial-gradient(640px 420px at 30% 108%, rgba(255, 120, 200, 0.07), transparent 60%);
+}
+.index-body .site-glow::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.030) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.030) 1px, transparent 1px);
+    background-size: 64px 64px;
+    -webkit-mask-image: radial-gradient(ellipse 95% 65% at 50% 0%, #000 25%, transparent 74%);
+    mask-image: radial-gradient(ellipse 95% 65% at 50% 0%, #000 25%, transparent 74%);
+}
+
+/* ---- 导航栏玻璃 ---- */
+.index-body .navbar {
+    background: rgba(10, 12, 18, 0.55);
+    backdrop-filter: blur(22px) saturate(1.5);
+    -webkit-backdrop-filter: blur(22px) saturate(1.5);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+.index-body .navbar nav a {
+    color: #b8c2d4;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+.index-body .navbar nav a:hover {
+    color: #f2f5fa;
+}
+
+/* ---- 按钮质感 ---- */
+.index-body .btn {
+    border-radius: 999px;
+    font-weight: 600;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+.index-body .btn-primary {
+    background: linear-gradient(135deg, #6d5dfc, #4c8dff);
+    border: 1px solid rgba(255, 255, 255, 0.20);
+    box-shadow: 0 10px 30px rgba(109, 93, 252, 0.40), inset 0 1px 0 rgba(255, 255, 255, 0.28);
+    position: relative;
+    overflow: hidden;
+}
+.index-body .btn-primary::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -70%;
+    width: 55%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.38), transparent);
+    transform: skewX(-20deg);
+    animation: indexBtnShine 3.6s ease-in-out infinite;
+}
+@keyframes indexBtnShine {
+    0%, 55% { left: -70%; }
+    88%, 100% { left: 150%; }
+}
+.index-body .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 38px rgba(109, 93, 252, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+.index-body .btn-outline {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.17);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: #dde4f0;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+.index-body .btn-outline:hover {
+    background: rgba(255, 255, 255, 0.11);
+    transform: translateY(-2px);
+    border-color: rgba(255, 255, 255, 0.26);
+}
+
+/* ---- Hero 排版与文字质感 ---- */
+.index-body .badge {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: #cfd8e8;
+    font-size: 12.5px;
+    letter-spacing: 1.5px;
+    padding: 9px 18px;
+    border-radius: 999px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+.index-body .hero h1 {
+    letter-spacing: -2.5px;
+    margin-bottom: 26px;
+}
+.index-body .hero h1 span:first-child {
+    color: #f2f5fa;
+    -webkit-text-fill-color: #f2f5fa;
+}
+.index-body .hero h1 span:last-child {
+    background: linear-gradient(115deg, #c4b5fd 0%, #8b7bff 38%, #5e8bff 72%, #67e8f9 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 8px 34px rgba(109, 93, 252, 0.40));
+}
+.index-body .hero p {
+    color: #a5b0c4;
+    font-size: 18px;
+    line-height: 1.8;
+    letter-spacing: 0.2px;
+}
+.index-body .hero-stats {
+    gap: 14px;
+}
+.index-body .hero-stats div {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    border-radius: 18px;
+    padding: 15px 22px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    transition: transform 0.2s ease, background 0.2s ease;
+}
+.index-body .hero-stats div:hover {
+    transform: translateY(-3px);
+    background: rgba(255, 255, 255, 0.08);
+}
+.index-body .hero-stats strong {
+    font-size: 27px;
+    background: linear-gradient(135deg, #f5f7fa, #b3a8ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+}
+.index-body .hero-stats span {
+    color: #8fa0b8;
+    font-size: 12.5px;
+    letter-spacing: 0.5px;
+}
+
+/* ---- Hero 玻璃卡片 ---- */
+.index-body .hero-card {
+    background: linear-gradient(160deg, rgba(255, 255, 255, 0.105), rgba(255, 255, 255, 0.035) 55%, rgba(255, 255, 255, 0.065));
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 30px;
+    backdrop-filter: blur(24px) saturate(1.5);
+    -webkit-backdrop-filter: blur(24px) saturate(1.5);
+    box-shadow: 0 34px 90px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+    padding: 26px;
+}
+.index-body .hero-card .card-header {
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+    font-weight: 700;
+    letter-spacing: 0.3px;
+}
+.index-body .hero-card .card-header .online {
+    background: rgba(46, 196, 110, 0.16);
+    border: 1px solid rgba(46, 196, 110, 0.35);
+    color: #7fe0a4;
+    border-radius: 999px;
+    padding: 4px 12px;
+    font-size: 12px;
+}
+.index-body .task-preview {
+    background: rgba(255, 255, 255, 0.055);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    border-radius: 18px;
+    padding: 13px 14px;
+    margin-top: 12px;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+.index-body .task-preview:hover {
+    background: rgba(255, 255, 255, 0.09);
+    transform: translateY(-2px);
+}
+.index-body .task-preview .task-icon {
+    width: 46px;
+    height: 46px;
+    border-radius: 15px;
+    background: linear-gradient(135deg, rgba(109, 93, 252, 0.55), rgba(76, 141, 255, 0.42));
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22), 0 6px 16px rgba(109, 93, 252, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+}
+.index-body .task-preview .task-info h3 {
+    font-size: 15px;
+    font-weight: 650;
+    color: #f0f4fa;
+}
+.index-body .task-preview .task-info p {
+    color: #94a2b8;
+    font-size: 12.5px;
+    margin-top: 3px;
+}
+.index-body .task-preview .reward {
+    text-align: right;
+}
+.index-body .task-preview .reward small {
+    color: #7f8ea6;
+    font-size: 11px;
+}
+.index-body .task-preview .reward strong {
+    font-size: 17px;
+    background: linear-gradient(135deg, #c4b5fd, #8fd0ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+}
+
+/* ---- 热门任务卡片 ---- */
+.index-body .tasks-section {
+    padding-top: 70px;
+}
+.index-body .section-title h2 {
+    font-size: 30px;
+    letter-spacing: -0.5px;
+}
+.index-body .section-label {
+    color: #bcc9de;
+}
+.index-body .task-card {
+    background: linear-gradient(165deg, rgba(255, 255, 255, 0.085), rgba(255, 255, 255, 0.03) 60%, rgba(255, 255, 255, 0.06));
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 24px;
+    backdrop-filter: blur(18px) saturate(1.4);
+    -webkit-backdrop-filter: blur(18px) saturate(1.4);
+    box-shadow: 0 22px 55px rgba(0, 0, 0, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.13);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.index-body .task-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 32px 75px rgba(0, 0, 0, 0.52), inset 0 1px 0 rgba(255, 255, 255, 0.17);
+}
+.index-body .task-card .task-category {
+    background: rgba(109, 93, 252, 0.16);
+    border: 1px solid rgba(140, 130, 255, 0.30);
+    color: #c3b8ff;
+    border-radius: 999px;
+    padding: 4px 12px;
+    font-size: 11px;
+    letter-spacing: 0.8px;
+}
+.index-body .task-card .task-status {
+    background: rgba(46, 196, 110, 0.15);
+    border: 1px solid rgba(46, 196, 110, 0.32);
+    color: #7fe0a4;
+    border-radius: 999px;
+    padding: 4px 12px;
+    font-size: 11px;
+}
+.index-body .task-card h3 {
+    font-size: 19px;
+    letter-spacing: -0.2px;
+}
+.index-body .task-card p {
+    color: #98a5ba;
+    line-height: 1.65;
+}
+.index-body .task-card .task-bottom strong {
+    font-size: 20px;
+    background: linear-gradient(135deg, #c4b5fd, #8fd0ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+}
+.index-body .task-card .claim-btn {
+    background: linear-gradient(135deg, rgba(109, 93, 252, 0.9), rgba(76, 141, 255, 0.85));
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 999px;
+    box-shadow: 0 8px 22px rgba(109, 93, 252, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.index-body .task-card .claim-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px rgba(109, 93, 252, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+/* ---- 关于我们 ---- */
+.index-body .about-box {
+    background: linear-gradient(165deg, rgba(255, 255, 255, 0.085), rgba(255, 255, 255, 0.03));
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 28px;
+    backdrop-filter: blur(18px) saturate(1.4);
+    -webkit-backdrop-filter: blur(18px) saturate(1.4);
+    box-shadow: 0 26px 70px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.13);
+    padding: 34px;
+}
+.index-body .about-box h2 {
+    font-size: 30px;
+}
+.index-body .about-box > div:first-child > p {
+    color: #98a5ba;
+    line-height: 1.75;
+}
+.index-body .about-features div {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    border-radius: 18px;
+    padding: 18px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    transition: transform 0.2s ease, background 0.2s ease;
+}
+.index-body .about-features div:hover {
+    transform: translateY(-3px);
+    background: rgba(255, 255, 255, 0.08);
+}
+.index-body .about-features div span {
+    font-size: 22px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #c4b5fd, #6d5dfc);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+}
+.index-body .about-features strong {
+    color: #f0f4fa;
+}
+.index-body .about-features p {
+    color: #8f9db2;
+}
+
+/* ---- FAQ 玻璃手风琴 ---- */
+.index-body .faq-item {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.11);
+    border-radius: 16px;
+    backdrop-filter: blur(12px) saturate(1.3);
+    -webkit-backdrop-filter: blur(12px) saturate(1.3);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    transition: border-color 0.2s ease, background 0.2s ease;
+}
+.index-body .faq-item:hover {
+    background: rgba(255, 255, 255, 0.075);
+    border-color: rgba(255, 255, 255, 0.18);
+}
+.index-body .faq-q {
+    font-weight: 600;
+    color: #e6ebf4;
+}
+.index-body .faq-a p {
+    color: #a0adc2;
+    line-height: 1.7;
+}
+
+/* ---- 登录/注册弹窗玻璃 ---- */
+.index-body .auth-modal {
+    background: rgba(16, 19, 26, 0.97);
+    backdrop-filter: blur(30px) saturate(1.5);
+    -webkit-backdrop-filter: blur(30px) saturate(1.5);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 26px;
+    box-shadow: 0 40px 110px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.14);
+}
+.index-body .auth-modal input {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.13);
+    border-radius: 13px;
+    box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.3);
+    transition: border-color 0.2s ease, background 0.2s ease;
+}
+.index-body .auth-modal input:focus {
+    background: rgba(255, 255, 255, 0.09);
+    border-color: rgba(140, 130, 255, 0.6);
+}
+
+/* ---- 移动端适配 ---- */
+@media (max-width: 768px) {
+    .index-body .hero {
+        padding: 70px 22px;
+        gap: 40px;
+    }
+    .index-body .hero h1 {
+        letter-spacing: -1.5px;
+    }
+    .index-body .hero p {
+        font-size: 16px;
+        line-height: 1.7;
+    }
+    .index-body .hero-stats {
+        gap: 10px;
+    }
+    .index-body .hero-stats div {
+        padding: 12px 16px;
+    }
+    .index-body .about-box {
+        padding: 24px;
+    }
+}
+
+
+/* ================= Index 质感强化 V2（新增区块，删除本区块即可回滚） ================= */
+
+/* 背景光斑缓慢呼吸，让玻璃背后的光"活"起来 */
+.index-body .site-glow {
+    animation: indexGlowBreath 10s ease-in-out infinite;
+}
+@keyframes indexGlowBreath {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+/* Logo 发光 */
+.index-body .navbar .logo-icon {
+    box-shadow: 0 0 22px rgba(109, 93, 252, 0.55), 0 4px 14px rgba(109, 93, 252, 0.35);
+}
+
+/* 导航链接：hover 渐变下滑线 */
+.index-body .navbar nav a {
+    position: relative;
+}
+.index-body .navbar nav a::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -6px;
+    width: 0;
+    height: 2px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, #8b7bff, #5e8bff);
+    transform: translateX(-50%);
+    transition: width 0.25s ease;
+}
+.index-body .navbar nav a:hover::after {
+    width: 100%;
+}
+
+/* Badge：状态绿点脉冲 */
+.index-body .badge {
+    position: relative;
+    padding-left: 26px;
+}
+.index-body .badge::before {
+    content: "";
+    position: absolute;
+    left: 11px;
+    top: 50%;
+    width: 7px;
+    height: 7px;
+    margin-top: -3.5px;
+    border-radius: 50%;
+    background: #4ade80;
+    box-shadow: 0 0 10px rgba(74, 222, 128, 0.8);
+    animation: indexDotPulse 2.2s ease-in-out infinite;
+}
+@keyframes indexDotPulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.55; transform: scale(0.78); }
+}
+
+/* Hero 标题：渐变上方加一层顶部高光，模拟玻璃折射 */
+.index-body .hero h1 span:last-child {
+    position: relative;
+    display: inline-block;
+}
+.index-body .hero h1 span:last-child::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 8%;
+    height: 34%;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.22), transparent);
+    border-radius: 4px;
+    pointer-events: none;
+}
+
+/* 主按钮：hover 光晕扩散 + 内光加强 */
+.index-body .btn-primary {
+    position: relative;
+}
+.index-body .btn-primary::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(120% 180% at 50% 0%, rgba(255, 255, 255, 0.35), transparent 55%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+.index-body .btn-primary:hover::before {
+    opacity: 1;
+}
+
+/* Hero 卡片：顶部渐变反光条 */
+.index-body .hero-card {
+    position: relative;
+    overflow: hidden;
+}
+.index-body .hero-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 8%;
+    right: 8%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+    pointer-events: none;
+}
+.index-body .hero-card::after {
+    content: "";
+    position: absolute;
+    top: -40%;
+    left: -20%;
+    width: 70%;
+    height: 90%;
+    background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.10) 48%, rgba(255, 255, 255, 0.20) 52%, transparent 70%);
+    transform: rotate(8deg);
+    pointer-events: none;
+    animation: indexCardShine 7s ease-in-out infinite;
+}
+@keyframes indexCardShine {
+    0%, 60% { transform: translateX(-40%) rotate(8deg); }
+    90%, 100% { transform: translateX(320%) rotate(8deg); }
+}
+
+/* 任务预览：图标彩色发光 */
+.index-body .task-preview .task-icon {
+    position: relative;
+    z-index: 1;
+}
+.index-body .task-preview {
+    position: relative;
+}
+
+/* Online 徽章脉冲 */
+.index-body .hero-card .card-header .online {
+    position: relative;
+}
+.index-body .hero-card .card-header .online::before {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    border-radius: 999px;
+    border: 1px solid rgba(74, 222, 128, 0.55);
+    animation: indexOnlineRing 2.4s ease-out infinite;
+}
+@keyframes indexOnlineRing {
+    0% { transform: scale(0.92); opacity: 0.9; }
+    80%, 100% { transform: scale(1.18); opacity: 0; }
+}
+
+/* 热门任务标题渐变点缀 */
+.index-body .section-title h2 {
+    background: linear-gradient(120deg, #f5f7fa 20%, #c4b5fd 80%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+}
+
+/* 任务卡：图片区顶部高光 */
+.index-body .task-card {
+    position: relative;
+    overflow: hidden;
+}
+.index-body .task-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 10%;
+    right: 10%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+    z-index: 2;
+}
+
+/* FAQ 展开图标旋转动效 */
+.index-body .faq-icon {
+    display: inline-block;
+    transition: transform 0.3s ease;
+}
+.index-body .faq-item.open .faq-icon {
+    transform: rotate(45deg);
+}
+
+/* 关于步骤序号：hover 发光 */
+.index-body .about-features div {
+    position: relative;
+}
+.index-body .about-features div:hover span {
+    text-shadow: 0 0 18px rgba(139, 123, 255, 0.8);
+}
+
+/* 页脚：顶部品牌渐变细线 */
+.index-body .site-footer {
+    border-top: 1px solid transparent;
+    background: linear-gradient(180deg, transparent, rgba(109, 93, 252, 0.05));
+}
+.index-body .site-footer::before {
+    content: "";
+    display: block;
+    height: 1px;
+    margin: -32px 0 0;
+    background: linear-gradient(90deg, transparent, rgba(139, 123, 255, 0.5), transparent);
+}
+
+
+/* ================= 全站质感统一：tasks / admin 对齐 index（新增区块，删除本区块即可回滚） ================= */
+
+/* ---- 1. 背景光斑（与 index 同语言） ---- */
+body.tasks-body,
+body.admin-body {
+    background:
+        radial-gradient(1000px 560px at 85% -12%, rgba(109, 93, 252, 0.30), transparent 62%),
+        radial-gradient(820px 500px at -8% 30%, rgba(76, 141, 255, 0.20), transparent 60%),
+        radial-gradient(720px 480px at 105% 85%, rgba(38, 188, 255, 0.13), transparent 62%),
+        radial-gradient(640px 420px at 35% 110%, rgba(255, 120, 200, 0.06), transparent 60%),
+        var(--bg) !important;
+    background-attachment: fixed;
+}
+
+/* ---- 2. 头部玻璃条 ---- */
+body.tasks-body .tasks-header,
+body.admin-body .admin-header {
+    background: rgba(13, 16, 23, 0.55);
+    backdrop-filter: blur(18px) saturate(1.4);
+    -webkit-backdrop-filter: blur(18px) saturate(1.4);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 18px;
+    box-shadow: 0 10px 34px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.10);
+}
+
+/* ---- 3. admin 侧边栏玻璃 ---- */
+body.admin-body .admin-sidebar {
+    background: rgba(13, 16, 23, 0.72);
+    backdrop-filter: blur(22px) saturate(1.5);
+    -webkit-backdrop-filter: blur(22px) saturate(1.5);
+    border-right: 1px solid rgba(255, 255, 255, 0.07);
+}
+body.admin-body .admin-nav-item {
+    border-radius: 14px;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+body.admin-body .admin-nav-item:hover {
+    background: rgba(255, 255, 255, 0.07);
+    transform: translateX(2px);
+}
+body.admin-body .admin-nav-item.active {
+    background: linear-gradient(135deg, rgba(109, 93, 252, 0.55), rgba(76, 141, 255, 0.45));
+    box-shadow: 0 6px 18px rgba(109, 93, 252, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+}
+body.admin-body .admin-back,
+body.admin-body .admin-logout {
+    border-radius: 12px;
+    transition: background 0.2s ease;
+}
+body.admin-body .admin-back:hover,
+body.admin-body .admin-logout:hover {
+    background: rgba(255, 255, 255, 0.07);
+}
+
+/* ---- 4. 玻璃卡片通用 ---- */
+body.tasks-body .dashboard-task-card.ht-task-card,
+body.tasks-body .empty-box,
+body.tasks-body .loading-box,
+body.admin-body .admin-form-card,
+body.admin-body .admin-tasks-container,
+body.admin-body .admin-task-card.admin-review-card,
+body.admin-body .empty-box,
+body.admin-body .loading-box {
+    background: linear-gradient(165deg, rgba(255, 255, 255, 0.10), rgba(255, 255, 255, 0.035) 55%, rgba(255, 255, 255, 0.07));
+    border: 1px solid rgba(255, 255, 255, 0.13);
+    border-radius: 22px;
+    backdrop-filter: blur(18px) saturate(1.5);
+    -webkit-backdrop-filter: blur(18px) saturate(1.5);
+    box-shadow: 0 22px 55px rgba(0, 0, 0, 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.16), inset 0 -1px 0 rgba(255, 255, 255, 0.04);
+}
+
+/* 任务卡图片圆角融入玻璃 */
+body.tasks-body .ht-card-media {
+    border-radius: 18px 18px 0 0;
+    overflow: hidden;
+}
+
+/* admin 统计卡：高质感实色玻璃（不依赖模糊，任何环境稳定渲染） */
+body.admin-body .admin-stat-card {
+    background: linear-gradient(165deg, rgba(31, 36, 47, 0.94), rgba(19, 23, 32, 0.98));
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 22px;
+    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+/* admin 统计卡图标 */
+body.admin-body .admin-stat-icon {
+    border-radius: 14px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), 0 6px 16px rgba(109, 93, 252, 0.2);
+}
+
+/* ---- 5. 按钮玻璃胶囊 ---- */
+body.tasks-body .task-action-btn,
+body.tasks-body .tasks-back-btn,
+body.tasks-body .tasks-logout-btn,
+body.admin-body .admin-primary-btn,
+body.admin-body .admin-btn {
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+body.tasks-body .task-action-btn:hover,
+body.tasks-body .tasks-back-btn:hover,
+body.tasks-body .tasks-logout-btn:hover,
+body.admin-body .admin-primary-btn:hover,
+body.admin-body .admin-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 12px 26px rgba(0, 0, 0, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+}
+body.tasks-body .task-action-btn,
+body.admin-body .admin-primary-btn {
+    background: linear-gradient(135deg, rgba(109, 93, 252, 0.9), rgba(76, 141, 255, 0.85));
+}
+
+/* ---- 6. admin 表单输入玻璃 ---- */
+body.admin-body .admin-form-group input,
+body.admin-body .admin-form-group textarea,
+body.admin-body .admin-form-group select {
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 13px;
+    box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.25);
+    transition: border-color 0.2s ease, background 0.2s ease;
+}
+body.admin-body .admin-form-group input:focus,
+body.admin-body .admin-form-group textarea:focus,
+body.admin-body .admin-form-group select:focus {
+    background: rgba(255, 255, 255, 0.10);
+    border-color: rgba(140, 130, 255, 0.65);
+    outline: none;
+}
+
+/* ---- 7. 渐变标题 ---- */
+body.tasks-body .tasks-main h1,
+body.admin-body .admin-section-title h2 {
+    background: linear-gradient(120deg, #f5f7fa 25%, #c4b5fd 85%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+}
+
+/* ---- 8. 弱文字对比度 ---- */
+body.tasks-body .section-label,
+body.admin-body .section-label,
+body.admin-body .admin-stat-label,
+body.admin-body .admin-label {
+    color: #bcc9de;
+}
+
+/* ---- 9. admin 列表行 / 审核卡 hover ---- */
+body.admin-body .admin-task-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+body.admin-body .admin-task-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 26px 60px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+/* ---- 10. 移动端背景简化 ---- */
+@media (max-width: 768px) {
+    body.tasks-body,
+    body.admin-body {
+        background:
+            radial-gradient(600px 420px at 90% -8%, rgba(109, 93, 252, 0.28), transparent 62%),
+            radial-gradient(560px 400px at -6% 30%, rgba(76, 141, 255, 0.20), transparent 60%),
+            var(--bg);
+        background-attachment: scroll;
+    }
+}
+
+
+/* ================= Dashboard 侧边栏气泡式导航（新增区块，删除本区块即可回滚） ================= */
+
+body.dashboard-body .side-nav a,
+body.dashboard-body .sidebar-bottom a {
+    position: relative;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.045);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 6px 18px rgba(0, 0, 0, 0.22);
+    margin: 7px 12px;
+    padding: 11px 18px;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease, border-color 0.25s ease;
+}
+body.dashboard-body .side-nav a:hover,
+body.dashboard-body .sidebar-bottom a:hover {
+    transform: scale(1.045);
+    background: rgba(255, 255, 255, 0.10);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16), 0 12px 28px rgba(0, 0, 0, 0.35);
+}
+body.dashboard-body .side-nav a.active {
+    background: linear-gradient(135deg, rgba(109, 93, 252, 0.75), rgba(76, 141, 255, 0.65));
+    border-color: rgba(255, 255, 255, 0.24);
+    box-shadow: 0 10px 28px rgba(109, 93, 252, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.30);
+    transform: scale(1.02);
+}
+
+/* 导航图标：气泡内的圆形渐变底 */
+body.dashboard-body .side-nav a span:first-child {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.07);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    font-size: 15px;
+    transition: background 0.25s ease, transform 0.25s ease;
+}
+body.dashboard-body .side-nav a:hover span:first-child {
+    background: rgba(255, 255, 255, 0.14);
+    transform: scale(1.06);
+}
+body.dashboard-body .side-nav a.active span:first-child {
+    background: rgba(255, 255, 255, 0.20);
+    box-shadow: 0 4px 14px rgba(109, 93, 252, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.30);
+}
+
+/* 侧边栏内边距适配气泡 */
+body.dashboard-body .sidebar {
+    padding-top: 26px;
+}
+
+/* 移动端抽屉模式：气泡仍保持 */
+@media (max-width: 600px) {
+    body.dashboard-body .side-nav a,
+    body.dashboard-body .sidebar-bottom a {
+        margin: 6px 6px;
+        padding: 10px 14px;
+    }
+}
+
+
+/* ================= Dashboard 侧边栏滑出式（edge slider，新增区块，删除本区块即可回滚） ================= */
+
+/* 触发热区：固定在左边缘的细指示条 */
+.sidebar-edge-zone {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 16px;
+    z-index: 95;
+    pointer-events: auto;
+    background: linear-gradient(90deg, rgba(109, 93, 252, 0.30), rgba(109, 93, 252, 0.08) 60%, transparent);
+    opacity: 0.85;
+    transition: opacity 0.3s ease;
+    cursor: default;
+}
+.sidebar-edge-zone:hover {
+    opacity: 1;
+    background: linear-gradient(90deg, rgba(109, 93, 252, 0.55), rgba(109, 93, 252, 0.15) 65%, transparent);
+}
+
+/* 桌面端：侧边栏默认藏起，hover 热区或侧边栏时滑出（overlay 式，内容全宽） */
+@media (min-width: 601px) {
+    body.dashboard-body .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+        z-index: 210;
+        box-shadow: 30px 0 60px rgba(0, 0, 0, 0.35);
+    }
+    body.dashboard-body .dashboard-main {
+        margin-left: 0;
+    }
+    body.dashboard-body .sidebar-edge-zone:hover + .sidebar,
+    body.dashboard-body .sidebar:hover,
+    body.dashboard-body .sidebar:focus-within {
+        transform: translateX(0);
+    }
+    /* 侧边栏展开时热区保持透明，避免双条视觉 */
+    body.dashboard-body .sidebar-edge-zone:hover,
+    body.dashboard-body .sidebar:hover ~ .sidebar-edge-zone {
+        opacity: 0.35;
+    }
+}
+
+/* 移动端：保留汉堡抽屉逻辑（600px 以内原有规则优先，这里仅兜底） */
+@media (max-width: 600px) {
+    .sidebar-edge-zone {
+        display: none;
+    }
 }

@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>TaskHub - 任务大厅</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css">
+
+    <style>
+
+        /* =========================
+           任务大厅独立页
+        ========================= */
+
+        body.tasks-body {
+            margin: 0;
+            min-height: 100vh;
+            background: #0c0f15;
+            color: #e8ecf2;
+            font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+        }
+
+        .tasks-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 14px 28px;
+            background: rgba(12, 15, 21, 0.88);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #1d222c;
+        }
+
+        .tasks-logo-link {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .tasks-logo-icon {
+            background: linear-gradient(135deg, #6d5dfc, #4c8dff);
+            color: #fff;
+            box-shadow: 0 4px 14px rgba(109, 93, 252, 0.35);
+        }
+
+        .tasks-logo-text {
+            font-size: 18px;
+            font-weight: 700;
+            color: #f5f7fa;
+        }
+
+        .tasks-header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tasks-back-btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 9px 16px;
+            border-radius: 10px;
+            border: 1px solid #2a303a;
+            background: rgba(255, 255, 255, 0.04);
+            color: #c6ccd6;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.18s ease;
+        }
+
+        .tasks-back-btn:hover {
+            border-color: #6d5dfc;
+            background: rgba(109, 93, 252, 0.12);
+            color: #fff;
+        }
+
+        .tasks-logout-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 9px 16px;
+            border-radius: 10px;
+            border: 1px solid #2a303a;
+            background: rgba(255, 255, 255, 0.04);
+            color: #c6ccd6;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.18s ease;
+        }
+
+        .tasks-logout-btn:hover {
+            border-color: rgba(255, 82, 82, 0.5);
+            background: rgba(255, 82, 82, 0.1);
+            color: #ff8a8a;
+        }
+
+        .tasks-main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 34px 28px 60px;
+        }
+
+        .tasks-main .dashboard-section-title {
+            margin-bottom: 26px;
+        }
+
+        .tasks-hint {
+            margin: -14px 0 24px;
+            font-size: 12px;
+            color: #5c6470;
+        }
+
+        .tasks-page .dashboard-task-grid {
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        @media (max-width: 640px) {
+
+            .tasks-header {
+                padding: 12px 16px;
+            }
+
+            .tasks-logo-text {
+                display: none;
+            }
+
+            .tasks-back-btn span,
+            .tasks-logout-btn span {
+                display: none;
+            }
+
+            .tasks-main {
+                padding: 24px 16px 48px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body class="tasks-body">
+
+    <header class="tasks-header">
+
+        <a
+            href="dashboard.html"
+            class="tasks-logo-link">
+
+            <div class="logo-icon tasks-logo-icon">T</div>
+
+            <span class="tasks-logo-text">TaskHub</span>
+
+        </a>
+
+        <div class="tasks-header-actions">
+
+            <button
+                type="button"
+                class="lang-btn"
+                onclick="I18N.toggle()"
+                data-i18n-lang>EN</button>
+
+            <a
+                href="dashboard.html"
+                class="tasks-back-btn">
+                <span data-i18n="tasks.backToDashboard">返回仪表盘</span>
+            </a>
+
+            <button
+                type="button"
+                class="tasks-logout-btn"
+                onclick="logout()">
+                <span data-i18n="dash.logout">登出</span>
+            </button>
+
+        </div>
+
+    </header>
+
+    <main class="tasks-main">
+
+        <div class="dashboard-section-title">
+
+            <div>
+
+                <span class="section-label">
+                    TASK HALL
+                </span>
+
+                <h2>
+                    <span data-i18n="dash.taskHall">任务大厅</span>
+                </h2>
+
+            </div>
+
+        </div>
+
+        <p class="tasks-hint">
+            <span data-i18n="tasks.hint">领取后请在仪表盘的「我的任务」中提交完成证明。</span>
+        </p>
+
+        <div
+            id="taskList"
+            class="dashboard-task-grid">
+
+            <div class="empty-box">
+                <span data-i18n="msg.loadingTasks">正在加载任务...</span>
+            </div>
+
+        </div>
+
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script src="i18n.js"></script>
+
+    <script src="app.js"></script>
+
+    <script>
+
+        // ========================================
+        // TASK HALL PAGE
+        // ========================================
+
+        let currentUser = null;
+
+
+        // ========================================
+        // 登录检查
+        // ========================================
+
+        async function checkUser() {
+
+            const {
+                data,
+                error
+            } =
+                await supabaseClient.auth.getUser();
+
+            if (error || !data.user) {
+
+                window.location.href = "index.html";
+
+                return;
+
+            }
+
+            currentUser = data.user;
+
+            await loadTasks();
+
+        }
+
+
+        // ========================================
+        // 转义
+        // ========================================
+
+        function escapeHtml(text) {
+
+            const div =
+                document.createElement("div");
+
+            div.textContent =
+                text;
+
+            return div.innerHTML;
+
+        }
+
+
+        // ========================================
+        // 任务卡片状态 / 截止
+        // ========================================
+
+        function taskBadgeInfo(task) {
+
+            if (
+                task.status !== "open" ||
+                !(task.remaining_slots > 0)
+            ) {
+
+                return {
+                    cls: "ended",
+                    text: I18N.t("tasks.ended")
+                };
+
+            }
+
+            if (
+                task.remaining_slots <= 3
+            ) {
+
+                return {
+                    cls: "limited",
+                    text: I18N.t("tasks.limited")
+                };
+
+            }
+
+            return {
+                cls: "recruiting",
+                text: I18N.t("tasks.recruiting")
+            };
+
+        }
+
+
+        function taskDeadlineInfo(task) {
+
+            if (!task.deadline) {
+
+                return {
+                    text: I18N.t("tasks.noDeadline")
+                };
+
+            }
+
+            const d =
+                new Date(task.deadline);
+
+            if (
+                isNaN(d.getTime())
+            ) {
+
+                return {
+                    text: I18N.t("tasks.noDeadline")
+                };
+
+            }
+
+            const mm =
+                String(
+                    d.getMonth() + 1
+                ).padStart(2, "0");
+
+            const dd =
+                String(
+                    d.getDate()
+                ).padStart(2, "0");
+
+            return {
+                text:
+                    I18N.t("tasks.deadline") +
+                    " " +
+                    mm +
+                    "/" +
+                    dd
+            };
+
+        }
+
+
+        // ========================================
+        // 加载任务
+        // ========================================
+
+        async function loadTasks() {
+
+            const taskList =
+                document.getElementById("taskList");
+
+            taskList.innerHTML =
+                `<div class="empty-box">
+                    ${I18N.t("msg.loadingTasks")}
+                </div>`;
+
+            const {
+                data,
+                error
+            } =
+                await supabaseClient
+                    .from("tasks")
+                    .select("*")
+                    .eq(
+                        "status",
+                        "open"
+                    )
+                    .order(
+                        "created_at",
+                        {
+                            ascending: false
+                        }
+                    );
+
+            if (error) {
+
+                console.error(error);
+
+                taskList.innerHTML =
+                    `<div class="empty-box">
+                        ${I18N.t("msg.failedLoadTasks")}
+                    </div>`;
+
+                return;
+
+            }
+
+            if (
+                !data ||
+                data.length === 0
+            ) {
+
+                taskList.innerHTML =
+                    `<div class="empty-box">
+                        ${I18N.t("dash.noTasks")}
+                    </div>`;
+
+                return;
+
+            }
+
+            taskList.innerHTML = "";
+
+            data.forEach(task => {
+
+                const badgeInfo =
+                    taskBadgeInfo(task);
+
+                const deadlineInfo =
+                    taskDeadlineInfo(task);
+
+                const appliedCount =
+                    Math.max(
+                        0,
+                        (task.slots || 0) -
+                            (task.remaining_slots || 0)
+                    );
+
+                const card =
+                    document.createElement("div");
+
+                card.className =
+                    "dashboard-task-card ht-task-card";
+
+                card.innerHTML = `
+
+                    <div class="ht-card-media">
+
+                        ${task.image_url
+                            ? `<img src="${escapeHtml(task.image_url)}" alt="${escapeHtml(task.title)}" loading="lazy">`
+                            : `<div class="ht-card-placeholder">📋</div>`}
+
+                        <span class="ht-badge ht-badge-${badgeInfo.cls}">
+                            ${badgeInfo.text}
+                        </span>
+
+                        <span class="ht-deadline">
+                            ${deadlineInfo.text}
+                        </span>
+
+                    </div>
+
+                    <div class="ht-card-body">
+
+                        <h3>
+                            ${escapeHtml(task.title)}
+                        </h3>
+
+                        <p class="ht-card-desc">
+                            ${escapeHtml(
+                                task.description ||
+                                I18N.t("dash.noTaskDesc")
+                            )}
+                        </p>
+
+                        <div class="ht-reward">
+                            RM${Number(task.reward).toFixed(2)}
+                            <small>${I18N.t("tasks.perTask")}</small>
+                        </div>
+
+                        <div class="ht-slots">
+                            ${I18N.t("tasks.applied")} ${appliedCount} ·
+                            ${I18N.t("tasks.slotsLeft")} <strong>${task.remaining_slots}</strong>
+                        </div>
+
+                        <button
+                            class="task-action-btn"
+                            onclick="claimTask(${task.id})">
+
+                            ${I18N.t("dash.claim")}
+
+                        </button>
+
+                    </div>
+
+                `;
+
+                taskList.appendChild(card);
+
+            });
+
+        }
+
+
+        // ========================================
+        // 领取任务
+        // ========================================
+
+        async function claimTask(taskId) {
+
+            const {
+                data: existing
+            } =
+                await supabaseClient
+                    .from("task_claims")
+                    .select("id")
+                    .eq(
+                        "task_id",
+                        taskId
+                    )
+                    .eq(
+                        "user_id",
+                        currentUser.id
+                    )
+                    .maybeSingle();
+
+            if (existing) {
+
+                alert(
+                    I18N.t("msg.claimedAlready")
+                );
+
+                return;
+
+            }
+
+            const {
+                data,
+                error
+            } =
+                await supabaseClient
+                    .from("task_claims")
+                    .insert({
+
+                        task_id:
+                            taskId,
+
+                        user_id:
+                            currentUser.id,
+
+                        status:
+                            "claimed"
+
+                    })
+                    .select()
+                    .single();
+
+            if (error) {
+
+                console.error(error);
+
+                alert(
+                    I18N.t("msg.claimFailed") +
+                    error.message
+                );
+
+                return;
+
+            }
+
+            alert(
+                I18N.t("msg.claimSuccess")
+            );
+
+            await loadTasks();
+
+        }
+
+
+        // ========================================
+        // 启动
+        // ========================================
+
+        // 切换语言后重渲染动态任务卡片
+        document.addEventListener(
+            "taskhub:langchange",
+            loadTasks
+        );
+
+        checkUser();
+
+    </script>
+
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <div class="footer-logo-icon">T</div>
+                <div class="footer-brand-name">TaskHub</div>
+            </div>
+            <div class="footer-copy">© TaskHub 2026</div>
+        </div>
+    </footer>
+
+    <a href="https://wa.me/601139706264" target="_blank" rel="noopener" class="wa-float" aria-label="联系客服" data-i18n-title="common.contactSupport">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+        <span class="wa-float-text" data-i18n="common.contactSupport">联系客服</span>
+    </a>
+
+
+</body>
+
+</html>

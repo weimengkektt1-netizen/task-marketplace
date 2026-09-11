@@ -334,8 +334,10 @@
 
 
 <!-- =========================
-     SIDEBAR
+     SIDEBAR（滑出式：鼠标靠近左边缘弹出）
 ========================= -->
+
+<div class="sidebar-edge-zone" aria-hidden="true" title="导航"></div>
 
 <aside class="sidebar">
 
@@ -354,59 +356,59 @@
             href="dashboard.html"
             class="active">
 
-            <span>▦</span>
+            <span>📊</span>
 
-            总览
+            <span class="nav-text" data-i18n="dash.overview">总览</span>
 
         </a>
 
 
-        <a href="#tasks">
+        <a href="tasks.html">
 
-            <span>◈</span>
+            <span>🛒</span>
 
-            任务大厅
+            <span class="nav-text" data-i18n="dash.taskHall">任务大厅</span>
 
         </a>
 
 
         <a href="#mytasks">
 
-            <span>✓</span>
+            <span>📋</span>
 
-            我的任务
+            <span class="nav-text" data-i18n="dash.myTasks">我的任务</span>
 
         </a>
 
 
         <a href="#wallet">
 
-            <span>◇</span>
+            <span>👛</span>
 
-            我的钱包
+            <span class="nav-text" data-i18n="dash.myWallet">我的钱包</span>
 
         </a>
 
 
-            <a href="#withdraw">
+        <a href="#withdraw">
 
-        <span>↗</span>
+            <span>💸</span>
 
-        提现
+            <span class="nav-text" data-i18n="dash.withdraw">提现</span>
 
-    </a>
+        </a>
 
-    <a
-    href="admin.html"
-    class="admin-nav-link"
-    id="adminNavLink"
-    style="display: none;">
+        <a
+            href="admin.html"
+            class="admin-nav-link"
+            id="adminNavLink"
+            style="display: none;">
 
-    <span>⚙</span>
+            <span>⚙️</span>
 
-    管理后台
+            <span class="nav-text" data-i18n="dash.adminPanel">管理后台</span>
 
-</a>
+        </a>
 
 </nav>
 
@@ -419,7 +421,7 @@
 
             <span>↪</span>
 
-            登出
+            <span class="nav-text" data-i18n="dash.logout">登出</span>
 
         </button>
 
@@ -435,6 +437,13 @@
 
 <main class="dashboard-main">
 
+    <button
+        class="sidebar-toggle"
+        onclick="toggleSidebar()"
+        aria-label="打开菜单">
+        ☰
+    </button>
+
 
     <!-- TOP BAR -->
 
@@ -447,13 +456,21 @@
             </span>
 
             <h1>
-                欢迎回来 👋
+                <span data-i18n="dash.welcome">欢迎回来 👋</span>
             </h1>
 
         </div>
 
 
         <div class="user-area">
+
+            <button
+                class="lang-btn"
+                data-i18n-lang
+                onclick="I18N.toggle()"
+                aria-label="Switch language">
+                EN
+            </button>
 
             <div class="user-avatar">
                 U
@@ -489,7 +506,7 @@
             <div class="balance-card-top">
 
                 <span>
-                    当前余额
+                    <span data-i18n="dash.balance">当前余额</span>
                 </span>
 
                 <span class="balance-icon">
@@ -505,7 +522,7 @@
 
 
             <p>
-                可用于提现的账户余额
+                <span data-i18n="dash.balanceDesc">可用于提现的账户余额</span>
             </p>
 
         </div>
@@ -515,7 +532,7 @@
         <div class="balance-card">
 
             <span>
-                已完成任务
+                <span data-i18n="dash.completed">已完成任务</span>
             </span>
 
             <strong id="completedTasks">
@@ -523,7 +540,7 @@
             </strong>
 
             <p>
-                Total completed
+                <span data-i18n="dash.completedDesc">Total completed</span>
             </p>
 
         </div>
@@ -533,7 +550,7 @@
         <div class="balance-card">
 
             <span>
-                进行中任务
+                <span data-i18n="dash.active">进行中任务</span>
             </span>
 
             <strong id="activeTasks">
@@ -541,7 +558,7 @@
             </strong>
 
             <p>
-                Currently working
+                <span data-i18n="dash.activeDesc">Currently working</span>
             </p>
 
         </div>
@@ -568,7 +585,7 @@
                 </span>
 
                 <h2>
-                    可领取任务
+                    <span data-i18n="dash.marketplace">可领取任务</span>
                 </h2>
 
             </div>
@@ -578,9 +595,21 @@
                 class="refresh-btn"
                 onclick="loadTasks()">
 
-                ↻ 刷新
+                <span aria-hidden="true">↻</span> <span data-i18n="common.refresh">刷新</span>
 
             </button>
+
+
+            <a
+                href="tasks.html"
+                class="refresh-btn more-tasks-btn"
+                id="moreTasksBtn"
+                style="display:none;">
+
+                <span data-i18n="dash.moreTasks">更多任务</span>
+                <span aria-hidden="true">→</span>
+
+            </a>
 
         </div>
 
@@ -590,7 +619,7 @@
             class="dashboard-task-grid">
 
             <div class="loading-box">
-                正在加载任务...
+                <span data-i18n="msg.loadingTasks">正在加载任务...</span>
             </div>
 
         </div>
@@ -613,7 +642,7 @@
                 </span>
 
                 <h2>
-                    我的任务
+                    <span data-i18n="dash.myTasksTitle">我的任务</span>
                 </h2>
 
             </div>
@@ -627,7 +656,7 @@
 
             <div class="empty-box">
 
-                暂时没有领取任何任务
+                <span data-i18n="dash.noMyTasks">暂时没有领取任何任务</span>
 
             </div>
 
@@ -654,7 +683,7 @@
                 </span>
 
                 <h2>
-                    钱包记录
+                    <span data-i18n="wallet.title">钱包记录</span>
                 </h2>
 
             </div>
@@ -667,7 +696,7 @@
     <div id="walletTransactions">
 
         <div class="empty-box">
-            正在加载交易记录...
+            <span data-i18n="wallet.loading">正在加载交易记录...</span>
         </div>
 
     </div>
@@ -687,7 +716,7 @@
     <div class="dashboard-section-title">
         <div>
             <span class="section-label">WITHDRAW</span>
-            <h2>提现</h2>
+            <h2 data-i18n="withdraw.title">提现</h2>
         </div>
     </div>
 
@@ -713,7 +742,7 @@
             <div class="withdraw-form-group">
 
                 <label for="withdrawAmount">
-                    提现金额
+                    <span data-i18n="withdraw.amount">提现金额</span>
                 </label>
 
                 <div class="withdraw-input-wrap">
@@ -732,7 +761,7 @@
                 </div>
 
                 <small>
-                    请输入你希望提现的金额。
+                    <span data-i18n="withdraw.amountHint">请输入你希望提现的金额。</span>
                 </small>
 
             </div>
@@ -741,20 +770,20 @@
             <div class="withdraw-form-group">
 
                 <label for="withdrawMethod">
-                    提现方式
+                    <span data-i18n="withdraw.method">提现方式</span>
                 </label>
 
                 <select id="withdrawMethod">
 
-                    <option value="">
+                    <option value="" data-i18n="withdraw.selectMethod">
                         请选择提现方式
                     </option>
 
-                    <option value="bank">
+                    <option value="bank" data-i18n="common.bank">
                         银行转账
                     </option>
 
-                    <option value="ewallet">
+                    <option value="ewallet" data-i18n="common.ewallet">
                         电子钱包
                     </option>
 
@@ -765,17 +794,56 @@
 
             <div class="withdraw-form-group">
 
+                <label for="withdrawBank">
+                    <span data-i18n="withdraw.bank">提现银行</span>
+                </label>
+
+                <input
+                    type="text"
+                    id="withdrawBank"
+                    placeholder="请输入银行名称（如 Maybank）"
+                    data-i18n-placeholder="withdraw.bankPh">
+
+                <small>
+                    <span data-i18n="withdraw.bankHint">请填写你希望收款使用的银行名称。</span>
+                </small>
+
+            </div>
+
+
+            <div class="withdraw-form-group">
+
+                <label for="withdrawAccountName">
+                    <span data-i18n="withdraw.accountName">收款人名称</span>
+                </label>
+
+                <input
+                    type="text"
+                    id="withdrawAccountName"
+                    placeholder="请输入收款人姓名"
+                    data-i18n-placeholder="withdraw.accountNamePh">
+
+                <small>
+                    <span data-i18n="withdraw.accountNameHint">请填写与收款账号一致的姓名。</span>
+                </small>
+
+            </div>
+
+
+            <div class="withdraw-form-group">
+
                 <label for="withdrawAccount">
-                    收款账户
+                    <span data-i18n="withdraw.account">收款账户</span>
                 </label>
 
                 <input
                     type="text"
                     id="withdrawAccount"
-                    placeholder="请输入银行账号 / 电子钱包账号">
+                    placeholder="请输入银行账号 / 电子钱包账号"
+                    data-i18n-placeholder="withdraw.accountPlaceholder">
 
                 <small>
-                    请确认收款账户资料正确。
+                    <span data-i18n="withdraw.accountHint">请确认收款账户资料正确。</span>
                 </small>
 
             </div>
@@ -786,7 +854,7 @@
                 class="withdraw-submit-btn"
                 onclick="submitWithdrawal()">
 
-                提交提现申请
+                <span data-i18n="withdraw.submitBtn">提交提现申请</span>
 
             </button>
 
@@ -801,7 +869,7 @@
             </span>
 
             <h3>
-                提现说明
+                <span data-i18n="withdraw.guide">提现说明</span>
             </h3>
 
 
@@ -817,11 +885,11 @@
                     <div>
 
                         <strong>
-                            填写提现金额
+                            <span data-i18n="withdraw.guideAmount">填写提现金额</span>
                         </strong>
 
                         <p>
-                            输入你希望提现的余额金额。
+                            <span data-i18n="withdraw.guideAmountDesc">输入你希望提现的余额金额。</span>
                         </p>
 
                     </div>
@@ -839,11 +907,11 @@
                     <div>
 
                         <strong>
-                            填写收款账户
+                            <span data-i18n="withdraw.guideAccount">填写收款账户</span>
                         </strong>
 
                         <p>
-                            选择提现方式并填写对应账户。
+                            <span data-i18n="withdraw.guideAccountDesc">选择提现方式并填写对应账户。</span>
                         </p>
 
                     </div>
@@ -861,11 +929,11 @@
                     <div>
 
                         <strong>
-                            等待审核处理
+                            <span data-i18n="withdraw.guideWait">等待审核处理</span>
                         </strong>
 
                         <p>
-                            提交申请后由管理员审核提现。
+                            <span data-i18n="withdraw.guideWaitDesc">提交申请后由管理员审核提现。</span>
                         </p>
 
                     </div>
@@ -890,7 +958,7 @@
             </span>
 
             <h3>
-                提现记录
+                <span data-i18n="withdraw.history">提现记录</span>
             </h3>
 
         </div>
@@ -899,7 +967,7 @@
         <div id="withdrawHistory">
 
             <div class="empty-box">
-                暂时没有提现记录
+                <span data-i18n="withdraw.noHistory">暂时没有提现记录</span>
             </div>
 
         </div>
@@ -908,13 +976,204 @@
 
 </section>
 
+
+        <section class="faq-section" id="faq">
+
+            <div class="dashboard-section-title">
+
+                <div>
+
+                    <span class="section-label">
+                        FAQ
+                    </span>
+
+                    <h2>
+                        <span data-i18n="faq.title">常见问题</span>
+                    </h2>
+
+                </div>
+
+            </div>
+
+            <p class="faq-subtitle">
+                <span data-i18n="faq.subtitle">还有疑问？随时联系客服</span>
+            </p>
+
+            <div class="faq-list">
+
+                <div class="faq-item">
+
+                    <button
+                        type="button"
+                        class="faq-q"
+                        onclick="toggleFaq(this)">
+
+                        <span data-i18n="faq.q1">任务完成后怎么提交？</span>
+
+                        <span class="faq-icon">＋</span>
+
+                    </button>
+
+                    <div class="faq-a">
+
+                        <p data-i18n="faq.a1">在我的任务中找到对应任务，点击提交审核，上传完成截图并填写完成说明，提交后等待管理员审核。</p>
+
+                    </div>
+
+                </div>
+
+                <div class="faq-item">
+
+                    <button
+                        type="button"
+                        class="faq-q"
+                        onclick="toggleFaq(this)">
+
+                        <span data-i18n="faq.q2">报酬什么时候到账？</span>
+
+                        <span class="faq-icon">＋</span>
+
+                    </button>
+
+                    <div class="faq-a">
+
+                        <p data-i18n="faq.a2">管理员审核通过后即完成结算，金额会直接计入你的可提现余额，通常会在 24 小时内处理。</p>
+
+                    </div>
+
+                </div>
+
+                <div class="faq-item">
+
+                    <button
+                        type="button"
+                        class="faq-q"
+                        onclick="toggleFaq(this)">
+
+                        <span data-i18n="faq.q3">怎么提现？</span>
+
+                        <span class="faq-icon">＋</span>
+
+                    </button>
+
+                    <div class="faq-a">
+
+                        <p data-i18n="faq.a3">在提现页面填写提现金额、选择提现方式并填写收款信息（银行、收款人、账号），提交后由管理员审核打款。</p>
+
+                    </div>
+
+                </div>
+
+                <div class="faq-item">
+
+                    <button
+                        type="button"
+                        class="faq-q"
+                        onclick="toggleFaq(this)">
+
+                        <span data-i18n="faq.q4">申请被驳回了怎么办？</span>
+
+                        <span class="faq-icon">＋</span>
+
+                    </button>
+
+                    <div class="faq-a">
+
+                        <p data-i18n="faq.a4">查看驳回原因，按提示修改后重新提交；如有疑问可联系客服。</p>
+
+                    </div>
+
+                </div>
+
+                <div class="faq-item">
+
+                    <button
+                        type="button"
+                        class="faq-q"
+                        onclick="toggleFaq(this)">
+
+                        <span data-i18n="faq.q5">可以同时做多个任务吗？</span>
+
+                        <span class="faq-icon">＋</span>
+
+                    </button>
+
+                    <div class="faq-a">
+
+                        <p data-i18n="faq.a5">可以，只要任务还有剩余名额，你就可以领取多个任务，按自己的时间安排完成。</p>
+
+                    </div>
+
+                </div>
+
+                <div class="faq-item">
+
+                    <button
+                        type="button"
+                        class="faq-q"
+                        onclick="toggleFaq(this)">
+
+                        <span data-i18n="faq.q6">一个任务可以申请多次吗？</span>
+
+                        <span class="faq-icon">＋</span>
+
+                    </button>
+
+                    <div class="faq-a">
+
+                        <p data-i18n="faq.a6">每个任务每人限领取一次，领取过的任务不能重复申请。</p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
 </main>
 
 
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+<script src="i18n.js"></script>
+
 <script src="app.js"></script>
+
+
+    <script>
+// ========================================
+// FAQ 手风琴
+// ========================================
+
+function toggleFaq(btn) {
+
+    const item =
+        btn.closest(".faq-item");
+
+    const isOpen =
+        item.classList.contains("open");
+
+    document
+        .querySelectorAll(".faq-item.open")
+        .forEach(
+            function (i) {
+
+                i.classList.remove("open");
+
+            }
+        );
+
+    if (!isOpen) {
+
+        item.classList.add("open");
+
+    }
+
+}
+    </script>
+
 
 
 <script>
@@ -1011,12 +1270,16 @@ async function loadProfile() {
     }
 
 
+    // 昵称优先取注册时存入的 user_metadata，
+    // 其次取 profiles（部分旧账号的 display_name 是邮箱前缀）
     document
         .getElementById("userName")
         .textContent =
+        (currentUser.user_metadata &&
+            currentUser.user_metadata.display_name) ||
         data.display_name ||
         data.username ||
-        "User";
+        I18N.t("common.user");
 
 
     document
@@ -1060,7 +1323,7 @@ async function loadWalletTransactions() {
 
     container.innerHTML = `
         <div class="empty-box">
-            正在加载交易记录...
+            ${I18N.t("wallet.loading")}
         </div>
     `;
 
@@ -1090,14 +1353,14 @@ async function loadWalletTransactions() {
     if (error) {
 
         console.error(
-            "加载钱包记录失败：",
+            I18N.t("msg.walletLoadFailed"),
             error
         );
 
 
         container.innerHTML = `
             <div class="empty-box">
-                无法加载交易记录
+                ${I18N.t("wallet.failed")}
             </div>
         `;
 
@@ -1110,7 +1373,7 @@ async function loadWalletTransactions() {
 
         container.innerHTML = `
             <div class="empty-box">
-                暂时没有交易记录
+                ${I18N.t("wallet.empty")}
             </div>
         `;
 
@@ -1133,15 +1396,31 @@ async function loadWalletTransactions() {
             const sign =
                 isIncome ? "+" : "";
 
+            const typeIcon =
+                isIncome ? "💰" : "💸";
 
-            const date =
+
+            const d =
                 new Date(
                     item.created_at
-                ).toLocaleString("zh-MY");
+                );
+
+            const date =
+                d.toLocaleDateString(
+                    I18N.get() === "zh" ? "zh-CN" : "en-GB"
+                ) +
+                " " +
+                d.toLocaleTimeString(
+                    "en-GB",
+                    {
+                        hour: "2-digit",
+                        minute: "2-digit"
+                    }
+                );
 
 
             let typeText =
-                "钱包交易";
+                I18N.t("wallet.generic");
 
 
             if (
@@ -1150,7 +1429,7 @@ async function loadWalletTransactions() {
             ) {
 
                 typeText =
-                    "任务奖励";
+                    I18N.t("wallet.taskReward");
 
             }
 
@@ -1161,7 +1440,7 @@ async function loadWalletTransactions() {
                     <div>
 
                         <strong>
-                            ${typeText}
+                            ${typeIcon} ${typeText}
                         </strong>
 
                         <p>
@@ -1174,7 +1453,7 @@ async function loadWalletTransactions() {
 
                     </div>
 
-                    <strong>
+                    <strong class="wallet-transaction-amount ${isIncome ? "income" : "expense"}">
                         ${sign}RM${Math.abs(amount).toFixed(2)}
                     </strong>
 
@@ -1190,6 +1469,84 @@ async function loadWalletTransactions() {
 // LOAD TASKS
 // ========================================
 
+function taskBadgeInfo(task) {
+
+    if (
+        task.status !== "open" ||
+        !(task.remaining_slots > 0)
+    ) {
+
+        return {
+            cls: "ended",
+            text: I18N.t("tasks.ended")
+        };
+
+    }
+
+    if (
+        task.remaining_slots <= 3
+    ) {
+
+        return {
+            cls: "limited",
+            text: I18N.t("tasks.limited")
+        };
+
+    }
+
+    return {
+        cls: "recruiting",
+        text: I18N.t("tasks.recruiting")
+    };
+
+}
+
+
+function taskDeadlineInfo(task) {
+
+    if (!task.deadline) {
+
+        return {
+            text: I18N.t("tasks.noDeadline")
+        };
+
+    }
+
+    const d =
+        new Date(task.deadline);
+
+    if (
+        isNaN(d.getTime())
+    ) {
+
+        return {
+            text: I18N.t("tasks.noDeadline")
+        };
+
+    }
+
+    const mm =
+        String(
+            d.getMonth() + 1
+        ).padStart(2, "0");
+
+    const dd =
+        String(
+            d.getDate()
+        ).padStart(2, "0");
+
+    return {
+        text:
+            I18N.t("tasks.deadline") +
+            " " +
+            mm +
+            "/" +
+            dd
+    };
+
+}
+
+
 async function loadTasks() {
 
     const taskList =
@@ -1200,7 +1557,7 @@ async function loadTasks() {
 
     taskList.innerHTML =
         `<div class="loading-box">
-            正在加载任务...
+            ${I18N.t("msg.loadingTasks")}
         </div>`;
 
 
@@ -1230,7 +1587,7 @@ async function loadTasks() {
 
         taskList.innerHTML =
             `<div class="empty-box">
-                无法加载任务
+                ${I18N.t("msg.failedLoadTasks")}
             </div>`;
 
 
@@ -1246,7 +1603,7 @@ async function loadTasks() {
 
         taskList.innerHTML =
             `<div class="empty-box">
-                目前没有可领取的任务
+                ${I18N.t("dash.noTasks")}
             </div>`;
 
 
@@ -1258,7 +1615,36 @@ async function loadTasks() {
     taskList.innerHTML = "";
 
 
-    data.forEach(task => {
+    // 最多显示 4 个，其余通过"更多任务"进入任务大厅
+    const moreBtn =
+        document.getElementById(
+            "moreTasksBtn"
+        );
+
+    if (moreBtn) {
+
+        moreBtn.style.display =
+            data.length > 4
+                ? ""
+                : "none";
+
+    }
+
+
+    data.slice(0, 4).forEach(task => {
+
+        const badgeInfo =
+            taskBadgeInfo(task);
+
+        const deadlineInfo =
+            taskDeadlineInfo(task);
+
+        const appliedCount =
+            Math.max(
+                0,
+                (task.slots || 0) -
+                    (task.remaining_slots || 0)
+            );
 
         const card =
             document.createElement(
@@ -1267,74 +1653,64 @@ async function loadTasks() {
 
 
         card.className =
-            "dashboard-task-card";
+            "dashboard-task-card ht-task-card";
 
 
         card.innerHTML = `
 
-            <div class="task-card-header">
+            <div class="ht-card-media">
 
-                <span class="task-category">
-                    TASK
+                ${task.image_url
+                    ? `<img src="${escapeHtml(task.image_url)}" alt="${escapeHtml(task.title)}" loading="lazy">`
+                    : `<div class="ht-card-placeholder">📋</div>`}
+
+                <span class="ht-badge ht-badge-${badgeInfo.cls}">
+                    ${badgeInfo.text}
                 </span>
 
-                <span class="task-status">
-                    可领取
+                <span class="ht-deadline">
+                    ${deadlineInfo.text}
                 </span>
 
             </div>
 
 
-            <h3>
-                ${escapeHtml(task.title)}
-            </h3>
+            <div class="ht-card-body">
+
+                <h3>
+                    ${escapeHtml(task.title)}
+                </h3>
 
 
-            <p>
-                ${escapeHtml(
-                    task.description ||
-                    "暂无任务说明"
-                )}
-            </p>
+                <p class="ht-card-desc">
+                    ${escapeHtml(
+                        task.description ||
+                        I18N.t("dash.noTaskDesc")
+                    )}
+                </p>
 
 
-            <div class="dashboard-task-info">
-
-                <div>
-
-                    <small>
-                        任务奖励
-                    </small>
-
-                    <strong>
-                        RM${Number(task.reward).toFixed(2)}
-                    </strong>
-
+                <div class="ht-reward">
+                    RM${Number(task.reward).toFixed(2)}
+                    <small>${I18N.t("tasks.perTask")}</small>
                 </div>
 
 
-                <div>
-
-                    <small>
-                        剩余名额
-                    </small>
-
-                    <strong>
-                        ${task.remaining_slots}
-                    </strong>
-
+                <div class="ht-slots">
+                    ${I18N.t("tasks.applied")} ${appliedCount} ·
+                    ${I18N.t("tasks.slotsLeft")} <strong>${task.remaining_slots}</strong>
                 </div>
+
+
+                <button
+                    class="task-action-btn"
+                    onclick="claimTask(${task.id})">
+
+                    ${I18N.t("dash.claim")}
+
+                </button>
 
             </div>
-
-
-            <button
-                class="task-action-btn"
-                onclick="claimTask(${task.id})">
-
-                领取任务
-
-            </button>
 
         `;
 
@@ -1374,7 +1750,7 @@ async function claimTask(taskId) {
     if (existing) {
 
         alert(
-            "你已经领取过这个任务了。"
+            I18N.t("msg.claimedAlready")
         );
 
         return;
@@ -1410,7 +1786,7 @@ async function claimTask(taskId) {
 
 
         alert(
-            "领取失败：" +
+            I18N.t("msg.claimFailed") +
             error.message
         );
 
@@ -1421,7 +1797,7 @@ async function claimTask(taskId) {
 
 
     alert(
-        "任务领取成功！"
+        I18N.t("msg.claimSuccess")
     );
 
 
@@ -1483,7 +1859,7 @@ async function loadMyTasks() {
 
         list.innerHTML =
             `<div class="empty-box">
-                暂时没有领取任何任务
+                ${I18N.t("dash.noMyTasks")}
             </div>`;
 
         return;
@@ -1540,15 +1916,17 @@ async function loadMyTasks() {
                 <strong>
                     ${escapeHtml(
                         item.tasks?.title ||
-                        "任务"
+                        I18N.t("dash.task")
                     )}
                 </strong>
 
                 <small>
-                    领取时间：
+                    ${I18N.t("dash.claimedAt")}
                     ${new Date(
                         item.claimed_at
-                    ).toLocaleString()}
+                    ).toLocaleString(
+                        I18N.get() === "zh" ? "zh-MY" : "en-MY"
+                    )}
                 </small>
 
             </div>
@@ -1575,7 +1953,7 @@ async function loadMyTasks() {
                             class="task-action-btn"
                             onclick="submitTask(${item.id})">
 
-                            提交任务
+                            ${I18N.t("dash.submitTask")}
 
                         </button>
                       `
@@ -1636,7 +2014,8 @@ function submitTask(taskId) {
 
 
     taskName.textContent =
-        "正在提交任务 #" +
+        I18N.t("submit.submitting") +
+        " #" +
         taskId;
 
 
@@ -1676,7 +2055,7 @@ async function submitProof() {
     if (!currentSubmitTask) {
 
         alert(
-            "没有选择任务"
+            I18N.t("msg.noTaskSelected")
         );
 
         return;
@@ -1711,7 +2090,7 @@ async function submitProof() {
     if (!file) {
 
         alert(
-            "请先选择完成截图"
+            I18N.t("msg.needProof")
         );
 
         return;
@@ -1722,7 +2101,7 @@ async function submitProof() {
     if (!proofText) {
 
         alert(
-            "请填写完成说明"
+            I18N.t("msg.needDesc")
         );
 
         return;
@@ -1739,7 +2118,7 @@ async function submitProof() {
     ) {
 
         alert(
-            "请上传图片格式的截图"
+            I18N.t("msg.imageOnly")
         );
 
         return;
@@ -1755,7 +2134,7 @@ async function submitProof() {
     ) {
 
         alert(
-            "图片不能超过 10MB"
+            I18N.t("msg.imageTooLarge")
         );
 
         return;
@@ -1775,7 +2154,7 @@ async function submitProof() {
             true;
 
         submitButton.textContent =
-            "正在提交...";
+            I18N.t("common.submitting");
 
     }
 
@@ -1803,7 +2182,7 @@ async function submitProof() {
         ) {
 
             throw new Error(
-                "登录已经失效，请重新登录"
+                I18N.t("msg.sessionExpired")
             );
 
         }
@@ -1882,13 +2261,13 @@ async function submitProof() {
         if (uploadError) {
 
             console.error(
-                "图片上传失败：",
+                I18N.t("msg.uploadFailed"),
                 uploadError
             );
 
 
             throw new Error(
-                "截图上传失败：\n" +
+                I18N.t("msg.uploadFailed") +
                 uploadError.message
             );
 
@@ -1920,7 +2299,7 @@ async function submitProof() {
         if (!proofUrl) {
 
             throw new Error(
-                "无法获取截图网址"
+                I18N.t("msg.noProofUrl")
             );
 
         }
@@ -1961,7 +2340,7 @@ async function submitProof() {
         if (submissionError) {
 
             console.error(
-                "保存提交记录失败：",
+                I18N.t("msg.saveFailed"),
                 submissionError
             );
 
@@ -1979,7 +2358,7 @@ async function submitProof() {
 
 
             throw new Error(
-                "保存提交资料失败：\n" +
+                I18N.t("msg.saveFailed") +
                 submissionError.message
             );
 
@@ -2019,7 +2398,7 @@ async function submitProof() {
         if (claimError) {
 
             console.error(
-                "更新任务状态失败：",
+                I18N.t("msg.statusUpdateFailed"),
                 claimError
             );
 
@@ -2054,7 +2433,7 @@ async function submitProof() {
 
 
             throw new Error(
-                "任务状态更新失败：\n" +
+                I18N.t("msg.statusUpdateFailed") +
                 claimError.message
             );
 
@@ -2066,9 +2445,7 @@ async function submitProof() {
         // ================================
 
         alert(
-            "✅ 提交成功！\n\n" +
-            "截图和完成说明已经保存。\n" +
-            "现在等待管理员审核。"
+            I18N.t("msg.submitSuccess")
         );
 
 
@@ -2107,7 +2484,7 @@ async function submitProof() {
 
 
         alert(
-            "提交失败：\n\n" +
+            I18N.t("msg.submitFailed") +
             error.message
         );
 
@@ -2120,7 +2497,7 @@ async function submitProof() {
                 false;
 
             submitButton.textContent =
-                "提交审核";
+                I18N.t("submit.submitBtn");
 
         }
 
@@ -2138,19 +2515,19 @@ function getStatusText(status) {
     const map = {
 
         claimed:
-            "🟡 已领取",
+            I18N.t("status.claimed"),
 
         submitted:
-            "🟠 待审核",
+            I18N.t("status.submitted"),
 
         approved:
-            "🟢 审核通过",
+            I18N.t("status.approved"),
 
         rejected:
-            "🔴 审核不通过",
+            I18N.t("status.rejected"),
 
         cancelled:
-            "⚪ 已取消"
+            I18N.t("status.cancelled")
 
     };
 
@@ -2198,6 +2575,12 @@ async function submitWithdrawal() {
     const accountInput =
         document.getElementById("withdrawAccount");
 
+    const bankInput =
+        document.getElementById("withdrawBank");
+
+    const accountNameInput =
+        document.getElementById("withdrawAccountName");
+
     const amount =
         Number(amountInput.value);
 
@@ -2207,6 +2590,12 @@ async function submitWithdrawal() {
     const account =
         accountInput.value.trim();
 
+    const bank =
+        bankInput ? bankInput.value.trim() : "";
+
+    const accountName =
+        accountNameInput ? accountNameInput.value.trim() : "";
+
 
     // ========================================
     // 基本检查
@@ -2214,7 +2603,7 @@ async function submitWithdrawal() {
 
     if (!amount || amount <= 0) {
 
-        alert("请输入正确的提现金额。");
+        alert(I18N.t("msg.withdrawAmountInvalid"));
 
         return;
 
@@ -2223,7 +2612,7 @@ async function submitWithdrawal() {
 
     if (!method) {
 
-        alert("请选择提现方式。");
+        alert(I18N.t("msg.withdrawMethodRequired"));
 
         return;
 
@@ -2232,7 +2621,25 @@ async function submitWithdrawal() {
 
     if (!account) {
 
-        alert("请输入收款账户。");
+        alert(I18N.t("msg.withdrawAccountRequired"));
+
+        return;
+
+    }
+
+
+    if (method === "bank" && !bank) {
+
+        alert(I18N.t("msg.bankRequired"));
+
+        return;
+
+    }
+
+
+    if (!accountName) {
+
+        alert(I18N.t("msg.accountNameRequired"));
 
         return;
 
@@ -2241,7 +2648,7 @@ async function submitWithdrawal() {
 
     if (!currentUser) {
 
-        alert("登录状态已经失效，请重新登录。");
+        alert(I18N.t("msg.withdrawSession"));
 
         return;
 
@@ -2266,12 +2673,12 @@ async function submitWithdrawal() {
     if (profileError) {
 
         console.error(
-            "读取余额失败：",
+            I18N.t("msg.balanceReadFailed"),
             profileError
         );
 
         alert(
-            "无法读取当前余额：\n" +
+            I18N.t("msg.balanceReadFailed") +
             profileError.message
         );
 
@@ -2287,9 +2694,12 @@ async function submitWithdrawal() {
     if (amount > balance) {
 
         alert(
-            "提现金额不能超过当前余额。\n\n" +
-            "当前余额：RM" +
-            balance.toFixed(2)
+            I18N.t(
+                "msg.balanceNotEnough",
+                {
+                    balance: balance.toFixed(2)
+                }
+            )
         );
 
         return;
@@ -2312,7 +2722,7 @@ async function submitWithdrawal() {
         button.disabled = true;
 
         button.textContent =
-            "正在提交...";
+            I18N.t("common.submitting");
 
     }
 
@@ -2343,6 +2753,12 @@ async function submitWithdrawal() {
                 account:
                     account,
 
+                bank_name:
+                    bank,
+
+                account_name:
+                    accountName,
+
                 status:
                     "pending"
 
@@ -2354,7 +2770,7 @@ async function submitWithdrawal() {
         if (error) {
 
             console.error(
-                "提现申请失败：",
+                I18N.t("msg.withdrawFailed"),
                 error
             );
 
@@ -2370,11 +2786,14 @@ async function submitWithdrawal() {
         // ========================================
 
         alert(
-            "✅ 提现申请提交成功！\n\n" +
-            "金额：RM" +
-            amount.toFixed(2) +
+            I18N.t(
+                "msg.withdrawSuccess",
+                {
+                    amount: amount.toFixed(2)
+                }
+            ) +
             "\n" +
-            "状态：等待管理员审核"
+            I18N.t("withdraw.status")
         );
 
 
@@ -2401,7 +2820,7 @@ async function submitWithdrawal() {
 
 
         alert(
-            "提现申请失败：\n\n" +
+            I18N.t("msg.withdrawFailed") +
             error.message
         );
 
@@ -2413,7 +2832,7 @@ async function submitWithdrawal() {
             button.disabled = false;
 
             button.textContent =
-                "提交提现申请";
+                I18N.t("withdraw.submitBtn");
 
         }
 
@@ -2443,7 +2862,7 @@ async function loadWithdrawHistory() {
 
     container.innerHTML = `
         <div class="empty-box">
-            正在加载提现记录...
+            ${I18N.t("withdraw.loading")}
         </div>
     `;
 
@@ -2480,14 +2899,14 @@ async function loadWithdrawHistory() {
     if (error) {
 
         console.error(
-            "加载提现记录失败：",
+            I18N.t("withdraw.failed"),
             error
         );
 
 
         container.innerHTML = `
             <div class="empty-box">
-                无法加载提现记录
+                ${I18N.t("withdraw.failed")}
             </div>
         `;
 
@@ -2500,7 +2919,7 @@ async function loadWithdrawHistory() {
 
         container.innerHTML = `
             <div class="empty-box">
-                暂时没有提现记录
+                ${I18N.t("withdraw.noHistory")}
             </div>
         `;
 
@@ -2518,16 +2937,27 @@ async function loadWithdrawHistory() {
                 ).toFixed(2);
 
 
-            const date =
+            const d =
                 new Date(
                     item.created_at
-                ).toLocaleString(
-                    "zh-MY"
+                );
+
+            const date =
+                d.toLocaleDateString(
+                    I18N.get() === "zh" ? "zh-CN" : "en-GB"
+                ) +
+                " " +
+                d.toLocaleTimeString(
+                    "en-GB",
+                    {
+                        hour: "2-digit",
+                        minute: "2-digit"
+                    }
                 );
 
 
             let methodText =
-                "未知方式";
+                I18N.t("common.unknown");
 
 
             if (
@@ -2535,7 +2965,7 @@ async function loadWithdrawHistory() {
             ) {
 
                 methodText =
-                    "银行转账";
+                    I18N.t("common.bank");
 
             }
 
@@ -2545,13 +2975,13 @@ async function loadWithdrawHistory() {
             ) {
 
                 methodText =
-                    "电子钱包";
+                    I18N.t("common.ewallet");
 
             }
 
 
             let statusText =
-                "审核中";
+                I18N.t("withdraw.pending");
 
 
             if (
@@ -2560,7 +2990,7 @@ async function loadWithdrawHistory() {
             ) {
 
                 statusText =
-                    "审核通过";
+                    I18N.t("withdraw.approved");
 
             }
 
@@ -2571,7 +3001,7 @@ async function loadWithdrawHistory() {
             ) {
 
                 statusText =
-                    "审核拒绝";
+                    I18N.t("withdraw.rejected");
 
             }
 
@@ -2582,7 +3012,7 @@ async function loadWithdrawHistory() {
             ) {
 
                 statusText =
-                    "已取消";
+                    I18N.t("withdraw.cancelled");
 
             }
 
@@ -2646,6 +3076,81 @@ async function logout() {
 
 checkUser();
 
+// 语言切换时重新渲染动态内容
+document.addEventListener(
+    "taskhub:langchange",
+    function () {
+
+        loadTasks();
+        loadMyTasks();
+        loadWalletTransactions();
+        loadWithdrawHistory();
+
+    }
+);
+
+
+// ========================================
+// TOGGLE SIDEBAR (MOBILE)
+// ========================================
+
+function toggleSidebar() {
+
+    const sidebar =
+        document.querySelector(
+            ".sidebar"
+        );
+
+    if (sidebar) {
+
+        sidebar.classList.toggle(
+            "open"
+        );
+
+    }
+
+}
+
+
+// 点击菜单外部区域时自动关闭
+
+document.addEventListener(
+    "click",
+    function (event) {
+
+        const sidebar =
+            document.querySelector(
+                ".sidebar"
+            );
+
+        const toggle =
+            document.querySelector(
+                ".sidebar-toggle"
+            );
+
+        if (
+            sidebar &&
+            sidebar.classList.contains(
+                "open"
+            ) &&
+            toggle &&
+            !sidebar.contains(
+                event.target
+            ) &&
+            !toggle.contains(
+                event.target
+            )
+        ) {
+
+            sidebar.classList.remove(
+                "open"
+            );
+
+        }
+
+    }
+);
+
 </script>
 <!-- =========================
      SUBMIT TASK MODAL
@@ -2661,7 +3166,7 @@ checkUser();
         <div class="modal-header">
 
             <h2>
-                提交任务
+                <span data-i18n="submit.title">提交任务</span>
             </h2>
 
 
@@ -2682,13 +3187,13 @@ checkUser();
 
 
             <p id="submitTaskName">
-                正在提交任务...
+                <span data-i18n="submit.submitting">正在提交任务...</span>
             </p>
 
 
 
             <label>
-                完成截图
+                <span data-i18n="submit.proof">完成截图</span>
             </label>
 
 
@@ -2700,14 +3205,15 @@ checkUser();
 
 
             <label>
-                完成说明
+                <span data-i18n="submit.desc">完成说明</span>
             </label>
 
 
             <textarea
                 id="proofDescription"
                 rows="4"
-                placeholder="请简单说明你是如何完成这个任务的"></textarea>
+                placeholder="请简单说明你是如何完成这个任务的"
+                data-i18n-placeholder="submit.descPlaceholder"></textarea>
 
 
 
@@ -2716,7 +3222,7 @@ checkUser();
                 class="task-action-btn"
                 onclick="submitProof()">
 
-                提交审核
+                <span data-i18n="submit.submitBtn">提交审核</span>
 
             </button>
 
@@ -2727,6 +3233,154 @@ checkUser();
 
 </div>
 
+
+
+<style>
+/* ========================================
+   WITHDRAW - 暗色统一覆盖
+   覆盖 head 内联提现样式，与全站暗色主题统一
+   删除本块即可回滚到原提现样式
+   ======================================== */
+
+.withdraw-section .dashboard-section-title h2 {
+    color: #f5f7fa !important;
+}
+
+.withdraw-section .section-label {
+    color: #b3a8ff !important;
+}
+
+.withdraw-card,
+.withdraw-info-card,
+.withdraw-history-card {
+    background: #10131a !important;
+    border: 1px solid #222731 !important;
+    color: #f5f7fa !important;
+}
+
+.withdraw-card-header strong {
+    color: #ffffff !important;
+}
+
+.withdraw-label {
+    color: #b3a8ff !important;
+}
+
+.withdraw-form-group label {
+    color: #f5f7fa !important;
+}
+
+.withdraw-form-group small {
+    color: #8b949e !important;
+}
+
+.withdraw-form-group input,
+.withdraw-form-group select {
+    background: #0b0e13 !important;
+    border-color: #2a303a !important;
+    color: #f5f7fa !important;
+}
+
+.withdraw-form-group input:focus,
+.withdraw-form-group select:focus {
+    border-color: #6d5dfc !important;
+}
+
+.withdraw-input-wrap {
+    background: #0b0e13 !important;
+    border-color: #2a303a !important;
+}
+
+.withdraw-input-wrap span {
+    color: #b3a8ff !important;
+}
+
+.withdraw-info-card h3,
+.withdraw-history-card h3 {
+    color: #f5f7fa !important;
+}
+
+.withdraw-info-item > span {
+    color: #b3a8ff !important;
+}
+
+.withdraw-info-item strong {
+    color: #f5f7fa !important;
+}
+
+.withdraw-info-item p {
+    color: #8b949e !important;
+}
+
+.withdraw-history-card .empty-box {
+    color: #8b949e !important;
+}
+
+.withdraw-wallet-icon {
+    background: rgba(109, 93, 252, 0.13) !important;
+    border-color: rgba(109, 93, 252, 0.45) !important;
+    color: #b3a8ff !important;
+}
+
+.withdraw-submit-btn {
+    background: linear-gradient(135deg, #6d5dfc, #4c8dff) !important;
+    color: #ffffff !important;
+}
+
+.withdraw-divider {
+    background: #222731 !important;
+}
+
+.withdraw-info-item {
+    border-color: #222731 !important;
+}
+
+.withdraw-history-item {
+    border-color: #222731 !important;
+}
+
+.withdraw-history-item strong {
+    color: #f5f7fa !important;
+}
+
+.withdraw-history-item p {
+    color: #8b949e !important;
+}
+
+.withdraw-history-item small {
+    color: #666e7b !important;
+}
+
+.withdraw-status {
+    background: rgba(139, 148, 158, 0.14);
+    color: #b3bccb;
+}
+
+@media (max-width: 800px) {
+
+    .withdraw-card,
+    .withdraw-info-card,
+    .withdraw-history-card {
+        padding: 20px;
+    }
+
+}
+</style>
+
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <div class="footer-logo-icon">T</div>
+                <div class="footer-brand-name">TaskHub</div>
+            </div>
+            <div class="footer-copy">© TaskHub 2026</div>
+        </div>
+    </footer>
+
+    <a href="https://wa.me/601139706264" target="_blank" rel="noopener" class="wa-float" aria-label="联系客服" data-i18n-title="common.contactSupport">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+        <span class="wa-float-text" data-i18n="common.contactSupport">联系客服</span>
+    </a>
 
 
 </body>

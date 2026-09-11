@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="style.css">
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="i18n.js"></script>
 
     <style>
         /* ========================================
@@ -189,30 +190,30 @@
             <nav class="admin-nav">
 
                 <a href="#dashboard"
-                   class="admin-nav-item active">
+                   class="admin-nav-item active" data-i18n="admin.dashboard">
                     <span>📊</span>
                     Dashboard
                 </a>
 
-                <a href="#tasks"
+                <a href="#tasks" data-i18n="admin.taskManage"
                    class="admin-nav-item">
                     <span>📋</span>
                     任务管理
                 </a>
 
-                <a href="#create"
+                <a href="#create" data-i18n="admin.createTask"
                    class="admin-nav-item">
                     <span>➕</span>
                     发布任务
                 </a>
 
-                <a href="#reviews"
+                <a href="#reviews" data-i18n="admin.reviewTask"
                    class="admin-nav-item">
                     <span>📝</span>
                     任务审核
                 </a>
 
-                <a href="#withdrawals"
+                <a href="#withdrawals" data-i18n="admin.withdrawReview"
                    class="admin-nav-item">
                     <span>💰</span>
                     提现审核
@@ -224,14 +225,14 @@
             <div class="admin-sidebar-bottom">
 
                 <a href="dashboard.html"
-                   class="admin-back">
+                   class="admin-back" data-i18n="admin.backUser">
                     ← 用户中心
                 </a>
 
                 <button
                     type="button"
                     onclick="adminLogout()"
-                    class="admin-logout">
+                    class="admin-logout" data-i18n="admin.logout">
                     🚪 登出
                 </button>
 
@@ -257,15 +258,23 @@
                 <div>
 
                     <h1>
-                        管理员后台
+                        <span data-i18n="admin.title">管理员后台</span>
                     </h1>
 
                     <p>
-                        管理平台任务与任务状态
+                        <span data-i18n="admin.subtitle">管理平台任务与任务状态</span>
                     </p>
 
                 </div>
 
+
+                <button
+                    type="button"
+                    class="lang-btn"
+                    data-i18n-lang
+                    onclick="I18N.toggle()">
+                    EN
+                </button>
 
                 <div class="admin-user">
 
@@ -308,7 +317,7 @@
                         </h2>
 
                         <p>
-                            平台任务概况
+                            <span data-i18n="admin.overview">平台任务概况</span>
                         </p>
 
                     </div>
@@ -330,7 +339,7 @@
                         <div>
 
                             <div class="admin-stat-label">
-                                总任务
+                            <span data-i18n="admin.totalTasks">总任务</span>
                             </div>
 
                             <div
@@ -355,7 +364,7 @@
                         <div>
 
                             <div class="admin-stat-label">
-                                开放任务
+                                <span data-i18n="admin.openTasks">开放任务</span>
                             </div>
 
                             <div
@@ -380,7 +389,7 @@
                         <div>
 
                             <div class="admin-stat-label">
-                                已关闭
+                                <span data-i18n="admin.closedTasks">已关闭</span>
                             </div>
 
                             <div
@@ -413,11 +422,11 @@
                     <div>
 
                         <h2>
-                            发布新任务
+                            <span data-i18n="admin.newTask">发布新任务</span>
                         </h2>
 
                         <p>
-                            创建一个新的平台任务
+                            <span data-i18n="admin.newTaskSub">创建一个新的平台任务</span>
                         </p>
 
                     </div>
@@ -437,13 +446,13 @@
                             <div class="admin-form-group full">
 
                                 <label>
-                                    任务标题
+                                <span data-i18n="admin.taskTitle">任务标题</span>
                                 </label>
 
                                 <input
                                     type="text"
                                     id="taskTitle"
-                                    placeholder="例如：点赞 TikTok 视频"
+                                    placeholder="例如：点赞 TikTok 视频" data-i18n-placeholder="admin.taskTitlePh"
                                     required>
 
                             </div>
@@ -454,14 +463,64 @@
                             <div class="admin-form-group full">
 
                                 <label>
-                                    任务描述
+                                <span data-i18n="admin.taskDesc">任务描述</span>
                                 </label>
 
                                 <textarea
                                     id="taskDescription"
                                     rows="5"
-                                    placeholder="详细说明用户需要完成什么任务..."
+                                    placeholder="详细说明用户需要完成什么任务..." data-i18n-placeholder="admin.taskDescPh"
                                     required></textarea>
+
+                            </div>
+
+
+                            <!-- Task Image -->
+
+                            <div class="admin-form-group full">
+
+                                <label>
+                                <span data-i18n="admin.taskImage">任务图片</span>
+                                </label>
+
+                                <div class="task-image-uploader">
+
+                                    <input
+                                        type="file"
+                                        id="taskImage"
+                                        accept="image/*"
+                                        onchange="previewTaskImage()"
+                                        hidden>
+
+                                    <button
+                                        type="button"
+                                        class="admin-primary-btn admin-image-btn"
+                                        onclick="document.getElementById('taskImage').click()">
+
+                                        📷 <span data-i18n="admin.uploadImage">选择图片</span>
+
+                                    </button>
+
+                                    <span class="admin-image-name" id="taskImageName"></span>
+
+                                    <button
+                                        type="button"
+                                        class="admin-image-remove"
+                                        id="taskImageRemove"
+                                        style="display:none;"
+                                        onclick="clearTaskImage()">
+
+                                        ✕
+
+                                    </button>
+
+                                </div>
+
+                                <img
+                                    id="taskImagePreview"
+                                    class="task-image-preview"
+                                    style="display:none;"
+                                    alt="任务图片预览">
 
                             </div>
 
@@ -471,7 +530,7 @@
                             <div class="admin-form-group">
 
                                 <label>
-                                    任务奖励（RM）
+                                <span data-i18n="admin.reward">任务奖励（RM）</span>
                                 </label>
 
                                 <input
@@ -490,7 +549,7 @@
                             <div class="admin-form-group">
 
                                 <label>
-                                    最大领取人数
+                                <span data-i18n="admin.maxClaims">最大领取人数</span>
                                 </label>
 
                                 <input
@@ -509,16 +568,16 @@
                             <div class="admin-form-group">
 
                                 <label>
-                                    任务状态
+                                <span data-i18n="admin.taskStatus">任务状态</span>
                                 </label>
 
                                 <select id="taskStatus">
 
-                                    <option value="open">
+                                    <option value="open" data-i18n="admin.statusOpen">
                                         开放
                                     </option>
 
-                                    <option value="closed">
+                                    <option value="closed" data-i18n="admin.statusClosed">
                                         关闭
                                     </option>
 
@@ -534,7 +593,7 @@
 
                             <button
                                 type="submit"
-                                class="admin-primary-btn">
+                                class="admin-primary-btn" data-i18n="admin.publishBtn">
 
                                 ➕ 发布任务
 
@@ -563,11 +622,11 @@
                     <div>
 
                         <h2>
-                            任务管理
+                            <span data-i18n="admin.manageTitle">任务管理</span>
                         </h2>
 
                         <p>
-                            查看及管理平台任务
+                            <span data-i18n="admin.manageSub">查看及管理平台任务</span>
                         </p>
 
                     </div>
@@ -575,7 +634,7 @@
 
                     <button
                         type="button"
-                        onclick="loadAdminTasks()"
+                        onclick="loadAdminTasks()" data-i18n="admin.refresh"
                         class="admin-refresh-btn">
 
                         🔄 刷新
@@ -589,7 +648,7 @@
                     id="adminTasksContainer"
                     class="admin-tasks-container">
 
-                    <div class="admin-loading">
+                    <div class="admin-loading" data-i18n="admin.taskLoading">
                         正在加载任务...
                     </div>
 
@@ -612,11 +671,11 @@
                     <div>
 
                         <h2>
-                            待审核任务
+                            <span data-i18n="admin.reviewTitle">待审核任务</span>
                         </h2>
 
                         <p>
-                            用户提交的任务会出现在这里
+                            <span data-i18n="admin.reviewSub">用户提交的任务会出现在这里</span>
                         </p>
 
                     </div>
@@ -624,7 +683,7 @@
 
                     <button
                         type="button"
-                        onclick="loadPendingSubmissions()"
+                        onclick="loadPendingSubmissions()" data-i18n="admin.refreshReview"
                         class="admin-refresh-btn">
 
                         🔄 刷新审核
@@ -637,7 +696,7 @@
                 <div id="pendingSubmissionsContainer">
 
                     <div class="admin-loading-box">
-                        正在加载待审核任务...
+                        <span data-i18n="admin.reviewLoading">正在加载待审核任务...</span>
                     </div>
 
                 </div>
@@ -659,11 +718,11 @@
                     <div>
 
                         <h2>
-                            提现审核
+                            <span data-i18n="admin.withdrawReviewTitle">提现审核</span>
                         </h2>
 
                         <p>
-                            审核用户的提现申请
+                            <span data-i18n="admin.withdrawReviewSub">审核用户的提现申请</span>
                         </p>
 
                     </div>
@@ -671,7 +730,7 @@
 
                     <button
                         type="button"
-                        onclick="loadPendingWithdrawals()"
+                        onclick="loadPendingWithdrawals()" data-i18n="admin.refreshWithdraw"
                         class="admin-refresh-btn">
 
                         🔄 刷新提现
@@ -684,7 +743,7 @@
                 <div id="pendingWithdrawalsContainer">
 
                     <div class="admin-loading-box">
-                        正在加载提现申请...
+                        <span data-i18n="admin.withdrawLoading">正在加载提现申请...</span>
                     </div>
 
                 </div>
@@ -750,6 +809,18 @@ document.addEventListener(
 
         await checkAdmin();
 
+        // 语言切换时重新渲染动态内容
+        document.addEventListener(
+            "taskhub:langchange",
+            function () {
+
+                loadAdminTasks();
+                loadPendingSubmissions();
+                loadPendingWithdrawals();
+
+            }
+        );
+
     }
 );
 
@@ -774,7 +845,7 @@ async function checkAdmin() {
 
         if (error || !user) {
 
-            alert("请先登录");
+            alert(I18N.t("admin.needLogin"));
 
             window.location.href =
                 "index.html";
@@ -793,7 +864,7 @@ async function checkAdmin() {
         if (emailElement) {
 
             emailElement.textContent =
-                user.email || "管理员";
+                user.email || I18N.t("admin.fallbackName");
 
         }
 
@@ -812,12 +883,12 @@ async function checkAdmin() {
         if (profileError) {
 
             console.error(
-                "读取管理员资料失败：",
+                I18N.t("admin.readProfileFailed"),
                 profileError
             );
 
             alert(
-                "无法读取管理员资料"
+                I18N.t("admin.profileReadFailed")
             );
 
             window.location.href =
@@ -834,7 +905,7 @@ async function checkAdmin() {
         ) {
 
             alert(
-                "你没有管理员权限"
+                I18N.t("admin.noPermission")
             );
 
             window.location.href =
@@ -855,16 +926,259 @@ async function checkAdmin() {
     } catch (error) {
 
         console.error(
-            "管理员检查失败：",
+            I18N.t("admin.checkFailed"),
             error
         );
 
         alert(
-            "系统发生错误：\n" +
+            I18N.t("admin.sysErrorPrefix") +
             error.message
         );
 
     }
+
+}
+
+
+
+/* ========================================
+   任务图片选择 / 清除
+   ======================================== */
+
+let taskImageFile = null;
+
+function previewTaskImage() {
+
+    const input =
+        document.getElementById(
+            "taskImage"
+        );
+
+    const nameEl =
+        document.getElementById(
+            "taskImageName"
+        );
+
+    const preview =
+        document.getElementById(
+            "taskImagePreview"
+        );
+
+    const removeBtn =
+        document.getElementById(
+            "taskImageRemove"
+        );
+
+    const file =
+        input && input.files
+            ? input.files[0]
+            : null;
+
+    if (!file) {
+
+        return;
+
+    }
+
+    if (
+        !file.type ||
+        file.type.indexOf(
+            "image/"
+        ) !== 0
+    ) {
+
+        alert(
+            I18N.t(
+                "admin.needImageFile"
+            )
+        );
+
+        input.value = "";
+
+        return;
+
+    }
+
+    if (
+        file.size >
+        5 * 1024 * 1024
+    ) {
+
+        alert(
+            I18N.t(
+                "admin.imageTooLarge"
+            )
+        );
+
+        input.value = "";
+
+        return;
+
+    }
+
+    taskImageFile = file;
+
+    if (nameEl) {
+
+        nameEl.textContent =
+            file.name;
+
+    }
+
+    if (preview) {
+
+        preview.src =
+            URL.createObjectURL(
+                file
+            );
+
+        preview.style.display =
+            "block";
+
+    }
+
+    if (removeBtn) {
+
+        removeBtn.style.display =
+            "";
+
+    }
+
+}
+
+
+function clearTaskImage() {
+
+    taskImageFile = null;
+
+    const input =
+        document.getElementById(
+            "taskImage"
+        );
+
+    const nameEl =
+        document.getElementById(
+            "taskImageName"
+        );
+
+    const preview =
+        document.getElementById(
+            "taskImagePreview"
+        );
+
+    const removeBtn =
+        document.getElementById(
+            "taskImageRemove"
+        );
+
+    if (input) {
+
+        input.value = "";
+
+    }
+
+    if (nameEl) {
+
+        nameEl.textContent =
+            "";
+
+    }
+
+    if (preview) {
+
+        preview.style.display =
+            "none";
+
+        preview.src =
+            "";
+
+    }
+
+    if (removeBtn) {
+
+        removeBtn.style.display =
+            "none";
+
+    }
+
+}
+
+
+async function uploadTaskImage() {
+
+    if (!taskImageFile) {
+
+        return null;
+
+    }
+
+    const file =
+        taskImageFile;
+
+    const ext =
+        (
+            file.name.split(".").pop() ||
+            "jpg"
+        ).toLowerCase()
+            .replace(
+                /[^a-z0-9]/g,
+                ""
+            );
+
+    const path =
+        "task_" +
+        Date.now() +
+        "_" +
+        Math.random()
+            .toString(36)
+            .slice(2, 8) +
+        "." +
+        ext;
+
+    const {
+        error: upError
+    } =
+        await supabaseClient
+            .storage
+            .from("task-images")
+            .upload(
+                path,
+                file,
+                {
+                    cacheControl:
+                        "3600",
+                    upsert: false,
+                    contentType:
+                        file.type ||
+                        "image/jpeg"
+                }
+            );
+
+    if (upError) {
+
+        throw new Error(
+            I18N.t(
+                "admin.imageUploadFailed"
+            ) +
+            upError.message
+        );
+
+    }
+
+    const {
+        data: pubData
+    } =
+        supabaseClient
+            .storage
+            .from("task-images")
+            .getPublicUrl(
+                path
+            );
+
+    return (
+        pubData &&
+        pubData.publicUrl
+    );
 
 }
 
@@ -943,7 +1257,7 @@ async function createTask(event) {
     if (!title) {
 
         alert(
-            "请输入任务标题"
+            I18N.t("admin.needTitle")
         );
 
         return;
@@ -954,7 +1268,7 @@ async function createTask(event) {
     if (!description) {
 
         alert(
-            "请输入任务描述"
+            I18N.t("admin.needDesc")
         );
 
         return;
@@ -968,7 +1282,7 @@ async function createTask(event) {
     ) {
 
         alert(
-            "请输入正确的任务奖励"
+            I18N.t("admin.needReward")
         );
 
         return;
@@ -982,7 +1296,7 @@ async function createTask(event) {
     ) {
 
         alert(
-            "请输入正确的领取人数"
+            I18N.t("admin.needClaims")
         );
 
         return;
@@ -1009,7 +1323,7 @@ async function createTask(event) {
         button.disabled = true;
 
         button.textContent =
-            "正在发布...";
+            I18N.t("admin.publishing");
 
     }
 
@@ -1027,11 +1341,30 @@ async function createTask(event) {
         if (!user) {
 
             alert(
-                "登录已失效"
+                I18N.t("admin.sessionExpired")
             );
 
             window.location.href =
                 "index.html";
+
+            return;
+
+        }
+
+
+        // 上传任务图片（可选）
+        let taskImageUrl = null;
+
+        try {
+
+            taskImageUrl =
+                await uploadTaskImage();
+
+        } catch (imgError) {
+
+            console.error(imgError);
+
+            alert(imgError.message);
 
             return;
 
@@ -1053,9 +1386,16 @@ async function createTask(event) {
 
                     max_claims: maxClaims,
 
+                    slots: maxClaims,
+
+                    remaining_slots: maxClaims,
+
                     status: status,
 
-                    created_by: user.id
+                    created_by: user.id,
+
+                    image_url:
+                        taskImageUrl
 
                 });
 
@@ -1063,12 +1403,12 @@ async function createTask(event) {
         if (error) {
 
             console.error(
-                "发布任务失败：",
+                I18N.t("admin.publishFailed"),
                 error
             );
 
             alert(
-                "发布失败：\n" +
+                I18N.t("admin.publishFailedMsg") +
                 error.message
             );
 
@@ -1078,7 +1418,7 @@ async function createTask(event) {
 
 
         alert(
-            "✅ 任务发布成功！"
+            I18N.t("admin.publishSuccess")
         );
 
 
@@ -1087,6 +1427,9 @@ async function createTask(event) {
             form.reset();
 
         }
+
+
+        clearTaskImage();
 
 
         if (maxClaimsElement) {
@@ -1126,12 +1469,12 @@ async function createTask(event) {
     } catch (error) {
 
         console.error(
-            "发布任务异常：",
+            I18N.t("admin.publishException"),
             error
         );
 
         alert(
-            "系统错误：\n" +
+            I18N.t("admin.sysErrorMsg") +
             error.message
         );
 
@@ -1143,7 +1486,7 @@ async function createTask(event) {
             button.disabled = false;
 
             button.textContent =
-                "➕ 发布任务";
+                I18N.t("admin.publishBtn");
 
         }
 
@@ -1168,7 +1511,7 @@ async function loadAdminTasks() {
     if (!container) {
 
         console.error(
-            "找不到 adminTasksContainer"
+            I18N.t("admin.noContainer")
         );
 
         return;
@@ -1177,7 +1520,7 @@ async function loadAdminTasks() {
 
 
     container.innerHTML =
-        '<div class="admin-loading">正在加载任务...</div>';
+        '<div class="admin-loading">' + I18N.t("admin.taskLoading") + '</div>';
 
 
     try {
@@ -1200,14 +1543,14 @@ async function loadAdminTasks() {
         if (error) {
 
             console.error(
-                "读取任务失败：",
+                I18N.t("admin.taskReadFailed"),
                 error
             );
 
             container.innerHTML =
                 `
                 <div class="admin-error-box">
-                    加载失败：<br>
+                    ${I18N.t("admin.loadFailed")}<br>
                     ${escapeHtml(
                         error.message
                     )}
@@ -1235,7 +1578,7 @@ async function loadAdminTasks() {
             container.innerHTML =
                 `
                 <div class="admin-empty-box">
-                    目前还没有任何任务。
+                    ${I18N.t("admin.noTasks")}
                 </div>
                 `;
 
@@ -1269,14 +1612,14 @@ async function loadAdminTasks() {
     } catch (error) {
 
         console.error(
-            "加载任务异常：",
+            I18N.t("admin.taskLoadException"),
             error
         );
 
         container.innerHTML =
             `
             <div class="admin-error-box">
-                系统错误：<br>
+                ${I18N.t("admin.sysError")}<br>
                 ${escapeHtml(
                     error.message
                 )}
@@ -1311,7 +1654,7 @@ async function loadPendingSubmissions(
 
 
     container.innerHTML =
-        '<div class="admin-loading-box">正在加载待审核任务...</div>';
+        '<div class="admin-loading-box">' + I18N.t("admin.reviewLoading") + '</div>';
 
 
     try {
@@ -1371,7 +1714,7 @@ async function loadPendingSubmissions(
             container.innerHTML =
                 `
                 <div class="admin-empty-box">
-                    🎉 目前没有待审核任务
+                    ${I18N.t("admin.noReviews")}
                 </div>
                 `;
 
@@ -1424,6 +1767,63 @@ async function loadPendingSubmissions(
         }
 
 
+        const userIds =
+            claims.map(
+                function (claim) {
+
+                    return claim.user_id;
+
+                }
+            );
+
+
+        const userMap = {};
+
+
+        if (
+            userIds.length > 0
+        ) {
+
+            const {
+                data: userProfiles,
+                error: userError
+            } =
+                await supabaseClient
+                    .from("profiles")
+                    .select(
+                        "id, display_name, username, phone"
+                    )
+                    .in(
+                        "id",
+                        userIds
+                    );
+
+
+            if (userError) {
+
+                console.warn(
+                    I18N.t("admin.loadUserFailed"),
+                    userError
+                );
+
+            }
+
+
+            (
+                userProfiles || []
+            ).forEach(
+                function (user) {
+
+                    userMap[
+                        user.id
+                    ] = user;
+
+                }
+            );
+
+        }
+
+
         const submissionMap = {};
 
 
@@ -1469,7 +1869,10 @@ async function loadPendingSubmissions(
                     createPendingSubmissionCard(
                         claim,
                         task,
-                        submission
+                        submission,
+                        userMap[
+                            claim.user_id
+                        ] || null
                     )
                 );
 
@@ -1480,7 +1883,7 @@ async function loadPendingSubmissions(
     } catch (error) {
 
         console.error(
-            "读取待审核资料失败：",
+            I18N.t("admin.loadReviewFailed"),
             error
         );
 
@@ -1488,7 +1891,7 @@ async function loadPendingSubmissions(
         container.innerHTML =
             `
             <div class="admin-error-box">
-                无法读取待审核资料：<br>
+                ${I18N.t("admin.loadReviewFailed")}<br>
                 ${escapeHtml(
                     error.message
                 )}
@@ -1508,7 +1911,8 @@ async function loadPendingSubmissions(
 function createPendingSubmissionCard(
     claim,
     task,
-    submission
+    submission,
+    userInfo
 ) {
 
     const card =
@@ -1521,10 +1925,34 @@ function createPendingSubmissionCard(
         "admin-task-card admin-review-card";
 
 
+    const userDisplay =
+        userInfo
+            ? (
+                userInfo.display_name ||
+                userInfo.username ||
+                "-"
+            )
+            : "-";
+
+
+    const userPhone =
+        userInfo && userInfo.phone
+            ? userInfo.phone
+            : "-";
+
+
+    const userInitial =
+        userDisplay && userDisplay !== "-"
+            ? String(userDisplay)
+                .charAt(0)
+                .toUpperCase()
+            : "?";
+
+
     const taskTitle =
         task
             ? task.title
-            : "任务 #" + claim.task_id;
+            : I18N.t("admin.taskNo") + claim.task_id;
 
 
     const reward =
@@ -1546,7 +1974,7 @@ function createPendingSubmissionCard(
             ? new Date(
                 submittedTime
             ).toLocaleString(
-                "zh-CN"
+                I18N.get() === "en" ? "en-US" : "zh-CN"
             )
             : "-";
 
@@ -1555,7 +1983,7 @@ function createPendingSubmissionCard(
         submission &&
         submission.proof_text
             ? submission.proof_text
-            : "用户没有填写完成说明";
+            : I18N.t("admin.noProofText");
 
 
     const proofUrl =
@@ -1575,14 +2003,14 @@ function createPendingSubmissionCard(
             <div class="admin-proof-box">
 
                 <div class="admin-proof-title">
-                    🖼️ 完成截图
+                    ${I18N.t("admin.proofTitle")}
                 </div>
 
                 <img
                     src="${escapeHtml(
                         proofUrl
                     )}"
-                    alt="任务完成截图"
+                    alt="${I18N.t("admin.proofAlt")}"
                     class="admin-proof-image"
                     onclick="window.open(
                         '${escapeJs(
@@ -1605,7 +2033,7 @@ function createPendingSubmissionCard(
                             text-decoration:none;
                         "
                     >
-                        🔗 新窗口查看原图
+                        ${I18N.t("admin.viewOriginal")}
                     </a>
 
                 </div>
@@ -1624,7 +2052,7 @@ function createPendingSubmissionCard(
                         color:#f59e0b;
                     "
                 >
-                    ⚠️ 没有找到用户上传的截图
+                    ${I18N.t("admin.noProof")}
                 </div>
 
             </div>
@@ -1643,7 +2071,7 @@ function createPendingSubmissionCard(
                 <div
                     class="admin-task-status status-open"
                 >
-                    🟡 待审核
+                    ${I18N.t("admin.pending")}
                 </div>
 
                 <h3>
@@ -1662,10 +2090,43 @@ function createPendingSubmissionCard(
         </div>
 
 
+        <div class="admin-user-bar">
+
+            <div class="admin-user-avatar">
+                ${escapeHtml(
+                    userInitial
+                )}
+            </div>
+
+            <div class="admin-user-meta">
+
+                <div class="admin-user-line">
+                    ${I18N.t("admin.userName")}
+                    <strong>
+                        ${escapeHtml(
+                            userDisplay
+                        )}
+                    </strong>
+                </div>
+
+                <div class="admin-user-line">
+                    ${I18N.t("admin.userPhone")}
+                    <strong>
+                        ${escapeHtml(
+                            userPhone
+                        )}
+                    </strong>
+                </div>
+
+            </div>
+
+        </div>
+
+
         <div class="admin-task-description">
 
             <strong>
-                📝 完成说明
+                ${I18N.t("admin.proofDesc")}
             </strong>
 
             <div class="admin-proof-text"
@@ -1684,21 +2145,21 @@ function createPendingSubmissionCard(
         <div class="admin-task-info">
 
             <div>
-                👤 用户 ID：
+                ${I18N.t("admin.userId")}
                 ${escapeHtml(
                     claim.user_id
                 )}
             </div>
 
             <div>
-                📋 Claim ID：
+                ${I18N.t("admin.claimId")}
                 ${escapeHtml(
                     claim.id
                 )}
             </div>
 
             <div>
-                📅 提交时间：
+                ${I18N.t("admin.submitTime")}
                 ${escapeHtml(
                     formattedTime
                 )}
@@ -1718,7 +2179,7 @@ function createPendingSubmissionCard(
                     )}
                 )"
             >
-                ✅ 通过
+                ${I18N.t("admin.approveBtn")}
             </button>
 
 
@@ -1731,7 +2192,7 @@ function createPendingSubmissionCard(
                     )}
                 )"
             >
-                ❌ 拒绝
+                ${I18N.t("admin.rejectBtn")}
             </button>
 
         </div>
@@ -1755,8 +2216,8 @@ async function approveSubmission(
 
     if (
         !confirm(
-            "确定要通过这个任务吗？\n\n" +
-            "通过后，系统会自动把任务奖励加入用户钱包。"
+            I18N.t("admin.approveConfirm") +
+            I18N.t("admin.approveConfirm2")
         )
     ) {
 
@@ -1786,7 +2247,7 @@ async function approveSubmission(
         if (error) {
 
             console.error(
-                "审核奖励失败：",
+                I18N.t("admin.rewardFailed"),
                 error
             );
 
@@ -1796,7 +2257,7 @@ async function approveSubmission(
 
 
         console.log(
-            "审核奖励结果：",
+            I18N.t("admin.rewardResult"),
             data
         );
 
@@ -1820,10 +2281,10 @@ async function approveSubmission(
 
 
         alert(
-            "✅ 审核通过！\n\n" +
-            "奖励 RM " +
+            I18N.t("admin.approveSuccess") +
+            I18N.t("admin.rewardLabel") +
             reward +
-            " 已加入用户钱包。"
+            I18N.t("admin.rewardAdded")
         );
 
 
@@ -1833,13 +2294,13 @@ async function approveSubmission(
     } catch (error) {
 
         console.error(
-            "审核失败：",
+            I18N.t("admin.approveFailed"),
             error
         );
 
 
         alert(
-            "审核失败：\n" +
+            I18N.t("admin.approveFailedMsg") +
             error.message
         );
 
@@ -1859,7 +2320,7 @@ async function rejectSubmission(
 
     if (
         !confirm(
-            "确定要拒绝这个任务吗？"
+            I18N.t("admin.rejectConfirm")
         )
     ) {
 
@@ -1901,14 +2362,14 @@ async function rejectSubmission(
         if (!data) {
 
             throw new Error(
-                "任务不存在，或者已经被处理"
+                I18N.t("admin.taskProcessed")
             );
 
         }
 
 
         alert(
-            "❌ 已拒绝这个任务提交。"
+            I18N.t("admin.rejectSuccess")
         );
 
 
@@ -1918,13 +2379,13 @@ async function rejectSubmission(
     } catch (error) {
 
         console.error(
-            "拒绝任务失败：",
+            I18N.t("admin.rejectFailed"),
             error
         );
 
 
         alert(
-            "拒绝失败：\n" +
+            I18N.t("admin.rejectFailedMsg") +
             error.message
         );
 
@@ -1954,7 +2415,7 @@ async function loadPendingWithdrawals() {
 
 
     container.innerHTML =
-        '<div class="admin-loading-box">正在加载提现申请...</div>';
+        '<div class="admin-loading-box">' + I18N.t("admin.withdrawLoading") + '</div>';
 
 
     try {
@@ -1972,7 +2433,7 @@ async function loadPendingWithdrawals() {
         if (error) {
 
             console.error(
-                "加载提现申请失败：",
+                I18N.t("admin.loadWithdrawFailed"),
                 error
             );
 
@@ -1980,7 +2441,7 @@ async function loadPendingWithdrawals() {
             container.innerHTML =
                 `
                 <div class="admin-error-box">
-                    加载提现申请失败：<br>
+                    ${I18N.t("admin.loadWithdrawFailed")}<br>
                     ${escapeHtml(
                         error.message
                     )}
@@ -2000,7 +2461,7 @@ async function loadPendingWithdrawals() {
             container.innerHTML =
                 `
                 <div class="admin-empty-box">
-                    🎉 暂时没有待审核提现
+                    ${I18N.t("admin.noWithdrawals")}
                 </div>
                 `;
 
@@ -2032,7 +2493,7 @@ async function loadPendingWithdrawals() {
     } catch (error) {
 
         console.error(
-            "提现审核加载异常：",
+            I18N.t("admin.withdrawLoadException"),
             error
         );
 
@@ -2040,7 +2501,7 @@ async function loadPendingWithdrawals() {
         container.innerHTML =
             `
             <div class="admin-error-box">
-                系统错误：<br>
+                ${I18N.t("admin.sysError")}<br>
                 ${escapeHtml(
                     error.message
                 )}
@@ -2090,7 +2551,7 @@ function createWithdrawalCard(
             ? new Date(
                 item.created_at
             ).toLocaleString(
-                "zh-CN"
+                I18N.get() === "en" ? "en-US" : "zh-CN"
             )
             : "-";
 
@@ -2099,42 +2560,60 @@ function createWithdrawalCard(
         `
 
         <div class="withdrawal-amount">
-            💰 提现 RM ${amount}
+            ${I18N.t("admin.withdrawAmount", { amount: amount })}
         </div>
 
 
         <div class="withdrawal-info">
 
             <div>
-                👤 用户 ID：
+                ${I18N.t("admin.userId")}
                 ${escapeHtml(
                     item.user_id
                 )}
             </div>
 
             <div>
-                💳 提现方式：
+                ${I18N.t("admin.method")}
                 ${escapeHtml(
                     method
                 )}
             </div>
 
             <div>
-                🏦 收款账户：
+                ${I18N.t("admin.account")}
                 ${escapeHtml(
                     account
                 )}
             </div>
 
             <div>
-                📅 申请时间：
+                ${I18N.t("admin.bankName")}
+                ${escapeHtml(
+                    item.bank_name || "-"
+                )}
+            </div>
+
+            <div>
+                ${I18N.t("admin.accountName")}
+                ${escapeHtml(
+                    item.account_name || "-"
+                )}
+            </div>
+                ${escapeHtml(
+                    account
+                )}
+            </div>
+
+            <div>
+                ${I18N.t("admin.applyTime")}
                 ${escapeHtml(
                     createdAt
                 )}
             </div>
 
             <div>
-                🆔 提现 ID：
+                ${I18N.t("admin.withdrawId")}
                 ${escapeHtml(
                     item.id
                 )}
@@ -2154,7 +2633,7 @@ function createWithdrawalCard(
                     )}
                 )"
             >
-                ✅ 通过提现
+                ${I18N.t("admin.approveWithdraw")}
             </button>
 
 
@@ -2167,7 +2646,7 @@ function createWithdrawalCard(
                     )}
                 )"
             >
-                ❌ 拒绝提现
+                ${I18N.t("admin.rejectWithdraw")}
             </button>
 
         </div>
@@ -2191,8 +2670,8 @@ async function approveWithdrawal(
 
     if (
         !confirm(
-            "确定要通过这笔提现吗？\n\n" +
-            "通过后会自动扣除用户余额，并记录钱包交易。"
+            I18N.t("admin.approveWithdrawConfirm") +
+            I18N.t("admin.approveWithdrawConfirm2")
         )
     ) {
 
@@ -2224,12 +2703,12 @@ async function approveWithdrawal(
         if (error) {
 
             console.error(
-                "通过提现失败：",
+                I18N.t("admin.approveWithdrawFailed"),
                 error
             );
 
             alert(
-                "通过提现失败：\n" +
+                I18N.t("admin.approveWithdrawFailedMsg") +
                 error.message
             );
 
@@ -2239,8 +2718,8 @@ async function approveWithdrawal(
 
 
         alert(
-            "✅ 提现已通过！\n\n" +
-            "用户余额已扣除，钱包交易已记录。"
+            I18N.t("admin.approveWithdrawSuccess") +
+            I18N.t("admin.approveWithdrawSuccess2")
         );
 
 
@@ -2252,13 +2731,13 @@ async function approveWithdrawal(
     } catch (error) {
 
         console.error(
-            "处理提现异常：",
+            I18N.t("admin.withdrawException"),
             error
         );
 
 
         alert(
-            "处理提现时发生错误：\n" +
+            I18N.t("admin.withdrawError") +
             error.message
         );
 
@@ -2278,7 +2757,7 @@ async function rejectWithdrawal(
 
     const note =
         prompt(
-            "请输入拒绝原因（可留空）："
+            I18N.t("admin.rejectReasonPrompt")
         );
 
 
@@ -2313,12 +2792,12 @@ async function rejectWithdrawal(
         if (error) {
 
             console.error(
-                "拒绝提现失败：",
+                I18N.t("admin.rejectWithdrawFailed"),
                 error
             );
 
             alert(
-                "拒绝提现失败：\n" +
+                I18N.t("admin.rejectWithdrawFailedMsg") +
                 error.message
             );
 
@@ -2328,7 +2807,7 @@ async function rejectWithdrawal(
 
 
         alert(
-            "❌ 提现申请已拒绝。"
+            I18N.t("admin.rejectWithdrawSuccess")
         );
 
 
@@ -2338,13 +2817,13 @@ async function rejectWithdrawal(
     } catch (error) {
 
         console.error(
-            "处理提现异常：",
+            I18N.t("admin.withdrawException"),
             error
         );
 
 
         alert(
-            "处理提现时发生错误：\n" +
+            I18N.t("admin.withdrawError") +
             error.message
         );
 
@@ -2378,8 +2857,8 @@ function createTaskCard(
 
     const statusText =
         isOpen
-            ? "开放"
-            : "关闭";
+            ? I18N.t("admin.statusOpen")
+            : I18N.t("admin.statusClosed");
 
 
     const statusClass =
@@ -2393,7 +2872,7 @@ function createTaskCard(
             ? new Date(
                 task.created_at
             ).toLocaleString(
-                "zh-CN"
+                I18N.get() === "en" ? "en-US" : "zh-CN"
             )
             : "-";
 
@@ -2446,11 +2925,11 @@ function createTaskCard(
         <div class="admin-task-info">
 
             <div>
-                👥 最多
+                ${I18N.t("admin.maxLabel")}
                 ${escapeHtml(
                     task.max_claims || 0
                 )}
-                人
+                ${I18N.t("admin.people")}
             </div>
 
 
@@ -2463,7 +2942,7 @@ function createTaskCard(
 
 
             <div>
-                ID：
+                ${I18N.t("admin.id")}
                 ${escapeHtml(
                     task.id
                 )}
@@ -2490,8 +2969,8 @@ function createTaskCard(
             >
                 ${
                     isOpen
-                        ? "🔴 关闭任务"
-                        : "🟢 开放任务"
+                        ? I18N.t("admin.closeTask")
+                        : I18N.t("admin.openTask")
                 }
             </button>
 
@@ -2505,7 +2984,7 @@ function createTaskCard(
                     )}
                 )"
             >
-                🗑 删除
+                ${I18N.t("admin.deleteBtn")}
             </button>
 
         </div>
@@ -2536,15 +3015,15 @@ async function toggleTaskStatus(
 
     const actionText =
         newStatus === "open"
-            ? "开放"
-            : "关闭";
+            ? I18N.t("admin.statusOpen")
+            : I18N.t("admin.statusClosed");
 
 
     if (
         !confirm(
-            "确定要" +
+            I18N.t("admin.toggleConfirm1") +
             actionText +
-            "这个任务吗？"
+            I18N.t("admin.toggleConfirm2")
         )
     ) {
 
@@ -2578,7 +3057,7 @@ async function toggleTaskStatus(
 
 
         alert(
-            "任务已" +
+            I18N.t("admin.taskUpdated") +
             actionText
         );
 
@@ -2589,13 +3068,13 @@ async function toggleTaskStatus(
     } catch (error) {
 
         console.error(
-            "修改任务状态失败：",
+            I18N.t("admin.toggleFailed"),
             error
         );
 
 
         alert(
-            "操作失败：\n" +
+            I18N.t("admin.opFailed") +
             error.message
         );
 
@@ -2615,8 +3094,8 @@ async function deleteTask(
 
     if (
         !confirm(
-            "确定要删除这个任务吗？\n\n" +
-            "如果这个任务已经有人领取，删除可能受到数据库限制。"
+            I18N.t("admin.deleteConfirm") +
+            I18N.t("admin.deleteConfirm2")
         )
     ) {
 
@@ -2647,7 +3126,7 @@ async function deleteTask(
 
 
         alert(
-            "任务已删除"
+            I18N.t("admin.taskDeleted")
         );
 
 
@@ -2657,13 +3136,13 @@ async function deleteTask(
     } catch (error) {
 
         console.error(
-            "删除任务失败：",
+            I18N.t("admin.deleteFailed"),
             error
         );
 
 
         alert(
-            "删除失败：\n" +
+            I18N.t("admin.deleteFailedMsg") +
             error.message
         );
 
@@ -2765,7 +3244,7 @@ async function adminLogout() {
     } catch (error) {
 
         console.error(
-            "登出失败：",
+            I18N.t("admin.logoutFailed"),
             error
         );
 
@@ -2876,6 +3355,17 @@ function escapeJs(
 }
 
 </script>
+
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <div class="footer-logo-icon">T</div>
+                <div class="footer-brand-name">TaskHub</div>
+            </div>
+            <div class="footer-copy">© TaskHub 2026</div>
+        </div>
+    </footer>
+
 
 </body>
 </html>

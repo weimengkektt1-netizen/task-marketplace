@@ -127,7 +127,7 @@ async function login() {
 
     if (!email || !password) {
 
-        alert("请输入邮箱和密码");
+        alert(I18N.t("msg.enterEmailPwd"));
         return;
 
     }
@@ -144,7 +144,7 @@ async function login() {
     if (error) {
 
         alert(
-            "登录失败：\n" +
+            I18N.t("msg.loginFailed") +
             error.message
         );
 
@@ -161,15 +161,25 @@ async function login() {
 
 // ========================================
 // 注册
+// 字段：昵称 / 邮箱 / 电话号码 / 密码 / 确认密码
 // ========================================
 
 async function register() {
 
+    const nameInput =
+        document.getElementById("registerName");
+
     const emailInput =
         document.getElementById("registerEmail");
 
+    const phoneInput =
+        document.getElementById("registerPhone");
+
     const passwordInput =
         document.getElementById("registerPassword");
+
+    const confirmInput =
+        document.getElementById("registerConfirmPassword");
 
 
     if (!emailInput || !passwordInput) {
@@ -180,16 +190,68 @@ async function register() {
     }
 
 
+    const name =
+        nameInput ? nameInput.value.trim() : "";
+
     const email =
         emailInput.value.trim();
+
+    const phone =
+        phoneInput ? phoneInput.value.trim() : "";
 
     const password =
         passwordInput.value;
 
+    const confirm =
+        confirmInput ? confirmInput.value : "";
 
-    if (!email || !password) {
 
-        alert("请输入邮箱和密码");
+    // ================================
+    // 基本校验
+    // ================================
+
+    if (!name) {
+
+        alert(I18N.t("msg.nameRequired"));
+        return;
+
+    }
+
+
+    if (!email) {
+
+        alert(I18N.t("msg.enterEmailPwd"));
+        return;
+
+    }
+
+
+    if (
+        !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
+            email
+        )
+    ) {
+
+        alert(I18N.t("msg.emailInvalid"));
+        return;
+
+    }
+
+
+    if (!phone) {
+
+        alert(I18N.t("msg.phoneRequired"));
+        return;
+
+    }
+
+
+    if (
+        phone.replace(/\D/g, "").length <
+        8
+    ) {
+
+        alert(I18N.t("msg.phoneInvalid"));
         return;
 
     }
@@ -198,7 +260,7 @@ async function register() {
     if (password.length < 6) {
 
         alert(
-            "密码至少需要 6 个字符"
+            I18N.t("msg.passwordTooShort")
         );
 
         return;
@@ -206,11 +268,34 @@ async function register() {
     }
 
 
+    if (password !== confirm) {
+
+        alert(
+            I18N.t("msg.passwordMismatch")
+        );
+
+        return;
+
+    }
+
+
+    // ================================
+    // 注册（昵称 / 电话存入 user_metadata，
+    // 不修改数据库 schema）
+    // ================================
+
     const { data, error } =
         await supabaseClient.auth.signUp({
 
             email: email,
-            password: password
+            password: password,
+
+            options: {
+                data: {
+                    display_name: name,
+                    phone: phone
+                }
+            }
 
         });
 
@@ -218,7 +303,7 @@ async function register() {
     if (error) {
 
         alert(
-            "注册失败：\n" +
+            I18N.t("msg.registerFailed") +
             error.message
         );
 
@@ -228,8 +313,7 @@ async function register() {
 
 
     alert(
-        "✅ 注册成功！\n\n" +
-        "如果系统要求验证邮箱，请先完成邮箱验证，然后再登录。"
+        I18N.t("msg.registerSuccess")
     );
 
 
@@ -237,6 +321,52 @@ async function register() {
     switchAuth("login");
 
 }
+
+
+// ========================================
+// 首页滚动到任务
+// ========================================
+
+// ========================================
+// 移动端菜单
+// ========================================
+
+function toggleMobileMenu() {
+
+    const menu =
+        document.getElementById("mobileNav");
+
+    if (menu) {
+
+        menu.classList.toggle("open");
+
+    }
+
+}
+
+
+// 点击菜单项后自动关闭
+
+document.addEventListener("click", function (event) {
+
+    const menu =
+        document.getElementById("mobileNav");
+
+    const toggle =
+        document.querySelector(".nav-toggle");
+
+    if (
+        menu &&
+        menu.classList.contains("open") &&
+        (!toggle || !toggle.contains(event.target)) &&
+        !menu.contains(event.target)
+    ) {
+
+        menu.classList.remove("open");
+
+    }
+
+});
 
 
 // ========================================

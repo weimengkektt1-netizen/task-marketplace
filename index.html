@@ -9,7 +9,9 @@
     <link rel="stylesheet" href="style.css">
 </head>
 
-<body>
+<body class="index-body">
+
+    <div class="site-glow" aria-hidden="true"></div>
 
     <!-- =========================
          NAVBAR
@@ -23,12 +25,26 @@
         </div>
 
         <nav>
-            <a href="#home">首页</a>
-            <a href="#tasks">任务</a>
-            <a href="#about">关于我们</a>
+            <a href="#home" data-i18n="nav.home">首页</a>
+            <a href="#tasks" data-i18n="nav.tasks">任务</a>
+            <a href="#about" data-i18n="nav.about">关于我们</a>
         </nav>
 
+        <button
+            class="nav-toggle"
+            onclick="toggleMobileMenu()"
+            aria-label="打开菜单">
+            ☰
+        </button>
+
         <div class="nav-buttons">
+
+            <button
+                class="btn btn-outline lang-btn"
+                onclick="I18N.toggle()"
+                data-i18n-lang>
+                EN
+            </button>
 
             <button
                 class="btn btn-outline"
@@ -48,6 +64,42 @@
 
 
     <!-- =========================
+         MOBILE NAV
+    ========================== -->
+
+    <div class="mobile-nav" id="mobileNav">
+
+        <a href="#home" data-i18n="nav.home">首页</a>
+        <a href="#tasks" data-i18n="nav.tasks">任务</a>
+        <a href="#about" data-i18n="nav.about">关于我们</a>
+
+        <div class="mobile-nav-buttons">
+
+            <button
+                class="btn btn-outline lang-btn"
+                onclick="I18N.toggle()"
+                data-i18n-lang>
+                EN
+            </button>
+
+            <button
+                class="btn btn-outline"
+                onclick="openAuth('login')">
+                登录
+            </button>
+
+            <button
+                class="btn btn-primary"
+                onclick="openAuth('register')">
+                注册
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
          HERO
     ========================== -->
 
@@ -57,16 +109,16 @@
 
             <div class="hero-content">
 
-                <div class="badge">
+                <div class="badge" data-i18n="home.badge">
                     ● 简单 · 灵活 · 在线
                 </div>
 
                 <h1>
-                    找到适合你的
-                    <span>线上任务</span>
+                    <span data-i18n="home.title1">找到适合你的</span>
+                    <span data-i18n="home.title2">线上任务</span>
                 </h1>
 
-                <p>
+                <p data-i18n="home.subtitle">
                     注册账号，浏览平台任务，
                     选择适合自己的兼职工作。
                     在空闲时间完成任务并获得报酬。
@@ -76,13 +128,15 @@
 
                     <button
                         class="btn btn-primary btn-large"
-                        onclick="openAuth('register')">
+                        onclick="openAuth('register')"
+                        data-i18n="nav.getStarted">
                         立即开始
                     </button>
 
                     <button
                         class="btn btn-outline btn-large"
-                        onclick="scrollToTasks()">
+                        onclick="scrollToTasks()"
+                        data-i18n="nav.browseTasks">
                         浏览任务
                     </button>
 
@@ -92,17 +146,17 @@
 
                     <div>
                         <strong>100+</strong>
-                        <span>任务机会</span>
+                        <span data-i18n="home.statJobs">任务机会</span>
                     </div>
 
                     <div>
                         <strong>24/7</strong>
-                        <span>在线平台</span>
+                        <span data-i18n="home.statOnline">在线平台</span>
                     </div>
 
                     <div>
                         <strong>RM</strong>
-                        <span>灵活赚取</span>
+                        <span data-i18n="home.statEarn">灵活赚取</span>
                     </div>
 
                 </div>
@@ -113,8 +167,8 @@
             <div class="hero-card">
 
                 <div class="card-header">
-                    <span>任务大厅</span>
-                    <span class="online">● Online</span>
+                    <span data-i18n="home.cardTitle">任务大厅</span>
+                    <span class="online" data-i18n="home.cardOnline">● Online</span>
                 </div>
 
                 <div class="task-preview">
@@ -122,12 +176,12 @@
                     <div class="task-icon">📱</div>
 
                     <div class="task-info">
-                        <h3>TikTok 内容任务</h3>
-                        <p>完成指定内容任务</p>
+                        <h3 data-i18n="home.cardTask1">TikTok 内容任务</h3>
+                        <p data-i18n="home.cardTask1Desc">完成指定内容任务</p>
                     </div>
 
                     <div class="reward">
-                        <small>奖励</small>
+                        <small data-i18n="home.reward">奖励</small>
                         <strong>RM25</strong>
                     </div>
 
@@ -139,12 +193,12 @@
                     <div class="task-icon">📝</div>
 
                     <div class="task-info">
-                        <h3>资料整理任务</h3>
-                        <p>完成线上资料整理</p>
+                        <h3 data-i18n="home.cardTask2">资料整理任务</h3>
+                        <p data-i18n="home.cardTask2Desc">完成线上资料整理</p>
                     </div>
 
                     <div class="reward">
-                        <small>奖励</small>
+                        <small data-i18n="home.reward">奖励</small>
                         <strong>RM15</strong>
                     </div>
 
@@ -156,12 +210,12 @@
                     <div class="task-icon">💻</div>
 
                     <div class="task-info">
-                        <h3>线上简单任务</h3>
-                        <p>适合新手参与</p>
+                        <h3 data-i18n="home.cardTask3">线上简单任务</h3>
+                        <p data-i18n="home.cardTask3Desc">适合新手参与</p>
                     </div>
 
                     <div class="reward">
-                        <small>奖励</small>
+                        <small data-i18n="home.reward">奖励</small>
                         <strong>RM10</strong>
                     </div>
 
@@ -185,14 +239,15 @@
                         TASK MARKETPLACE
                     </span>
 
-                    <h2>
+                    <h2 data-i18n="home.hotTasks">
                         热门任务
                     </h2>
                 </div>
 
                 <button
                     class="btn btn-outline"
-                    onclick="openAuth('login')">
+                    onclick="openAuth('login')"
+                    data-i18n="nav.loginMore">
                     登录查看更多
                 </button>
 
@@ -208,12 +263,12 @@
                             Social Media
                         </span>
 
-                        <span class="task-status">
+                        <span class="task-status" data-i18n="home.claimable">
                             可领取
                         </span>
                     </div>
 
-                    <h3>TikTok 内容任务</h3>
+                    <h3 data-i18n="home.cardTask1">TikTok 内容任务</h3>
 
                     <p>
                         根据任务要求完成指定内容并提交证明。
@@ -222,13 +277,14 @@
                     <div class="task-bottom">
 
                         <div>
-                            <small>任务奖励</small>
+                            <small data-i18n="home.reward">任务奖励</small>
                             <strong>RM25.00</strong>
                         </div>
 
                         <button
                             class="claim-btn"
-                            onclick="openAuth('login')">
+                            onclick="openAuth('login')"
+                            data-i18n="home.viewTask">
                             查看任务
                         </button>
 
@@ -244,12 +300,12 @@
                             Data
                         </span>
 
-                        <span class="task-status">
+                        <span class="task-status" data-i18n="home.claimable">
                             可领取
                         </span>
                     </div>
 
-                    <h3>资料整理任务</h3>
+                    <h3 data-i18n="home.cardTask2">资料整理任务</h3>
 
                     <p>
                         完成平台指定的数据整理工作。
@@ -258,13 +314,14 @@
                     <div class="task-bottom">
 
                         <div>
-                            <small>任务奖励</small>
+                            <small data-i18n="home.reward">任务奖励</small>
                             <strong>RM15.00</strong>
                         </div>
 
                         <button
                             class="claim-btn"
-                            onclick="openAuth('login')">
+                            onclick="openAuth('login')"
+                            data-i18n="home.viewTask">
                             查看任务
                         </button>
 
@@ -280,12 +337,12 @@
                             Online
                         </span>
 
-                        <span class="task-status">
+                        <span class="task-status" data-i18n="home.claimable">
                             可领取
                         </span>
                     </div>
 
-                    <h3>线上简单任务</h3>
+                    <h3 data-i18n="home.cardTask3">线上简单任务</h3>
 
                     <p>
                         简单的线上任务，适合新用户参与。
@@ -294,13 +351,14 @@
                     <div class="task-bottom">
 
                         <div>
-                            <small>任务奖励</small>
+                            <small data-i18n="home.reward">任务奖励</small>
                             <strong>RM10.00</strong>
                         </div>
 
                         <button
                             class="claim-btn"
-                            onclick="openAuth('login')">
+                            onclick="openAuth('login')"
+                            data-i18n="home.viewTask">
                             查看任务
                         </button>
 
@@ -326,11 +384,11 @@
                         WHY TASKHUB
                     </span>
 
-                    <h2>
+                    <h2 data-i18n="home.whyTitle">
                         灵活安排你的时间
                     </h2>
 
-                    <p>
+                    <p data-i18n="home.whyDesc">
                         TaskHub 致力于提供一个简单、
                         清晰的线上任务平台。
                         用户可以根据自己的时间和能力选择任务。
@@ -341,20 +399,175 @@
 
                     <div>
                         <span>01</span>
-                        <strong>注册账号</strong>
-                        <p>创建你的个人账户。</p>
+                        <strong data-i18n="home.step1">注册账号</strong>
+                        <p data-i18n="home.step1Desc">创建你的个人账户。</p>
                     </div>
 
                     <div>
                         <span>02</span>
-                        <strong>选择任务</strong>
-                        <p>浏览平台提供的任务。</p>
+                        <strong data-i18n="home.step2">选择任务</strong>
+                        <p data-i18n="home.step2Desc">浏览平台提供的任务。</p>
                     </div>
 
                     <div>
                         <span>03</span>
-                        <strong>完成任务</strong>
-                        <p>按照任务要求完成工作。</p>
+                        <strong data-i18n="home.step3">完成任务</strong>
+                        <p data-i18n="home.step3Desc">按照任务要求完成工作。</p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <section class="faq-section" id="faq">
+
+            <div class="dashboard-section-title">
+
+                <div>
+
+                    <span class="section-label">
+                        FAQ
+                    </span>
+
+                    <h2>
+                        <span data-i18n="faq.title">常见问题</span>
+                    </h2>
+
+                </div>
+
+            </div>
+
+            <p class="faq-subtitle">
+                <span data-i18n="faq.subtitle">还有疑问？随时联系客服</span>
+            </p>
+
+            <div class="faq-list">
+
+                <div class="faq-item">
+
+                    <button
+                        type="button"
+                        class="faq-q"
+                        onclick="toggleFaq(this)">
+
+                        <span data-i18n="faq.q1">任务完成后怎么提交？</span>
+
+                        <span class="faq-icon">＋</span>
+
+                    </button>
+
+                    <div class="faq-a">
+
+                        <p data-i18n="faq.a1">在我的任务中找到对应任务，点击提交审核，上传完成截图并填写完成说明，提交后等待管理员审核。</p>
+
+                    </div>
+
+                </div>
+
+                <div class="faq-item">
+
+                    <button
+                        type="button"
+                        class="faq-q"
+                        onclick="toggleFaq(this)">
+
+                        <span data-i18n="faq.q2">报酬什么时候到账？</span>
+
+                        <span class="faq-icon">＋</span>
+
+                    </button>
+
+                    <div class="faq-a">
+
+                        <p data-i18n="faq.a2">管理员审核通过后即完成结算，金额会直接计入你的可提现余额，通常会在 24 小时内处理。</p>
+
+                    </div>
+
+                </div>
+
+                <div class="faq-item">
+
+                    <button
+                        type="button"
+                        class="faq-q"
+                        onclick="toggleFaq(this)">
+
+                        <span data-i18n="faq.q3">怎么提现？</span>
+
+                        <span class="faq-icon">＋</span>
+
+                    </button>
+
+                    <div class="faq-a">
+
+                        <p data-i18n="faq.a3">在提现页面填写提现金额、选择提现方式并填写收款信息（银行、收款人、账号），提交后由管理员审核打款。</p>
+
+                    </div>
+
+                </div>
+
+                <div class="faq-item">
+
+                    <button
+                        type="button"
+                        class="faq-q"
+                        onclick="toggleFaq(this)">
+
+                        <span data-i18n="faq.q4">申请被驳回了怎么办？</span>
+
+                        <span class="faq-icon">＋</span>
+
+                    </button>
+
+                    <div class="faq-a">
+
+                        <p data-i18n="faq.a4">查看驳回原因，按提示修改后重新提交；如有疑问可联系客服。</p>
+
+                    </div>
+
+                </div>
+
+                <div class="faq-item">
+
+                    <button
+                        type="button"
+                        class="faq-q"
+                        onclick="toggleFaq(this)">
+
+                        <span data-i18n="faq.q5">可以同时做多个任务吗？</span>
+
+                        <span class="faq-icon">＋</span>
+
+                    </button>
+
+                    <div class="faq-a">
+
+                        <p data-i18n="faq.a5">可以，只要任务还有剩余名额，你就可以领取多个任务，按自己的时间安排完成。</p>
+
+                    </div>
+
+                </div>
+
+                <div class="faq-item">
+
+                    <button
+                        type="button"
+                        class="faq-q"
+                        onclick="toggleFaq(this)">
+
+                        <span data-i18n="faq.q6">一个任务可以申请多次吗？</span>
+
+                        <span class="faq-icon">＋</span>
+
+                    </button>
+
+                    <div class="faq-a">
+
+                        <p data-i18n="faq.a6">每个任务每人限领取一次，领取过的任务不能重复申请。</p>
+
                     </div>
 
                 </div>
@@ -393,44 +606,47 @@
 
             <div id="loginForm">
 
-                <h2>欢迎回来</h2>
+                <h2 data-i18n="auth.welcome">欢迎回来</h2>
 
-                <p class="auth-subtitle">
+                <p class="auth-subtitle" data-i18n="auth.loginSub">
                     登录你的 TaskHub 账户
                 </p>
 
 
-                <label>
+                <label data-i18n="auth.email">
                     Email
                 </label>
 
                 <input
                     type="email"
                     id="loginEmail"
-                    placeholder="your@email.com">
+                    placeholder="your@email.com"
+                    data-i18n-placeholder="auth.emailPh">
 
 
-                <label>
+                <label data-i18n="auth.password">
                     密码
                 </label>
 
                 <input
                     type="password"
                     id="loginPassword"
-                    placeholder="请输入密码">
+                    placeholder="请输入密码"
+                    data-i18n-placeholder="auth.passwordPh">
 
 
                 <button
                     class="auth-submit"
-                    onclick="login()">
+                    onclick="login()"
+                    data-i18n="common.login">
                     登录
                 </button>
 
 
                 <p class="switch-auth">
-                    还没有账号？
+                    <span data-i18n="auth.noAccount">还没有账号？</span>
 
-                    <button onclick="switchAuth('register')">
+                    <button onclick="switchAuth('register')" data-i18n="auth.signUpNow">
                         立即注册
                     </button>
                 </p>
@@ -444,44 +660,84 @@
                 id="registerForm"
                 style="display:none;">
 
-                <h2>创建账户</h2>
+                <h2 data-i18n="auth.createAccount">创建账户</h2>
 
-                <p class="auth-subtitle">
+                <p class="auth-subtitle" data-i18n="auth.registerSub">
                     免费注册 TaskHub
                 </p>
 
 
-                <label>
+                <label data-i18n="auth.name">
+                    昵称
+                </label>
+
+                <input
+                    type="text"
+                    id="registerName"
+                    placeholder="你的昵称"
+                    data-i18n-placeholder="auth.namePh"
+                    autocomplete="nickname">
+
+
+                <label data-i18n="auth.email">
                     Email
                 </label>
 
                 <input
                     type="email"
                     id="registerEmail"
-                    placeholder="your@email.com">
+                    placeholder="your@email.com"
+                    data-i18n-placeholder="auth.emailPh">
 
 
-                <label>
+                <label data-i18n="auth.phone">
+                    电话号码
+                </label>
+
+                <input
+                    type="tel"
+                    id="registerPhone"
+                    placeholder="+60 12-345 6789"
+                    data-i18n-placeholder="auth.phonePh"
+                    autocomplete="tel">
+
+
+                <label data-i18n="auth.password">
                     密码
                 </label>
 
                 <input
                     type="password"
                     id="registerPassword"
-                    placeholder="至少 6 个字符">
+                    placeholder="至少 6 个字符"
+                    data-i18n-placeholder="auth.pwdMin"
+                    autocomplete="new-password">
+
+
+                <label data-i18n="auth.confirmPwd">
+                    确认密码
+                </label>
+
+                <input
+                    type="password"
+                    id="registerConfirmPassword"
+                    placeholder="再次输入密码"
+                    data-i18n-placeholder="auth.confirmPwdPh"
+                    autocomplete="new-password">
 
 
                 <button
                     class="auth-submit"
-                    onclick="register()">
+                    onclick="register()"
+                    data-i18n="auth.createBtn">
                     创建账户
                 </button>
 
 
                 <p class="switch-auth">
-                    已经有账号？
+                    <span data-i18n="auth.hasAccount">已经有账号？</span>
 
-                    <button onclick="switchAuth('login')">
+                    <button onclick="switchAuth('login')" data-i18n="auth.backLogin">
                         返回登录
                     </button>
                 </p>
@@ -501,7 +757,59 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+    <script src="i18n.js"></script>
+
     <script src="app.js"></script>
+
+
+    <script>
+// ========================================
+// FAQ 手风琴
+// ========================================
+
+function toggleFaq(btn) {
+
+    const item =
+        btn.closest(".faq-item");
+
+    const isOpen =
+        item.classList.contains("open");
+
+    document
+        .querySelectorAll(".faq-item.open")
+        .forEach(
+            function (i) {
+
+                i.classList.remove("open");
+
+            }
+        );
+
+    if (!isOpen) {
+
+        item.classList.add("open");
+
+    }
+
+}
+    </script>
+
+
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <div class="footer-logo-icon">T</div>
+                <div class="footer-brand-name">TaskHub</div>
+            </div>
+            <div class="footer-copy">© TaskHub 2026</div>
+        </div>
+    </footer>
+
+    <a href="https://wa.me/601139706264" target="_blank" rel="noopener" class="wa-float" aria-label="联系客服" data-i18n-title="common.contactSupport">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+        <span class="wa-float-text" data-i18n="common.contactSupport">联系客服</span>
+    </a>
+
 
 </body>
 </html>
