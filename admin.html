@@ -219,6 +219,13 @@
                     提现审核
                 </a>
 
+
+                <a href="#members" data-i18n="admin.memberManage"
+                   class="admin-nav-item">
+                    <span>👥</span>
+                    会员管理
+                </a>
+
             </nav>
 
 
@@ -525,6 +532,49 @@
                             </div>
 
 
+                            <!-- ShopHub 商品绑定 -->
+
+                            <div class="admin-form-group full">
+
+                                <label>
+                                <span data-i18n="admin.shopProduct">绑定 ShopHub 商品（选填，刷单任务）</span>
+                                </label>
+
+                                <input
+                                    type="number"
+                                    id="taskShopProduct"
+                                    placeholder="例如：3" data-i18n-placeholder="admin.shopProductPh"
+                                    min="1">
+
+                                <small class="admin-form-hint" style="display:block;margin-top:6px;font-size:12px;color:#8a94a6;line-height:1.6;">
+                                    <span data-i18n="admin.shopProductHint">填写 ShopHub 商品 ID（商品详情页 #product/ 后面的数字）。填写后该任务为刷单任务：用户领取后跳转商城下单，付款审核通过后任务自动完成并发放佣金。</span>
+                                </small>
+
+                            </div>
+
+
+                            <!-- ShopHub 商品价格（刷单佣金基数） -->
+
+                            <div class="admin-form-group full">
+
+                                <label>
+                                <span data-i18n="admin.shopPrice">商品价格（RM）（选填，刷单任务）</span>
+                                </label>
+
+                                <input
+                                    type="number"
+                                    id="taskShopPrice"
+                                    placeholder="例如：89.00" data-i18n-placeholder="admin.shopPricePh"
+                                    step="0.01"
+                                    min="0">
+
+                                <small class="admin-form-hint" style="display:block;margin-top:6px;font-size:12px;color:#8a94a6;line-height:1.6;">
+                                    <span data-i18n="admin.shopPriceHint">填写 ShopHub 商品售价，用于展示用户完成该订单可得佣金（按会员等级比例计算，5% / 8% / 10% / 15%）。</span>
+                                </small>
+
+                            </div>
+
+
                             <!-- Reward -->
 
                             <div class="admin-form-group">
@@ -751,6 +801,51 @@
             </section>
 
 
+            <!-- ========================================
+                 Members（会员管理）
+                 ======================================== -->
+
+            <section id="members" class="admin-section">
+
+                <div class="admin-review-header">
+
+                    <div>
+
+                        <h2>
+                            <span data-i18n="admin.membersTitle">会员管理</span>
+                        </h2>
+
+                        <p>
+                            <span data-i18n="admin.membersSub">查看与管理所有会员的等级、余额与邀请关系</span>
+                        </p>
+
+                    </div>
+
+
+                    <button
+                        type="button"
+                        onclick="loadMembers()"
+                        class="admin-refresh-btn"
+                        data-i18n="common.refresh">
+
+                        🔄 刷新
+
+                    </button>
+
+                </div>
+
+
+                <div id="membersContainer">
+
+                    <div class="admin-loading-box">
+                        <span data-i18n="common.loading">正在加载...</span>
+                    </div>
+
+                </div>
+
+            </section>
+
+
         </main>
 
     </div>
@@ -817,6 +912,7 @@ document.addEventListener(
                 loadAdminTasks();
                 loadPendingSubmissions();
                 loadPendingWithdrawals();
+                loadMembers();
 
             }
         );
@@ -922,6 +1018,8 @@ async function checkAdmin() {
 
         await loadPendingWithdrawals();
 
+        await loadMembers();
+
 
     } catch (error) {
 
@@ -939,6 +1037,160 @@ async function checkAdmin() {
 
 }
 
+
+
+/* ========================================
+   会员管理
+   ======================================== */
+
+async function loadMembers() {
+
+    const container = document.getElementById("membersContainer");
+    if (!container) return;
+
+    container.innerHTML =
+        '<div class="admin-loading-box"><span data-i18n="common.loading">正在加载...</span></div>';
+
+    const { data: members, error } =
+        await supabaseClient
+        .from("profiles")
+        .select("id, display_name, email, phone, balance, membership_level, invite_code, invited_by, created_at, role")
+        .order("created_at", { ascending: false });
+
+    if (error) {
+        container.innerHTML = '<div class="admin-loading-box">' + I18N.t("admin.memberEditFailed") + error.message + '</div>';
+        return;
+    }
+
+    if (!members || members.length === 0) {
+        container.innerHTML = '<div class="admin-loading-box"><span data-i18n="admin.membersEmpty">暂无会员数据</span></div>';
+        return;
+    }
+
+    const { data: allInvites } =
+        await supabaseClient
+        .from("profiles")
+        .select("invited_by");
+
+    const id2name = {};
+    members.forEach(function (m) {
+        id2name[m.id] = m.display_name || m.username || m.email || "?";
+    });
+
+    const invCount = {};
+    (allInvites || []).forEach(function (r) {
+        if (r.invited_by) invCount[r.invited_by] = (invCount[r.invited_by] || 0) + 1;
+    });
+
+    const levelNames = {
+        basic: I18N.t("member.basic"),
+        gold: I18N.t("member.gold"),
+        platinum: I18N.t("member.platinum"),
+        diamond: I18N.t("member.diamond")
+    };
+
+    const rows = members.map(function (m) {
+
+        const levelOpts = ["basic", "gold", "platinum", "diamond"].map(function (l) {
+            return '<option value="' + l + '"' + (m.membership_level === l ? " selected" : "") + '>' + levelNames[l] + '</option>';
+        }).join("");
+
+        const inviter = m.invited_by ? (id2name[m.invited_by] || "?") : "—";
+        const name = m.display_name || "—";
+        const avatar = name.slice(0, 1).toUpperCase();
+
+        return (
+            '<div class="admin-member-card" data-uid="' + m.id + '">' +
+
+            '<div class="admin-member-main">' +
+            '<div class="admin-member-avatar">' + avatar + '</div>' +
+            '<div class="admin-member-info">' +
+            '<strong class="admin-member-name">' + name + '</strong>' +
+            '<span class="admin-member-mail">' + (m.email || "") + '</span>' +
+            '<span class="admin-member-mail">' + (m.phone || "") + '</span>' +
+            '</div>' +
+            '</div>' +
+
+            '<div class="admin-member-cell">' +
+            '<select class="admin-member-select" data-field="membership_level" data-uid="' + m.id + '">' + levelOpts + '</select>' +
+            '</div>' +
+
+            '<div class="admin-member-cell">' +
+            '<input class="admin-member-input" data-field="balance" data-uid="' + m.id + '" value="' + Number(m.balance || 0) + '" />' +
+            '</div>' +
+
+            '<div class="admin-member-cell admin-member-invite">' +
+            '<code>' + (m.invite_code || "—") + '</code>' +
+            '<small>' + I18N.t("admin.invitesCount").replace("{n}", String(invCount[m.id] || 0)) + '</small>' +
+            '</div>' +
+
+            '<div class="admin-member-cell">' + inviter + '</div>' +
+
+            '<div class="admin-member-cell">' + fmtMemberDate(m.created_at) + '</div>' +
+
+            '<div class="admin-member-cell">' +
+            '<button class="admin-member-save" onclick="saveMember(this)" data-uid="' + m.id + '">' + I18N.t("admin.saveMember") + '</button>' +
+            '</div>' +
+
+            '</div>'
+        );
+
+    }).join("");
+
+    container.innerHTML =
+        '<div class="admin-member-table">' +
+        '<div class="admin-member-head">' +
+        '<span data-i18n="admin.colUser">用户</span>' +
+        '<span data-i18n="admin.colLevel">等级</span>' +
+        '<span data-i18n="admin.colBalance">余额</span>' +
+        '<span data-i18n="admin.colInvite">邀请码</span>' +
+        '<span data-i18n="admin.colInvitedBy">邀请人</span>' +
+        '<span data-i18n="admin.colJoined">注册时间</span>' +
+        '<span data-i18n="admin.colActions">操作</span>' +
+        '</div>' +
+        rows +
+        '</div>';
+
+}
+
+function fmtMemberDate(iso) {
+    if (!iso) return "—";
+    const d = new Date(iso);
+    return d.getFullYear() + "-" +
+        String(d.getMonth() + 1).padStart(2, "0") + "-" +
+        String(d.getDate()).padStart(2, "0");
+}
+
+async function saveMember(btn) {
+
+    const uid = btn.getAttribute("data-uid");
+    const card = document.querySelector('.admin-member-card[data-uid="' + uid + '"]');
+    if (!card) return;
+
+    const level = card.querySelector('[data-field="membership_level"]').value;
+    const balance = Number(card.querySelector('[data-field="balance"]').value);
+
+    btn.disabled = true;
+
+    const { error } =
+        await supabaseClient
+        .rpc("admin_update_membership", {
+            p_user_id: uid,
+            p_level: level,
+            p_balance: balance
+        });
+
+    btn.disabled = false;
+
+    if (error) {
+        alert(I18N.t("admin.memberEditFailed") + error.message);
+        return;
+    }
+
+    alert(I18N.t("admin.memberEdited"));
+    await loadMembers();
+
+}
 
 
 /* ========================================
@@ -1218,6 +1470,33 @@ async function createTask(event) {
             "taskStatus"
         );
 
+    const shopProductElement =
+        document.getElementById(
+            "taskShopProduct"
+        );
+
+
+    const shopProductValue =
+        shopProductElement && shopProductElement.value.trim()
+            ? parseInt(
+                shopProductElement.value,
+                10
+            )
+            : null;
+
+
+    const shopPriceElement =
+        document.getElementById(
+            "taskShopPrice"
+        );
+
+    const shopPriceValue =
+        shopPriceElement && shopPriceElement.value.trim()
+            ? parseFloat(
+                shopPriceElement.value
+            )
+            : null;
+
 
     const title =
         titleElement
@@ -1395,7 +1674,13 @@ async function createTask(event) {
                     created_by: user.id,
 
                     image_url:
-                        taskImageUrl
+                        taskImageUrl,
+
+                    shop_product_id:
+                        shopProductValue,
+
+                    shop_product_price:
+                        shopPriceValue
 
                 });
 
@@ -2598,10 +2883,6 @@ function createWithdrawalCard(
                 ${I18N.t("admin.accountName")}
                 ${escapeHtml(
                     item.account_name || "-"
-                )}
-            </div>
-                ${escapeHtml(
-                    account
                 )}
             </div>
 

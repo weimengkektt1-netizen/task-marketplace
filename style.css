@@ -4349,3 +4349,598 @@ body.dashboard-body .sidebar {
         display: none;
     }
 }
+
+
+/* ===== Index 移动端导航优化：汉堡移到最右，登录/注册收进菜单（新增区块，删除即可回滚） ===== */
+@media (max-width: 800px) {
+    body.index-body .navbar {
+        gap: 10px;
+    }
+    body.index-body .nav-toggle {
+        order: 5;
+        margin-left: 0;
+    }
+    body.index-body .navbar .nav-buttons {
+        margin-left: auto;
+        gap: 8px;
+    }
+}
+
+
+/* ===== 会员中心 Membership（新增区块，删除即可回滚） ===== */
+.membership-section {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.member-current-card {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 22px 24px;
+    border-radius: 20px;
+    background: linear-gradient(165deg, rgba(37, 43, 58, 0.92), rgba(22, 27, 38, 0.96));
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    position: relative;
+    overflow: hidden;
+}
+
+.member-current-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(120px 90px at 12% 0%, rgba(139, 92, 246, 0.18), transparent 70%);
+    pointer-events: none;
+}
+
+.member-tier-badge {
+    width: 64px;
+    height: 64px;
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 34px;
+    border-radius: 18px;
+    background: linear-gradient(160deg, rgba(139, 92, 246, 0.35), rgba(88, 58, 160, 0.25));
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.member-current-info {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+}
+
+.member-label {
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.member-tier-name {
+    font-size: 22px;
+    font-weight: 800;
+    background: linear-gradient(120deg, #fff, #c7c2ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.member-stats {
+    display: flex;
+    gap: 28px;
+    margin-top: 6px;
+}
+
+.member-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.member-stat span {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.member-stat strong {
+    font-size: 16px;
+    font-weight: 700;
+    color: #fff;
+}
+
+.member-invite-card {
+    padding: 20px 24px;
+    border-radius: 20px;
+    background: linear-gradient(165deg, rgba(31, 36, 47, 0.9), rgba(19, 23, 32, 0.95));
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28);
+}
+
+.member-invite-card h3 {
+    margin: 0 0 12px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff;
+}
+
+.member-invite-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.member-invite-row code {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    color: #c7bfff;
+    background: rgba(139, 92, 246, 0.14);
+    border: 1px dashed rgba(199, 191, 255, 0.35);
+    border-radius: 12px;
+    padding: 8px 16px;
+}
+
+.member-copy-btn {
+    padding: 9px 18px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    background: rgba(255, 255, 255, 0.07);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.member-copy-btn:hover {
+    background: rgba(139, 92, 246, 0.35);
+    border-color: rgba(139, 92, 246, 0.5);
+}
+
+.member-invite-hint {
+    margin: 10px 0 16px;
+    font-size: 12px;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.55);
+}
+
+.member-invite-progress {
+    background: rgba(0, 0, 0, 0.25);
+    border-radius: 999px;
+    padding: 4px;
+}
+
+.member-invite-bar {
+    height: 8px;
+    border-radius: 999px;
+    background: rgba(139, 92, 246, 0.18);
+    overflow: hidden;
+}
+
+.member-invite-bar span {
+    display: block;
+    height: 100%;
+    width: 0;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #8b5cf6, #6366f1, #22d3ee);
+    transition: width 0.6s ease;
+}
+
+.member-invite-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.member-invite-count {
+    margin-top: 10px;
+    text-align: right;
+    font-size: 13px;
+    font-weight: 600;
+    color: #c7bfff;
+}
+
+.member-tiers-title {
+    margin: 6px 0 0;
+    font-size: 16px;
+    font-weight: 800;
+    color: #fff;
+}
+
+.member-tiers {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+}
+
+.member-tier {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 18px;
+    border-radius: 18px;
+    background: linear-gradient(165deg, rgba(31, 36, 47, 0.85), rgba(19, 23, 32, 0.92));
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    transition: transform 0.2s, border-color 0.2s;
+}
+
+.member-tier:hover {
+    transform: translateY(-3px);
+    border-color: rgba(139, 92, 246, 0.35);
+}
+
+.member-tier.is-current {
+    border-color: rgba(139, 92, 246, 0.6);
+    background: linear-gradient(165deg, rgba(42, 47, 66, 0.95), rgba(26, 30, 44, 0.98));
+    box-shadow: 0 0 0 1px rgba(139, 92, 246, 0.25), 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+.member-tier-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.member-tier-icon {
+    font-size: 22px;
+}
+
+.member-tier-head strong {
+    font-size: 15px;
+    font-weight: 800;
+    color: #fff;
+}
+
+.member-tier-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.member-tier-rows > div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.55);
+}
+
+.member-tier-rows b {
+    font-size: 13px;
+    color: #fff;
+}
+
+.member-tier-price {
+    font-size: 13px;
+    font-weight: 700;
+    color: #22d3ee;
+}
+
+.member-tier-price em {
+    font-style: normal;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.45);
+    font-size: 11px;
+}
+
+.member-upgrade-btn {
+    margin-top: auto;
+    padding: 10px 14px;
+    border-radius: 12px;
+    border: none;
+    background: linear-gradient(120deg, #8b5cf6, #6366f1);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: filter 0.2s, transform 0.15s;
+}
+
+.member-upgrade-btn:hover {
+    filter: brightness(1.12);
+    transform: translateY(-1px);
+}
+
+.member-badge-cur {
+    margin-left: auto;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 9px;
+    border-radius: 999px;
+    background: rgba(139, 92, 246, 0.3);
+    color: #d6d0ff;
+    border: 1px solid rgba(139, 92, 246, 0.4);
+    white-space: nowrap;
+}
+
+.member-badge-need {
+    margin-left: auto;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 3px 9px;
+    border-radius: 999px;
+    background: rgba(250, 204, 21, 0.15);
+    color: #facc15;
+    border: 1px solid rgba(250, 204, 21, 0.3);
+    white-space: nowrap;
+}
+
+.member-badge-unlocked {
+    margin-left: auto;
+    font-size: 13px;
+    color: #34d399;
+}
+
+@media (max-width: 1000px) {
+    .member-tiers {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 560px) {
+    .member-tiers {
+        grid-template-columns: 1fr;
+    }
+    .member-current-card {
+        padding: 18px;
+    }
+}
+
+
+/* ===== Admin 会员管理（新增区块，删除即可回滚） ===== */
+.admin-member-table {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.admin-member-head,
+.admin-member-card {
+    display: grid;
+    grid-template-columns: 2.2fr 1fr 1fr 1.3fr 1fr 1fr 0.9fr;
+    gap: 12px;
+    align-items: center;
+}
+
+.admin-member-head {
+    padding: 10px 16px;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.45);
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 12px;
+}
+
+.admin-member-card {
+    padding: 14px 16px;
+    border-radius: 16px;
+    background: linear-gradient(165deg, rgba(31, 36, 47, 0.88), rgba(19, 23, 32, 0.94));
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.22);
+}
+
+.admin-member-main {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+}
+
+.admin-member-avatar {
+    width: 40px;
+    height: 40px;
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 16px;
+    color: #fff;
+    border-radius: 12px;
+    background: linear-gradient(150deg, #8b5cf6, #6366f1);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.35);
+}
+
+.admin-member-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.admin-member-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.admin-member-mail {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.5);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.admin-member-cell {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.8);
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.admin-member-select,
+.admin-member-input {
+    width: 100%;
+    padding: 7px 10px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    background: rgba(255, 255, 255, 0.07);
+    color: #fff;
+    font-size: 13px;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.admin-member-select:focus,
+.admin-member-input:focus {
+    border-color: rgba(139, 92, 246, 0.6);
+    background: rgba(139, 92, 246, 0.12);
+}
+
+.admin-member-select option {
+    background: #141a2e;
+    color: #fff;
+}
+
+.admin-member-invite {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.admin-member-invite code {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 12px;
+    font-weight: 700;
+    color: #c7bfff;
+    letter-spacing: 0.06em;
+}
+
+.admin-member-invite small {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.admin-member-save {
+    padding: 8px 14px;
+    border-radius: 10px;
+    border: none;
+    background: linear-gradient(120deg, #8b5cf6, #6366f1);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: filter 0.2s;
+}
+
+.admin-member-save:hover {
+    filter: brightness(1.12);
+}
+
+.admin-member-save:disabled {
+    opacity: 0.5;
+    cursor: wait;
+}
+
+@media (max-width: 1100px) {
+    .admin-member-table {
+        overflow-x: auto;
+        padding-bottom: 6px;
+    }
+    .admin-member-head,
+    .admin-member-card {
+        grid-template-columns: 200px 110px 110px 140px 110px 110px 90px;
+        min-width: 900px;
+    }
+}
+
+/* ===== 会员等级徽章 SVG + 发光动画（可回滚：删除本块即可） ===== */
+.tier-svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.member-tier-icon {
+    display: inline-flex;
+    width: 38px;
+    height: 38px;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.tier-basic    { --glow: rgba(148, 163, 184, 0.55); }
+.tier-gold     { --glow: rgba(245, 158, 11, 0.65); }
+.tier-platinum { --glow: rgba(167, 139, 250, 0.7); }
+.tier-diamond  { --glow: rgba(56, 189, 248, 0.75); }
+
+.member-tier-icon svg,
+.member-tier-badge svg,
+.invite-milestone-ico svg {
+    filter: drop-shadow(0 0 5px var(--glow, rgba(255, 255, 255, 0.35)));
+    animation: tierGlow 2.8s ease-in-out infinite;
+}
+
+.member-tier-icon.tier-gold svg,
+.member-tier-badge.tier-gold svg,
+.invite-milestone-ico.tier-gold svg { animation-delay: 0.15s; }
+
+.member-tier-icon.tier-platinum svg,
+.member-tier-badge.tier-platinum svg,
+.invite-milestone-ico.tier-platinum svg { animation-delay: 0.3s; }
+
+.member-tier-icon.tier-diamond svg,
+.member-tier-badge.tier-diamond svg,
+.invite-milestone-ico.tier-diamond svg { animation-delay: 0.45s; }
+
+@keyframes tierGlow {
+    0%, 100% { filter: drop-shadow(0 0 4px var(--glow, rgba(255, 255, 255, 0.35))); }
+    50%      { filter: drop-shadow(0 0 15px var(--glow, rgba(255, 255, 255, 0.35))); }
+}
+
+.member-tier-badge {
+    position: relative;
+    overflow: hidden;
+}
+
+.member-tier-badge::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(circle at 50% 42%, var(--glow, transparent), transparent 72%);
+    opacity: 0;
+    animation: badgePulse 2.8s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes badgePulse {
+    0%, 100% { opacity: 0.12; }
+    50%      { opacity: 0.5; }
+}
+
+.invite-milestone {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.invite-milestone-ico {
+    width: 18px;
+    height: 18px;
+    display: inline-flex;
+}
+

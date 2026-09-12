@@ -398,6 +398,15 @@
 
         </a>
 
+
+        <a href="#membership">
+
+            <span class="nav-ico tier-diamond" id="navMemberIco"></span>
+
+            <span class="nav-text" data-i18n="member.title">会员中心</span>
+
+        </a>
+
         <a
             href="admin.html"
             class="admin-nav-link"
@@ -977,6 +986,70 @@
 </section>
 
 
+    <!-- =========================
+         MEMBERSHIP
+    ========================== -->
+
+    <section class="dashboard-section membership-section" id="membership">
+
+        <div class="dashboard-section-title">
+            <div>
+                <span class="section-label">MEMBERSHIP</span>
+                <h2><span data-i18n="member.title">会员中心</span></h2>
+            </div>
+        </div>
+
+        <div class="member-current-card glass-card">
+
+            <div class="member-tier-badge tier-basic" id="memberTierBadge"></div>
+
+            <div class="member-current-info">
+                <span class="member-label" data-i18n="member.current">当前等级</span>
+                <strong class="member-tier-name" id="memberTierName">普通会员</strong>
+                <div class="member-stats">
+                    <div class="member-stat">
+                        <span data-i18n="member.commission">任务佣金</span>
+                        <strong id="memberCommission">5%</strong>
+                    </div>
+                    <div class="member-stat">
+                        <span data-i18n="member.dailyLimit">每日可领任务</span>
+                        <strong id="memberDailyLimit">1 单/天</strong>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="member-invite-card glass-card">
+
+            <h3 data-i18n="member.myInviteCode">我的邀请码</h3>
+
+            <div class="member-invite-row">
+                <code id="memberInviteCode">--------</code>
+                <button class="member-copy-btn" onclick="copyInviteCode()" data-i18n="member.copy">复制</button>
+            </div>
+
+            <p class="member-invite-hint" data-i18n="member.inviteHint">分享邀请码给好友，好友注册后你自动获得奖励，邀请达标免费升级</p>
+
+            <div class="member-invite-progress">
+                <div class="member-invite-bar"><span id="memberInviteBar"></span></div>
+                <div class="member-invite-labels">
+                    <span class="invite-milestone"><span class="invite-milestone-ico tier-gold"><svg class="tier-svg" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="tg-gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fef3c7"/><stop offset="0.5" stop-color="#f59e0b"/><stop offset="1" stop-color="#b45309"/></linearGradient><linearGradient id="tg-gold-r" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fef9c3"/><stop offset="1" stop-color="#d97706"/></linearGradient></defs><circle cx="32" cy="32" r="29" fill="url(#tg-gold)"/><circle cx="32" cy="32" r="29" fill="none" stroke="url(#tg-gold-r)" stroke-width="2"/><circle cx="32" cy="32" r="24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1"/><path d="M32 16.5 L35.8 26.5 L46.5 27.6 L38.4 34.7 L40.6 45.3 L32 40.1 L23.4 45.3 L25.6 34.7 L17.5 27.6 L28.2 26.5 Z" fill="#ffffff" opacity="0.97"/><ellipse cx="23" cy="20" rx="13" ry="7" fill="rgba(255,255,255,0.4)" transform="rotate(-30 23 20)"/></svg></span> 3</span>
+                    <span class="invite-milestone"><span class="invite-milestone-ico tier-platinum"><svg class="tier-svg" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="tg-plat" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f5f3ff"/><stop offset="0.5" stop-color="#a78bfa"/><stop offset="1" stop-color="#6d28d9"/></linearGradient><linearGradient id="tg-plat-r" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ede9fe"/><stop offset="1" stop-color="#7c3aed"/></linearGradient></defs><circle cx="32" cy="32" r="29" fill="url(#tg-plat)"/><circle cx="32" cy="32" r="29" fill="none" stroke="url(#tg-plat-r)" stroke-width="2"/><circle cx="32" cy="32" r="24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1"/><path d="M32 16 L45.5 32 L32 48 L18.5 32 Z" fill="#ffffff" opacity="0.97"/><path d="M32 22.5 L40.5 32 L32 41.5 L23.5 32 Z" fill="rgba(109,40,217,0.5)"/><ellipse cx="23" cy="20" rx="13" ry="7" fill="rgba(255,255,255,0.4)" transform="rotate(-30 23 20)"/></svg></span> 6</span>
+                    <span class="invite-milestone"><span class="invite-milestone-ico tier-diamond"><svg class="tier-svg" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="tg-dia" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e0f2fe"/><stop offset="0.5" stop-color="#38bdf8"/><stop offset="1" stop-color="#0369a1"/></linearGradient><linearGradient id="tg-dia-r" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#bae6fd"/><stop offset="1" stop-color="#0284c7"/></linearGradient></defs><circle cx="32" cy="32" r="29" fill="url(#tg-dia)"/><circle cx="32" cy="32" r="29" fill="none" stroke="url(#tg-dia-r)" stroke-width="2"/><circle cx="32" cy="32" r="24" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="1"/><path d="M19 42 L19 27 L26.5 32.5 L32 22.5 L37.5 32.5 L45 27 L45 42 Z" fill="#ffffff" opacity="0.97"/><path d="M19 44 h26 v3 h-26 Z" fill="#ffffff" opacity="0.9"/><ellipse cx="23" cy="20" rx="13" ry="7" fill="rgba(255,255,255,0.45)" transform="rotate(-30 23 20)"/></svg></span> 10</span>
+                </div>
+                <div class="member-invite-count" id="memberInviteCount">0 / 10</div>
+            </div>
+
+        </div>
+
+        <h3 class="member-tiers-title" data-i18n="member.tiers">等级权益</h3>
+
+        <div class="member-tiers" id="memberTiers"></div>
+
+    </section>
+
+
         <section class="faq-section" id="faq">
 
             <div class="dashboard-section-title">
@@ -1175,7 +1248,6 @@ function toggleFaq(btn) {
     </script>
 
 
-
 <script>
 
 
@@ -1185,6 +1257,15 @@ function toggleFaq(btn) {
 
 
 let currentUser = null;
+
+// 当前用户会员等级（用于刷单任务展示预计佣金）
+let currentMembershipLevel = "basic";
+
+function commissionRate(level) {
+    return level === "gold" ? 0.08 :
+           level === "platinum" ? 0.10 :
+           level === "diamond" ? 0.15 : 0.05;
+}
 
 
 // ========================================
@@ -1241,6 +1322,8 @@ async function checkUser() {
 	
 	await loadWithdrawHistory();
 
+	await loadMembership();
+
 }
 
 
@@ -1280,6 +1363,11 @@ async function loadProfile() {
         data.display_name ||
         data.username ||
         I18N.t("common.user");
+
+
+    // 记录当前会员等级（用于展示刷单任务预计佣金）
+    currentMembershipLevel =
+        data.membership_level || "basic";
 
 
     document
@@ -1696,6 +1784,24 @@ async function loadTasks() {
                 </div>
 
 
+                ${
+                    task.shop_product_id && task.shop_product_price
+                        ? `
+                        <div class="ht-commission">
+                            <div>
+                                <span>${I18N.t("dash.orderPrice")}</span>
+                                <b>RM${Number(task.shop_product_price).toFixed(2)}</b>
+                            </div>
+                            <div>
+                                <span>${I18N.t("dash.estCommission")}</span>
+                                <b class="ht-commission-value">RM${(Number(task.shop_product_price) * commissionRate(currentMembershipLevel)).toFixed(2)}</b>
+                            </div>
+                        </div>
+                        `
+                        : ""
+                }
+
+
                 <div class="ht-slots">
                     ${I18N.t("tasks.applied")} ${appliedCount} ·
                     ${I18N.t("tasks.slotsLeft")} <strong>${task.remaining_slots}</strong>
@@ -1704,9 +1810,13 @@ async function loadTasks() {
 
                 <button
                     class="task-action-btn"
-                    onclick="claimTask(${task.id})">
+                    onclick="claimTask(${task.id}, ${task.shop_product_id || "null"})">
 
-                    ${I18N.t("dash.claim")}
+                    ${
+                        task.shop_product_id
+                            ? I18N.t("dash.shopTask")
+                            : I18N.t("dash.claim")
+                    }
 
                 </button>
 
@@ -1728,7 +1838,7 @@ async function loadTasks() {
 // CLAIM TASK
 // ========================================
 
-async function claimTask(taskId) {
+async function claimTask(taskId, shopProductId) {
 
     const {
         data: existing
@@ -1754,6 +1864,60 @@ async function claimTask(taskId) {
         );
 
         return;
+
+    }
+
+
+    // ===== 会员等级每日限额检查（马来西亚自然日） =====
+    const { data: profInfo } =
+        await supabaseClient
+        .from("profiles")
+        .select("membership_level, role")
+        .eq("id", currentUser.id)
+        .single();
+
+    const mLevel =
+        (profInfo && profInfo.membership_level) || "basic";
+
+    const mRole =
+        (profInfo && profInfo.role) || "user";
+
+    if (mRole !== "admin") {
+
+        const mLimit =
+            mLevel === "gold" ? 5 :
+            mLevel === "platinum" ? 10 :
+            mLevel === "diamond" ? -1 : 1;
+
+        if (mLimit > 0) {
+
+            const malayDate =
+                new Date(Date.now() + 8 * 3600 * 1000)
+                .toISOString().slice(0, 10);
+
+            const dayStartUTC =
+                new Date(malayDate + "T00:00:00Z")
+                .getTime() - 8 * 3600 * 1000;
+
+            const { count: todayCount } =
+                await supabaseClient
+                .from("task_claims")
+                .select("id", { count: "exact" })
+                .eq("user_id", currentUser.id)
+                .gte("claimed_at", new Date(dayStartUTC).toISOString());
+
+            if ((todayCount || 0) >= mLimit) {
+
+                alert(
+                    I18N.t("msg.claimLimitReached")
+                    .replace("{limit}", String(mLimit))
+                );
+
+                return;
+
+            }
+
+        }
 
     }
 
@@ -1801,6 +1965,13 @@ async function claimTask(taskId) {
     );
 
 
+    // 刷单任务：领取成功后直接跳转 ShopHub 下单
+    if (shopProductId && data && data.id) {
+        window.location.href = shopHubUrl(shopProductId, taskId, data.id);
+        return;
+    }
+
+
     await loadTasks();
 
     await loadMyTasks();
@@ -1828,7 +1999,8 @@ async function loadMyTasks() {
             *,
             tasks (
                 title,
-                reward
+                reward,
+                shop_product_id
             )
         `)
         .eq(
@@ -1948,6 +2120,26 @@ async function loadMyTasks() {
 
             ${
                 item.status === "claimed"
+                    ? (item.tasks?.shop_product_id
+                        ? `
+                            <button
+                                class="task-action-btn ht-shop-btn"
+                                onclick="goShopTask(${item.id}, ${item.tasks.id}, ${item.tasks.shop_product_id})">
+
+                                ${I18N.t("dash.shopTaskGo")}
+
+                            </button>
+                          `
+                        : `
+                            <button
+                                class="task-action-btn"
+                                onclick="submitTask(${item.id})">
+
+                                ${I18N.t("dash.submitTask")}
+
+                            </button>
+                          `)
+                    : ""
                     ? `
                         <button
                             class="task-action-btn"
@@ -1993,6 +2185,32 @@ async function loadMyTasks() {
 // ========================================
 
 let currentSubmitTask = null;
+
+
+// ========================================
+// 刷单任务：前往 ShopHub 商城完成下单（携带领取记录）
+// ========================================
+
+function goShopTask(claimId, taskId, productId) {
+
+    if (!productId) {
+
+        alert(
+            I18N.t("msg.shopOrderNotPlaced")
+        );
+
+        return;
+
+    }
+
+    window.location.href =
+        shopHubUrl(
+            productId,
+            taskId,
+            claimId
+        );
+
+}
 
 
 function submitTask(taskId) {
@@ -3085,9 +3303,180 @@ document.addEventListener(
         loadMyTasks();
         loadWalletTransactions();
         loadWithdrawHistory();
+        loadMembership();
 
     }
 );
+
+
+// ========================================
+// MEMBERSHIP（会员中心）
+// ========================================
+
+const MEMBER_TIERS = [
+    { key: "basic",    rate: 5,  limit: 1,  price: 0,    invite: 0  },
+    { key: "gold",     rate: 8,  limit: 5,  price: 19.9, invite: 3  },
+    { key: "platinum", rate: 10, limit: 10, price: 69.9, invite: 6  },
+    { key: "diamond",  rate: 15, limit: -1, price: 99.9, invite: 10 }
+];
+
+function tierIcon(key) {
+
+    const SVG = {
+        basic: '<svg class="tier-svg" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="tg-basic" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e2e8f0"/><stop offset="0.5" stop-color="#94a3b8"/><stop offset="1" stop-color="#475569"/></linearGradient><linearGradient id="tg-basic-r" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f8fafc"/><stop offset="1" stop-color="#64748b"/></linearGradient></defs><circle cx="32" cy="32" r="29" fill="url(#tg-basic)"/><circle cx="32" cy="32" r="29" fill="none" stroke="url(#tg-basic-r)" stroke-width="2"/><circle cx="32" cy="32" r="24" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="1"/><path d="M24 20 h16 v4.5 h-5.5 v15 h-5 V24.5 h-5.5 Z" fill="#ffffff" opacity="0.97"/><ellipse cx="23" cy="20" rx="13" ry="7" fill="rgba(255,255,255,0.35)" transform="rotate(-30 23 20)"/></svg>',
+        gold: '<svg class="tier-svg" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="tg-gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fef3c7"/><stop offset="0.5" stop-color="#f59e0b"/><stop offset="1" stop-color="#b45309"/></linearGradient><linearGradient id="tg-gold-r" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fef9c3"/><stop offset="1" stop-color="#d97706"/></linearGradient></defs><circle cx="32" cy="32" r="29" fill="url(#tg-gold)"/><circle cx="32" cy="32" r="29" fill="none" stroke="url(#tg-gold-r)" stroke-width="2"/><circle cx="32" cy="32" r="24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1"/><path d="M32 16.5 L35.8 26.5 L46.5 27.6 L38.4 34.7 L40.6 45.3 L32 40.1 L23.4 45.3 L25.6 34.7 L17.5 27.6 L28.2 26.5 Z" fill="#ffffff" opacity="0.97"/><ellipse cx="23" cy="20" rx="13" ry="7" fill="rgba(255,255,255,0.4)" transform="rotate(-30 23 20)"/></svg>',
+        platinum: '<svg class="tier-svg" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="tg-plat" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f5f3ff"/><stop offset="0.5" stop-color="#a78bfa"/><stop offset="1" stop-color="#6d28d9"/></linearGradient><linearGradient id="tg-plat-r" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ede9fe"/><stop offset="1" stop-color="#7c3aed"/></linearGradient></defs><circle cx="32" cy="32" r="29" fill="url(#tg-plat)"/><circle cx="32" cy="32" r="29" fill="none" stroke="url(#tg-plat-r)" stroke-width="2"/><circle cx="32" cy="32" r="24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1"/><path d="M32 16 L45.5 32 L32 48 L18.5 32 Z" fill="#ffffff" opacity="0.97"/><path d="M32 22.5 L40.5 32 L32 41.5 L23.5 32 Z" fill="rgba(109,40,217,0.5)"/><ellipse cx="23" cy="20" rx="13" ry="7" fill="rgba(255,255,255,0.4)" transform="rotate(-30 23 20)"/></svg>',
+        diamond: '<svg class="tier-svg" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="tg-dia" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e0f2fe"/><stop offset="0.5" stop-color="#38bdf8"/><stop offset="1" stop-color="#0369a1"/></linearGradient><linearGradient id="tg-dia-r" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#bae6fd"/><stop offset="1" stop-color="#0284c7"/></linearGradient></defs><circle cx="32" cy="32" r="29" fill="url(#tg-dia)"/><circle cx="32" cy="32" r="29" fill="none" stroke="url(#tg-dia-r)" stroke-width="2"/><circle cx="32" cy="32" r="24" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="1"/><path d="M19 42 L19 27 L26.5 32.5 L32 22.5 L37.5 32.5 L45 27 L45 42 Z" fill="#ffffff" opacity="0.97"/><path d="M19 44 h26 v3 h-26 Z" fill="#ffffff" opacity="0.9"/><ellipse cx="23" cy="20" rx="13" ry="7" fill="rgba(255,255,255,0.45)" transform="rotate(-30 23 20)"/></svg>'
+    };
+
+    return SVG[key] || SVG.basic;
+
+}
+
+function memberName(key) {
+    return I18N.t("member." + key);
+}
+
+async function loadMembership() {
+
+    const wrap = document.getElementById("memberTiers");
+    if (!wrap) return;
+
+    const { data: prof, error } =
+        await supabaseClient
+        .from("profiles")
+        .select("membership_level, invite_code")
+        .eq("id", currentUser.id)
+        .single();
+
+    if (error || !prof) return;
+
+    const cur = prof.membership_level || "basic";
+    const conf = MEMBER_TIERS.find(function (t) { return t.key === cur; }) || MEMBER_TIERS[0];
+
+    const badgeEl = document.getElementById("memberTierBadge");
+    if (badgeEl) {
+        badgeEl.innerHTML = tierIcon(cur);
+        badgeEl.className = "member-tier-badge tier-" + cur;
+    }
+    const navIco = document.getElementById("navMemberIco");
+    if (navIco) navIco.innerHTML = tierIcon("diamond");
+
+    const { count } =
+        await supabaseClient
+        .from("profiles")
+        .select("id", { count: "exact" })
+        .eq("invited_by", currentUser.id);
+
+    const invited = count || 0;
+
+    document.getElementById("memberTierName").textContent = memberName(cur);
+    document.getElementById("memberCommission").textContent = conf.rate + "%";
+    document.getElementById("memberDailyLimit").textContent =
+        conf.limit < 0 ? I18N.t("member.unlimited") : (conf.limit + " " + I18N.t("member.perDay"));
+
+    const codeEl = document.getElementById("memberInviteCode");
+    if (codeEl && prof.invite_code) codeEl.textContent = prof.invite_code;
+
+    const bar = document.getElementById("memberInviteBar");
+    if (bar) bar.style.width = Math.min(100, Math.round(invited / 10 * 100)) + "%";
+
+    const cntEl = document.getElementById("memberInviteCount");
+    if (cntEl) cntEl.textContent = I18N.t("member.invited") + " " + invited + " / 10";
+
+    wrap.innerHTML = MEMBER_TIERS.map(function (t) {
+
+        const isCur = t.key === cur;
+        const unlocked = t.invite === 0 || invited >= t.invite;
+        let action = "";
+
+        if (isCur) {
+            action = '<span class="member-badge-cur" data-i18n="member.current">当前等级</span>';
+        } else if (t.invite > 0 && !unlocked) {
+            action = '<span class="member-badge-need">' +
+                I18N.t("member.need").replace("{n}", String(t.invite - invited)) + '</span>';
+        } else if (t.invite > 0) {
+            action = '<span class="member-badge-unlocked">✓</span>';
+        }
+
+        const priceLine = t.price > 0
+            ? '<div class="member-tier-price">RM ' + t.price.toFixed(1) +
+              ' <em>· ' + I18N.t("member.upgradeByInvite").replace("{n}", String(t.invite)) + '</em></div>'
+            : '<div class="member-tier-price"><em>' + I18N.t("member.upgradeByInvite").replace("{n}", "0") + '</em></div>';
+
+        return (
+            '<div class="member-tier' + (isCur ? " is-current" : "") + '">' +
+            '<div class="member-tier-head">' +
+            '<span class="member-tier-icon tier-' + t.key + '">' + tierIcon(t.key) + '</span>' +
+            '<strong>' + memberName(t.key) + '</strong>' + action +
+            '</div>' +
+            '<div class="member-tier-rows">' +
+            '<div><span data-i18n="member.commission">任务佣金</span><b>' + t.rate + '%</b></div>' +
+            '<div><span data-i18n="member.dailyLimit">每日可领任务</span><b>' +
+            (t.limit < 0 ? I18N.t("member.unlimited") : t.limit + " " + I18N.t("member.perDay")) + '</b></div>' +
+            '</div>' + priceLine +
+            (isCur ? "" :
+                (t.invite > 0 && !unlocked
+                    ? ""
+                    : '<button class="member-upgrade-btn" onclick="upgradeMember(\'' + t.key + '\',' + t.price + ')">' +
+                      I18N.t("member.join") + '</button>')) +
+            '</div>'
+        );
+
+    }).join("");
+
+}
+
+function copyInviteCode() {
+
+    const el = document.getElementById("memberInviteCode");
+    if (!el) return;
+    const code = el.textContent.trim();
+    if (!code || code === "--------") return;
+
+    const done = function () {
+        alert(I18N.t("member.copySuccess"));
+    };
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(code).then(done).catch(function () {
+            fallbackCopy(code, done);
+        });
+    } else {
+        fallbackCopy(code, done);
+    }
+
+}
+
+function fallbackCopy(text, done) {
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand("copy"); } catch (e) {}
+    document.body.removeChild(ta);
+    done();
+}
+
+function upgradeMember(level, price) {
+
+    if (price > 0) {
+
+        alert(
+            I18N.t("member.upgradeByPay").replace("{price}", String(price)) +
+            "\n\n" + I18N.t("member.payHint")
+        );
+        window.open("https://wa.me/601139706264", "_blank");
+
+    } else {
+
+        alert(I18N.t("member.inviteHint"));
+
+    }
+
+}
 
 
 // ========================================
@@ -3236,6 +3625,43 @@ document.addEventListener(
 
 
 <style>
+/* ========================================
+   刷单任务：订单总价 + 预计佣金
+   ======================================== */
+
+.ht-commission {
+    margin-top: 10px;
+    padding: 9px 11px;
+    border-radius: 12px;
+    background: rgba(34, 197, 94, 0.10);
+    border: 1px solid rgba(34, 197, 94, 0.28);
+    display: grid;
+    gap: 4px;
+}
+
+.ht-commission > div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.ht-commission span {
+    font-size: 12px;
+    color: #94a3b8;
+}
+
+.ht-commission b {
+    font-size: 13px;
+    color: #e2e8f0;
+    font-weight: 700;
+}
+
+.ht-commission .ht-commission-value {
+    font-size: 15px;
+    color: #22c55e;
+}
+
 /* ========================================
    WITHDRAW - 暗色统一覆盖
    覆盖 head 内联提现样式，与全站暗色主题统一

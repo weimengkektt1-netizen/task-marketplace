@@ -12,6 +12,31 @@ const SUPABASE_URL = "https://pkinowzrhteoduvrttdk.supabase.co";
 
 const SUPABASE_KEY = "sb_publishable_aPZF0KY7OFoDaZ_wIT60tg_2Hc_ctLT";
 
+
+// ========================================
+// ShopHub 商城地址（刷单任务跳转目标）
+// 部署上线后请改为 ShopHub 正式网址，例如：
+// const SHOP_HUB_BASE = "https://shophub.yourdomain.com/index.html";
+// ========================================
+
+const SHOP_HUB_BASE = "file:///C:/Users/Internet%20Cafe/Desktop/ShopHub/index.html";
+
+
+// 组装跳转 ShopHub 指定商品页的链接（携带任务/领取信息）
+function shopHubUrl(productId, taskId, claimId) {
+
+    const params = [];
+
+    if (taskId) params.push("task=" + encodeURIComponent(taskId));
+
+    if (claimId) params.push("claim=" + encodeURIComponent(claimId));
+
+    const query = params.length > 0 ? "?" + params.join("&") : "";
+
+    return SHOP_HUB_BASE + "#product/" + productId + query;
+
+}
+
 const supabaseClient = window.supabase.createClient(
     SUPABASE_URL,
     SUPABASE_KEY
@@ -181,6 +206,9 @@ async function register() {
     const confirmInput =
         document.getElementById("registerConfirmPassword");
 
+    const inviteInput =
+        document.getElementById("registerInvite");
+
 
     if (!emailInput || !passwordInput) {
 
@@ -293,7 +321,8 @@ async function register() {
             options: {
                 data: {
                     display_name: name,
-                    phone: phone
+                    phone: phone,
+                    invite_code: inviteInput ? inviteInput.value.trim() : ""
                 }
             }
 
