@@ -683,7 +683,7 @@ async function loadHome(){
    打手大厅
    ============================================================ */
 async function loadSellers(){
-  const { data, error } = await sb.from("seller_profiles").select("*, profiles!inner(display_name, email)").eq("status","approved").order("exp", {ascending:false});
+  const { data, error } = await sb.from("seller_profiles").select("*").eq("status","approved").order("exp", {ascending:false});
   if (error) return toast(error.message, 0);
   const list = data || [];
   $("#sellersList").innerHTML = list.length ? list.map(s => {
@@ -696,7 +696,7 @@ async function loadSellers(){
       <div class="sp-meta">
         <span>历史段位：<b>${esc(s.historical_rank||"—")}</b></span>
         <span>历史巅峰：<b>${s.historical_peak ? s.historical_peak + " 分" : "—"}</b></span>
-        <span>分路段位：<b>${esc(s.lane_rank||"—")}</b></span>
+        <span>分路段位：<b>${esc(laneRanksText(s))}</b></span>
         <span>等级：<b style="color:var(--gold)">LV${L.lv} ${L.name}</b> · ${s.exp} exp</span>
       </div>
       ${s.lanes && s.lanes.length ? '<div class="sp-lanes">' + s.lanes.map(l => '<span class="lane">' + esc(l) + "</span>").join("") + "</div>" : ""}
@@ -907,11 +907,11 @@ async function loadMyCenter(){
           <div class="fg"><label>UID（接单人识别码）</label><input id="spUid" value="${esc(s?.uid||"")}" placeholder="提交时自动生成" readonly style="opacity:.6"></div>
           <div class="fg"><label>历史段位（最高）</label><select id="spRank">${RANKS.map(r => '<option ' + (s?.historical_rank===r?"selected":"") + '>' + r + "</option>").join("")}</select></div>
           <div class="fg"><label>历史巅峰分（最高）</label><input type="number" id="spPeak" value="${s?.historical_peak||""}" placeholder="例如 1800" min="0"></div>
-          <div class="fg"><label>分路段位</label><select id="spLaneRank">${RANKS.map(r => '<option ' + (s?.lane_rank===r?"selected":"") + '>' + r + "</option>").join("")}</select></div>
-          <div class="fg"><label>擅长分路（可多选）</label>
+          <div class="fg full"><label>擅长分路（可多选，选择后在下方填写各分路段位，如 10段 / 20段 / 100段）</label>
             <div style="display:flex;gap:6px;flex-wrap:wrap" id="lanePick">
               ${LANES.map(l => '<span class="lane" style="cursor:pointer;padding:7px 12px;font-size:12.5px" data-l="'+l+'" onclick="toggleLane(this)">'+l+"</span>").join("")}
             </div>
+            <div id="laneRanks" style="margin-top:4px"></div>
           </div>
           <div class="fg full"><label>自我介绍（选填）</label><textarea id="spBio" placeholder="介绍一下你的实力与风格…">${esc(s?.bio||"")}</textarea></div>
           <div class="fg full">
@@ -929,6 +929,7 @@ async function loadMyCenter(){
     </div>`;
   window._spProofs = s?.proofs || [];
   window._spLanes = s?.lanes || [];
+  window._spLaneRanks = s?.lane_ranks || {};
   renderLanePick();
   renderSpThumbs();
   $("#spFile").onchange = async e => {
@@ -941,7 +942,16 @@ async function loadMyCenter(){
   };
 }
 function renderLanePick(){
-  $$("#lanePick .lane").forEach(el => el.style.cssText = "cursor:pointer;padding:7px 12px;font-size:12.5px;background:" + (window._spLanes.includes(el.dataset.l) ? "rgba(124,92,255,.35)" : "rgba(79,124,255,.14)") + ";color:" + (window._spLanes.includes(el.dataset.l) ? "#fff" : "#9db8ff"));
+  window._spLaneRanks = window._spLaneRanks || {};
+  $$("#lanePick .lane").forEach(el => {
+    const on = window._spLanes.includes(el.dataset.l);
+    el.style.cssText = "cursor:pointer;padding:7px 12px;font-size:12.5px;background:" + (on ? "rgba(124,92,255,.35)" : "rgba(79,124,255,.14)") + ";color:" + (on ? "#fff" : "#9db8ff");
+  });
+  $("#laneRanks").innerHTML = window._spLanes.map(l => `
+    <div style="display:flex;align-items:center;gap:8px;margin-top:8px">
+      <span style="font-size:12.5px;color:#9db8ff;min-width:56px">${esc(l)}</span>
+      <input id="lr_${esc(l)}" placeholder="分路段位，如 10段 / 20段 / 100段" value="${esc(window._spLaneRanks[l]||"")}" style="flex:1">
+    </div>`).join("");
 }
 function toggleLane(el){
   const l = el.dataset.l;
@@ -955,10 +965,11 @@ function rmProof(i){ window._spProofs.splice(i,1); renderSpThumbs(); }
 async function saveSeller(){
   const nickname = $("#spNick").value.trim();
   const rank = $("#spRank").value, peak = Number($("#spPeak").value);
-  const laneRank = $("#spLaneRank").value;
   const bio = $("#spBio").value.trim();
   if (!nickname) return toast("请填写昵称", 0);
   if (window._spLanes.length === 0) return toast("请至少选择一个擅长分路", 0);
+  const laneRanks = {};
+  window._spLanes.forEach(l => { laneRanks[l] = ($("#lr_" + l) || {}).value ? $("#lr_" + l).value.trim() : ""; });
   let uid = $("#spUid").value.trim();
   if (!uid) {
     uid = "WZ" + Math.random().toString(36).slice(2, 8).toUpperCase();
@@ -967,7 +978,9 @@ async function saveSeller(){
   }
   const payload = {
     id: USER.id, nickname, uid, historical_rank: rank,
-    historical_peak: peak || null, lane_rank: laneRank,
+    historical_peak: peak || null,
+    lane_ranks: laneRanks,
+    lane_rank: Object.values(laneRanks).filter(Boolean).join(" / ") || null,
     lanes: window._spLanes, bio: bio || null,
     proofs: window._spProofs, status: "pending"
   };
@@ -975,6 +988,12 @@ async function saveSeller(){
   if (error) return toast("提交失败：" + error.message, 0);
   toast("资料已提交，等待管理员审核", 1);
   loadMyCenter();
+}
+/* 分路段位展示文本 */
+function laneRanksText(s){
+  const lr = s.lane_ranks || {};
+  const arr = (s.lanes||[]).map(l => lr[l] ? l + " " + lr[l] : l).filter(Boolean);
+  return arr.join(" / ") || (s.lane_rank || "—");
 }
 
 /* ============================================================
@@ -1230,7 +1249,7 @@ function adSellers(list){
       <div class="row mt8 small">
         <span>历史段位 <b>${esc(s.historical_rank||"—")}</b></span>
         <span>历史巅峰 <b>${s.historical_peak||"—"}</b></span>
-        <span>分路 <b>${esc(s.lane_rank||"—")}</b></span>
+        <span>分路段位 <b>${esc(laneRanksText(s))}</b></span>
         <span>擅长 <b>${(s.lanes||[]).join(" / ")||"—"}</b></span>
         <span>经验 <b style="color:var(--gold)">${s.exp} exp · LV${L.lv}</b></span>
       </div>
@@ -1274,18 +1293,25 @@ function editSeller(id){
       <div class="fg"><label>UID</label><input id="esUid" value="${esc(s.uid)}"></div>
       <div class="fg"><label>历史段位</label><select id="esRank">${RANKS.map(r => '<option ' + (s.historical_rank===r?"selected":"") + '>' + r + "</option>").join("")}</select></div>
       <div class="fg"><label>历史巅峰</label><input type="number" id="esPeak" value="${s.historical_peak||""}"></div>
-      <div class="fg"><label>分路段位</label><select id="esLaneRank">${RANKS.map(r => '<option ' + (s.lane_rank===r?"selected":"") + '>' + r + "</option>").join("")}</select></div>
       <div class="fg"><label>状态</label><select id="esStatus"><option ${s.status==="approved"?"selected":""} value="approved">已认证</option><option ${s.status==="pending"?"selected":""} value="pending">待审核</option><option ${s.status==="rejected"?"selected":""} value="rejected">已驳回</option></select></div>
       <div class="fg full"><label>擅长分路（逗号分隔）</label><input id="esLanes" value="${esc((s.lanes||[]).join(","))}"></div>
+      <div class="fg full"><label>分路段位（格式：分路:段位，逗号分隔，如 打野:10段, 中路:20段）</label><input id="esLaneRanks" value="${esc(Object.entries(s.lane_ranks||{}).map(([k,v]) => k + ":" + v).join(", "))}"></div>
     </div>
     <button class="btn btn-p mt16" style="width:100%" onclick="saveEditSeller('${id}')">保存</button>`;
   openModal("gModal");
 }
 async function saveEditSeller(id){
+  const lanes = $("#esLanes").value.split(",").map(s => s.trim()).filter(Boolean);
+  const laneRanks = {};
+  $("#esLaneRanks").value.split(",").map(s => s.trim()).filter(Boolean).forEach(pair => {
+    const [k, ...v] = pair.split(":");
+    if (k) laneRanks[k.trim()] = v.join(":").trim();
+  });
   const { error } = await sb.rpc("admin_update_seller", {
     p_user_id: id, p_nickname: $("#esNick").value.trim(), p_uid: $("#esUid").value.trim().toUpperCase(),
     p_historical_rank: $("#esRank").value, p_historical_peak: Number($("#esPeak").value) || null,
-    p_lane_rank: $("#esLaneRank").value, p_lanes: $("#esLanes").value.split(",").map(s => s.trim()).filter(Boolean),
+    p_lane_rank: null, p_lanes: lanes,
+    p_lane_ranks: laneRanks,
     p_bio: null, p_status: $("#esStatus").value
   });
   if (error) return toast(error.message, 0);
