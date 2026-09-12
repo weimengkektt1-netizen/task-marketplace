@@ -1524,16 +1524,41 @@ async function loadWalletTransactions() {
     }
 
 
-    // 当前余额
+    // 当前余额（从 profiles 读取）
     const balEl =
         document.getElementById(
             "walletStatBalance"
         );
 
-    if (balEl && currentUser.balance !== undefined) {
+    try {
 
-        balEl.textContent =
-            "RM" + Number(currentUser.balance || 0).toFixed(2);
+        const {
+            data: profile
+        } =
+            await supabaseClient
+            .from("profiles")
+            .select(
+                "balance"
+            )
+            .eq(
+                "id",
+                currentUser.id
+            )
+            .maybeSingle();
+
+        if (balEl && profile) {
+
+            balEl.textContent =
+                "RM" + Number(profile.balance || 0).toFixed(2);
+
+        }
+
+    } catch (e) {
+
+        console.error(
+            "Failed to load wallet balance",
+            e
+        );
 
     }
 
