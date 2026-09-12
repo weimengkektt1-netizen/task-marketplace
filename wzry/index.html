@@ -185,6 +185,26 @@ img{display:block}
 .avatar-up img{width:100%;height:100%;object-fit:cover;display:none}
 .avatar-up .avatar-up-mask{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#cdd8ff;background:rgba(8,12,28,.45);opacity:0;transition:.18s}
 .avatar-up:hover .avatar-up-mask{opacity:1}
+/* ---------- 代充代送 ---------- */
+.goods-banner{border-radius:14px;padding:12px 16px;margin-bottom:16px;text-align:center;font-weight:800;font-size:13.5px;color:#ffe9a8;background:linear-gradient(135deg,rgba(255,201,77,.14),rgba(255,176,32,.08));border:1px solid rgba(255,201,77,.3);box-shadow:0 0 24px rgba(255,190,60,.08)}
+.goods-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(235px,1fr));gap:14px}
+.g-card{border-radius:16px;border:1px solid var(--line);background:var(--card);overflow:hidden;transition:.2s;display:flex;flex-direction:column;position:relative}
+.g-card:hover{transform:translateY(-4px);border-color:rgba(124,92,255,.5);box-shadow:0 14px 40px rgba(0,0,0,.4)}
+.g-deal{position:absolute;top:10px;left:10px;z-index:2;padding:4px 10px;border-radius:8px;font-size:11.5px;font-weight:800;color:#fff;background:linear-gradient(135deg,#ff4d5e,#ff9f43);box-shadow:0 4px 14px rgba(255,77,94,.4);animation:dealPulse 2s ease-in-out infinite}
+@keyframes dealPulse{0%,100%{box-shadow:0 4px 14px rgba(255,77,94,.4)}50%{box-shadow:0 4px 22px rgba(255,120,80,.75)}}
+.g-img{width:100%;aspect-ratio:1/1;object-fit:cover;background:linear-gradient(135deg,rgba(124,92,255,.25),rgba(255,201,77,.18))}
+.g-img-ph{display:flex;align-items:center;justify-content:center;font-size:52px}
+.g-body{padding:13px 14px 15px;display:flex;flex-direction:column;gap:6px;flex:1}
+.g-title{font-weight:800;font-size:15px}
+.g-desc{font-size:12.5px;color:var(--mut);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.g-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:auto;padding-top:8px}
+.g-foot .g-acts{display:flex;gap:6px;align-items:center}
+.g-price{font-size:19px;font-weight:900;color:var(--gold)}
+.g-price small{font-size:11px;color:var(--mut);font-weight:600}
+.g-orig{font-size:13px;color:var(--mut);font-weight:600;text-decoration:line-through;margin-right:2px}
+.g-time{font-size:11px;color:#6a6f96;margin-top:2px}
+.wx-box{margin:12px 0 10px;padding:13px;border-radius:12px;border:1px dashed rgba(255,201,77,.5);background:rgba(255,201,77,.08);font-size:20px;font-weight:900;letter-spacing:2px;color:#ffe9a8;user-select:all;text-align:center}
+
 /* ---------- 平台规则 ---------- */
 .rules-wrap{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
 .rules-wrap .card h3{font-size:14px;margin-bottom:8px}
@@ -488,6 +508,7 @@ img{display:block}
       <a href="#hall" data-v="hall">接单大厅</a>
       <a href="#create" data-v="create">发布订单</a>
       <a href="#orders" data-v="orders">我的订单</a>
+      <a href="#goods" data-v="goods">🛍️ 代充代送</a>
       <a href="#mycenter" data-v="mycenter">打手中心</a>
       <a href="#wallet" data-v="wallet">我的钱包</a>
       <a href="#admin" data-v="admin" class="hidden" id="adminNav">管理后台</a>
@@ -669,6 +690,16 @@ img{display:block}
     <div id="ordersList"></div>
   </section>
 
+  <!-- ============ 代充代送 ============ -->
+  <section class="view" id="view-goods">
+    <div class="page-h">
+      <div><h2>🛍️ 代充 / 代送</h2><div class="sub">微信担保代充 · 商品由平台认证商家提供</div></div>
+      <button class="btn btn-g hidden" id="goodsAddBtn" onclick="openGoodsAdd()">＋ 上传商品</button>
+    </div>
+    <div class="goods-banner">🛡️ 本版块货品全部经由网站担保 · 100%诚信 · 欢迎下单</div>
+    <div class="goods-grid" id="goodsList"></div>
+  </section>
+
   <!-- ============ 打手中心 ============ -->
   <section class="view" id="view-mycenter">
     <div class="page-h"><div><h2>打手中心</h2><div class="sub">填写并提交接单人资料，审核通过后可接单</div></div></div>
@@ -766,6 +797,24 @@ img{display:block}
   </div>
 </div>
 
+<!-- ============ 购买弹窗 ============ -->
+<div class="modal-mask hidden" id="buyModal" onclick="if(event.target===this)closeModal('buyModal')">
+  <div class="modal-box" style="position:relative;max-width:380px">
+    <button class="modal-close" onclick="closeModal('buyModal')">✕</button>
+    <div class="modal-h">🛒 微信下单</div>
+    <div id="buyBody"></div>
+  </div>
+</div>
+
+<!-- ============ 上传商品弹窗 ============ -->
+<div class="modal-mask hidden" id="goodsModal" onclick="if(event.target===this)closeModal('goodsModal')">
+  <div class="modal-box" style="position:relative;max-width:440px">
+    <button class="modal-close" onclick="closeModal('goodsModal')">✕</button>
+    <div class="modal-h">＋ 上传商品</div>
+    <div id="goodsBody"></div>
+  </div>
+</div>
+
 <!-- ============ 通用弹窗 ============ -->
 <div class="modal-mask hidden" id="gModal" onclick="if(event.target===this)closeModal('gModal')">
   <div class="modal-box" style="position:relative;max-width:520px">
@@ -833,7 +882,7 @@ function go(h){ location.hash = h; }
 function isRankType(t){ return t === "rank"; }
 
 /* 路由 */
-const VIEWS = ["home","sellers","board","hall","create","orders","mycenter","wallet","admin"];
+const VIEWS = ["home","sellers","board","hall","create","orders","goods","mycenter","wallet","admin"];
 let sessionReady = false;
 async function router(){
   if (!sessionReady && !USER) return;
@@ -847,6 +896,7 @@ async function router(){
   if (v === "board") loadBoard(boardTab);
   if (v === "hall") loadHall();
   if (v === "orders") loadOrders();
+  if (v === "goods") loadGoods();
   if (v === "mycenter") loadMyCenter();
   if (v === "wallet") loadWallet();
   if (v === "admin") loadAdmin();
@@ -1226,6 +1276,159 @@ async function doSubmitProof(orderId){
   closeModal("gModal");
   toast("已提交，等待管理员审核", 1);
   loadOrders(); loadNotifCount();
+}
+
+/* ============================================================
+   代充代送
+   ============================================================ */
+const SHOP_WECHAT = "ChaOsbubu";
+const isShopAdmin = () => !!PROFILE && (PROFILE.role === "admin" || PROFILE.role === "shop_admin");
+let gEditId = null;
+
+function fmtTime(ts){
+  if (!ts) return "";
+  const d = new Date(ts);
+  const p = n => String(n).padStart(2, "0");
+  return d.getFullYear() + "-" + p(d.getMonth()+1) + "-" + p(d.getDate()) + " " + p(d.getHours()) + ":" + p(d.getMinutes());
+}
+
+async function loadGoods(){
+  const { data, error } = await sb.from("goods").select("*").order("created_at", {ascending:false});
+  if (error) { $("#goodsList").innerHTML = '<div class="card muted" style="text-align:center;padding:40px">加载失败</div>'; return; }
+  const can = isShopAdmin();
+  $("#goodsAddBtn").classList.toggle("hidden", !can);
+  const list = data || [];
+  if (!list.length) { $("#goodsList").innerHTML = '<div class="card muted" style="text-align:center;padding:40px">暂无商品，敬请期待</div>'; return; }
+  $("#goodsList").innerHTML = list.map(g => {
+    const deal = !!g.is_deal;
+    return `
+    <div class="g-card">
+      ${g.image_url ? '<img class="g-img" src="' + g.image_url + '" alt="' + esc(g.title) + '">' : '<div class="g-img g-img-ph">🛍️</div>'}
+      ${deal ? '<div class="g-deal">🔥 限时折扣</div>' : ""}
+      <div class="g-body">
+        <div class="g-title">${esc(g.title)}</div>
+        ${g.desc ? '<div class="g-desc">' + esc(g.desc) + "</div>" : ""}
+        <div class="g-time">🕐 上架于 ${fmtTime(g.created_at)}</div>
+        <div class="g-foot">
+          <div class="g-price">
+            ${deal && g.orig_price ? '<s class="g-orig">RM ' + fmt(g.orig_price) + '</s> ' : ""}
+            <small>RM</small> ${fmt(deal ? g.price : g.price)}
+          </div>
+          <div class="g-acts">
+            <button class="btn btn-p" style="padding:8px 14px" onclick="buyGoods('${g.id}')">🛒 购买</button>
+            ${can ? '<button class="btn btn-o" style="padding:8px 11px" onclick="openGoodsEdit(\'' + g.id + '\')" title="编辑">✏️</button><button class="btn btn-o" style="padding:8px 11px" onclick="delGoods(\'' + g.id + '\')" title="删除">🗑</button>' : ""}
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+function buyGoods(id){
+  openModal("buyModal");
+  $("#buyBody").innerHTML = `
+    <div style="text-align:center;padding:8px 0">
+      <div style="font-size:44px">🛒</div>
+      <div class="muted small" style="margin-top:6px">请在微信添加以下商家账号下单</div>
+      <div class="wx-box" id="wxBox">${SHOP_WECHAT}</div>
+      <button class="btn btn-g" style="width:100%" onclick="copyWechat()">📋 复制微信号</button>
+      <p class="small muted mt12">复制后打开微信 → 搜索添加 → 发送商品名称并下单</p>
+      <p class="small" style="color:var(--ok);margin-top:8px">🛡️ 本平台担保交易，请放心购买</p>
+    </div>`;
+}
+function copyWechat(){
+  const done = () => toast("微信号已复制：" + SHOP_WECHAT, 1);
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(SHOP_WECHAT).then(done).catch(() => { legacyCopy(); done(); });
+  } else { legacyCopy(); done(); }
+}
+function legacyCopy(){
+  const ta = document.createElement("textarea");
+  ta.value = SHOP_WECHAT; document.body.appendChild(ta); ta.select();
+  document.execCommand("copy"); document.body.removeChild(ta);
+}
+function openGoodsAdd(){
+  gEditId = null;
+  openModal("goodsModal");
+  $("#goodsBody").innerHTML = goodsForm("", "", "", false, null, null);
+}
+function openGoodsEdit(id){
+  sb.from("goods").select("*").eq("id", id).maybeSingle().then(({ data }) => {
+    if (!data) return toast("商品不存在", 0);
+    gEditId = id;
+    openModal("goodsModal");
+    $("#goodsBody").innerHTML = goodsForm(data.title, data.desc, data.image_url, !!data.is_deal, data.price, data.orig_price);
+  });
+}
+function goodsForm(title, desc, img, isDeal, price, orig){
+  return `
+    <div class="fg full" style="text-align:center">
+      <label>商品图片</label>
+      <div class="avatar-up" onclick="document.getElementById('gImgFile').click()">
+        <img id="gImgPrev" src="${img || ""}" style="${img ? "" : "display:none"}">
+        <div class="avatar-up-mask">📷 点击上传商品图片</div>
+      </div>
+      <input type="file" id="gImgFile" accept="image/*" class="hidden" onchange="previewGoodsImg(this)">
+    </div>
+    <div class="fg"><label>商品名称</label><input id="gTitle" value="${esc(title||"")}" placeholder="例如：王者荣耀点券代充 1000"></div>
+    <div class="fg full">
+      <label>商品类型</label>
+      <div class="type-pick" style="grid-template-columns:1fr 1fr">
+        <div class="type-opt ${isDeal ? "" : "on"}" id="gTypeNormal" onclick="pickGoodsType(false)"><b>📦 普通商品</b></div>
+        <div class="type-opt ${isDeal ? "on" : ""}" id="gTypeDeal" onclick="pickGoodsType(true)"><b>🔥 限时折扣</b></div>
+      </div>
+    </div>
+    <div class="fg ${isDeal ? "" : "hidden"}" id="gOrigRow"><label>原价 (RM)</label><input type="number" id="gOrigPrice" value="${orig != null ? orig : ""}" placeholder="例如 100" min="0"></div>
+    <div class="fg"><label>${isDeal ? "折扣价 (RM)" : "价格 (RM)"}</label><input type="number" id="gPrice" value="${price != null ? price : ""}" placeholder="例如 50" min="0"></div>
+    <div class="fg full"><label>商品介绍</label><textarea id="gDesc" placeholder="介绍商品内容、到账时间、注意事项等">${esc(desc||"")}</textarea></div>
+    <div class="mt16"><button class="btn btn-g" style="width:100%" onclick="saveGoods()">${gEditId ? "✅ 保存修改" : "✅ 发布商品"}</button></div>`;
+}
+function pickGoodsType(deal){
+  $("#gTypeNormal").classList.toggle("on", !deal);
+  $("#gTypeDeal").classList.toggle("on", deal);
+  $("#gOrigRow").classList.toggle("hidden", !deal);
+}
+function previewGoodsImg(input){
+  const f = input.files[0];
+  if (!f) return;
+  const rd = new FileReader();
+  rd.onload = e => { const img = $("#gImgPrev"); img.src = e.target.result; img.style.display = "block"; };
+  rd.readAsDataURL(f);
+}
+async function saveGoods(){
+  const title = $("#gTitle").value.trim();
+  const desc = $("#gDesc").value.trim();
+  const isDeal = $("#gTypeDeal").classList.contains("on");
+  const price = Number($("#gPrice").value);
+  const orig = isDeal ? Number($("#gOrigPrice").value) : null;
+  if (!title) return toast("请填写商品名称", "warn");
+  if (!price || price <= 0) return toast("请填写有效价格", "warn");
+  if (isDeal && (!orig || orig <= price)) return toast("折扣价需低于原价", "warn");
+  let image_url = $("#gImgPrev").src || "";
+  if (image_url && image_url.startsWith("data:")) {
+    const f = $("#gImgFile").files[0];
+    if (f) image_url = await uploadImage(f, "goods");
+  }
+  const payload = { title, desc, price, orig_price: orig, is_deal: isDeal, image_url };
+  if (gEditId) {
+    const { error } = await sb.from("goods").update(payload).eq("id", gEditId);
+    if (error) return toast(error.message, 0);
+    toast("商品已更新", 1);
+  } else {
+    payload.created_by = USER.id;
+    const { error } = await sb.from("goods").insert(payload);
+    if (error) return toast(error.message, 0);
+    toast("商品已发布", 1);
+  }
+  closeModal("goodsModal");
+  loadGoods();
+}
+async function delGoods(id){
+  if (!confirm("确定删除该商品？")) return;
+  const { error } = await sb.from("goods").delete().eq("id", id);
+  if (error) return toast(error.message, 0);
+  toast("已删除", 1);
+  loadGoods();
 }
 
 /* ============================================================
