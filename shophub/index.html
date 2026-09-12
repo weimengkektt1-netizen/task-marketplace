@@ -592,7 +592,7 @@ input,select,textarea{font-family:inherit;outline:none}
             </div>
             <div class="profile-item" onclick="openAbout()">
                 <span class="mi-ico" style="background:#f3f4f6;color:var(--text)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg></span>
-                <div><div class="mi-txt">关于 ShopHub</div><div class="mi-sub">演示站点说明与联系方式</div></div>
+                <div><div class="mi-txt">关于 ShopHub</div><div class="mi-sub">商城介绍与联系方式</div></div>
                 <span class="mi-arrow">›</span>
             </div>
         </div>
@@ -655,7 +655,7 @@ input,select,textarea{font-family:inherit;outline:none}
             <a>+60 11-3970 6264</a>
         </div>
     </div>
-    <div class="footer-bottom">© 2026 ShopHub · 演示站点，数据存储于本地浏览器</div>
+    <div class="footer-bottom">© 2026 ShopHub · 专业在线购物平台 · 正品保障 · 售后无忧</div>
 </footer>
 
 <!-- ================= 移动端底栏 ================= -->
@@ -729,7 +729,7 @@ input,select,textarea{font-family:inherit;outline:none}
             <img class="pay-qr-img hidden" id="payQrImg" alt="收款码">
             <div class="pay-qr-placeholder" id="payQrPh">
                 <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round"><rect x="4" y="4" width="7" height="7" rx="1.2"/><rect x="13" y="4" width="7" height="7" rx="1.2"/><rect x="4" y="13" width="7" height="7" rx="1.2"/><path d="M13 13h2v2h-2zM17 13h3v3h-3zM13 17h1M17 17h3"/></svg>
-                收款码待配置<br>（请将真实收款码图片保存为<br>assets/pay-qr.png 即可自动替换）
+                收款码暂不可用<br>请联系客服获取收款方式
             </div>
             <div class="pay-account" id="payAccount" style="display:none;margin:10px 0 0;padding:10px 12px;border-radius:12px;background:#f7f9fc;border:1px solid #eef0f4;width:100%;box-sizing:border-box">
                 <div style="font-size:11px;color:#9aa3af;font-weight:700;margin-bottom:6px;letter-spacing:.5px">付款账户</div>
@@ -740,14 +740,14 @@ input,select,textarea{font-family:inherit;outline:none}
             <div class="pay-amount">RM<span id="payAmount">0</span></div>
             <div class="pay-order-no" id="payOrderNo"></div>
         </div>
-        <div class="pay-tip">请使用您的支付应用扫描上方收款码完成付款。付款成功后点击下方按钮上传<b>支付截图</b>，管理员审核通过后订单即完成。</div>
+        <div class="pay-tip">请使用您的支付应用扫描上方收款码完成付款。付款成功后点击下方按钮上传<b>支付截图</b>，平台客服审核通过后订单即完成。</div>
         <div class="pay-upload">
             <button class="upload-btn" onclick="document.getElementById('payFile').click()">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V4m0 0l-4 4m4-4l4 4"/><path d="M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/></svg>
                 我已付款 · 上传支付截图
             </button>
             <input type="file" id="payFile" accept="image/*" class="hidden" onchange="uploadPayProof(this)">
-            <div class="upload-hint">支持 JPG / PNG，图片将提交给管理员审核</div>
+            <div class="upload-hint">支持 JPG / PNG，图片将提交给平台客服审核</div>
         </div>
     </div>
 </div>
@@ -843,7 +843,7 @@ async function loadProducts(){
             });
         }
     } catch(e) {
-        console.error("商品加载失败，使用本地数据兜底", e);
+        console.error("商品加载失败，已使用默认商品列表", e);
     }
     productsLoaded = true;
 }
@@ -1375,7 +1375,7 @@ function uploadPayProof(input){
         sb.from("shop_orders").update({pay_proof_url: url, status: "awaiting_review"}).eq("id", curPayOrder.id).then(u => {
             if (u.error) { toast("提交失败：" + u.error.message); return; }
             closeModal("payModal");
-            toast("支付凭证已提交，等待管理员审核");
+            toast("支付凭证已提交，等待平台客服审核");
             input.value = "";
             renderOrders();
         });
@@ -1525,7 +1525,7 @@ function renderProfile(){
     }
 }
 function openAbout(){
-    toast("ShopHub 商城 · 登录后可下单，付款截图由管理员人工审核");
+    toast("ShopHub 商城 · 精选好物，安心购物 · 付款后由客服快速审核发货");
 }
 
 /* ============================================================
@@ -1810,7 +1810,7 @@ async function renderAdminPay(){
         '<div style="display:flex;align-items:center;gap:18px;flex-wrap:wrap">' +
         (s.qr_url
             ? '<img src="' + s.qr_url + '" style="width:172px;height:172px;border-radius:14px;border:1px solid var(--line);object-fit:contain;background:#fff">'
-            : '<div style="width:172px;height:172px;border-radius:14px;background:#fafbfc;border:1.5px dashed #d5d9de;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:12px;text-align:center;padding:10px">尚未上传收款码<br>客户付款时收款码区域将显示占位提示</div>') +
+            : '<div style="width:172px;height:172px;border-radius:14px;background:#fafbfc;border:1.5px dashed #d5d9de;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:12px;text-align:center;padding:10px">尚未上传收款码<br>上传后客户下单时将显示收款码</div>') +
         '<div><div style="font-size:12px;color:var(--muted);margin-bottom:8px">上传新的收款码（JPG / PNG，≤5MB）</div>' +
         '<label class="btn btn-primary" style="cursor:pointer;display:inline-flex;align-items:center;gap:6px;padding:10px 18px">📷 选择图片<input type="file" accept="image/*" class="hidden" onchange="uploadPayQr(this)"></label></div>' +
         "</div></div>" +
@@ -2098,7 +2098,7 @@ async function openOrderDetail(id){
     const tl = [
         {t: "下单", d: new Date(o.created_at).toLocaleString("zh-CN"), on: true},
         {t: "提交支付凭证", d: o.pay_proof_url ? "已上传支付截图" : "尚未付款", on: !!o.pay_proof_url},
-        {t: "管理员审核", d: o.reviewed_at ? new Date(o.reviewed_at).toLocaleString("zh-CN") : (o.status === "awaiting_review" ? "等待审核中…" : "—"), on: !!o.reviewed_at || o.status === "awaiting_review"},
+        {t: "平台审核", d: o.reviewed_at ? new Date(o.reviewed_at).toLocaleString("zh-CN") : (o.status === "awaiting_review" ? "等待审核中…" : "—"), on: !!o.reviewed_at || o.status === "awaiting_review"},
         {t: "订单完成", d: o.status === "completed" ? "已通过审核" : (o.status === "rejected" ? "已拒绝：" + (o.reject_reason || "") : "—"), on: o.status === "completed" || o.status === "rejected"}
     ];
     const statusCls = o.status === "completed" ? "st-done" : o.status === "rejected" ? "st-rejected" : o.status === "awaiting_review" ? "st-await" : "st-pending";
