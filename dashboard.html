@@ -700,6 +700,43 @@
         </div>
 
 
+<div class="wallet-stats">
+
+    <div class="wallet-stat-card wallet-stat-main">
+
+        <div class="wallet-stat-icon">💰</div>
+
+        <div class="wallet-stat-body">
+
+            <span class="wallet-stat-label" data-i18n="wallet.totalCommission">总佣金收入</span>
+
+            <strong class="wallet-stat-value" id="totalCommission">RM0.00</strong>
+
+            <small class="wallet-stat-sub" data-i18n="wallet.totalCommissionSub">所有已通过任务累计赚取的佣金</small>
+
+        </div>
+
+    </div>
+
+
+    <div class="wallet-stat-card">
+
+        <div class="wallet-stat-icon">👛</div>
+
+        <div class="wallet-stat-body">
+
+            <span class="wallet-stat-label" data-i18n="wallet.balanceNow">当前余额</span>
+
+            <strong class="wallet-stat-value" id="walletStatBalance">RM0.00</strong>
+
+            <small class="wallet-stat-sub" data-i18n="wallet.balanceNowSub">可用于提现的余额</small>
+
+        </div>
+
+    </div>
+
+</div>
+
 <div class="wallet-box">
 
     <div id="walletTransactions">
@@ -1436,6 +1473,69 @@ async function loadWalletTransactions() {
             }
         )
         .limit(20);
+
+
+    // 总佣金收入统计：所有 task_reward 记录金额之和
+    try {
+
+        const {
+            data: rewards
+        } =
+            await supabaseClient
+            .from("wallet_transactions")
+            .select(
+                "amount"
+            )
+            .eq(
+                "user_id",
+                currentUser.id
+            )
+            .eq(
+                "type",
+                "task_reward"
+            )
+            .limit(5000);
+
+        const total =
+            (rewards || []).reduce(
+                (sum, r) => sum + Number(r.amount || 0),
+                0
+            );
+
+        const totalEl =
+            document.getElementById(
+                "totalCommission"
+            );
+
+        if (totalEl) {
+
+            totalEl.textContent =
+                "RM" + total.toFixed(2);
+
+        }
+
+    } catch (e) {
+
+        console.error(
+            "Failed to load total commission",
+            e
+        );
+
+    }
+
+
+    // 当前余额
+    const balEl =
+        document.getElementById(
+            "walletStatBalance"
+        );
+
+    if (balEl && currentUser.balance !== undefined) {
+
+        balEl.textContent =
+            "RM" + Number(currentUser.balance || 0).toFixed(2);
+
+    }
 
 
     if (error) {
