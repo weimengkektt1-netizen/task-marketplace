@@ -212,6 +212,12 @@ img{display:block}
 .rules-wrap li{font-size:12.5px;color:var(--mut);line-height:1.55}
 .rules-wrap li b{color:var(--txt)}
 
+/* ---------- CTA 横幅 ---------- */
+.cta-band{margin-top:20px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:22px 24px;border-radius:18px;border:1px solid rgba(255,201,77,.35);background:radial-gradient(600px 200px at 20% 0%,rgba(255,201,77,.14),transparent 55%),linear-gradient(160deg,rgba(124,92,255,.2),rgba(255,255,255,.04));box-shadow:0 10px 40px rgba(124,92,255,.15)}
+.cta-t{font-size:19px;font-weight:900;background:linear-gradient(135deg,#ffe9a8,#ffb020);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.cta-s{font-size:12.5px;color:var(--mut);margin-top:5px;letter-spacing:.5px}
+.cta-btns{display:flex;gap:10px;flex-wrap:wrap}
+
 /* ---------- 钱包 ---------- */
 .wallet-hero{border-radius:22px;padding:24px;background:linear-gradient(135deg,#171a45,#26204f 60%,#3a1f45);border:1px solid rgba(255,255,255,.12);position:relative;overflow:hidden}
 .wallet-hero::after{content:"";position:absolute;inset:0;background:radial-gradient(500px 240px at 85% 20%,rgba(255,201,77,.14),transparent 60%);pointer-events:none}
@@ -476,6 +482,39 @@ img{display:block}
 .foot-logo b{font-size:14px;font-weight:800}
 .foot-logo small{display:block;font-size:10px;color:var(--gold);letter-spacing:2px;font-weight:700}
 .foot-copy{font-size:12px;color:#6a6f96}
+.foot-links{display:flex;gap:16px;flex-wrap:wrap}
+.foot-links a{font-size:12.5px;color:#9aa0c8;cursor:pointer;transition:.15s}
+.foot-links a:hover{color:var(--gold);text-shadow:0 0 10px rgba(255,201,77,.4)}
+
+/* ---------- 关于我们 ---------- */
+.about-hero{position:relative;text-align:center;padding:30px 20px 24px;border-radius:20px;overflow:hidden;margin-bottom:16px;background:radial-gradient(700px 300px at 50% -20%,rgba(124,92,255,.3),transparent 60%),linear-gradient(160deg,rgba(255,255,255,.06),rgba(255,255,255,.02));border:1px solid rgba(124,92,255,.3)}
+.about-title{font-size:24px;font-weight:900;letter-spacing:2px;background:linear-gradient(135deg,#fff,#b9c2ff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.about-sub{color:var(--mut);font-size:12.5px;margin-top:6px;letter-spacing:.5px}
+.about-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.about-tab{padding:9px 18px;border-radius:999px;font-size:13px;font-weight:700;color:var(--mut);border:1px solid var(--line);background:var(--card);cursor:pointer;transition:.18s}
+.about-tab:hover{border-color:rgba(124,92,255,.5);color:var(--txt)}
+.about-tab.on{color:#fff;background:linear-gradient(135deg,rgba(124,92,255,.4),rgba(79,124,255,.3));border-color:rgba(124,92,255,.6);box-shadow:0 4px 18px rgba(124,92,255,.25)}
+.ab-card{margin-bottom:14px}
+.ab-card h3{font-size:15px;margin-bottom:8px}
+.ab-p{font-size:13.5px;color:#c2c6ea;line-height:1.75;margin-bottom:8px}
+.ab-p:last-child{margin-bottom:0}
+.ab-p b{color:var(--txt)}
+.ab-value{text-align:center;padding:18px 14px}
+.ab-value .av-ic{font-size:28px}
+.ab-value b{display:block;margin-top:8px;font-size:14.5px}
+.ab-value p{font-size:12.5px;color:var(--mut);margin-top:4px;line-height:1.6}
+.ab-ul{margin:0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:9px}
+.ab-ul li{font-size:13px;color:#c2c6ea;line-height:1.65;padding-left:16px;position:relative}
+.ab-ul li::before{content:"•";position:absolute;left:0;color:var(--gold);font-weight:900}
+.ab-ul li b{color:var(--txt)}
+.ab-faq{display:flex;flex-direction:column;gap:9px}
+.faq-item{border-radius:13px;border:1px solid var(--line);background:var(--card);overflow:hidden}
+.faq-item summary{cursor:pointer;padding:13px 16px;font-size:13.5px;font-weight:700;color:var(--txt);list-style:none;position:relative;padding-right:34px;transition:.15s}
+.faq-item summary::after{content:"＋";position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--gold);font-size:15px;transition:.2s}
+.faq-item[open] summary::after{content:"－"}
+.faq-item summary:hover{background:rgba(124,92,255,.08)}
+.faq-item p{padding:0 16px 13px;font-size:12.8px;color:#c2c6ea;line-height:1.7}
+.faq-item[open] summary{border-bottom:1px solid rgba(255,255,255,.05)}
 
 /* 管理后台快速入口 */
 .ad-quick{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
@@ -511,6 +550,7 @@ img{display:block}
       <a href="#goods" data-v="goods">🛍️ 代充代送</a>
       <a href="#mycenter" data-v="mycenter">打手中心</a>
       <a href="#wallet" data-v="wallet">我的钱包</a>
+      <a href="#about" data-v="about">ℹ️ 关于</a>
       <a href="#admin" data-v="admin" class="hidden" id="adminNav">管理后台</a>
     </nav>
     <div class="top-right">
@@ -545,6 +585,14 @@ img{display:block}
       <div class="stat"><div class="n" id="stOpen">0</div><div class="t">大厅待接订单</div></div>
       <div class="stat"><div class="n" id="stDone">0</div><div class="t">已完成订单</div></div>
       <div class="stat"><div class="n">100%</div><div class="t">平台担保</div></div>
+    </div>
+
+    <div class="section-h"><div class="bar"></div><h2>为什么选择我们</h2></div>
+    <div class="grid g4">
+      <div class="card"><div style="font-size:24px">🛡️</div><h3 class="mt8">平台担保</h3><p class="muted small">押金全程托管，完成审核后自动结算，杜绝跑单</p></div>
+      <div class="card"><div style="font-size:24px">🎖️</div><h3 class="mt8">资质审核</h3><p class="muted small">打手实名认证 + 段位战绩审核，只留真本事</p></div>
+      <div class="card"><div style="font-size:24px">⚡</div><h3 class="mt8">极速匹配</h3><p class="muted small">资格智能匹配，指定下单直达，无需漫长等待</p></div>
+      <div class="card"><div style="font-size:24px">💬</div><h3 class="mt8">专属客服</h3><p class="muted small">WhatsApp 实时响应，纠纷仲裁全程护航</p></div>
     </div>
 
     <div class="section-h"><div class="bar"></div><h2>等级体系 · 接单成长</h2></div>
@@ -618,6 +666,18 @@ img{display:block}
           <li>严禁私下交易、共享账号、恶意刷单等违规行为，违者将冻结账户。</li>
           <li>任何问题请通过右下角 <b>WhatsApp 客服</b> 联系平台，谨防诈骗。</li>
         </ul>
+      </div>
+    </div>
+
+    <div class="cta-band">
+      <div>
+        <div class="cta-t">准备好了吗？立即开始你的上分之旅 🚀</div>
+        <div class="cta-s">安全担保 · 专业打手 · 极速匹配 · 全程护航</div>
+      </div>
+      <div class="cta-btns">
+        <button class="btn btn-g" onclick="go('#create')">⚔️ 立即下单</button>
+        <button class="btn btn-o" onclick="go('#sellers')">👑 找打手</button>
+        <button class="btn btn-o" onclick="go('#hall')">📋 去接单</button>
       </div>
     </div>
   </section>
@@ -737,6 +797,88 @@ img{display:block}
     </div>
   </section>
 
+  <!-- ============ 关于我们 ============ -->
+  <section class="view" id="view-about">
+    <div class="about-hero">
+      <div class="about-title">ℹ️ 关于我们</div>
+      <div class="about-sub">WZRY·BOOST 王者荣耀代打平台 · 押金托管 · 安全担保 · 值得信赖</div>
+    </div>
+    <div class="about-tabs">
+      <div class="about-tab on" data-t="intro" onclick="aboutTab('intro')">📖 关于我们</div>
+      <div class="about-tab" data-t="faq" onclick="aboutTab('faq')">💬 帮助中心</div>
+      <div class="about-tab" data-t="terms" onclick="aboutTab('terms')">📜 服务条款</div>
+      <div class="about-tab" data-t="privacy" onclick="aboutTab('privacy')">🔒 隐私政策</div>
+    </div>
+
+    <div id="abIntro">
+      <div class="card ab-card">
+        <h3>🤝 平台简介</h3>
+        <p class="ab-p">WZRY·BOOST 是一个专注于《王者荣耀》代打与陪玩服务的专业平台。我们连接有上分需求的玩家与经验丰富的认证打手，通过<b>押金托管、资质审核、完成审核、佣金保障</b>四大机制，为每一次交易提供全程担保。</p>
+        <p class="ab-p">无论你是想安全快速地上分、冲击巅峰赛，还是需要专业陪玩指导，在这里都能找到经过平台认证的可靠打手。</p>
+      </div>
+      <div class="card ab-card">
+        <h3>🎯 我们的使命</h3>
+        <p class="ab-p">让每一位玩家都能<b>安全、快速、放心</b>地达成目标段位，让每一份实力都获得应有的回报。</p>
+      </div>
+      <div class="grid g2">
+        <div class="card ab-value"><div class="av-ic">🛡️</div><b>安全担保</b><p>订单押金全程托管，完成或驳回均自动退还，杜绝跑单风险。</p></div>
+        <div class="card ab-value"><div class="av-ic">🎖️</div><b>专业打手</b><p>每位打手均提交真实段位与战绩资料，经管理员审核认证后才可接单。</p></div>
+        <div class="card ab-value"><div class="av-ic">⚡</div><b>高效服务</b><p>智能匹配符合资格的打手，指定下单直达，快速响应。</p></div>
+        <div class="card ab-value"><div class="av-ic">🤝</div><b>诚信经营</b><p>100% 诚信交易，佣金透明、流水可查，售后有保障。</p></div>
+      </div>
+      <div class="card ab-card">
+        <h3>📬 联系我们</h3>
+        <p class="ab-p">任何问题欢迎通过右下角 <b>WhatsApp 客服</b> 联系我们（工作日 10:00 - 22:00 在线，通常几分钟内回复）。</p>
+        <p class="ab-p">平台邮箱：<b>support@wzry-boost.com</b></p>
+      </div>
+    </div>
+
+    <div id="abFaq" class="hidden">
+      <div class="ab-faq">
+        <details class="faq-item" open><summary>1. 如何注册并选择身份？</summary><p>注册时选择「下单人」或「接单人」身份。下单人发布订单并托管押金；接单人需先提交打手资料，审核通过后即可接单。注册后身份不可随意更改。</p></details>
+        <details class="faq-item"><summary>2. 如何充值？多久到账？</summary><p>在「我的钱包」点击充值，按页面显示的收款二维码或银行账户转账，上传转账截图后提交。管理员审核通过后金额自动入账，通常几分钟至 1 小时内到账。</p></details>
+        <details class="faq-item"><summary>3. 如何下单？</summary><p>在「发布订单」选择段位上分或巅峰上分，填写当前/目标段位、价格、完成时间；可指定打手（昵称或 UID），不指定则自动进入接单大厅。下单前请确保钱包余额充足。</p></details>
+        <details class="faq-item"><summary>4. 如何接单？有什么资格要求？</summary><p>在「接单大厅」或指定订单中选择符合资格的单子，支付押金后接取。段位单要求历史最高段位 ≥ 目标段位；巅峰单要求历史最高巅峰分 ≥ 目标巅峰分。</p></details>
+        <details class="faq-item"><summary>5. 押金如何收取与退还？</summary><p>下单押金 = 接单押金 = 订单金额，由平台托管。订单完成并经管理员审核后，双方押金自动退还至钱包；订单被驳回同样全额退还。</p></details>
+        <details class="faq-item"><summary>6. 佣金如何计算与发放？</summary><p>订单完成后，平台按接单人等级抽取一定比例，剩余佣金自动打入接单人钱包。抽佣比例：LV0/LV1 15%、LV2 12%、LV3 10%、LV4 8%、LV5 5%、LV6 3%。</p></details>
+        <details class="faq-item"><summary>7. 经验与等级如何获得？</summary><p>每完成一单按订单价值获得经验（RM1 = 1 exp）。等级越高抽佣越低、徽章越尊贵，每月可冲击排行榜赢取荣誉。</p></details>
+        <details class="faq-item"><summary>8. 如何提现？最低金额？</summary><p>在「我的钱包」申请提现，最低 RM50。提交申请后管理员审核并转账，转账完成后自动扣减余额，可在提现记录中查看转账凭证。</p></details>
+        <details class="faq-item"><summary>9. 订单多久能完成？</summary><p>下单时填写希望完成的时间（如 3 天内/5 天内），打手须在约定时间内完成并提交完成证明。超时未完成可联系客服介入处理。</p></details>
+        <details class="faq-item"><summary>10. 遇到纠纷怎么办？</summary><p>所有订单均经平台审核。如打手未按时完成、资料不实等，可提交完成证明并联系客服，平台将按规则仲裁：押金全额退还、违规方按情节处理。</p></details>
+        <details class="faq-item"><summary>11. 代充/代送怎么购买？</summary><p>在「代充代送」版块选择商品，点击「购买」复制商家微信号，添加后发送商品名称即可下单。该版块货品全部经由网站担保。</p></details>
+        <details class="faq-item"><summary>12. 怎么联系客服？</summary><p>页面右下角 WhatsApp 客服按钮（wa.me/60175468526），工作日 10:00 - 22:00 在线，通常几分钟内回复。</p></details>
+      </div>
+    </div>
+
+    <div id="abTerms" class="hidden">
+      <div class="card ab-card">
+        <h3>📜 服务条款</h3>
+        <ul class="ab-ul">
+          <li><b>服务内容</b>：本平台提供王者荣耀代打上分、陪玩及代充代送等服务，所有服务均通过平台担保机制完成。</li>
+          <li><b>账户规范</b>：一个账号对应一位用户，请确保注册信息真实有效。禁止转借、共享或恶意注册多个账号。</li>
+          <li><b>交易担保</b>：订单押金由平台托管，仅在订单完成并经管理员审核后发放；驳回订单押金全额退还。</li>
+          <li><b>禁止行为</b>：严禁线下私下交易、共享游戏账号、恶意刷单、虚假提交完成证明、使用外挂或脚本等违规行为。</li>
+          <li><b>违规处理</b>：一经发现违规，平台有权冻结账户、取消接单资格、扣除违规所得，并保留追究责任的权利。</li>
+          <li><b>风险提示</b>：代打/陪玩服务涉及游戏账号共享，用户应自行评估风险；因游戏官方政策导致的账号处罚，平台不承担相关责任。</li>
+          <li><b>条款更新</b>：平台有权根据业务需要修订本条款，修订后将在页面公示，继续使用即视为接受更新后的条款。</li>
+        </ul>
+      </div>
+    </div>
+
+    <div id="abPrivacy" class="hidden">
+      <div class="card ab-card">
+        <h3>🔒 隐私政策</h3>
+        <ul class="ab-ul">
+          <li><b>信息收集</b>：我们仅收集提供服务所必需的信息，包括注册信息（邮箱、手机号）、打手资料（段位、巅峰分、战绩截图）、订单与交易记录。</li>
+          <li><b>信息使用</b>：收集的信息用于账户管理、交易担保、资质审核、客服支持及服务改进，绝不用于其他用途。</li>
+          <li><b>信息保护</b>：我们采取加密存储、权限管控、安全审计等措施保护您的数据，不会向任何第三方出售或出租您的个人信息。</li>
+          <li><b>您的权利</b>：您可以随时查看自己的资料与交易记录；如需更正或删除个人信息，请联系客服协助处理。</li>
+          <li><b>联系我们</b>：如有隐私相关问题，请通过 WhatsApp 客服或邮箱 support@wzry-boost.com 与我们联系。</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
   <!-- ============ 管理后台 ============ -->
   <section class="view" id="view-admin">
     <div class="page-h"><div><h2>管理后台</h2><div class="sub">全局管理：用户 / 打手 / 订单 / 充值 / 佣金 / 收款设置</div></div></div>
@@ -765,6 +907,12 @@ img{display:block}
     <div class="foot-logo">
       <div class="logo-badge">WZ</div>
       <div><b>王者荣耀代打</b><small>WZRY · BOOST</small></div>
+    </div>
+    <div class="foot-links">
+      <a onclick="goAbout('intro')">关于我们</a>
+      <a onclick="goAbout('faq')">帮助中心</a>
+      <a onclick="goAbout('terms')">服务条款</a>
+      <a onclick="goAbout('privacy')">隐私政策</a>
     </div>
     <div class="foot-copy">© 2026 WZRY·BOOST 王者荣耀代打平台 · 押金托管 · 安全担保 · 专业上分</div>
   </div>
@@ -882,7 +1030,7 @@ function go(h){ location.hash = h; }
 function isRankType(t){ return t === "rank"; }
 
 /* 路由 */
-const VIEWS = ["home","sellers","board","hall","create","orders","goods","mycenter","wallet","admin"];
+const VIEWS = ["home","sellers","board","hall","create","orders","goods","mycenter","wallet","about","admin"];
 let sessionReady = false;
 async function router(){
   if (!sessionReady && !USER) return;
@@ -1430,6 +1578,20 @@ async function delGoods(id){
   toast("已删除", 1);
   loadGoods();
 }
+
+/* ============================================================
+   关于我们
+   ============================================================ */
+let aboutCur = "intro";
+function aboutTab(t){
+  aboutCur = t;
+  $$(".about-tab").forEach(x => x.classList.toggle("on", x.dataset.t === t));
+  $("#abIntro").classList.toggle("hidden", t !== "intro");
+  $("#abFaq").classList.toggle("hidden", t !== "faq");
+  $("#abTerms").classList.toggle("hidden", t !== "terms");
+  $("#abPrivacy").classList.toggle("hidden", t !== "privacy");
+}
+function goAbout(t){ go("#about"); setTimeout(() => aboutTab(t), 60); }
 
 /* ============================================================
    打手中心
