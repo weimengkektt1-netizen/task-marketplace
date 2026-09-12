@@ -50,6 +50,10 @@ img{display:block}
 .nav a:hover{color:var(--txt);background:var(--card2)}
 .nav a.on{color:#fff;background:linear-gradient(135deg,rgba(124,92,255,.32),rgba(79,124,255,.22));box-shadow:inset 0 0 0 1px rgba(124,92,255,.4)}
 .top-right{display:flex;align-items:center;gap:10px;flex:none}
+.burger{display:none;width:40px;height:40px;border-radius:12px;background:var(--card);border:1px solid var(--line);align-items:center;justify-content:center;cursor:pointer;color:var(--txt);flex:none}
+.burger:hover{background:var(--card2)}
+.nav-mask{position:fixed;inset:0;background:rgba(4,5,14,.6);backdrop-filter:blur(3px);z-index:198;opacity:0;pointer-events:none;transition:opacity .25s}
+.nav-mask.show{opacity:1;pointer-events:auto}
 .bell{position:relative;width:38px;height:38px;border-radius:12px;background:var(--card);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;cursor:pointer}
 .bell .dot{position:absolute;top:7px;right:8px;min-width:16px;height:16px;border-radius:9px;background:var(--danger);font-size:10px;display:flex;align-items:center;justify-content:center;padding:0 4px;font-weight:800}
 .user-chip{display:flex;align-items:center;gap:8px;padding:5px 12px 5px 6px;border-radius:13px;background:var(--card);border:1px solid var(--line);cursor:pointer}
@@ -327,8 +331,10 @@ img{display:block}
   .form-grid{grid-template-columns:1fr}
   .hero h1{font-size:26px}
   .hero{padding:30px 20px}
-  .nav{order:3;width:100%;margin:6px 0 0;overflow-x:auto;flex-wrap:nowrap;padding-bottom:4px}
-  .nav a{flex:none}
+  .nav{position:fixed;top:0;right:0;height:100vh;width:280px;max-width:86vw;margin:0;flex-direction:column;gap:2px;padding:74px 14px 24px;background:rgba(10,12,26,.98);border-left:1px solid var(--line);box-shadow:-12px 0 44px rgba(0,0,0,.55);transform:translateX(106%);transition:transform .3s ease;z-index:200;overflow-y:auto;flex-wrap:nowrap;align-content:flex-start}
+  .nav.open{transform:translateX(0)}
+  .nav a{padding:12px 14px;font-size:14px;flex:none;width:100%;border-radius:11px;display:flex;align-items:center;gap:8px}
+  .burger{display:flex}
   .top-right{gap:8px}
 }
 /* ---------- 排行榜（富丽堂皇） ---------- */
@@ -579,6 +585,9 @@ img{display:block}
       <a href="#about" data-v="about">ℹ️ 关于</a>
       <a href="#admin" data-v="admin" class="hidden" id="adminNav">⚙️ 管理后台</a>
     </nav>
+    <div class="burger" onclick="toggleNav()" aria-label="菜单">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h16"/></svg>
+    </div>
     <div class="top-right">
       <div class="bell" onclick="toggleNotif()">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
@@ -593,6 +602,7 @@ img{display:block}
     </div>
   </div>
 </header>
+<div class="nav-mask" id="navMask" onclick="toggleNav(false)"></div>
 
 <main class="wrap">
   <!-- ============ 首页 ============ -->
@@ -1085,6 +1095,7 @@ async function router(){
   $$(".view").forEach(x => x.classList.remove("on"));
   $("#view-"+v).classList.add("on");
   $$(".nav a").forEach(a => a.classList.toggle("on", a.dataset.v === v));
+  toggleNav(false);
   if (v === "home") loadHome();
   if (v === "sellers") loadSellers();
   if (v === "board") loadBoard(boardTab);
@@ -1631,8 +1642,7 @@ async function delGoods(id){
 /* ============================================================
    关于我们
    ============================================================ */
-let aboutCur = "intro";
-function aboutTab(t){
+let aboutCur = "intro";function aboutTab(t){
   aboutCur = t;
   $$(".about-tab").forEach(x => x.classList.toggle("on", x.dataset.t === t));
   $("#abIntro").classList.toggle("hidden", t !== "intro");
@@ -1641,6 +1651,16 @@ function aboutTab(t){
   $("#abPrivacy").classList.toggle("hidden", t !== "privacy");
 }
 function goAbout(t){ go("#about"); setTimeout(() => aboutTab(t), 60); }
+
+/* 汉堡包菜单 */
+function toggleNav(force){
+  const nav = document.getElementById("mainNav");
+  const mask = document.getElementById("navMask");
+  if (!nav || !mask) return;
+  const open = force === undefined ? !nav.classList.contains("open") : force;
+  nav.classList.toggle("open", open);
+  mask.classList.toggle("show", open);
+}
 
 /* ============================================================
    平台公告
