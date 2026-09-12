@@ -167,14 +167,29 @@ img{display:block}
 /* ---------- 打手卡片 ---------- */
 .sp-card{border-radius:16px;border:1px solid var(--line);background:var(--card);padding:16px;text-align:center;transition:.18s}
 .sp-card:hover{transform:translateY(-3px);border-color:rgba(124,92,255,.5)}
+.sp-top{display:flex;align-items:center;gap:10px;text-align:left}
+.sp-avatar{width:52px;height:52px;border-radius:50%;overflow:hidden;flex:none;border:2px solid rgba(124,92,255,.6);background:linear-gradient(135deg,rgba(124,92,255,.35),rgba(255,201,77,.25));display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;color:#fff;box-shadow:0 0 14px rgba(124,92,255,.35)}
+.sp-avatar img{width:100%;height:100%;object-fit:cover}
+.sp-id{flex:1;min-width:0}
+.sp-name{font-weight:800;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sp-uid{font-size:11px;color:var(--acc);font-weight:700;margin-top:1px;letter-spacing:.5px}
 .sp-lv{width:74px;height:74px;margin:0 auto;position:relative}
 .sp-lv img{width:100%;height:100%;object-fit:cover;mix-blend-mode:screen;filter:drop-shadow(0 0 14px rgba(124,92,255,.45))}
-.sp-name{font-weight:800;font-size:15px;margin-top:8px}
-.sp-uid{font-size:11px;color:var(--acc);font-weight:700;margin-top:1px;letter-spacing:.5px}
-.sp-meta{display:flex;flex-direction:column;gap:4px;margin-top:10px;font-size:12px;color:var(--mut)}
+.sp-meta{display:flex;flex-direction:column;gap:4px;margin-top:10px;font-size:12px;color:var(--mut);text-align:center}
 .sp-meta b{color:var(--txt)}
 .sp-lanes{display:flex;gap:5px;justify-content:center;flex-wrap:wrap;margin-top:9px}
 .lane{padding:3px 9px;border-radius:7px;background:rgba(79,124,255,.14);color:#9db8ff;font-size:11px;font-weight:700}
+/* ---------- 头像上传 ---------- */
+.avatar-up{width:92px;height:92px;border-radius:50%;margin:6px auto 0;border:2px dashed rgba(124,92,255,.55);overflow:hidden;position:relative;cursor:pointer;background:rgba(124,92,255,.08);display:flex;align-items:center;justify-content:center}
+.avatar-up img{width:100%;height:100%;object-fit:cover;display:none}
+.avatar-up .avatar-up-mask{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#cdd8ff;background:rgba(8,12,28,.45);opacity:0;transition:.18s}
+.avatar-up:hover .avatar-up-mask{opacity:1}
+/* ---------- 平台规则 ---------- */
+.rules-wrap{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+.rules-wrap .card h3{font-size:14px;margin-bottom:8px}
+.rules-wrap ul{margin:0;padding-left:16px;display:flex;flex-direction:column;gap:5px}
+.rules-wrap li{font-size:12.5px;color:var(--mut);line-height:1.55}
+.rules-wrap li b{color:var(--txt)}
 
 /* ---------- 钱包 ---------- */
 .wallet-hero{border-radius:22px;padding:24px;background:linear-gradient(135deg,#171a45,#26204f 60%,#3a1f45);border:1px solid rgba(255,255,255,.12);position:relative;overflow:hidden}
@@ -335,6 +350,69 @@ img{display:block}
       <div class="card"><h3>② 充值钱包</h3><p class="muted small">扫码转账并上传截图，管理员审核后到账</p></div>
       <div class="card"><h3>③ 下单 / 接单</h3><p class="muted small">下单人发布订单并托管押金，打手付押金接单</p></div>
       <div class="card"><h3>④ 完成结算</h3><p class="muted small">打手提交完成证明，审核后押金退还、佣金发放</p></div>
+    </div>
+
+    <div class="section-h"><div class="bar"></div><h2>📜 平台规则</h2></div>
+    <div class="rules-wrap">
+      <div class="card">
+        <h3>👤 账户与角色</h3>
+        <ul>
+          <li>注册时请选择身份：<b>下单人</b> 或 <b>接单人</b>，注册后不可随意更改。</li>
+          <li>接单人昵称<b>全网唯一</b>，每位接单人拥有独立 <b>UID</b> 用于识别。</li>
+          <li>下单人与接单人均需在平台钱包充值后，才能下单 / 接单。</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>💰 押金与担保</h3>
+        <ul>
+          <li>下单押金 = 接单押金 = 订单金额，全程由平台托管。</li>
+          <li>下单人发布订单时托管押金，接单人接单时冻结同额押金。</li>
+          <li>订单完成并经管理员审核后，<b>双方押金自动退还</b>；被驳回的订单同样退还。</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>🎯 资格匹配</h3>
+        <ul>
+          <li><b>段位单</b>：接单人历史最高段位 ≥ 订单目标段位才可接取。</li>
+          <li><b>巅峰单</b>：接单人历史最高巅峰分 ≥ 订单目标巅峰分才可接取。</li>
+          <li>接单人资料须经管理员审核认证，才会展示在打手大厅。</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>📋 接单方式</h3>
+        <ul>
+          <li><b>无指定接单人</b>：订单自动进入接单大厅，符合资格的打手付押金领取。</li>
+          <li><b>有指定接单人</b>：订单自动推送至该接单人，并发送通知提醒。</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>💸 佣金与平台抽佣</h3>
+        <ul>
+          <li>订单完成审核后，佣金<b>自动打入接单人钱包</b>。</li>
+          <li>平台按接单人等级抽佣：<b>LV0/LV1 15% · LV2 12% · LV3 10% · LV4 8% · LV5 5% · LV6 3%</b>。</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>⭐ 经验与等级</h3>
+        <ul>
+          <li>每完成一单按订单价值获得经验（RM1 = 1 exp），经验用于升级等级。</li>
+          <li>等级越高，平台抽佣越低、徽章越尊贵（详见上方等级体系）。</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>🏧 提现规则</h3>
+        <ul>
+          <li>钱包余额（含佣金）可随时申请提现。</li>
+          <li>提现由管理员审核，转账完成后<b>自动扣减钱包余额</b>，可在钱包查看转账凭证。</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>🛡️ 诚信与安全</h3>
+        <ul>
+          <li>严禁私下交易、共享账号、恶意刷单等违规行为，违者将冻结账户。</li>
+          <li>任何问题请通过右下角 <b>WhatsApp 客服</b> 联系平台，谨防诈骗。</li>
+        </ul>
+      </div>
     </div>
   </section>
 
@@ -690,9 +768,14 @@ async function loadSellers(){
     const L = lvInfo(s.exp);
     return `
     <div class="sp-card">
-      <div class="sp-lv"><img src="${L.img}" alt="LV${L.lv}"></div>
-      <div class="sp-name">${esc(s.nickname)}</div>
-      <div class="sp-uid">UID ${esc(s.uid)}</div>
+      <div class="sp-top">
+        <div class="sp-avatar">${s.avatar_url ? '<img src="' + s.avatar_url + '" alt="头像">' : '<span>' + esc((s.nickname||"?").slice(0,1)) + "</span>"}</div>
+        <div class="sp-id">
+          <div class="sp-name">${esc(s.nickname)}</div>
+          <div class="sp-uid">UID ${esc(s.uid)}</div>
+        </div>
+        <div class="sp-lv" style="width:46px;height:46px;margin:0;flex:none"><img src="${L.img}" alt="LV${L.lv}"></div>
+      </div>
       <div class="sp-meta">
         <span>历史段位：<b>${esc(s.historical_rank||"—")}</b></span>
         <span>历史巅峰：<b>${s.historical_peak ? s.historical_peak + " 分" : "—"}</b></span>
@@ -903,6 +986,14 @@ async function loadMyCenter(){
       <div class="card" style="grid-column:1/-1">
         <h3>接单人资料</h3>
         <div class="form-grid">
+          <div class="fg full" style="text-align:center">
+            <label>头像</label>
+            <div class="avatar-up" onclick="document.getElementById('spAvatar').click()">
+              <img id="spAvatarImg" src="${s?.avatar_url || ''}">
+              <div class="avatar-up-mask">📷 点击上传头像</div>
+            </div>
+            <input type="file" id="spAvatar" accept="image/*" class="hidden">
+          </div>
           <div class="fg"><label>昵称（唯一，不可重复）</label><input id="spNick" value="${esc(s?.nickname||"")}" placeholder="你的游戏昵称"></div>
           <div class="fg"><label>UID（接单人识别码）</label><input id="spUid" value="${esc(s?.uid||"")}" placeholder="提交时自动生成" readonly style="opacity:.6"></div>
           <div class="fg"><label>历史段位（最高）</label><select id="spRank">${RANKS.map(r => '<option ' + (s?.historical_rank===r?"selected":"") + '>' + r + "</option>").join("")}</select></div>
@@ -930,8 +1021,16 @@ async function loadMyCenter(){
   window._spProofs = s?.proofs || [];
   window._spLanes = s?.lanes || [];
   window._spLaneRanks = s?.lane_ranks || {};
+  window._spAvatar = s?.avatar_url || "";
   renderLanePick();
   renderSpThumbs();
+  renderAvatar();
+  $("#spAvatar").onchange = async e => {
+    const f = e.target.files[0]; if (!f) return;
+    toast("头像上传中…");
+    const url = await uploadImage(f, "avatars");
+    if (url) { window._spAvatar = url; renderAvatar(); }
+  };
   $("#spFile").onchange = async e => {
     const files = Array.from(e.target.files);
     for (const f of files) {
@@ -961,6 +1060,10 @@ function toggleLane(el){
 function renderSpThumbs(){
   $("#spThumbs").innerHTML = (window._spProofs||[]).map((u,i) => '<div class="up-thumb"><img src="' + u + '"><span class="rm" onclick="rmProof(' + i + ')">✕</span></div>').join("");
 }
+function renderAvatar(){
+  const img = $("#spAvatarImg");
+  if (img) img.style.display = window._spAvatar ? "block" : "none";
+}
 function rmProof(i){ window._spProofs.splice(i,1); renderSpThumbs(); }
 async function saveSeller(){
   const nickname = $("#spNick").value.trim();
@@ -982,7 +1085,8 @@ async function saveSeller(){
     lane_ranks: laneRanks,
     lane_rank: Object.values(laneRanks).filter(Boolean).join(" / ") || null,
     lanes: window._spLanes, bio: bio || null,
-    proofs: window._spProofs, status: "pending"
+    proofs: window._spProofs, avatar_url: window._spAvatar || null,
+    status: "pending"
   };
   const { error } = await sb.from("seller_profiles").upsert(payload, { onConflict: "id" });
   if (error) return toast("提交失败：" + error.message, 0);
@@ -1238,7 +1342,8 @@ function adSellers(list){
     <div class="card mb12">
       <div class="row">
         <div style="display:flex;align-items:center;gap:10px">
-          <div class="sp-lv" style="width:52px;height:52px"><img src="${L.img}"></div>
+          <div class="sp-avatar" style="width:46px;height:46px;font-size:18px;flex:none">${s.avatar_url ? '<img src="' + s.avatar_url + '">' : '<span>' + esc((s.nickname||"?").slice(0,1)) + "</span>"}</div>
+          <div class="sp-lv" style="width:38px;height:38px;flex:none"><img src="${L.img}"></div>
           <div>
             <div class="bold">${esc(s.nickname)} <span class="small" style="color:var(--acc)">UID ${esc(s.uid)}</span></div>
             <div class="small muted">${esc((p && p.email) || "")}</div>
