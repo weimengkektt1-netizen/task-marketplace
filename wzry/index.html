@@ -150,6 +150,7 @@ img{display:block}
 .od-no{font-size:11px;color:var(--mut);font-weight:700;letter-spacing:.3px}
 .st{padding:4px 10px;border-radius:8px;font-size:11.5px;font-weight:800}
 .st-open{background:rgba(46,230,168,.15);color:var(--ok)}
+.st-specified{background:rgba(255,201,77,.16);color:#ffe08a;border:1px solid rgba(255,201,77,.35);box-shadow:0 0 12px rgba(255,190,60,.15)}
 .st-claimed{background:rgba(79,124,255,.16);color:#8fb0ff}
 .st-submitted{background:rgba(255,159,67,.16);color:var(--warn)}
 .st-completed{background:rgba(255,201,77,.16);color:var(--gold)}
@@ -353,6 +354,121 @@ img{display:block}
   .p-first .p-val{font-size:15px}
   .p-uid{font-size:9px}
   .board-list .p-row .p-val{font-size:12px}
+}
+
+/* ============================================================
+   质感增强层（2026.09 精修）
+   ============================================================ */
+::selection{background:rgba(255,201,77,.35);color:#fff}
+*{scrollbar-width:thin;scrollbar-color:rgba(124,92,255,.45) rgba(255,255,255,.04)}
+::-webkit-scrollbar{width:9px;height:9px}
+::-webkit-scrollbar-track{background:rgba(255,255,255,.03)}
+::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#7c5cff,#4f7cff);border-radius:5px;border:2px solid rgba(10,12,26,.6)}
+::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,#9a7dff,#6a8dff)}
+
+/* 顶栏精修 */
+.topbar{box-shadow:0 10px 40px rgba(0,0,0,.3)}
+.logo-badge{position:relative;overflow:hidden}
+.logo-badge::after{content:"";position:absolute;left:-120%;top:0;width:60%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.5),transparent);transform:skewX(-20deg);animation:logoShine 4.5s ease-in-out infinite}
+@keyframes logoShine{0%,70%{left:-120%}100%{left:160%}}
+.nav a{position:relative}
+.nav a.on{color:#fff;background:linear-gradient(135deg,rgba(255,201,77,.22),rgba(255,176,32,.12));box-shadow:inset 0 0 0 1px rgba(255,201,77,.45),0 2px 14px rgba(255,190,60,.12);text-shadow:0 0 10px rgba(255,220,120,.5)}
+.nav a:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(0,0,0,.25)}
+
+/* 英雄区氛围 */
+.hero{background:
+  radial-gradient(700px 380px at 78% -10%,rgba(124,92,255,.5),transparent 62%),
+  radial-gradient(480px 300px at 8% 105%,rgba(255,201,77,.16),transparent 60%),
+  linear-gradient(135deg,#16133f 0%,#241d4e 45%,#381e44 100%)}
+.hero::before{content:"";position:absolute;left:55%;top:-160px;width:560px;height:320px;transform:translateX(-50%);background:radial-gradient(closest-side,rgba(124,92,255,.35),transparent);filter:blur(8px);animation:heroGlow 4.5s ease-in-out infinite;pointer-events:none}
+@keyframes heroGlow{0%,100%{opacity:.6;transform:translateX(-50%) scale(1)}50%{opacity:1;transform:translateX(-50%) scale(1.12)}}
+.hero h1{text-shadow:0 0 34px rgba(124,92,255,.35)}
+.hero h1 span{text-shadow:0 0 24px rgba(255,190,60,.45)}
+.hero .btn{box-shadow:0 8px 26px rgba(0,0,0,.35)}
+.hero .btn-g{box-shadow:0 8px 26px rgba(255,176,32,.35)}
+.hero .btn-p{box-shadow:0 8px 26px rgba(124,92,255,.45)}
+
+/* 标题渐变 */
+.page-h h2,.section-h h2{background:linear-gradient(135deg,#fff,#b9c2ff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.section-h .bar{box-shadow:0 0 12px rgba(255,201,77,.6)}
+
+/* 统计卡 */
+.stat{position:relative;overflow:hidden;transition:.2s}
+.stat::after{content:"";position:absolute;left:0;top:0;width:100%;height:2px;background:linear-gradient(90deg,transparent,rgba(255,201,77,.7),transparent);opacity:0;transition:.25s}
+.stat:hover{transform:translateY(-3px);border-color:rgba(255,201,77,.4);box-shadow:0 10px 30px rgba(0,0,0,.35)}
+.stat:hover::after{opacity:1}
+.stat .n{background:linear-gradient(135deg,#fff,#c8d0ff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.stat .n[style]{-webkit-text-fill-color:currentColor}
+
+/* 卡片统一交互 */
+.card,.od,.sp-card,.lv-cell{border-color:rgba(255,255,255,.09)}
+.hero,.wallet-hero{border-color:rgba(255,255,255,.14)}
+.card{transition:.2s}
+.card:hover{border-color:rgba(124,92,255,.45);box-shadow:0 12px 36px rgba(0,0,0,.4)}
+
+/* 按钮按压反馈 */
+.btn:active{transform:scale(.96)}
+.btn-p,.btn-g,.btn-ok,.btn-danger{position:relative;overflow:hidden}
+.btn-p::after,.btn-g::after,.btn-ok::after,.btn-danger::after{content:"";position:absolute;left:-120%;top:0;width:55%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.32),transparent);transform:skewX(-20deg);transition:.5s}
+.btn-p:hover::after,.btn-g:hover::after,.btn-ok:hover::after,.btn-danger:hover::after{left:160%}
+
+/* 输入框 */
+.fg input:hover,.fg select:hover,.fg textarea:hover{border-color:rgba(124,92,255,.45)}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:#8b6dff;box-shadow:0 0 0 3px rgba(124,92,255,.22),0 0 18px rgba(124,92,255,.14)}
+
+/* 弹窗玻璃质感 */
+.modal-box{background:linear-gradient(170deg,#171b3d,#0f1228);border-color:rgba(255,255,255,.14);box-shadow:0 24px 80px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.08)}
+.modal-box::before{content:"";position:absolute;left:14%;right:14%;top:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.4),transparent);pointer-events:none}
+@keyframes popIn{from{opacity:0;transform:translateY(16px) scale(.96)}to{opacity:1;transform:none}}
+.modal-h{background:linear-gradient(135deg,#fff,#c8d0ff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+
+/* 通知面板 */
+.notif-panel{border-color:rgba(124,92,255,.3);box-shadow:0 16px 50px rgba(0,0,0,.5);animation:dropIn .2s ease}
+@keyframes dropIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+
+/* 提现/钱包 */
+.wallet-hero{border-color:rgba(255,201,77,.18)}
+.wallet-bal span{background:linear-gradient(135deg,#ffe9a8,#ffc94d,#ff9d3c);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;text-shadow:0 0 30px rgba(255,190,60,.3)}
+
+/* 等级体系卡 */
+.lv-cell{position:relative;overflow:hidden}
+.lv-cell::after{content:"";position:absolute;inset:0;background:radial-gradient(120px 80px at 50% 0%,rgba(124,92,255,.16),transparent 75%);pointer-events:none}
+.lv-cell:hover{border-color:var(--gold);box-shadow:0 10px 30px rgba(0,0,0,.4),0 0 20px rgba(255,190,60,.08)}
+
+/* 管理员 */
+.ad-mini{position:relative;overflow:hidden;transition:.2s}
+.ad-mini::after{content:"";position:absolute;inset:0;background:radial-gradient(160px 90px at 90% 0%,rgba(124,92,255,.18),transparent 75%);pointer-events:none}
+.ad-mini:hover{transform:translateY(-3px);border-color:rgba(124,92,255,.5);box-shadow:0 10px 28px rgba(0,0,0,.35)}
+.ad-mini .n{background:linear-gradient(135deg,#fff,#c8d0ff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.ad-tab.on{background:linear-gradient(135deg,rgba(255,201,77,.2),rgba(255,176,32,.12));border-color:rgba(255,201,77,.45);color:#ffe9a8;box-shadow:0 2px 14px rgba(255,190,60,.12)}
+.ad-tab:hover{color:var(--txt);border-color:rgba(124,92,255,.5)}
+.ad-q{cursor:pointer;position:relative;overflow:hidden;transition:.2s}
+.ad-q:hover{transform:translateY(-3px)}
+
+/* 客服按钮 */
+.wa-btn::after{content:"";position:absolute;inset:-5px;border-radius:50%;border:2px solid rgba(37,211,102,.45);animation:waPulse 2.2s ease-out infinite;pointer-events:none}
+@keyframes waPulse{0%{transform:scale(.85);opacity:1}100%{transform:scale(1.25);opacity:0}}
+
+/* 页脚 */
+.site-foot{margin-top:40px;border-top:1px solid rgba(255,255,255,.07);background:linear-gradient(180deg,transparent,rgba(10,12,26,.6))}
+.foot-in{max-width:1180px;margin:0 auto;padding:26px 16px 22px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.foot-logo{display:flex;align-items:center;gap:10px}
+.foot-logo b{font-size:14px;font-weight:800}
+.foot-logo small{display:block;font-size:10px;color:var(--gold);letter-spacing:2px;font-weight:700}
+.foot-copy{font-size:12px;color:#6a6f96}
+
+/* 管理后台快速入口 */
+.ad-quick{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.ad-quick .ad-q{padding:16px 14px;border-radius:15px;border:1px solid var(--line);background:var(--card);text-align:left;display:flex;flex-direction:column;gap:4px;transition:.18s;position:relative;overflow:hidden}
+.ad-quick .ad-q::after{content:"";position:absolute;inset:0;background:radial-gradient(150px 80px at 100% 0%,rgba(124,92,255,.16),transparent 75%);pointer-events:none}
+.ad-quick .ad-q:hover{border-color:rgba(124,92,255,.55);box-shadow:0 10px 28px rgba(0,0,0,.35);transform:translateY(-3px)}
+.ad-quick .ad-q.on{border-color:rgba(255,201,77,.55);background:linear-gradient(160deg,rgba(255,201,77,.14),rgba(255,255,255,.03));box-shadow:0 6px 24px rgba(255,190,60,.1)}
+.ad-quick .q-ic{font-size:22px}
+.ad-quick .ad-q b{font-size:14px;font-weight:800}
+.ad-quick .ad-q span{font-size:11px;color:var(--mut)}
+@media(max-width:700px){
+  .ad-quick{grid-template-columns:repeat(2,1fr)}
+  .foot-in{justify-content:center;text-align:center}
 }
 </style>
 </head>
@@ -600,17 +716,28 @@ img{display:block}
       <div class="ad-mini"><div class="n" id="aRecharges">0</div><div class="t">待审充值</div></div>
       <div class="ad-mini"><div class="n" id="aPayouts">0</div><div class="t">待审提现</div></div>
     </div>
-    <div class="ad-tabs">
-      <div class="ad-tab on" onclick="adTab('users')">用户管理</div>
-      <div class="ad-tab" onclick="adTab('sellers')">打手审核</div>
-      <div class="ad-tab" onclick="adTab('orders')">订单审核</div>
-      <div class="ad-tab" onclick="adTab('recharges')">充值审批</div>
-      <div class="ad-tab" onclick="adTab('withdrawals')">提现审批</div>
-      <div class="ad-tab" onclick="adTab('payset')">收款设置</div>
+    <div class="ad-quick">
+      <div class="ad-q ad-tab on" data-k="users" onclick="adTab('users')"><div class="q-ic">👥</div><b>用户管理</b><span>注册用户 · 资料 · 等级</span></div>
+      <div class="ad-q ad-tab" data-k="sellers" onclick="adTab('sellers')"><div class="q-ic">🛡️</div><b>打手审核</b><span>资质认证 · 资料上架</span></div>
+      <div class="ad-q ad-tab" data-k="orders" onclick="adTab('orders')"><div class="q-ic">📦</div><b>订单审核</b><span>完成度 · 佣金发放</span></div>
+      <div class="ad-q ad-tab" data-k="recharges" onclick="adTab('recharges')"><div class="q-ic">💳</div><b>充值审批</b><span>转账核对 · 余额入账</span></div>
+      <div class="ad-q ad-tab" data-k="withdrawals" onclick="adTab('withdrawals')"><div class="q-ic">🏧</div><b>提现审批</b><span>转账凭证 · 扣减余额</span></div>
+      <div class="ad-q ad-tab" data-k="payset" onclick="adTab('payset')"><div class="q-ic">⚙️</div><b>收款设置</b><span>收款码 · 银行账户</span></div>
     </div>
     <div id="adBody"></div>
   </section>
 </main>
+
+<!-- ============ 页脚 ============ -->
+<footer class="site-foot">
+  <div class="foot-in">
+    <div class="foot-logo">
+      <div class="logo-badge">WZ</div>
+      <div><b>王者荣耀代打</b><small>WZRY · BOOST</small></div>
+    </div>
+    <div class="foot-copy">© 2026 WZRY·BOOST 王者荣耀代打平台 · 押金托管 · 安全担保 · 专业上分</div>
+  </div>
+</footer>
 
 <!-- ============ 认证弹窗 ============ -->
 <div class="modal-mask hidden" id="authModal" onclick="if(event.target===this)closeModal('authModal')">
@@ -1410,7 +1537,7 @@ async function markAllRead(){
    管理后台
    ============================================================ */
 let adCur = "users";
-function adTab(t){ adCur = t; $$(".ad-tab").forEach(x => x.classList.toggle("on", x.textContent === ({users:"用户管理",sellers:"打手审核",orders:"订单审核",recharges:"充值审批",withdrawals:"提现审批",payset:"收款设置"})[t])); loadAdmin(); }
+function adTab(t){ adCur = t; $$(".ad-tab").forEach(x => x.classList.toggle("on", x.dataset.k === t)); loadAdmin(); }
 async function loadAdmin(){
   if (!USER || !PROFILE || PROFILE.role !== "admin") { $("#adBody").innerHTML = '<div class="card" style="text-align:center;padding:40px">需要管理员权限</div>'; return; }
   const [u, sp, od, rc, wd] = await Promise.all([
