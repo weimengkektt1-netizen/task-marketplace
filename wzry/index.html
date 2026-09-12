@@ -280,11 +280,79 @@ img{display:block}
   .nav a{flex:none}
   .top-right{gap:8px}
 }
+/* ---------- 排行榜（富丽堂皇） ---------- */
+.board-hero{position:relative;text-align:center;padding:34px 20px 26px;border-radius:20px;overflow:hidden;background:
+  radial-gradient(1200px 500px at 50% -10%, rgba(255,190,60,.28), transparent 60%),
+  radial-gradient(900px 400px at 85% 120%, rgba(124,92,255,.25), transparent 60%),
+  linear-gradient(160deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+  border:1px solid rgba(255,200,80,.28);margin-bottom:18px;box-shadow:0 0 44px rgba(255,180,50,.12) inset}
+.board-hero::before{content:"";position:absolute;left:50%;top:-120px;width:520px;height:260px;transform:translateX(-50%);background:radial-gradient(closest-side, rgba(255,210,90,.28), transparent);filter:blur(6px);pointer-events:none;animation:bdGlow 3.2s ease-in-out infinite}
+@keyframes bdGlow{0%,100%{opacity:.7}50%{opacity:1}}
+.board-title{font-size:26px;font-weight:900;letter-spacing:3px;background:linear-gradient(135deg,#ffe9a8,#ffc64d 45%,#ff9d2e);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;text-shadow:0 0 30px rgba(255,190,60,.35)}
+.board-sub{color:rgba(255,235,200,.65);font-size:12.5px;margin-top:6px;letter-spacing:1px}
+.board-tabs{display:flex;gap:8px;justify-content:center;margin-top:16px}
+.board-tab{padding:9px 22px;border-radius:999px;cursor:pointer;font-size:13.5px;font-weight:700;border:1px solid var(--line);color:var(--mut);background:rgba(255,255,255,.03);transition:.2s}
+.board-tab.on{background:linear-gradient(135deg,#ffd76a,#ff9d3c);color:#221b0a;border-color:transparent;box-shadow:0 4px 20px rgba(255,180,60,.35)}
+.podium{display:flex;justify-content:center;align-items:flex-end;gap:14px;flex-wrap:wrap;margin-bottom:18px}
+.p-card{position:relative;width:200px;border-radius:18px;padding:20px 14px 16px;text-align:center;border:1px solid rgba(255,200,80,.35);
+  background:linear-gradient(170deg, rgba(255,255,255,.08), rgba(255,255,255,.02) 55%), radial-gradient(400px 200px at 50% 0%, rgba(255,200,80,.16), transparent 70%);
+  box-shadow:0 8px 30px rgba(0,0,0,.35)}
+.p-card::after{content:"";position:absolute;inset:-1px;border-radius:18px;padding:1px;background:linear-gradient(160deg, rgba(255,210,100,.55), transparent 40%, rgba(124,92,255,.4));-webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
+.p1{width:170px;padding-top:16px}
+.p2{width:190px}
+.p3{width:170px;padding-top:16px}
+.p-first{width:220px;padding:26px 16px 20px;z-index:2;background:linear-gradient(170deg, rgba(255,215,120,.16), rgba(255,255,255,.03) 60%), radial-gradient(500px 260px at 50% -20%, rgba(255,200,70,.32), transparent 70%);
+  box-shadow:0 0 44px rgba(255,190,60,.28), 0 10px 40px rgba(0,0,0,.45);animation:firstPulse 2.4s ease-in-out infinite}
+@keyframes firstPulse{0%,100%{box-shadow:0 0 30px rgba(255,190,60,.22), 0 10px 40px rgba(0,0,0,.45)}50%{box-shadow:0 0 60px rgba(255,190,60,.4), 0 10px 40px rgba(0,0,0,.45)}}
+.p-crown{font-size:36px;line-height:1;margin-bottom:2px;filter:drop-shadow(0 0 12px rgba(255,200,80,.8))}
+.p-first .p-crown{font-size:46px;animation:crownSwing 2.6s ease-in-out infinite}
+@keyframes crownSwing{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}
+.p-rank{font-size:13px;font-weight:900;letter-spacing:4px;color:#ffd66b;margin-bottom:6px}
+.p-first .p-rank{font-size:16px;color:#ffe9a8}
+.p-avatar{width:76px;height:76px;border-radius:50%;margin:0 auto 6px;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:900;color:#fff;
+  background:linear-gradient(135deg,#ffcf6d,#ff9d3c);border:3px solid rgba(255,210,110,.9);box-shadow:0 0 22px rgba(255,190,60,.5)}
+.p-first .p-avatar{width:96px;height:96px;border:3px solid #ffe9a8;box-shadow:0 0 34px rgba(255,200,80,.75), 0 0 70px rgba(255,190,60,.3)}
+.p-avatar img{width:100%;height:100%;object-fit:cover}
+.p-lv{width:44px;height:44px;margin:-18px auto 6px;position:relative;z-index:2;filter:drop-shadow(0 0 12px rgba(124,92,255,.7))}
+.p-first .p-lv{width:54px;height:54px;margin:-22px auto 8px}
+.p-lv img{width:100%;height:100%;object-fit:cover;mix-blend-mode:screen}
+.p-name{font-weight:800;font-size:16px;color:#fff}
+.p-first .p-name{font-size:20px;background:linear-gradient(135deg,#ffe9a8,#ffc64d);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.p-uid{font-size:10.5px;color:rgba(255,230,190,.6);margin-top:2px}
+.p-val{font-size:17px;font-weight:900;color:#ffd66b;margin-top:8px;text-shadow:0 0 16px rgba(255,200,80,.5)}
+.p-first .p-val{font-size:22px}
+.p-meta{font-size:11px;color:var(--mut);margin-top:2px}
+.board-list{display:flex;flex-direction:column;gap:8px}
+.p-row{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:14px;border:1px solid rgba(255,200,80,.16);
+  background:linear-gradient(90deg, rgba(255,210,100,.07), rgba(255,255,255,.02) 55%);transition:.2s}
+.p-row:hover{border-color:rgba(255,200,80,.4);transform:translateX(3px)}
+.p-num{width:34px;text-align:center;font-size:19px;font-weight:900;font-style:italic;color:#ffd66b;text-shadow:0 0 12px rgba(255,200,80,.45)}
+.p-row .p-avatar{width:40px;height:40px;font-size:16px;margin:0;flex:none;border:2px solid rgba(255,210,110,.6);box-shadow:0 0 12px rgba(255,190,60,.3)}
+.p-row .p-lv{width:34px;height:34px;margin:0;flex:none}
+.p-id{flex:1;min-width:0;text-align:left}
+.p-row .p-name{font-size:14px}
+.p-row .p-uid{font-size:10.5px;color:var(--mut)}
+.p-row .p-val{font-size:15px;margin:0;flex:none;text-align:right}
+
 @media(max-width:560px){
   .g4,.g3{grid-template-columns:1fr}
   .lv-grid{grid-template-columns:repeat(4,1fr)}
   .wallet-bal{font-size:28px}
   .notif-panel{width:calc(100vw - 24px);right:12px}
+  .p-card{width:104px;padding:12px 6px 10px}
+  .p-first{width:120px;padding:18px 8px 14px}
+  .p-crown{font-size:24px}
+  .p-first .p-crown{font-size:32px}
+  .p-avatar{width:48px;height:48px;font-size:18px}
+  .p-first .p-avatar{width:60px;height:60px}
+  .p-lv{width:30px;height:30px;margin-top:-14px}
+  .p-first .p-lv{width:38px;height:38px;margin-top:-16px}
+  .p-name{font-size:12px}
+  .p-first .p-name{font-size:15px}
+  .p-val{font-size:12px}
+  .p-first .p-val{font-size:15px}
+  .p-uid{font-size:9px}
+  .board-list .p-row .p-val{font-size:12px}
 }
 </style>
 </head>
@@ -300,6 +368,7 @@ img{display:block}
     <nav class="nav" id="mainNav">
       <a href="#home" data-v="home" class="on">首页</a>
       <a href="#sellers" data-v="sellers">打手大厅</a>
+      <a href="#board" data-v="board">🏆 排行榜</a>
       <a href="#hall" data-v="hall">接单大厅</a>
       <a href="#create" data-v="create">发布订单</a>
       <a href="#orders" data-v="orders">我的订单</a>
@@ -416,6 +485,19 @@ img{display:block}
     </div>
   </section>
 
+  <!-- ============ 排行榜 ============ -->
+  <section class="view" id="view-board">
+    <div class="board-hero">
+      <div class="board-title">🏆 打手荣耀榜</div>
+      <div class="board-sub">每月 1 号重置 · 最有米 & 最肝打手荣誉殿堂</div>
+      <div class="board-tabs">
+        <div class="board-tab on" id="btComm" onclick="loadBoard('comm')">💰 本月最有米</div>
+        <div class="board-tab" id="btOrders" onclick="loadBoard('orders')">⚔️ 本月最肝</div>
+      </div>
+    </div>
+    <div id="boardBody"><div class="card muted" style="text-align:center;padding:40px">加载中…</div></div>
+  </section>
+
   <!-- ============ 打手大厅 ============ -->
   <section class="view" id="view-sellers">
     <div class="page-h">
@@ -453,7 +535,7 @@ img{display:block}
       <div class="form-grid mt12">
         <div class="fg"><label>希望多久完成</label><input id="duration" placeholder="例如：3天内 / 5天内"></div>
         <div class="fg"><label>单子价格 (RM)</label><input type="number" id="price" placeholder="例如 100" min="1"></div>
-        <div class="fg full"><label>指定接单人（选填：填昵称或 UID，不填则自动进入接单大厅）</label><input id="specified" placeholder="接单人昵称 / UID"></div>
+        <div class="fg full"><label>指定接单人（选填：填昵称或 UID，不填则自动进入接单大厅）</label><input id="specified" placeholder="接单人昵称 / UID"><div id="specTip" class="small" style="color:var(--gold);margin-top:4px;min-height:16px"></div></div>
       </div>
       <button class="btn btn-g mt16" style="width:100%" onclick="placeOrder()">确认下单 · 托管押金</button>
     </div>
@@ -492,7 +574,8 @@ img{display:block}
     <div class="grid g3 mt16">
       <div class="stat"><div class="n" style="color:var(--gold)" id="totComm">0.00</div><div class="t">平台总佣金收入</div></div>
       <div class="stat"><div class="n" style="color:var(--ok)" id="monComm">0.00</div><div class="t">本月佣金（每月1号重置）</div></div>
-      <div class="stat"><div class="n" id="wdCnt">0</div><div class="t">提现申请</div></div>
+      <div class="stat"><div class="n" style="color:#ffd166" id="totWd">0.00</div><div class="t">历史累计提现</div></div>
+      <div class="stat"><div class="n" id="wdCnt">0</div><div class="t">待审提现申请</div></div>
     </div>
     <div class="grid g2 mt16">
       <div class="card">
@@ -605,7 +688,7 @@ const LEVELS = [
   {lv:6, name:"王者传奇", min:10001, max:20000, rate:3, img:"assets/levels/lv6.png"},
 ];
 function lvInfo(exp){ let cur = LEVELS[0]; for (const L of LEVELS) if (exp >= L.min) cur = L; return cur; }
-const ST_MAP = {open:["待接单","st-open"], claimed:["进行中","st-claimed"], submitted:["待审核","st-submitted"], completed:["已完成","st-completed"], rejected:["已驳回","st-rejected"], cancelled:["已取消","st-rejected"]};
+const ST_MAP = {open:["待接单","st-open"], specified:["待接单 · 指定","st-specified"], claimed:["进行中","st-claimed"], submitted:["待审核","st-submitted"], completed:["已完成","st-completed"], rejected:["已驳回","st-rejected"], cancelled:["已取消","st-rejected"]};
 
 /* ============================================================
    工具
@@ -623,7 +706,7 @@ function go(h){ location.hash = h; }
 function isRankType(t){ return t === "rank"; }
 
 /* 路由 */
-const VIEWS = ["home","sellers","hall","create","orders","mycenter","wallet","admin"];
+const VIEWS = ["home","sellers","board","hall","create","orders","mycenter","wallet","admin"];
 let sessionReady = false;
 async function router(){
   if (!sessionReady && !USER) return;
@@ -634,6 +717,7 @@ async function router(){
   $$(".nav a").forEach(a => a.classList.toggle("on", a.dataset.v === v));
   if (v === "home") loadHome();
   if (v === "sellers") loadSellers();
+  if (v === "board") loadBoard(boardTab);
   if (v === "hall") loadHall();
   if (v === "orders") loadOrders();
   if (v === "mycenter") loadMyCenter();
@@ -784,9 +868,69 @@ async function loadSellers(){
       </div>
       ${s.lanes && s.lanes.length ? '<div class="sp-lanes">' + s.lanes.map(l => '<span class="lane">' + esc(l) + "</span>").join("") + "</div>" : ""}
       ${s.bio ? '<p class="small muted mt8" style="text-align:left">' + esc(s.bio) + "</p>" : ""}
-      <button class="btn btn-p mt12" style="width:100%" onclick="go('#create')">指定 TA 下单</button>
+      <button class="btn btn-p mt12" style="width:100%" onclick="goSpecified('${esc(s.uid)}')">🎯 指定 TA 下单</button>
     </div>`;
   }).join("") : '<div class="card muted" style="text-align:center;padding:40px">暂无已认证打手</div>';
+}
+
+/* ============================================================
+   排行榜
+   ============================================================ */
+let boardTab = "comm";
+async function loadBoard(tab){
+  boardTab = tab;
+  $("#btComm").classList.toggle("on", tab === "comm");
+  $("#btOrders").classList.toggle("on", tab === "orders");
+  const { data, error } = await sb.rpc(tab === "comm" ? "leaderboard_comm" : "leaderboard_orders");
+  if (error) { $("#boardBody").innerHTML = '<div class="card muted" style="text-align:center;padding:40px">加载失败</div>'; return; }
+  const list = (data || []).slice(0, 10);
+  if (!list.length) { $("#boardBody").innerHTML = '<div class="card muted" style="text-align:center;padding:40px">本月暂无上榜打手，快来抢占榜首！</div>'; return; }
+  const fmtV = v => tab === "comm" ? "RM " + fmt(v) : v + " 单";
+  const crown = ["👑","🥈","🥉"];
+  const top3 = list.slice(0, 3);
+  const order = [1, 0, 2];
+  const podium = order.map(i => {
+    const s = top3[i];
+    if (!s) return "";
+    const rank = i + 1;
+    const L = lvInfo(s.level || 0);
+    const big = rank === 1;
+    return `
+    <div class="p-card p${rank} ${big ? "p-first" : ""}">
+      <div class="p-crown">${crown[i]}</div>
+      <div class="p-rank">TOP ${rank}</div>
+      <div class="p-avatar">${s.avatar_url ? '<img src="' + s.avatar_url + '" alt="头像">' : "<span>" + esc((s.nickname||"?").slice(0,1)) + "</span>"}</div>
+      <div class="p-lv"><img src="${L.img}" alt="LV${L.lv}"></div>
+      <div class="p-name">${esc(s.nickname)}</div>
+      <div class="p-uid">UID ${esc(s.uid||"")} · ${esc(L.name)}</div>
+      <div class="p-val">${fmtV(s.comm ?? s.cnt)}</div>
+      <div class="p-meta">${tab === "comm" ? "本月佣金收入" : "本月完成单数"}</div>
+    </div>`;
+  }).join("");
+  const rest = list.slice(3).map((s, idx) => {
+    const r = idx + 4;
+    const L = lvInfo(s.level || 0);
+    return `
+    <div class="p-row">
+      <div class="p-num">${r}</div>
+      <div class="p-avatar">${s.avatar_url ? '<img src="' + s.avatar_url + '" alt="头像">' : "<span>" + esc((s.nickname||"?").slice(0,1)) + "</span>"}</div>
+      <div class="p-id"><div class="p-name">${esc(s.nickname)}</div><div class="p-uid">UID ${esc(s.uid||"")}</div></div>
+      <div class="p-lv" style="width:34px;height:34px"><img src="${L.img}"></div>
+      <div class="p-val">${fmtV(s.comm ?? s.cnt)}</div>
+    </div>`;
+  }).join("");
+  $("#boardBody").innerHTML = `<div class="podium">${podium}</div><div class="board-list">${rest}</div>`;
+}
+
+/* 指定打手下单：跳转并预填 UID */
+function goSpecified(uid){
+  go("#create");
+  setTimeout(() => {
+    const el = $("#specified");
+    if (el) { el.value = uid; el.focus(); }
+    const tip = $("#specTip");
+    if (tip) tip.textContent = "🎯 已指定打手 " + uid + "，该订单将直接推送给该打手";
+  }, 80);
 }
 
 /* ============================================================
@@ -882,7 +1026,7 @@ async function loadOrders(){
   if (!USER) { $("#ordersList").innerHTML = '<div class="card" style="text-align:center;padding:40px">请先登录查看订单</div>'; return; }
   let q = sb.from("orders").select("*");
   if (ordTab === "buy") q = q.eq("buyer_id", USER.id);
-  else q = q.eq("claimed_by", USER.id);
+  else q = q.or("claimed_by.eq." + USER.id + ",seller_id.eq." + USER.id);
   const { data, error } = await q.order("created_at", {ascending:false});
   if (error) return toast(error.message, 0);
   const list = data || [];
@@ -897,6 +1041,9 @@ async function ordCard(o){
     : o.current_peak + " 分 → " + o.target_peak + " 分";
   let btns = "";
   if (o.status === "open" && o.buyer_id === USER.id) btns = "";
+  if (o.status === "specified" && o.seller_id === USER.id) {
+    btns = '<button class="btn btn-p" onclick="claimOrder(\'' + o.id + '\')">✅ 确认接单（付押金 RM' + fmt(o.price) + '）</button>';
+  }
   if (o.status === "claimed" && o.claimed_by === USER.id) {
     btns = '<button class="btn btn-ok" onclick="openSubmit(\'' + o.id + '\')">提交完成</button>';
   }
@@ -1128,6 +1275,7 @@ async function loadWallet(){
   const stats = st.data || {};
   $("#totComm").textContent = fmt(stats.total_commission || 0);
   $("#monComm").textContent = fmt(stats.month_commission || 0);
+  $("#totWd").textContent = fmt((wd.data||[]).filter(x => x.status === "approved").reduce((a,b) => a + Number(b.amount), 0));
   $("#wdCnt").textContent = (wd.data||[]).filter(x => x.status === "pending").length;
   const TX_IC = {recharge:"💳", order_pay:"📤", order_deposit:"🔒", deposit_refund:"🔓", commission:"💰", withdraw:"🏧"};
   const TX_T = {recharge:"充值", order_pay:"下单押金", order_deposit:"接单押金", deposit_refund:"押金退还", commission:"佣金", withdraw:"提现"};
@@ -1163,14 +1311,15 @@ async function openWithdraw(){
       <div class="muted small">当前可提现余额</div>
       <div style="font-size:34px;font-weight:800;margin-top:6px;background:linear-gradient(135deg,#ffd66b,#ff9f43);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">RM ${fmt(PROFILE.balance)}</div>
     </div>
-    <div class="fg"><label>提现金额 (RM)</label><input type="number" id="wdAmount" placeholder="输入提现金额" min="1"></div>
-    <p class="small muted mt12">💡 提交提现申请后，平台审核并转账，转账完成自动扣减余额。佣金可直接提现。</p>
+    <div class="fg"><label>提现金额 (RM) · 最低 RM50</label><input type="number" id="wdAmount" placeholder="最低提现 RM50" min="50"></div>
+    <p class="small muted mt12">💡 最低提现金额 RM50。提交提现申请后，平台审核并转账，转账完成自动扣减余额。佣金可直接提现。</p>
     <div class="mt16"><button class="btn btn-p" style="width:100%" onclick="doWithdraw()">提交提现申请</button></div>`;
   openModal("wdModal");
 }
 async function doWithdraw(){
   const amt = Number($("#wdAmount").value);
   if (!amt || amt <= 0) return toast("请输入有效提现金额", "warn");
+  if (amt < 50) return toast("最低提现金额 RM50", "warn");
   if (amt > PROFILE.balance) return toast("提现金额超过可提现余额", "warn");
   const { error } = await sb.rpc("request_withdraw", { p_amount: amt });
   if (error) return toast(error.message, "warn");
