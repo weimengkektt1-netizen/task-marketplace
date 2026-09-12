@@ -5007,6 +5007,280 @@ body.dashboard-body .sidebar {
     color: #ffd166;
 }
 
+/* ========================================
+   UI 全面优化覆盖层 v2（2026-09-12）
+   1. 全局 icon 动态效果（发光 / 浮动 / 弹跳 / 流动）
+   2. Admin 界面密度优化（利用每一寸空间）
+   3. 卡片 / 按钮质感微调
+   删除本块即可回滚
+   ======================================== */
+
+/* ---------- 1. 全局 Icon 动态效果 ---------- */
+
+/* ① Logo T：渐变流动 + 高光呼吸 */
+.dashboard-logo .logo-icon,
+.admin-logo .logo-icon,
+.logo .logo-icon,
+.footer-logo-icon,
+.tasks-logo-icon {
+    background-size: 200% 200%;
+    animation: logoFlow 4.5s ease-in-out infinite;
+    position: relative;
+    overflow: hidden;
+}
+@keyframes logoFlow {
+    0%, 100% { background-position: 0% 50%; }
+    50%      { background-position: 100% 50%; }
+}
+.dashboard-logo .logo-icon::after,
+.admin-logo .logo-icon::after,
+.logo .logo-icon::after,
+.footer-logo-icon::after,
+.tasks-logo-icon::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.4), transparent 55%);
+    animation: logoShine 3.2s ease-in-out infinite;
+    pointer-events: none;
+}
+@keyframes logoShine {
+    0%, 100% { opacity: 0.2; }
+    50%      { opacity: 0.7; }
+}
+
+/* ② 侧边栏导航 emoji：hover 弹跳 + 发光 */
+.side-nav a > span:first-child {
+    display: inline-block;
+    transition: transform 0.25s ease, filter 0.25s ease;
+}
+.side-nav a:hover > span:first-child {
+    transform: scale(1.25) rotate(-8deg);
+    filter: drop-shadow(0 0 8px rgba(109,93,252,0.85));
+    animation: iconBounce 0.5s ease;
+}
+@keyframes iconBounce {
+    0%   { transform: scale(1.25) rotate(-8deg) translateY(0); }
+    40%  { transform: scale(1.38) rotate(5deg) translateY(-3px); }
+    70%  { transform: scale(1.18) rotate(-4deg) translateY(0); }
+    100% { transform: scale(1.25) rotate(-8deg) translateY(0); }
+}
+
+/* ③ Admin 导航 icon：hover 前移发光 */
+.admin-nav-item span {
+    display: inline-block;
+    transition: transform 0.25s ease, filter 0.25s ease;
+}
+.admin-nav-item:hover span {
+    transform: translateX(3px) scale(1.2);
+    filter: drop-shadow(0 0 7px rgba(109,93,252,0.9));
+}
+
+/* ④ Admin 统计 icon：常驻微光脉动 + hover 放大 */
+.admin-stat-icon {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, #171d2b, #1d2440);
+    border: 1px solid rgba(109,93,252,0.25);
+    transition: transform 0.25s ease, border-color 0.25s ease;
+}
+.admin-stat-icon::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 20%, rgba(109,93,252,0.45), transparent 70%);
+    animation: iconGlow 2.6s ease-in-out infinite;
+    pointer-events: none;
+}
+.admin-stat-card:hover .admin-stat-icon {
+    transform: scale(1.1);
+    border-color: rgba(109,93,252,0.6);
+}
+@keyframes iconGlow {
+    0%, 100% { opacity: 0.15; }
+    50%      { opacity: 0.6; }
+}
+
+/* ⑤ Index 任务预览图标：常驻浮动 */
+.task-icon {
+    animation: taskFloat 3s ease-in-out infinite;
+}
+@keyframes taskFloat {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-4px); }
+}
+
+/* ⑥ 钱包 / 余额 / 提现图标：hover 放大旋转 + 发光 */
+.balance-icon,
+.wallet-stat-icon,
+.withdraw-wallet-icon {
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.balance-card:hover .balance-icon,
+.wallet-stat-card:hover .wallet-stat-icon,
+.withdraw-card:hover .withdraw-wallet-icon {
+    transform: scale(1.12) rotate(-6deg);
+    box-shadow: 0 0 14px rgba(109,93,252,0.45);
+}
+
+/* ⑦ 按钮流光扫过 */
+.admin-primary-btn,
+.btn-primary,
+.btn-large {
+    position: relative;
+    overflow: hidden;
+}
+.admin-primary-btn::after,
+.btn-primary::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -80%;
+    width: 45%;
+    height: 100%;
+    background: linear-gradient(105deg, transparent, rgba(255,255,255,0.22), transparent);
+    animation: btnSheen 3.4s ease-in-out infinite;
+    pointer-events: none;
+}
+@keyframes btnSheen {
+    0%       { left: -80%; }
+    55%, 100% { left: 140%; }
+}
+
+/* ---------- 2. Admin 界面密度优化（利用每一寸空间） ---------- */
+
+.admin-sidebar {
+    width: 236px;
+    padding: 20px 14px;
+}
+.admin-main {
+    margin-left: 236px;
+    width: calc(100% - 236px);
+    padding: 24px 30px 50px;
+}
+.admin-logo {
+    padding: 0 8px 20px;
+}
+.admin-logo .logo-icon {
+    width: 38px;
+    height: 38px;
+    font-size: 19px;
+}
+.admin-logo .logo-text {
+    font-size: 18px;
+}
+.admin-nav-item {
+    padding: 10px 12px;
+    font-size: 13.5px;
+    gap: 10px;
+}
+.admin-header {
+    margin-bottom: 20px;
+}
+.admin-header h1 {
+    font-size: 24px;
+}
+.admin-header p {
+    margin: 5px 0 0;
+}
+.admin-section {
+    margin-bottom: 34px;
+}
+.admin-section-title {
+    margin-bottom: 14px;
+}
+.admin-section-title h2 {
+    font-size: 19px;
+}
+.admin-section-title p {
+    margin: 4px 0 0;
+}
+.admin-stats {
+    gap: 13px;
+}
+.admin-stat-card {
+    padding: 16px 17px;
+    gap: 13px;
+    border-radius: 13px;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.admin-stat-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(109,93,252,0.45);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+}
+.admin-stat-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 19px;
+}
+.admin-stat-label {
+    margin-bottom: 2px;
+}
+.admin-stat-value {
+    font-size: 22px;
+}
+.admin-form-card {
+    padding: 20px 22px;
+    border-radius: 14px;
+}
+.admin-form-grid {
+    gap: 14px;
+}
+.admin-task-card {
+    padding: 15px 17px;
+    border-radius: 13px;
+}
+.admin-task-card h3 {
+    font-size: 16px;
+}
+.admin-task-description {
+    margin-top: 10px;
+}
+.admin-task-info {
+    margin-top: 12px;
+    padding-top: 12px;
+    gap: 14px;
+}
+
+/* 审核 / 会员卡片 hover 质感 */
+.admin-member-card {
+    transition: border-color 0.2s ease, background 0.2s ease;
+}
+.admin-member-card:hover {
+    border-color: rgba(109,93,252,0.4);
+    background: rgba(109,93,252,0.04);
+}
+
+/* admin 表格更紧凑 */
+.admin-member-card,
+.admin-review-card .admin-task-card {
+    border-radius: 12px;
+}
+
+/* 移动端 admin 侧边栏自适应 */
+@media (max-width: 900px) {
+    .admin-sidebar {
+        width: 76px;
+        padding: 18px 10px;
+    }
+    .admin-main {
+        margin-left: 76px;
+        width: calc(100% - 76px);
+        padding: 18px 16px 40px;
+    }
+    .admin-logo .logo-text,
+    .admin-label,
+    .admin-nav-item .admin-nav-text,
+    .admin-nav-item span:last-child {
+        display: none;
+    }
+    .admin-nav-item {
+        justify-content: center;
+        padding: 11px;
+    }
+}
+
 .wallet-stat-sub {
     display: block;
     margin-top: 3px;
