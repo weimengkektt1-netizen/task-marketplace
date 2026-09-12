@@ -5271,13 +5271,16 @@ body.dashboard-body .sidebar {
     }
     .admin-logo .logo-text,
     .admin-label,
-    .admin-nav-item .admin-nav-text,
-    .admin-nav-item span:last-child {
+    .admin-nav-text {
         display: none;
     }
     .admin-nav-item {
         justify-content: center;
         padding: 11px;
+        font-size: 0;
+    }
+    .admin-nav-item span {
+        font-size: 16px;
     }
 }
 
