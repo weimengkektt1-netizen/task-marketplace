@@ -218,6 +218,30 @@ img{display:block}
 .cta-s{font-size:12.5px;color:var(--mut);margin-top:5px;letter-spacing:.5px}
 .cta-btns{display:flex;gap:10px;flex-wrap:wrap}
 
+/* ---------- 公告 ---------- */
+.ann-card{margin-bottom:12px;border-left:3px solid rgba(124,92,255,.6)}
+.ann-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.ann-pin{padding:2px 8px;border-radius:6px;font-size:11px;font-weight:800;color:#fff;background:linear-gradient(135deg,#ff9f43,#ff4d5e)}
+.ann-title{font-size:15px}
+.ann-time{margin-left:auto;font-size:11.5px;color:var(--mut)}
+.ann-content{font-size:13px;color:#c2c6ea;line-height:1.7;margin-top:8px;white-space:pre-line}
+.ann-acts{margin-top:10px;display:flex;gap:8px}
+
+/* ---------- 反馈 ---------- */
+.fb-wrap{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start}
+@media(max-width:760px){.fb-wrap{grid-template-columns:1fr}}
+.fb-row{margin-bottom:12px}
+.fb-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.fb-tag{padding:3px 10px;border-radius:8px;font-size:12px;font-weight:800;background:rgba(124,92,255,.15);color:#a9b4ff;border:1px solid rgba(124,92,255,.3)}
+.fb-new{font-size:11.5px;font-weight:700;color:#ffb86b}
+.fb-ok{font-size:11.5px;font-weight:700;color:#5ee6b0}
+.fb-user{font-size:12px;color:#c2c6ea}
+.fb-content{font-size:13px;color:#d6daf5;line-height:1.7;margin-top:8px;background:rgba(255,255,255,.03);padding:10px 12px;border-radius:10px;white-space:pre-line}
+.fb-reply{margin-top:8px;font-size:12.5px;color:#a9ffcf;background:rgba(94,230,176,.08);padding:9px 12px;border-radius:10px;border:1px solid rgba(94,230,176,.2)}
+.fb-acts{margin-top:10px;display:flex;gap:8px}
+.fb-mini{padding:12px 0;border-bottom:1px dashed rgba(255,255,255,.07)}
+.fb-mini:last-child{border-bottom:none}
+
 /* ---------- 钱包 ---------- */
 .wallet-hero{border-radius:22px;padding:24px;background:linear-gradient(135deg,#171a45,#26204f 60%,#3a1f45);border:1px solid rgba(255,255,255,.12);position:relative;overflow:hidden}
 .wallet-hero::after{content:"";position:absolute;inset:0;background:radial-gradient(500px 240px at 85% 20%,rgba(255,201,77,.14),transparent 60%);pointer-events:none}
@@ -541,17 +565,19 @@ img{display:block}
       <div class="logo-txt">王者荣耀代打<small>WZRY · BOOST</small></div>
     </div>
     <nav class="nav" id="mainNav">
-      <a href="#home" data-v="home" class="on">首页</a>
-      <a href="#sellers" data-v="sellers">打手大厅</a>
+      <a href="#home" data-v="home" class="on">🏠 首页</a>
+      <a href="#sellers" data-v="sellers">👑 打手大厅</a>
       <a href="#board" data-v="board">🏆 排行榜</a>
-      <a href="#hall" data-v="hall">接单大厅</a>
-      <a href="#create" data-v="create">发布订单</a>
-      <a href="#orders" data-v="orders">我的订单</a>
+      <a href="#hall" data-v="hall">📋 接单大厅</a>
+      <a href="#create" data-v="create">📝 发布订单</a>
+      <a href="#orders" data-v="orders">🗂️ 我的订单</a>
       <a href="#goods" data-v="goods">🛍️ 代充代送</a>
-      <a href="#mycenter" data-v="mycenter">打手中心</a>
-      <a href="#wallet" data-v="wallet">我的钱包</a>
+      <a href="#mycenter" data-v="mycenter">🧑‍🚀 打手中心</a>
+      <a href="#wallet" data-v="wallet">💰 我的钱包</a>
+      <a href="#announce" data-v="announce">📢 公告</a>
+      <a href="#feedback" data-v="feedback">💬 反馈</a>
       <a href="#about" data-v="about">ℹ️ 关于</a>
-      <a href="#admin" data-v="admin" class="hidden" id="adminNav">管理后台</a>
+      <a href="#admin" data-v="admin" class="hidden" id="adminNav">⚙️ 管理后台</a>
     </nav>
     <div class="top-right">
       <div class="bell" onclick="toggleNotif()">
@@ -797,6 +823,25 @@ img{display:block}
     </div>
   </section>
 
+  <!-- ============ 平台公告 ============ -->
+  <section class="view" id="view-announce">
+    <div class="page-h">
+      <div><h2>📢 平台公告</h2><div class="sub">最新通知 · 规则更新 · 活动消息</div></div>
+      <button class="btn btn-g hidden" id="annAddBtn" onclick="openAnnAdd()">＋ 发布公告</button>
+    </div>
+    <div id="annList"></div>
+  </section>
+
+  <!-- ============ 投诉与建议 ============ -->
+  <section class="view" id="view-feedback">
+    <div class="page-h">
+      <div><h2>💬 投诉与建议</h2><div class="sub">您的每一条反馈，我们都会认真处理</div></div>
+    </div>
+    <div id="fbBody">
+      <div class="card muted" style="text-align:center;padding:40px">请先登录后提交反馈</div>
+    </div>
+  </section>
+
   <!-- ============ 关于我们 ============ -->
   <section class="view" id="view-about">
     <div class="about-hero">
@@ -895,6 +940,7 @@ img{display:block}
       <div class="ad-q ad-tab" data-k="orders" onclick="adTab('orders')"><div class="q-ic">📦</div><b>订单审核</b><span>完成度 · 佣金发放</span></div>
       <div class="ad-q ad-tab" data-k="recharges" onclick="adTab('recharges')"><div class="q-ic">💳</div><b>充值审批</b><span>转账核对 · 余额入账</span></div>
       <div class="ad-q ad-tab" data-k="withdrawals" onclick="adTab('withdrawals')"><div class="q-ic">🏧</div><b>提现审批</b><span>转账凭证 · 扣减余额</span></div>
+      <div class="ad-q ad-tab" data-k="feedbacks" onclick="adTab('feedbacks')"><div class="q-ic">💬</div><b>投诉与反馈</b><span id="aFeedbacks">0</span></div>
       <div class="ad-q ad-tab" data-k="payset" onclick="adTab('payset')"><div class="q-ic">⚙️</div><b>收款设置</b><span>收款码 · 银行账户</span></div>
     </div>
     <div id="adBody"></div>
@@ -1030,7 +1076,7 @@ function go(h){ location.hash = h; }
 function isRankType(t){ return t === "rank"; }
 
 /* 路由 */
-const VIEWS = ["home","sellers","board","hall","create","orders","goods","mycenter","wallet","about","admin"];
+const VIEWS = ["home","sellers","board","hall","create","orders","goods","mycenter","wallet","announce","feedback","about","admin"];
 let sessionReady = false;
 async function router(){
   if (!sessionReady && !USER) return;
@@ -1047,6 +1093,9 @@ async function router(){
   if (v === "goods") loadGoods();
   if (v === "mycenter") loadMyCenter();
   if (v === "wallet") loadWallet();
+  if (v === "announce") loadAnnounce();
+  if (v === "feedback") loadFeedback();
+  if (v === "about") aboutTab(aboutCur);
   if (v === "admin") loadAdmin();
 }
 window.addEventListener("hashchange", () => { if (sessionReady || USER) router(); });
@@ -1594,6 +1643,119 @@ function aboutTab(t){
 function goAbout(t){ go("#about"); setTimeout(() => aboutTab(t), 60); }
 
 /* ============================================================
+   平台公告
+   ============================================================ */
+async function loadAnnounce(){
+  const { data, error } = await sb.from("announcements").select("*").order("created_at", {ascending:false});
+  if (error) { $("#annList").innerHTML = '<div class="card muted" style="text-align:center;padding:40px">加载失败</div>'; return; }
+  const can = !!USER && PROFILE && PROFILE.role === "admin";
+  $("#annAddBtn").classList.toggle("hidden", !can);
+  const list = (data || []).sort((a,b) => (b.is_pinned ? 1 : 0) - (a.is_pinned ? 1 : 0));
+  if (!list.length) { $("#annList").innerHTML = '<div class="card muted" style="text-align:center;padding:40px">暂无公告</div>'; return; }
+  $("#annList").innerHTML = list.map(a => `
+    <div class="card ann-card">
+      <div class="ann-head">
+        ${a.is_pinned ? '<span class="ann-pin">📌 置顶</span>' : ""}
+        <b class="ann-title">${esc(a.title)}</b>
+        <span class="ann-time">${fmtTime(a.created_at)}</span>
+      </div>
+      <div class="ann-content">${esc(a.content)}</div>
+      ${can ? '<div class="ann-acts"><button class="btn btn-o small" onclick="openAnnEdit(\'' + a.id + '\')">✏️ 编辑</button><button class="btn btn-o small" onclick="delAnnounce(\'' + a.id + '\')">🗑 删除</button></div>' : ""}
+    </div>`).join("");
+}
+function openAnnAdd(){ annForm(null, "", "", false); }
+function openAnnEdit(id){
+  sb.from("announcements").select("*").eq("id", id).maybeSingle().then(({ data }) => {
+    if (!data) return toast("公告不存在", 0);
+    annForm(id, data.title, data.content, !!data.is_pinned);
+  });
+}
+function annForm(id, title, content, pinned){
+  $("#gBody").innerHTML = `
+    <div class="modal-h">📢 ${id ? "编辑公告" : "发布公告"}</div>
+    <div class="fg"><label>标题</label><input id="annTitle" value="${esc(title||"")}" placeholder="公告标题"></div>
+    <div class="fg full"><label>内容</label><textarea id="annContent" placeholder="公告详细内容">${esc(content||"")}</textarea></div>
+    <div class="fg mt8"><label><input type="checkbox" id="annPin" ${pinned ? "checked" : ""}> 📌 置顶显示</label></div>
+    <button class="btn btn-g mt16" style="width:100%" onclick="saveAnnounce('${id||""}')">${id ? "✅ 保存修改" : "✅ 发布公告"}</button>`;
+  openModal("gModal");
+}
+async function saveAnnounce(id){
+  const title = $("#annTitle").value.trim();
+  const content = $("#annContent").value.trim();
+  if (!title) return toast("请填写标题", "warn");
+  if (!content) return toast("请填写内容", "warn");
+  const payload = { title, content, is_pinned: $("#annPin").checked };
+  if (id) {
+    const { error } = await sb.from("announcements").update(payload).eq("id", id);
+    if (error) return toast(error.message, 0);
+    toast("公告已更新", 1);
+  } else {
+    payload.created_by = USER.id;
+    const { error } = await sb.from("announcements").insert(payload);
+    if (error) return toast(error.message, 0);
+    toast("公告已发布", 1);
+  }
+  closeModal("gModal"); loadAnnounce();
+}
+async function delAnnounce(id){
+  if (!confirm("确定删除该公告？")) return;
+  const { error } = await sb.from("announcements").delete().eq("id", id);
+  if (error) return toast(error.message, 0);
+  toast("已删除", 1); loadAnnounce();
+}
+
+/* ============================================================
+   投诉与建议
+   ============================================================ */
+async function loadFeedback(){
+  if (!USER) {
+    $("#fbBody").innerHTML = '<div class="card muted" style="text-align:center;padding:40px">请先登录后提交反馈</div>';
+    return;
+  }
+  const { data, error } = await sb.from("feedbacks").select("*").eq("user_id", USER.id).order("created_at", {ascending:false});
+  const mine = data || [];
+  $("#fbBody").innerHTML = `
+    <div class="fb-wrap">
+      <div class="card">
+        <h3>📝 提交反馈</h3>
+        <p class="muted small" style="margin-bottom:10px">您提交的投诉或建议将直接送达平台管理员，我们会在 24 小时内处理。</p>
+        <div class="fg"><label>反馈类型</label>
+          <select id="fbType">
+            <option value="投诉">😡 投诉</option>
+            <option value="建议">💡 建议</option>
+            <option value="咨询">❓ 咨询</option>
+            <option value="其他">📌 其他</option>
+          </select>
+        </div>
+        <div class="fg full"><label>内容</label><textarea id="fbContent" placeholder="请描述您遇到的问题、建议或想法..."></textarea></div>
+        <button class="btn btn-g" onclick="submitFeedback()">📨 提交反馈</button>
+      </div>
+      <div class="card">
+        <h3>📋 我的反馈记录</h3>
+        <div id="myFbList">${mine.length ? mine.map(f => `
+          <div class="fb-mini">
+            <div class="fb-head">
+              <div class="fb-tag">${esc(f.type||"反馈")}</div>
+              <div class="${f.status === "resolved" ? "fb-ok" : "fb-new"}">${f.status === "resolved" ? "✅ 已处理" : "🕐 待处理"}</div>
+              <span class="muted" style="margin-left:auto">${fmtTime(f.created_at)}</span>
+            </div>
+            <div class="fb-content">${esc(f.content)}</div>
+            ${f.reply ? '<div class="fb-reply">💬 平台回复：' + esc(f.reply) + "</div>" : ""}
+          </div>`).join("") : '<div class="muted small" style="text-align:center;padding:20px">暂无反馈记录</div>'}</div>
+      </div>
+    </div>`;
+}
+async function submitFeedback(){
+  const type = $("#fbType").value;
+  const content = $("#fbContent").value.trim();
+  if (!content) return toast("请填写反馈内容", "warn");
+  const { error } = await sb.from("feedbacks").insert({ user_id: USER.id, type, content });
+  if (error) return toast(error.message, 0);
+  toast("反馈已提交，感谢您的支持", 1);
+  loadFeedback();
+}
+
+/* ============================================================
    打手中心
    ============================================================ */
 async function loadMyCenter(){
@@ -1905,26 +2067,30 @@ let adCur = "users";
 function adTab(t){ adCur = t; $$(".ad-tab").forEach(x => x.classList.toggle("on", x.dataset.k === t)); loadAdmin(); }
 async function loadAdmin(){
   if (!USER || !PROFILE || PROFILE.role !== "admin") { $("#adBody").innerHTML = '<div class="card" style="text-align:center;padding:40px">需要管理员权限</div>'; return; }
-  const [u, sp, od, rc, wd] = await Promise.all([
+  const [u, sp, od, rc, wd, fb] = await Promise.all([
     sb.from("profiles").select("*").order("created_at", {ascending:false}).limit(200),
     sb.from("seller_profiles").select("*").order("created_at", {ascending:false}).limit(200),
     sb.from("orders").select("*").order("created_at", {ascending:false}).limit(200),
     sb.from("recharges").select("*").order("created_at", {ascending:false}).limit(200),
-    sb.from("withdrawals").select("*").order("created_at", {ascending:false}).limit(200)
+    sb.from("withdrawals").select("*").order("created_at", {ascending:false}).limit(200),
+    sb.from("feedbacks").select("*").order("created_at", {ascending:false}).limit(200)
   ]);
   window._adUsers = u.data || [];
   window._adSellers = sp.data || [];
+  window._adFeedbacks = fb.data || [];
   $("#aUsers").textContent = (u.data||[]).length;
   $("#aSellers").textContent = (sp.data||[]).filter(x => x.status === "pending").length;
   $("#aOrders").textContent = (od.data||[]).filter(x => x.status === "submitted").length;
   $("#aRecharges").textContent = (rc.data||[]).filter(x => x.status === "pending").length;
   $("#aPayouts").textContent = (wd.data||[]).filter(x => x.status === "pending").length;
+  $("#aFeedbacks").textContent = (fb.data||[]).filter(x => x.status === "new").length;
   const body = {
     users: () => adUsers(u.data||[]),
     sellers: () => adSellers(sp.data||[]),
     orders: () => adOrders(od.data||[]),
     recharges: () => adRecharges(rc.data||[]),
     withdrawals: () => adWithdrawals(wd.data||[]),
+    feedbacks: () => adFeedbacks(fb.data||[]),
     payset: () => adPaySet()
   };
   if (adCur === "payset") { $("#adBody").innerHTML = await adPaySet(); }
@@ -2225,6 +2391,54 @@ async function saveRejectWd(id){
   const { error } = await sb.rpc("reject_withdraw", { p_withdraw_id: id, p_reason: $("#rrReason").value.trim() });
   if (error) return toast(error.message, 0);
   closeModal("gModal"); toast("已驳回", 1); loadAdmin();
+}
+
+/* 投诉与反馈管理 */
+function adFeedbacks(list){
+  if (!list.length) return '<div class="card muted" style="text-align:center;padding:30px">暂无反馈</div>';
+  const users = window._adUsers || [];
+  return list.map(f => {
+    const u = users.find(x => x.id === f.user_id);
+    const isNew = f.status === "new";
+    return `
+    <div class="card fb-row">
+      <div class="fb-head">
+        <div class="fb-tag">${esc(f.type||"反馈")}</div>
+        <div class="fb-status ${isNew ? "fb-new" : "fb-ok"}">${isNew ? "🕐 待处理" : "✅ 已处理"}</div>
+        <div class="fb-user">👤 ${esc((u&&u.display_name)||"用户")} <span class="muted">${esc((u&&u.email)||"")} · ${fmtTime(f.created_at)}</span></div>
+      </div>
+      <div class="fb-content">${esc(f.content)}</div>
+      ${f.reply ? '<div class="fb-reply">💬 平台回复：' + esc(f.reply) + "</div>" : ""}
+      <div class="fb-acts">
+        <button class="btn btn-o small" onclick="replyFeedback('${f.id}')">${f.reply ? "↩ 修改回复" : "↩ 回复"}</button>
+        ${isNew ? '<button class="btn btn-p small" onclick="resolveFeedback(\'' + f.id + '\')">✓ 标记已处理</button>' : ""}
+      </div>
+    </div>`;
+  }).join("");
+}
+function replyFeedback(id){
+  const f = (window._adFeedbacks||[]).find(x => x.id === id);
+  $("#gBody").innerHTML = `
+    <div class="modal-h">💬 回复反馈</div>
+    <div class="fb-content" style="padding:10px 12px;border:1px solid var(--line);border-radius:10px;margin-bottom:12px">${esc(f.content)}</div>
+    <div class="fg"><label>回复内容</label><textarea id="fbReply" placeholder="向用户回复处理结果或建议">${esc(f.reply||"")}</textarea></div>
+    <div class="fg mt8"><label>状态</label><select id="fbStatus"><option value="new" ${f.status==="new"?"selected":""}>待处理</option><option value="resolved" ${f.status==="resolved"?"selected":""}>已处理</option></select></div>
+    <button class="btn btn-g mt16" style="width:100%" onclick="saveReplyFeedback('${id}')">💾 保存回复</button>`;
+  openModal("gModal");
+}
+async function saveReplyFeedback(id){
+  const reply = $("#fbReply").value.trim();
+  const status = $("#fbStatus").value;
+  const payload = { reply: reply || null };
+  if (status === "resolved") payload.status = "resolved";
+  const { error } = await sb.from("feedbacks").update(payload).eq("id", id);
+  if (error) return toast(error.message, 0);
+  closeModal("gModal"); toast("已保存", 1); loadAdmin();
+}
+async function resolveFeedback(id){
+  const { error } = await sb.from("feedbacks").update({ status: "resolved" }).eq("id", id);
+  if (error) return toast(error.message, 0);
+  toast("已标记处理", 1); loadAdmin();
 }
 
 /* 收款设置 */
