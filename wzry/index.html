@@ -331,24 +331,15 @@ img{display:block}
   .form-grid{grid-template-columns:1fr}
   .hero h1{font-size:26px}
   .hero{padding:30px 20px}
-  /* 右侧泡泡导航（手机） */
+  /* 底部悬浮泡泡 Tab 栏（手机） */
   .burger{display:none}
   .nav-mask{display:none}
-  .nav{position:fixed;right:8px;top:50%;transform:translateY(-50%);width:auto;height:auto;max-height:92vh;margin:0;flex-direction:column;gap:5px;padding:9px 6px;background:rgba(12,14,30,.5);border:1px solid rgba(255,255,255,.1);border-radius:20px;box-shadow:0 10px 34px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.08);backdrop-filter:blur(16px) saturate(150%);-webkit-backdrop-filter:blur(16px) saturate(150%);z-index:120;overflow-y:auto;flex-wrap:nowrap;align-content:flex-start;scrollbar-width:none}
-  .nav::-webkit-scrollbar{display:none}
-  .nav a{padding:0;width:44px;height:44px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;font-size:0;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);box-shadow:inset 0 1px 0 rgba(255,255,255,.1);transition:transform .18s,box-shadow .18s;position:relative;flex:none}
-  .nav a::before{content:attr(data-ic);font-size:19px;line-height:1;display:block}
-  .nav a::after{content:attr(data-lb);font-size:8.5px;line-height:1;margin-top:3px;color:var(--mut);font-weight:700;display:block}
-  .nav a:hover{transform:scale(1.1)}
-  .nav a:active{transform:scale(.94)}
-  .nav a.on{background:linear-gradient(135deg,rgba(124,92,255,.55),rgba(79,124,255,.38));border-color:rgba(124,92,255,.75);box-shadow:0 0 20px rgba(124,92,255,.55),inset 0 1px 0 rgba(255,255,255,.18)}
-  .nav a.on::after{color:#fff}
-  .nav a.on::before{filter:drop-shadow(0 0 6px rgba(255,255,255,.5))}
+  .nav{display:none}
   .top-right{gap:8px}
-  .wrap{padding-right:76px}
-  .foot-in{padding-right:60px}
-  .wa-btn{right:auto;left:16px;bottom:22px}
-  .notif-panel{right:72px;width:calc(100vw - 96px);max-width:340px}
+  .wrap{padding:16px 16px 150px}
+  .foot-in{padding-right:16px}
+  .wa-btn{right:auto;left:16px;bottom:88px}
+  .notif-panel{right:16px;width:calc(100vw - 32px);max-width:340px}
 }
 /* ---------- 排行榜（富丽堂皇） ---------- */
 .board-hero{position:relative;text-align:center;padding:34px 20px 26px;border-radius:20px;overflow:hidden;background:
@@ -642,6 +633,31 @@ select option{background:#12152e;color:var(--txt)}
   .nav a{font-size:14.5px}
   .nav a.on{background:linear-gradient(135deg,rgba(255,201,77,.32),rgba(255,176,32,.18));border-color:rgba(255,201,77,.7);box-shadow:0 0 20px rgba(255,190,60,.55),inset 0 1px 0 rgba(255,255,255,.22)}
   .nav a.on::before{filter:drop-shadow(0 0 8px rgba(255,220,120,.9))}
+}
+
+/* ============================================================
+   底部悬浮泡泡 Tab 栏（移动端）
+   ============================================================ */
+.tabbar,.more-panel,.more-mask{display:none}
+@media(max-width:900px){
+  .tabbar{display:flex;position:fixed;left:50%;transform:translateX(-50%);bottom:14px;z-index:140;gap:2px;padding:7px 10px;border-radius:26px;background:rgba(12,14,30,.78);border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(20px) saturate(160%);-webkit-backdrop-filter:blur(20px) saturate(160%);box-shadow:0 14px 44px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.1);padding-bottom:calc(7px + env(safe-area-inset-bottom,0px))}
+  .tab{width:58px;display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px 0 4px;border-radius:18px;cursor:pointer;color:var(--mut);transition:transform .18s}
+  .tab:active{transform:scale(.9)}
+  .tab .t-ic{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:17px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.11);box-shadow:inset 0 1px 0 rgba(255,255,255,.1);transition:transform .2s,box-shadow .2s,background .2s}
+  .tab .t-lb{font-size:9.5px;font-weight:700;letter-spacing:.3px}
+  .tab.on{color:#fff}
+  .tab.on .t-ic{background:linear-gradient(135deg,rgba(255,201,77,.42),rgba(255,176,32,.26));border-color:rgba(255,201,77,.8);box-shadow:0 0 18px rgba(255,190,60,.6),inset 0 1px 0 rgba(255,255,255,.25);transform:translateY(-2px) scale(1.05)}
+  .tab.on .t-lb{color:var(--gold);text-shadow:0 0 8px rgba(255,190,60,.5)}
+  .more-panel{display:block;position:fixed;left:50%;transform:translateX(-50%);bottom:96px;width:calc(100vw - 36px);max-width:430px;background:rgba(14,17,38,.95);border:1px solid rgba(255,255,255,.13);border-radius:22px;padding:16px;z-index:150;box-shadow:0 18px 56px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.08);backdrop-filter:blur(22px) saturate(150%);-webkit-backdrop-filter:blur(22px) saturate(150%);animation:moreUp .25s ease}
+  @keyframes moreUp{from{opacity:0;transform:translateX(-50%) translateY(16px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+  .more-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+  .mi{display:flex;flex-direction:column;align-items:center;gap:5px;padding:13px 4px;border-radius:15px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);transition:transform .15s,box-shadow .15s}
+  .mi:active{transform:scale(.93)}
+  .mi.on{border-color:rgba(255,201,77,.6);background:rgba(255,201,77,.1);box-shadow:0 0 14px rgba(255,190,60,.15)}
+  .mi-ic{font-size:21px;filter:drop-shadow(0 2px 6px rgba(0,0,0,.4))}
+  .mi-lb{font-size:10.5px;font-weight:700;color:var(--mut)}
+  .mi.on .mi-lb{color:var(--gold)}
+  .more-mask{display:block;position:fixed;inset:0;background:rgba(4,5,14,.45);z-index:145}
 }
 </style>
 </head>
@@ -1134,6 +1150,20 @@ select option{background:#12152e;color:var(--txt)}
 <!-- ============ 大图查看 ============ -->
 <div class="img-view hidden" id="imgView" onclick="this.classList.add('hidden')"><img id="imgViewSrc" src="" alt=""></div>
 
+<!-- ============ 移动端底部 Tab 栏 ============ -->
+<div class="more-mask hidden" id="moreMask" onclick="toggleMore(false)"></div>
+<nav class="tabbar" id="tabbar">
+  <a class="tab on" data-v="home" href="#home"><span class="t-ic">🏠</span><span class="t-lb">首页</span></a>
+  <a class="tab" data-v="sellers" href="#sellers"><span class="t-ic">👑</span><span class="t-lb">打手</span></a>
+  <a class="tab" data-v="hall" href="#hall"><span class="t-ic">📋</span><span class="t-lb">接单</span></a>
+  <a class="tab" data-v="wallet" href="#wallet"><span class="t-ic">💰</span><span class="t-lb">钱包</span></a>
+  <a class="tab" data-v="more" onclick="toggleMore()"><span class="t-ic">▦</span><span class="t-lb">更多</span></a>
+</nav>
+<div class="more-panel hidden" id="morePanel">
+  <div class="page-h" style="margin-bottom:12px"><div><h2 style="font-size:15px">全部功能</h2><div class="sub" style="font-size:11.5px">更多服务入口</div></div></div>
+  <div class="more-grid" id="moreGrid"></div>
+</div>
+
 <div id="toast"></div>
 
 <script>
@@ -1184,7 +1214,11 @@ async function router(){
   $$(".view").forEach(x => x.classList.remove("on"));
   $("#view-"+v).classList.add("on");
   $$(".nav a").forEach(a => a.classList.toggle("on", a.dataset.v === v));
+  $$(".tab").forEach(t => t.classList.toggle("on", t.dataset.v === v));
+  const _moreTab = document.querySelector('#tabbar .tab[data-v=more]');
+  if (_moreTab) _moreTab.classList.toggle("on", MORE_ITEMS.some(x => x.v === v) || v === "admin");
   toggleNav(false);
+  if (!$("#morePanel").classList.contains("hidden")) toggleMore(false);
   if (v === "home") loadHome();
   if (v === "sellers") loadSellers();
   if (v === "board") loadBoard(boardTab);
@@ -1749,6 +1783,32 @@ function toggleNav(force){
   const open = force === undefined ? !nav.classList.contains("open") : force;
   nav.classList.toggle("open", open);
   mask.classList.toggle("show", open);
+}
+
+/* 移动端底部 Tab 栏 */
+const MORE_ITEMS = [
+  {v:"board", ic:"🏆", lb:"排行榜"},
+  {v:"create", ic:"📝", lb:"发布订单"},
+  {v:"orders", ic:"🗂️", lb:"我的订单"},
+  {v:"goods", ic:"🛍️", lb:"代充代送"},
+  {v:"mycenter", ic:"🧑‍🚀", lb:"打手中心"},
+  {v:"announce", ic:"📢", lb:"公告"},
+  {v:"feedback", ic:"💬", lb:"反馈"},
+  {v:"about", ic:"ℹ️", lb:"关于"}
+];
+function renderMore(){
+  const items = MORE_ITEMS.slice();
+  if (USER && PROFILE && PROFILE.role === "admin") items.push({v:"admin", ic:"⚙️", lb:"管理后台"});
+  const cur = (location.hash || "#home").replace("#", "");
+  $("#moreGrid").innerHTML = items.map(it =>
+    '<a class="mi ' + (cur === it.v ? "on" : "") + '" href="#' + it.v + '" onclick="toggleMore(false)"><span class="mi-ic">' + it.ic + '</span><span class="mi-lb">' + it.lb + "</span></a>"
+  ).join("");
+}
+function toggleMore(force){
+  renderMore();
+  const open = force === undefined ? $("#morePanel").classList.contains("hidden") : force;
+  $("#morePanel").classList.toggle("hidden", !open);
+  $("#moreMask").classList.toggle("hidden", !open);
 }
 
 /* ============================================================
