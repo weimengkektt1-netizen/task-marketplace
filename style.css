@@ -4299,92 +4299,67 @@ body.dashboard-body .sidebar {
 }
 
 
-/* ================= Dashboard 左侧气泡式导航（常驻，新增区块，删除本区块即可回滚） ================= */
+/* ================= Dashboard 侧边栏气泡式导航（恢复早期气泡版本，删除本区块即可回滚） ================= */
 
-/* 桌面端：侧边栏常驻，导航项为玻璃气泡胶囊 */
-@media (min-width: 901px) {
-    /* 侧边栏：玻璃气泡面板 */
-    body.dashboard-body .sidebar {
-        width: 240px;
-        padding: 22px 16px;
-        background: rgba(13, 16, 23, 0.55);
-        backdrop-filter: blur(26px) saturate(1.5);
-        -webkit-backdrop-filter: blur(26px) saturate(1.5);
-        border-right: 1px solid rgba(255, 255, 255, 0.08);
-        box-shadow: 8px 0 40px rgba(0, 0, 0, 0.35), inset -1px 0 0 rgba(255, 255, 255, 0.04);
-    }
-    body.dashboard-body .dashboard-main {
-        margin-left: 240px;
-    }
-    /* 导航项：气泡胶囊 */
+body.dashboard-body .side-nav a,
+body.dashboard-body .sidebar-bottom a {
+    position: relative;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.045);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 6px 18px rgba(0, 0, 0, 0.22);
+    margin: 7px 12px;
+    padding: 11px 18px;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease, border-color 0.25s ease;
+}
+body.dashboard-body .side-nav a:hover,
+body.dashboard-body .sidebar-bottom a:hover {
+    transform: scale(1.045);
+    background: rgba(255, 255, 255, 0.10);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16), 0 12px 28px rgba(0, 0, 0, 0.35);
+}
+body.dashboard-body .side-nav a.active {
+    background: linear-gradient(135deg, rgba(109, 93, 252, 0.75), rgba(76, 141, 255, 0.65));
+    border-color: rgba(255, 255, 255, 0.24);
+    box-shadow: 0 10px 28px rgba(109, 93, 252, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.30);
+    transform: scale(1.02);
+}
+
+/* 导航图标：气泡内的圆形渐变底 */
+body.dashboard-body .side-nav a span:first-child {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.07);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    font-size: 15px;
+    transition: background 0.25s ease, transform 0.25s ease;
+}
+body.dashboard-body .side-nav a:hover span:first-child {
+    background: rgba(255, 255, 255, 0.14);
+    transform: scale(1.06);
+}
+body.dashboard-body .side-nav a.active span:first-child {
+    background: rgba(255, 255, 255, 0.20);
+    box-shadow: 0 4px 14px rgba(109, 93, 252, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.30);
+}
+
+/* 侧边栏内边距适配气泡 */
+body.dashboard-body .sidebar {
+    padding-top: 26px;
+}
+
+/* 移动端抽屉模式：气泡仍保持 */
+@media (max-width: 600px) {
     body.dashboard-body .side-nav a,
-    body.dashboard-body .sidebar-bottom .logout-btn {
-        position: relative;
-        padding: 10px 15px;
-        margin-bottom: 6px;
-        border-radius: 999px;
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(255, 255, 255, 0.10);
-        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.10), 0 4px 14px rgba(0, 0, 0, 0.25);
-        transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, border-color 0.2s ease;
-        color: #aab4c8;
-    }
-    /* 图标泡泡底 */
-    body.dashboard-body .side-nav a span:first-child {
-        width: 30px;
-        height: 30px;
-        flex: none;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 50%;
-        background: rgba(109, 93, 252, 0.18);
-        border: 1px solid rgba(109, 93, 252, 0.35);
-        font-size: 14px;
-        color: #cfd6ff;
-    }
-    /* hover：右移上浮 + 紫色光晕 */
-    body.dashboard-body .side-nav a:hover {
-        transform: translateX(4px) translateY(-1px);
-        background: rgba(109, 93, 252, 0.16);
-        border-color: rgba(109, 93, 252, 0.45);
-        box-shadow: 0 8px 22px rgba(109, 93, 252, 0.30), inset 0 1px 0 rgba(255, 255, 255, 0.12);
-        color: #fff;
-    }
-    /* 当前页：紫色渐变发光气泡 */
-    body.dashboard-body .side-nav a.active {
-        background: linear-gradient(135deg, rgba(109, 93, 252, 0.85), rgba(76, 141, 255, 0.75));
-        border-color: rgba(140, 130, 255, 0.65);
-        box-shadow: 0 8px 26px rgba(109, 93, 252, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.25);
-        color: #fff;
-    }
-    body.dashboard-body .side-nav a.active span:first-child {
-        background: rgba(255, 255, 255, 0.22);
-        border-color: rgba(255, 255, 255, 0.4);
-        color: #fff;
-    }
-    /* 管理员入口：去掉分隔线，保持气泡一致 */
-    body.dashboard-body .admin-nav-link {
-        margin-top: 6px;
-        border-top: none;
-        padding-top: 10px;
-    }
-    /* 登出气泡：红调 */
-    body.dashboard-body .sidebar-bottom .logout-btn {
-        background: rgba(255, 82, 82, 0.08);
-        border-color: rgba(255, 82, 82, 0.22);
-        color: #d8a0a6;
-    }
-    body.dashboard-body .sidebar-bottom .logout-btn:hover {
-        transform: translateX(4px) translateY(-1px);
-        background: rgba(255, 82, 82, 0.18);
-        border-color: rgba(255, 82, 82, 0.45);
-        color: #fff;
-        box-shadow: 0 8px 22px rgba(255, 82, 82, 0.30), inset 0 1px 0 rgba(255, 255, 255, 0.12);
-    }
-    /* 不再需要左边缘滑出触发条 */
-    .sidebar-edge-zone {
-        display: none;
+    body.dashboard-body .sidebar-bottom a {
+        margin: 6px 6px;
+        padding: 10px 14px;
     }
 }
 
