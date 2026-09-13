@@ -183,6 +183,10 @@
 
         /* ========== 钱包 ========== */
         "wallet.title": { zh: "钱包记录", en: "Wallet Records" },
+        "wallet.totalCommission": { zh: "总佣金收入", en: "Total Commission" },
+        "wallet.totalCommissionSub": { zh: "所有已通过任务累计赚取的佣金", en: "Total commission earned from completed tasks" },
+        "wallet.balanceNow": { zh: "当前余额", en: "Current Balance" },
+        "wallet.balanceNowSub": { zh: "可用于提现的余额", en: "Balance available for withdrawal" },
         "wallet.loading": { zh: "正在加载交易记录...", en: "Loading transactions..." },
         "wallet.failed": { zh: "无法加载交易记录", en: "Failed to load transactions" },
         "wallet.empty": { zh: "暂时没有交易记录", en: "No transactions yet" },

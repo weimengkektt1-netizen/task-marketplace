@@ -1,0 +1,2674 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>王者荣耀代打 · 上分陪玩平台</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+/* ============================================================
+   WZRY · 王者荣耀代打/陪玩平台
+   ============================================================ */
+:root{
+  --bg0:#070912;
+  --bg1:#0d1022;
+  --bg2:#131735;
+  --card:rgba(255,255,255,.055);
+  --card2:rgba(255,255,255,.09);
+  --line:rgba(255,255,255,.10);
+  --txt:#eef0ff;
+  --mut:#8d93b8;
+  --acc:#7c5cff;
+  --acc2:#4f7cff;
+  --gold:#ffc94d;
+  --gold2:#ffb020;
+  --ok:#2ee6a8;
+  --danger:#ff4d5e;
+  --warn:#ff9f43;
+  --radius:16px;
+  --shadow:0 8px 30px rgba(0,0,0,.35);
+  --font:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:radial-gradient(1200px 700px at 80% -10%,#1b1a4a 0%,transparent 60%),radial-gradient(900px 600px at -10% 30%,#251233 0%,transparent 55%),linear-gradient(160deg,var(--bg0),var(--bg1) 45%,#080a18);color:var(--txt);font-size:14px;line-height:1.55;min-height:100vh}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,select,textarea{font-family:inherit;outline:none;color:var(--txt)}
+img{display:block}
+.hidden{display:none!important}
+
+/* ---------- 顶栏 ---------- */
+.topbar{position:sticky;top:0;z-index:100;background:rgba(10,12,26,.75);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}
+.topbar-in{max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:14px;padding:10px 16px}
+.logo{display:flex;align-items:center;gap:9px;cursor:pointer;flex:none}
+.logo-badge{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,#7c5cff,#2a2f6e);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:20px;color:#fff;box-shadow:0 0 18px rgba(124,92,255,.55);letter-spacing:-1px}
+.logo-txt{font-weight:800;font-size:16px;letter-spacing:.3px}
+.logo-txt small{display:block;font-size:10px;color:var(--gold);font-weight:700;letter-spacing:2px}
+.nav{display:flex;gap:4px;margin-left:6px;flex:1;flex-wrap:wrap}
+.nav a{padding:8px 13px;border-radius:11px;font-size:13.5px;color:var(--mut);font-weight:600;transition:.18s}
+.nav a:hover{color:var(--txt);background:var(--card2)}
+.nav a.on{color:#fff;background:linear-gradient(135deg,rgba(124,92,255,.32),rgba(79,124,255,.22));box-shadow:inset 0 0 0 1px rgba(124,92,255,.4)}
+.top-right{display:flex;align-items:center;gap:10px;flex:none}
+.burger{display:none;width:40px;height:40px;border-radius:12px;background:var(--card);border:1px solid var(--line);align-items:center;justify-content:center;cursor:pointer;color:var(--txt);flex:none}
+.burger:hover{background:var(--card2)}
+.nav-mask{position:fixed;inset:0;background:rgba(4,5,14,.4);z-index:198;opacity:0;pointer-events:none;transition:opacity .25s}
+.nav-mask.show{opacity:1;pointer-events:auto}
+.bell{position:relative;width:38px;height:38px;border-radius:12px;background:var(--card);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;cursor:pointer}
+.bell .dot{position:absolute;top:7px;right:8px;min-width:16px;height:16px;border-radius:9px;background:var(--danger);font-size:10px;display:flex;align-items:center;justify-content:center;padding:0 4px;font-weight:800}
+.user-chip{display:flex;align-items:center;gap:8px;padding:5px 12px 5px 6px;border-radius:13px;background:var(--card);border:1px solid var(--line);cursor:pointer}
+.user-chip .lv{width:30px;height:30px;border-radius:10px;overflow:hidden;flex:none}
+.user-chip .lv img{width:100%;height:100%;object-fit:cover;mix-blend-mode:screen}
+.user-chip .un{font-weight:700;font-size:13px;max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.btn{padding:9px 16px;border-radius:12px;font-size:13.5px;font-weight:700;transition:.18s;display:inline-flex;align-items:center;gap:6px;justify-content:center}
+.btn-p{background:linear-gradient(135deg,#7c5cff,#4f7cff);color:#fff;box-shadow:0 4px 18px rgba(124,92,255,.4)}
+.btn-p:hover{filter:brightness(1.12);transform:translateY(-1px)}
+.btn-g{background:linear-gradient(135deg,#ffc94d,#ffb020);color:#241a00}
+.btn-g:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.btn-o{background:var(--card2);border:1px solid var(--line)}
+.btn-o:hover{background:rgba(255,255,255,.13)}
+.btn-danger{background:linear-gradient(135deg,#ff4d5e,#e03448);color:#fff}
+.btn-ok{background:linear-gradient(135deg,#2ee6a8,#12b886);color:#04130c}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+
+/* ---------- 主容器 ---------- */
+.wrap{max-width:1180px;margin:0 auto;padding:22px 16px 120px}
+.view{display:none;animation:fadeUp .3s ease}
+.view.on{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.page-h{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px;flex-wrap:wrap}
+.page-h h2{font-size:21px;font-weight:800}
+.page-h .sub{color:var(--mut);font-size:13px;margin-top:2px}
+
+/* ---------- 卡片 ---------- */
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(2,1fr)}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g4{grid-template-columns:repeat(4,1fr)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);backdrop-filter:blur(10px)}
+.card h3{font-size:15px;font-weight:800;margin-bottom:10px}
+.muted{color:var(--mut)}
+.small{font-size:12.5px}
+.bold{font-weight:800}
+.row{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.mt8{margin-top:8px}.mt12{margin-top:12px}.mt16{margin-top:16px}.mt24{margin-top:24px}
+.mb12{margin-bottom:12px}
+
+/* ---------- 英雄/首页 ---------- */
+.hero{position:relative;border-radius:24px;overflow:hidden;padding:46px 34px;background:linear-gradient(135deg,#1a1747 0%,#26204f 45%,#3a1f45 100%);border:1px solid rgba(255,255,255,.1);box-shadow:var(--shadow)}
+.hero::after{content:"";position:absolute;inset:0;background:radial-gradient(600px 300px at 80% 10%,rgba(124,92,255,.35),transparent 60%),radial-gradient(400px 260px at 10% 90%,rgba(255,201,77,.12),transparent 60%);pointer-events:none}
+.hero h1{font-size:34px;font-weight:900;letter-spacing:1px;position:relative;z-index:1}
+.hero h1 span{background:linear-gradient(90deg,#ffc94d,#ff8a3d);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{color:#c7caf0;margin-top:10px;max-width:620px;position:relative;z-index:1;font-size:14.5px}
+.hero .btns{display:flex;gap:12px;margin-top:24px;position:relative;z-index:1;flex-wrap:wrap}
+.stat-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:18px}
+.stat{border-radius:16px;padding:16px;border:1px solid var(--line);background:var(--card)}
+.stat .n{font-size:26px;font-weight:900}
+.stat .t{font-size:12px;color:var(--mut);margin-top:2px}
+.section-h{display:flex;align-items:center;gap:10px;margin:30px 0 16px}
+.section-h h2{font-size:19px;font-weight:800}
+.section-h .bar{width:4px;height:20px;border-radius:2px;background:linear-gradient(180deg,#7c5cff,#ffc94d)}
+
+/* 等级体系 */
+.lv-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:12px}
+.lv-cell{border-radius:16px;padding:14px 8px 12px;text-align:center;border:1px solid var(--line);background:var(--card);transition:.2s}
+.lv-cell:hover{transform:translateY(-4px);border-color:rgba(124,92,255,.5)}
+.lv-cell img{width:88px;height:88px;margin:0 auto;mix-blend-mode:screen;filter:drop-shadow(0 0 12px rgba(124,92,255,.35));animation:lvPulse 3s ease-in-out infinite}
+.lv-cell:nth-child(2) img{filter:drop-shadow(0 0 12px rgba(205,127,50,.4))}
+.lv-cell:nth-child(3) img{filter:drop-shadow(0 0 14px rgba(200,210,225,.5))}
+.lv-cell:nth-child(4) img{filter:drop-shadow(0 0 16px rgba(255,201,77,.55))}
+.lv-cell:nth-child(5) img{filter:drop-shadow(0 0 18px rgba(140,180,255,.6))}
+.lv-cell:nth-child(6) img{filter:drop-shadow(0 0 20px rgba(120,255,240,.65))}
+.lv-cell:nth-child(7) img{filter:drop-shadow(0 0 24px rgba(255,180,60,.8));animation:lvPulse 2s ease-in-out infinite}
+@keyframes lvPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+.lv-cell .nm{font-weight:800;font-size:13px;margin-top:6px}
+.lv-cell .ex{font-size:11px;color:var(--mut);margin-top:2px}
+.lv-cell .cm{font-size:11px;color:var(--gold);font-weight:700;margin-top:2px}
+
+/* ---------- 表单 ---------- */
+.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.fg{display:flex;flex-direction:column;gap:6px}
+.fg.full{grid-column:1/-1}
+.fg label{font-size:12.5px;color:var(--mut);font-weight:700}
+.fg input,.fg select,.fg textarea{padding:11px 13px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.05);font-size:14px;transition:.15s}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--acc);box-shadow:0 0 0 3px rgba(124,92,255,.18);background:rgba(255,255,255,.07)}
+.fg textarea{min-height:74px;resize:vertical}
+.fg select option{background:#131735;color:#eef0ff}
+.role-pick{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.role-opt{padding:13px;border-radius:13px;border:1px solid var(--line);background:var(--card);text-align:center;cursor:pointer;transition:.15s}
+.role-opt b{display:block;font-size:14px}
+.role-opt span{font-size:11.5px;color:var(--mut)}
+.role-opt.on{border-color:var(--acc);background:rgba(124,92,255,.16);box-shadow:0 0 0 3px rgba(124,92,255,.15)}
+.role-opt.on b{color:#fff}
+.type-pick{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.type-opt{padding:14px;border-radius:13px;border:1px solid var(--line);background:var(--card);cursor:pointer;transition:.15s;text-align:center}
+.type-opt .ti{font-size:20px}
+.type-opt b{display:block;margin-top:3px}
+.type-opt span{font-size:11.5px;color:var(--mut)}
+.type-opt.on{border-color:var(--gold);background:rgba(255,201,77,.12);box-shadow:0 0 0 3px rgba(255,201,77,.15)}
+
+/* ---------- 订单卡片 ---------- */
+.od{border-radius:16px;border:1px solid var(--line);background:var(--card);padding:15px;display:flex;flex-direction:column;gap:10px;transition:.18s}
+.od:hover{border-color:rgba(124,92,255,.45)}
+.od-top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.od-no{font-size:11px;color:var(--mut);font-weight:700;letter-spacing:.3px}
+.st{padding:4px 10px;border-radius:8px;font-size:11.5px;font-weight:800}
+.st-open{background:rgba(46,230,168,.15);color:var(--ok)}
+.st-specified{background:rgba(255,201,77,.16);color:#ffe08a;border:1px solid rgba(255,201,77,.35);box-shadow:0 0 12px rgba(255,190,60,.15)}
+.st-claimed{background:rgba(79,124,255,.16);color:#8fb0ff}
+.st-submitted{background:rgba(255,159,67,.16);color:var(--warn)}
+.st-completed{background:rgba(255,201,77,.16);color:var(--gold)}
+.st-rejected{background:rgba(255,77,94,.15);color:var(--danger)}
+.od-mid{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.od-tag{padding:5px 10px;border-radius:9px;background:rgba(124,92,255,.15);color:#b9a8ff;font-size:12px;font-weight:800}
+.od-val{font-size:12.5px;color:var(--txt)}
+.od-price{font-size:20px;font-weight:900;color:var(--gold)}
+.od-price small{font-size:12px;color:var(--mut);font-weight:600}
+.od-bot{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.od-from{font-size:11.5px;color:var(--mut)}
+.od-arr{display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:800}
+.od-arr .ar{color:var(--gold)}
+
+/* ---------- 打手卡片 ---------- */
+.sp-card{border-radius:16px;border:1px solid var(--line);background:var(--card);padding:16px;text-align:center;transition:.18s}
+.sp-card:hover{transform:translateY(-3px);border-color:rgba(124,92,255,.5)}
+.sp-top{display:flex;align-items:center;gap:10px;text-align:left}
+.sp-avatar{width:52px;height:52px;border-radius:50%;overflow:hidden;flex:none;border:2px solid rgba(124,92,255,.6);background:linear-gradient(135deg,rgba(124,92,255,.35),rgba(255,201,77,.25));display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;color:#fff;box-shadow:0 0 14px rgba(124,92,255,.35)}
+.sp-avatar img{width:100%;height:100%;object-fit:cover}
+.sp-id{flex:1;min-width:0}
+.sp-name{font-weight:800;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sp-uid{font-size:11px;color:var(--acc);font-weight:700;margin-top:1px;letter-spacing:.5px}
+.sp-lv{width:74px;height:74px;margin:0 auto;position:relative}
+.sp-lv img{width:100%;height:100%;object-fit:cover;mix-blend-mode:screen;filter:drop-shadow(0 0 14px rgba(124,92,255,.45))}
+.sp-meta{display:flex;flex-direction:column;gap:4px;margin-top:10px;font-size:12px;color:var(--mut);text-align:center}
+.sp-meta b{color:var(--txt)}
+.sp-lanes{display:flex;gap:5px;justify-content:center;flex-wrap:wrap;margin-top:9px}
+.lane{padding:3px 9px;border-radius:7px;background:rgba(79,124,255,.14);color:#9db8ff;font-size:11px;font-weight:700}
+/* ---------- 头像上传 ---------- */
+.avatar-up{width:92px;height:92px;border-radius:50%;margin:6px auto 0;border:2px dashed rgba(124,92,255,.55);overflow:hidden;position:relative;cursor:pointer;background:rgba(124,92,255,.08);display:flex;align-items:center;justify-content:center}
+.avatar-up img{width:100%;height:100%;object-fit:cover;display:none}
+.avatar-up .avatar-up-mask{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#cdd8ff;background:rgba(8,12,28,.45);opacity:0;transition:.18s}
+.avatar-up:hover .avatar-up-mask{opacity:1}
+/* ---------- 代充代送 ---------- */
+.goods-banner{border-radius:14px;padding:12px 16px;margin-bottom:16px;text-align:center;font-weight:800;font-size:13.5px;color:#ffe9a8;background:linear-gradient(135deg,rgba(255,201,77,.14),rgba(255,176,32,.08));border:1px solid rgba(255,201,77,.3);box-shadow:0 0 24px rgba(255,190,60,.08)}
+.goods-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(235px,1fr));gap:14px}
+.g-card{border-radius:16px;border:1px solid var(--line);background:var(--card);overflow:hidden;transition:.2s;display:flex;flex-direction:column;position:relative}
+.g-card:hover{transform:translateY(-4px);border-color:rgba(124,92,255,.5);box-shadow:0 14px 40px rgba(0,0,0,.4)}
+.g-deal{position:absolute;top:10px;left:10px;z-index:2;padding:4px 10px;border-radius:8px;font-size:11.5px;font-weight:800;color:#fff;background:linear-gradient(135deg,#ff4d5e,#ff9f43);box-shadow:0 4px 14px rgba(255,77,94,.4);animation:dealPulse 2s ease-in-out infinite}
+@keyframes dealPulse{0%,100%{box-shadow:0 4px 14px rgba(255,77,94,.4)}50%{box-shadow:0 4px 22px rgba(255,120,80,.75)}}
+.g-img{width:100%;aspect-ratio:1/1;object-fit:cover;background:linear-gradient(135deg,rgba(124,92,255,.25),rgba(255,201,77,.18))}
+.g-img-ph{display:flex;align-items:center;justify-content:center;font-size:52px}
+.g-body{padding:13px 14px 15px;display:flex;flex-direction:column;gap:6px;flex:1}
+.g-title{font-weight:800;font-size:15px}
+.g-desc{font-size:12.5px;color:var(--mut);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.g-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:auto;padding-top:8px}
+.g-foot .g-acts{display:flex;gap:6px;align-items:center}
+.g-price{font-size:19px;font-weight:900;color:var(--gold)}
+.g-price small{font-size:11px;color:var(--mut);font-weight:600}
+.g-orig{font-size:13px;color:var(--mut);font-weight:600;text-decoration:line-through;margin-right:2px}
+.g-time{font-size:11px;color:#6a6f96;margin-top:2px}
+.wx-box{margin:12px 0 10px;padding:13px;border-radius:12px;border:1px dashed rgba(255,201,77,.5);background:rgba(255,201,77,.08);font-size:20px;font-weight:900;letter-spacing:2px;color:#ffe9a8;user-select:all;text-align:center}
+
+/* ---------- 平台规则 ---------- */
+.rules-wrap{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+.rules-wrap .card h3{font-size:14px;margin-bottom:8px}
+.rules-wrap ul{margin:0;padding-left:16px;display:flex;flex-direction:column;gap:5px}
+.rules-wrap li{font-size:12.5px;color:var(--mut);line-height:1.55}
+.rules-wrap li b{color:var(--txt)}
+
+/* ---------- CTA 横幅 ---------- */
+.cta-band{margin-top:20px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:22px 24px;border-radius:18px;border:1px solid rgba(255,201,77,.35);background:radial-gradient(600px 200px at 20% 0%,rgba(255,201,77,.14),transparent 55%),linear-gradient(160deg,rgba(124,92,255,.2),rgba(255,255,255,.04));box-shadow:0 10px 40px rgba(124,92,255,.15)}
+.cta-t{font-size:19px;font-weight:900;background:linear-gradient(135deg,#ffe9a8,#ffb020);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.cta-s{font-size:12.5px;color:var(--mut);margin-top:5px;letter-spacing:.5px}
+.cta-btns{display:flex;gap:10px;flex-wrap:wrap}
+
+/* ---------- 公告 ---------- */
+.ann-card{margin-bottom:12px;border-left:3px solid rgba(124,92,255,.6)}
+.ann-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.ann-pin{padding:2px 8px;border-radius:6px;font-size:11px;font-weight:800;color:#fff;background:linear-gradient(135deg,#ff9f43,#ff4d5e)}
+.ann-title{font-size:15px}
+.ann-time{margin-left:auto;font-size:11.5px;color:var(--mut)}
+.ann-content{font-size:13px;color:#c2c6ea;line-height:1.7;margin-top:8px;white-space:pre-line}
+.ann-acts{margin-top:10px;display:flex;gap:8px}
+
+/* ---------- 反馈 ---------- */
+.fb-wrap{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start}
+@media(max-width:760px){.fb-wrap{grid-template-columns:1fr}}
+.fb-row{margin-bottom:12px}
+.fb-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.fb-tag{padding:3px 10px;border-radius:8px;font-size:12px;font-weight:800;background:rgba(124,92,255,.15);color:#a9b4ff;border:1px solid rgba(124,92,255,.3)}
+.fb-new{font-size:11.5px;font-weight:700;color:#ffb86b}
+.fb-ok{font-size:11.5px;font-weight:700;color:#5ee6b0}
+.fb-user{font-size:12px;color:#c2c6ea}
+.fb-content{font-size:13px;color:#d6daf5;line-height:1.7;margin-top:8px;background:rgba(255,255,255,.03);padding:10px 12px;border-radius:10px;white-space:pre-line}
+.fb-reply{margin-top:8px;font-size:12.5px;color:#a9ffcf;background:rgba(94,230,176,.08);padding:9px 12px;border-radius:10px;border:1px solid rgba(94,230,176,.2)}
+.fb-acts{margin-top:10px;display:flex;gap:8px}
+.fb-mini{padding:12px 0;border-bottom:1px dashed rgba(255,255,255,.07)}
+.fb-mini:last-child{border-bottom:none}
+
+/* ---------- 钱包 ---------- */
+.wallet-hero{border-radius:22px;padding:24px;background:linear-gradient(135deg,#171a45,#26204f 60%,#3a1f45);border:1px solid rgba(255,255,255,.12);position:relative;overflow:hidden}
+.wallet-hero::after{content:"";position:absolute;inset:0;background:radial-gradient(500px 240px at 85% 20%,rgba(255,201,77,.14),transparent 60%);pointer-events:none}
+.wallet-bal{font-size:34px;font-weight:900;margin-top:6px;position:relative}
+.wallet-bal small{font-size:14px;color:var(--gold)}
+.wallet-lab{font-size:12px;color:#a9adde;font-weight:700;letter-spacing:1px}
+.wallet-acts{display:flex;gap:10px;margin-top:18px;position:relative}
+.tx{display:flex;align-items:center;gap:12px;padding:12px 4px;border-bottom:1px dashed rgba(255,255,255,.07)}
+.tx:last-child{border-bottom:none}
+.tx-ic{width:38px;height:38px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:16px;flex:none}
+.tx .tt{font-weight:700;font-size:13.5px}
+.tx .td{font-size:11px;color:var(--mut);margin-top:1px}
+.tx .am{font-weight:800;font-size:14.5px;margin-left:auto;flex:none}
+.am-in{color:var(--ok)}
+.am-out{color:var(--danger)}
+
+/* ---------- 通知 ---------- */
+.notif-panel{position:fixed;top:64px;right:16px;width:340px;max-height:70vh;overflow:auto;background:rgba(15,18,38,.96);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);z-index:120;backdrop-filter:blur(16px)}
+.notif-item{padding:13px 15px;border-bottom:1px solid rgba(255,255,255,.06)}
+.notif-item:last-child{border-bottom:none}
+.notif-item.unread{background:rgba(124,92,255,.08)}
+.notif-item .nt{font-weight:800;font-size:13px}
+.notif-item .nb{font-size:12px;color:var(--mut);margin-top:2px}
+.notif-item .nd{font-size:10.5px;color:#5d6288;margin-top:4px}
+
+/* ---------- 弹窗 ---------- */
+.modal-mask{position:fixed;inset:0;background:rgba(5,7,16,.7);backdrop-filter:blur(6px);z-index:150;display:flex;align-items:center;justify-content:center;padding:16px}
+.modal-box{width:100%;max-width:460px;max-height:88vh;overflow:auto;background:#121530;border:1px solid var(--line);border-radius:20px;padding:24px;box-shadow:0 20px 60px rgba(0,0,0,.5);animation:popIn .22s ease}
+@keyframes popIn{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:none}}
+.modal-close{position:absolute;top:14px;right:14px;width:30px;height:30px;border-radius:9px;background:var(--card2);font-size:14px;color:var(--mut)}
+.modal-h{font-size:18px;font-weight:800;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+
+/* ---------- 上传 ---------- */
+.upload-zone{border:2px dashed rgba(255,255,255,.18);border-radius:14px;padding:20px;text-align:center;cursor:pointer;transition:.15s;background:rgba(255,255,255,.03)}
+.upload-zone:hover{border-color:var(--acc);background:rgba(124,92,255,.07)}
+.upload-zone .up-ic{font-size:26px}
+.upload-zone .up-t{font-size:12.5px;color:var(--mut);margin-top:6px}
+.up-thumbs{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.up-thumb{width:62px;height:62px;border-radius:10px;overflow:hidden;position:relative;border:1px solid var(--line)}
+.up-thumb img{width:100%;height:100%;object-fit:cover}
+.up-thumb .rm{position:absolute;top:2px;right:2px;width:18px;height:18px;border-radius:50%;background:rgba(0,0,0,.6);font-size:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff}
+
+/* ---------- 客服 ---------- */
+.wa-btn{position:fixed;right:20px;bottom:22px;z-index:130;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#25d366,#128c7e);display:flex;align-items:center;justify-content:center;box-shadow:0 8px 26px rgba(37,211,102,.45);transition:.2s}
+.wa-btn:hover{transform:scale(1.08)}
+.wa-btn svg{width:28px;height:28px;fill:#fff}
+.wa-pulse{position:absolute;inset:0;border-radius:50%;border:2px solid #25d366;animation:waPulse 2s ease-out infinite}
+@keyframes waPulse{0%{transform:scale(1);opacity:.8}100%{transform:scale(1.55);opacity:0}}
+
+/* ---------- Admin ---------- */
+.ad-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.ad-tab{padding:9px 15px;border-radius:11px;font-size:13px;font-weight:700;color:var(--mut);background:var(--card);border:1px solid var(--line)}
+.ad-tab.on{color:#fff;background:linear-gradient(135deg,rgba(124,92,255,.35),rgba(79,124,255,.25));border-color:rgba(124,92,255,.5)}
+.ad-stat{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:16px}
+.ad-mini{border-radius:14px;padding:14px;border:1px solid var(--line);background:var(--card)}
+.ad-mini .n{font-size:22px;font-weight:900}
+.ad-mini .t{font-size:11.5px;color:var(--mut)}
+.ad-row{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:13px;background:var(--card);border:1px solid var(--line);margin-bottom:8px;flex-wrap:wrap}
+.ad-row .inf{flex:1;min-width:200px}
+.ad-row .nm{font-weight:800;font-size:14px}
+.ad-row .em{font-size:11.5px;color:var(--mut)}
+.avatar{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#7c5cff,#3a2f7a);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;flex:none}
+.proof-imgs{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.proof-imgs img{width:86px;height:86px;border-radius:10px;object-fit:cover;cursor:pointer;border:1px solid var(--line)}
+.img-view{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px;cursor:zoom-out}
+.img-view img{max-width:92vw;max-height:88vh;border-radius:10px}
+
+/* ---------- toast ---------- */
+#toast{position:fixed;top:72px;left:50%;transform:translateX(-50%);z-index:300;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none}
+.toast{padding:11px 20px;border-radius:12px;background:rgba(20,24,48,.96);border:1px solid var(--line);font-size:13.5px;font-weight:700;box-shadow:var(--shadow);animation:toastIn .25s ease;max-width:86vw}
+.toast.ok{border-color:rgba(46,230,168,.5)}
+.toast.err{border-color:rgba(255,77,94,.55)}
+@keyframes toastIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+
+/* ---------- 响应式 ---------- */
+@media(max-width:900px){
+  .g4{grid-template-columns:repeat(2,1fr)}
+  .g3{grid-template-columns:repeat(2,1fr)}
+  .g2{grid-template-columns:1fr}
+  .lv-grid{grid-template-columns:repeat(4,1fr)}
+  .stat-strip{grid-template-columns:repeat(2,1fr)}
+  .ad-stat{grid-template-columns:repeat(2,1fr)}
+  .form-grid{grid-template-columns:1fr}
+  .hero h1{font-size:26px}
+  .hero{padding:30px 20px}
+  /* 底部悬浮泡泡 Tab 栏（手机） */
+  .burger{display:none}
+  .nav-mask{display:none}
+  .nav{display:none}
+  .top-right{gap:8px}
+  .wrap{padding:16px 16px 150px}
+  .foot-in{padding-right:16px}
+  .wa-btn{right:auto;left:16px;bottom:88px}
+  .notif-panel{right:16px;width:calc(100vw - 32px);max-width:340px}
+}
+/* ---------- 排行榜（富丽堂皇） ---------- */
+.board-hero{position:relative;text-align:center;padding:34px 20px 26px;border-radius:20px;overflow:hidden;background:
+  radial-gradient(1200px 500px at 50% -10%, rgba(255,190,60,.28), transparent 60%),
+  radial-gradient(900px 400px at 85% 120%, rgba(124,92,255,.25), transparent 60%),
+  linear-gradient(160deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+  border:1px solid rgba(255,200,80,.28);margin-bottom:18px;box-shadow:0 0 44px rgba(255,180,50,.12) inset}
+.board-hero::before{content:"";position:absolute;left:50%;top:-120px;width:520px;height:260px;transform:translateX(-50%);background:radial-gradient(closest-side, rgba(255,210,90,.28), transparent);filter:blur(6px);pointer-events:none;animation:bdGlow 3.2s ease-in-out infinite}
+@keyframes bdGlow{0%,100%{opacity:.7}50%{opacity:1}}
+.board-title{font-size:26px;font-weight:900;letter-spacing:3px;background:linear-gradient(135deg,#ffe9a8,#ffc64d 45%,#ff9d2e);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;text-shadow:0 0 30px rgba(255,190,60,.35)}
+.board-sub{color:rgba(255,235,200,.65);font-size:12.5px;margin-top:6px;letter-spacing:1px}
+.board-tabs{display:flex;gap:8px;justify-content:center;margin-top:16px}
+.board-tab{padding:9px 22px;border-radius:999px;cursor:pointer;font-size:13.5px;font-weight:700;border:1px solid var(--line);color:var(--mut);background:rgba(255,255,255,.03);transition:.2s}
+.board-tab.on{background:linear-gradient(135deg,#ffd76a,#ff9d3c);color:#221b0a;border-color:transparent;box-shadow:0 4px 20px rgba(255,180,60,.35)}
+.podium{display:flex;justify-content:center;align-items:flex-end;gap:14px;flex-wrap:wrap;margin-bottom:18px}
+.p-card{position:relative;width:200px;border-radius:18px;padding:20px 14px 16px;text-align:center;border:1px solid rgba(255,200,80,.35);
+  background:linear-gradient(170deg, rgba(255,255,255,.08), rgba(255,255,255,.02) 55%), radial-gradient(400px 200px at 50% 0%, rgba(255,200,80,.16), transparent 70%);
+  box-shadow:0 8px 30px rgba(0,0,0,.35)}
+.p-card::after{content:"";position:absolute;inset:-1px;border-radius:18px;padding:1px;background:linear-gradient(160deg, rgba(255,210,100,.55), transparent 40%, rgba(124,92,255,.4));-webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
+.p1{width:170px;padding-top:16px}
+.p2{width:190px}
+.p3{width:170px;padding-top:16px}
+.p-first{width:220px;padding:26px 16px 20px;z-index:2;background:linear-gradient(170deg, rgba(255,215,120,.16), rgba(255,255,255,.03) 60%), radial-gradient(500px 260px at 50% -20%, rgba(255,200,70,.32), transparent 70%);
+  box-shadow:0 0 44px rgba(255,190,60,.28), 0 10px 40px rgba(0,0,0,.45);animation:firstPulse 2.4s ease-in-out infinite}
+@keyframes firstPulse{0%,100%{box-shadow:0 0 30px rgba(255,190,60,.22), 0 10px 40px rgba(0,0,0,.45)}50%{box-shadow:0 0 60px rgba(255,190,60,.4), 0 10px 40px rgba(0,0,0,.45)}}
+.p-crown{font-size:36px;line-height:1;margin-bottom:2px;filter:drop-shadow(0 0 12px rgba(255,200,80,.8))}
+.p-first .p-crown{font-size:46px;animation:crownSwing 2.6s ease-in-out infinite}
+@keyframes crownSwing{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}
+.p-rank{font-size:13px;font-weight:900;letter-spacing:4px;color:#ffd66b;margin-bottom:6px}
+.p-first .p-rank{font-size:16px;color:#ffe9a8}
+.p-avatar{width:76px;height:76px;border-radius:50%;margin:0 auto 6px;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:900;color:#fff;
+  background:linear-gradient(135deg,#ffcf6d,#ff9d3c);border:3px solid rgba(255,210,110,.9);box-shadow:0 0 22px rgba(255,190,60,.5)}
+.p-first .p-avatar{width:96px;height:96px;border:3px solid #ffe9a8;box-shadow:0 0 34px rgba(255,200,80,.75), 0 0 70px rgba(255,190,60,.3)}
+.p-avatar img{width:100%;height:100%;object-fit:cover}
+.p-lv{width:44px;height:44px;margin:-18px auto 6px;position:relative;z-index:2;filter:drop-shadow(0 0 12px rgba(124,92,255,.7))}
+.p-first .p-lv{width:54px;height:54px;margin:-22px auto 8px}
+.p-lv img{width:100%;height:100%;object-fit:cover;mix-blend-mode:screen}
+.p-name{font-weight:800;font-size:16px;color:#fff}
+.p-first .p-name{font-size:20px;background:linear-gradient(135deg,#ffe9a8,#ffc64d);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.p-uid{font-size:10.5px;color:rgba(255,230,190,.6);margin-top:2px}
+.p-val{font-size:17px;font-weight:900;color:#ffd66b;margin-top:8px;text-shadow:0 0 16px rgba(255,200,80,.5)}
+.p-first .p-val{font-size:22px}
+.p-meta{font-size:11px;color:var(--mut);margin-top:2px}
+.board-list{display:flex;flex-direction:column;gap:8px}
+.p-row{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:14px;border:1px solid rgba(255,200,80,.16);
+  background:linear-gradient(90deg, rgba(255,210,100,.07), rgba(255,255,255,.02) 55%);transition:.2s}
+.p-row:hover{border-color:rgba(255,200,80,.4);transform:translateX(3px)}
+.p-num{width:34px;text-align:center;font-size:19px;font-weight:900;font-style:italic;color:#ffd66b;text-shadow:0 0 12px rgba(255,200,80,.45)}
+.p-row .p-avatar{width:40px;height:40px;font-size:16px;margin:0;flex:none;border:2px solid rgba(255,210,110,.6);box-shadow:0 0 12px rgba(255,190,60,.3)}
+.p-row .p-lv{width:34px;height:34px;margin:0;flex:none}
+.p-id{flex:1;min-width:0;text-align:left}
+.p-row .p-name{font-size:14px}
+.p-row .p-uid{font-size:10.5px;color:var(--mut)}
+.p-row .p-val{font-size:15px;margin:0;flex:none;text-align:right}
+
+@media(max-width:560px){
+  .g4,.g3{grid-template-columns:1fr}
+  .lv-grid{grid-template-columns:repeat(4,1fr)}
+  .wallet-bal{font-size:28px}
+  .notif-panel{width:calc(100vw - 24px);right:12px}
+  .p-card{width:104px;padding:12px 6px 10px}
+  .p-first{width:120px;padding:18px 8px 14px}
+  .p-crown{font-size:24px}
+  .p-first .p-crown{font-size:32px}
+  .p-avatar{width:48px;height:48px;font-size:18px}
+  .p-first .p-avatar{width:60px;height:60px}
+  .p-lv{width:30px;height:30px;margin-top:-14px}
+  .p-first .p-lv{width:38px;height:38px;margin-top:-16px}
+  .p-name{font-size:12px}
+  .p-first .p-name{font-size:15px}
+  .p-val{font-size:12px}
+  .p-first .p-val{font-size:15px}
+  .p-uid{font-size:9px}
+  .board-list .p-row .p-val{font-size:12px}
+}
+
+/* ============================================================
+   质感增强层（2026.09 精修）
+   ============================================================ */
+::selection{background:rgba(255,201,77,.35);color:#fff}
+*{scrollbar-width:thin;scrollbar-color:rgba(124,92,255,.45) rgba(255,255,255,.04)}
+::-webkit-scrollbar{width:9px;height:9px}
+::-webkit-scrollbar-track{background:rgba(255,255,255,.03)}
+::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#7c5cff,#4f7cff);border-radius:5px;border:2px solid rgba(10,12,26,.6)}
+::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,#9a7dff,#6a8dff)}
+
+/* 顶栏精修 */
+.topbar{box-shadow:0 10px 40px rgba(0,0,0,.3)}
+.logo-badge{position:relative;overflow:hidden}
+.logo-badge::after{content:"";position:absolute;left:-120%;top:0;width:60%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.5),transparent);transform:skewX(-20deg);animation:logoShine 4.5s ease-in-out infinite}
+@keyframes logoShine{0%,70%{left:-120%}100%{left:160%}}
+.nav a{position:relative}
+.nav a.on{color:#fff;background:linear-gradient(135deg,rgba(255,201,77,.22),rgba(255,176,32,.12));box-shadow:inset 0 0 0 1px rgba(255,201,77,.45),0 2px 14px rgba(255,190,60,.12);text-shadow:0 0 10px rgba(255,220,120,.5)}
+.nav a:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(0,0,0,.25)}
+
+/* 英雄区氛围 */
+.hero{background:
+  radial-gradient(700px 380px at 78% -10%,rgba(124,92,255,.5),transparent 62%),
+  radial-gradient(480px 300px at 8% 105%,rgba(255,201,77,.16),transparent 60%),
+  linear-gradient(135deg,#16133f 0%,#241d4e 45%,#381e44 100%)}
+.hero::before{content:"";position:absolute;left:55%;top:-160px;width:560px;height:320px;transform:translateX(-50%);background:radial-gradient(closest-side,rgba(124,92,255,.35),transparent);filter:blur(8px);animation:heroGlow 4.5s ease-in-out infinite;pointer-events:none}
+@keyframes heroGlow{0%,100%{opacity:.6;transform:translateX(-50%) scale(1)}50%{opacity:1;transform:translateX(-50%) scale(1.12)}}
+.hero h1{text-shadow:0 0 34px rgba(124,92,255,.35)}
+.hero h1 span{text-shadow:0 0 24px rgba(255,190,60,.45)}
+.hero .btn{box-shadow:0 8px 26px rgba(0,0,0,.35)}
+.hero .btn-g{box-shadow:0 8px 26px rgba(255,176,32,.35)}
+.hero .btn-p{box-shadow:0 8px 26px rgba(124,92,255,.45)}
+
+/* 标题渐变 */
+.page-h h2,.section-h h2{background:linear-gradient(135deg,#fff,#b9c2ff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.section-h .bar{box-shadow:0 0 12px rgba(255,201,77,.6)}
+
+/* 统计卡 */
+.stat{position:relative;overflow:hidden;transition:.2s}
+.stat::after{content:"";position:absolute;left:0;top:0;width:100%;height:2px;background:linear-gradient(90deg,transparent,rgba(255,201,77,.7),transparent);opacity:0;transition:.25s}
+.stat:hover{transform:translateY(-3px);border-color:rgba(255,201,77,.4);box-shadow:0 10px 30px rgba(0,0,0,.35)}
+.stat:hover::after{opacity:1}
+.stat .n{background:linear-gradient(135deg,#fff,#c8d0ff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.stat .n[style]{-webkit-text-fill-color:currentColor}
+
+/* 卡片统一交互 */
+.card,.od,.sp-card,.lv-cell{border-color:rgba(255,255,255,.09)}
+.hero,.wallet-hero{border-color:rgba(255,255,255,.14)}
+.card{transition:.2s}
+.card:hover{border-color:rgba(124,92,255,.45);box-shadow:0 12px 36px rgba(0,0,0,.4)}
+
+/* 按钮按压反馈 */
+.btn:active{transform:scale(.96)}
+.btn-p,.btn-g,.btn-ok,.btn-danger{position:relative;overflow:hidden}
+.btn-p::after,.btn-g::after,.btn-ok::after,.btn-danger::after{content:"";position:absolute;left:-120%;top:0;width:55%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.32),transparent);transform:skewX(-20deg);transition:.5s}
+.btn-p:hover::after,.btn-g:hover::after,.btn-ok:hover::after,.btn-danger:hover::after{left:160%}
+
+/* 输入框 */
+.fg input:hover,.fg select:hover,.fg textarea:hover{border-color:rgba(124,92,255,.45)}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:#8b6dff;box-shadow:0 0 0 3px rgba(124,92,255,.22),0 0 18px rgba(124,92,255,.14)}
+
+/* 弹窗玻璃质感 */
+.modal-box{background:linear-gradient(170deg,#171b3d,#0f1228);border-color:rgba(255,255,255,.14);box-shadow:0 24px 80px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.08)}
+.modal-box::before{content:"";position:absolute;left:14%;right:14%;top:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.4),transparent);pointer-events:none}
+@keyframes popIn{from{opacity:0;transform:translateY(16px) scale(.96)}to{opacity:1;transform:none}}
+.modal-h{background:linear-gradient(135deg,#fff,#c8d0ff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+
+/* 通知面板 */
+.notif-panel{border-color:rgba(124,92,255,.3);box-shadow:0 16px 50px rgba(0,0,0,.5);animation:dropIn .2s ease}
+@keyframes dropIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+
+/* 提现/钱包 */
+.wallet-hero{border-color:rgba(255,201,77,.18)}
+.wallet-bal span{background:linear-gradient(135deg,#ffe9a8,#ffc94d,#ff9d3c);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;text-shadow:0 0 30px rgba(255,190,60,.3)}
+
+/* 等级体系卡 */
+.lv-cell{position:relative;overflow:hidden}
+.lv-cell::after{content:"";position:absolute;inset:0;background:radial-gradient(120px 80px at 50% 0%,rgba(124,92,255,.16),transparent 75%);pointer-events:none}
+.lv-cell:hover{border-color:var(--gold);box-shadow:0 10px 30px rgba(0,0,0,.4),0 0 20px rgba(255,190,60,.08)}
+
+/* 管理员 */
+.ad-mini{position:relative;overflow:hidden;transition:.2s}
+.ad-mini::after{content:"";position:absolute;inset:0;background:radial-gradient(160px 90px at 90% 0%,rgba(124,92,255,.18),transparent 75%);pointer-events:none}
+.ad-mini:hover{transform:translateY(-3px);border-color:rgba(124,92,255,.5);box-shadow:0 10px 28px rgba(0,0,0,.35)}
+.ad-mini .n{background:linear-gradient(135deg,#fff,#c8d0ff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.ad-tab.on{background:linear-gradient(135deg,rgba(255,201,77,.2),rgba(255,176,32,.12));border-color:rgba(255,201,77,.45);color:#ffe9a8;box-shadow:0 2px 14px rgba(255,190,60,.12)}
+.ad-tab:hover{color:var(--txt);border-color:rgba(124,92,255,.5)}
+.ad-q{cursor:pointer;position:relative;overflow:hidden;transition:.2s}
+.ad-q:hover{transform:translateY(-3px)}
+
+/* 客服按钮 */
+.wa-btn::after{content:"";position:absolute;inset:-5px;border-radius:50%;border:2px solid rgba(37,211,102,.45);animation:waPulse 2.2s ease-out infinite;pointer-events:none}
+@keyframes waPulse{0%{transform:scale(.85);opacity:1}100%{transform:scale(1.25);opacity:0}}
+
+/* 页脚 */
+.site-foot{margin-top:40px;border-top:1px solid rgba(255,255,255,.07);background:linear-gradient(180deg,transparent,rgba(10,12,26,.6))}
+.foot-in{max-width:1180px;margin:0 auto;padding:26px 16px 22px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.foot-logo{display:flex;align-items:center;gap:10px}
+.foot-logo b{font-size:14px;font-weight:800}
+.foot-logo small{display:block;font-size:10px;color:var(--gold);letter-spacing:2px;font-weight:700}
+.foot-copy{font-size:12px;color:#6a6f96}
+.foot-links{display:flex;gap:16px;flex-wrap:wrap}
+.foot-links a{font-size:12.5px;color:#9aa0c8;cursor:pointer;transition:.15s}
+.foot-links a:hover{color:var(--gold);text-shadow:0 0 10px rgba(255,201,77,.4)}
+
+/* ---------- 关于我们 ---------- */
+.about-hero{position:relative;text-align:center;padding:30px 20px 24px;border-radius:20px;overflow:hidden;margin-bottom:16px;background:radial-gradient(700px 300px at 50% -20%,rgba(124,92,255,.3),transparent 60%),linear-gradient(160deg,rgba(255,255,255,.06),rgba(255,255,255,.02));border:1px solid rgba(124,92,255,.3)}
+.about-title{font-size:24px;font-weight:900;letter-spacing:2px;background:linear-gradient(135deg,#fff,#b9c2ff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.about-sub{color:var(--mut);font-size:12.5px;margin-top:6px;letter-spacing:.5px}
+.about-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.about-tab{padding:9px 18px;border-radius:999px;font-size:13px;font-weight:700;color:var(--mut);border:1px solid var(--line);background:var(--card);cursor:pointer;transition:.18s}
+.about-tab:hover{border-color:rgba(124,92,255,.5);color:var(--txt)}
+.about-tab.on{color:#fff;background:linear-gradient(135deg,rgba(124,92,255,.4),rgba(79,124,255,.3));border-color:rgba(124,92,255,.6);box-shadow:0 4px 18px rgba(124,92,255,.25)}
+.ab-card{margin-bottom:14px}
+.ab-card h3{font-size:15px;margin-bottom:8px}
+.ab-p{font-size:13.5px;color:#c2c6ea;line-height:1.75;margin-bottom:8px}
+.ab-p:last-child{margin-bottom:0}
+.ab-p b{color:var(--txt)}
+.ab-value{text-align:center;padding:18px 14px}
+.ab-value .av-ic{font-size:28px}
+.ab-value b{display:block;margin-top:8px;font-size:14.5px}
+.ab-value p{font-size:12.5px;color:var(--mut);margin-top:4px;line-height:1.6}
+.ab-ul{margin:0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:9px}
+.ab-ul li{font-size:13px;color:#c2c6ea;line-height:1.65;padding-left:16px;position:relative}
+.ab-ul li::before{content:"•";position:absolute;left:0;color:var(--gold);font-weight:900}
+.ab-ul li b{color:var(--txt)}
+.ab-faq{display:flex;flex-direction:column;gap:9px}
+.faq-item{border-radius:13px;border:1px solid var(--line);background:var(--card);overflow:hidden}
+.faq-item summary{cursor:pointer;padding:13px 16px;font-size:13.5px;font-weight:700;color:var(--txt);list-style:none;position:relative;padding-right:34px;transition:.15s}
+.faq-item summary::after{content:"＋";position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--gold);font-size:15px;transition:.2s}
+.faq-item[open] summary::after{content:"－"}
+.faq-item summary:hover{background:rgba(124,92,255,.08)}
+.faq-item p{padding:0 16px 13px;font-size:12.8px;color:#c2c6ea;line-height:1.7}
+.faq-item[open] summary{border-bottom:1px solid rgba(255,255,255,.05)}
+
+/* 管理后台快速入口 */
+.ad-quick{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.ad-quick .ad-q{padding:16px 14px;border-radius:15px;border:1px solid var(--line);background:var(--card);text-align:left;display:flex;flex-direction:column;gap:4px;transition:.18s;position:relative;overflow:hidden}
+.ad-quick .ad-q::after{content:"";position:absolute;inset:0;background:radial-gradient(150px 80px at 100% 0%,rgba(124,92,255,.16),transparent 75%);pointer-events:none}
+.ad-quick .ad-q:hover{border-color:rgba(124,92,255,.55);box-shadow:0 10px 28px rgba(0,0,0,.35);transform:translateY(-3px)}
+.ad-quick .ad-q.on{border-color:rgba(255,201,77,.55);background:linear-gradient(160deg,rgba(255,201,77,.14),rgba(255,255,255,.03));box-shadow:0 6px 24px rgba(255,190,60,.1)}
+.ad-quick .q-ic{font-size:22px}
+.ad-quick .ad-q b{font-size:14px;font-weight:800}
+.ad-quick .ad-q span{font-size:11px;color:var(--mut)}
+@media(max-width:700px){
+  .ad-quick{grid-template-columns:repeat(2,1fr)}
+  .foot-in{justify-content:center;text-align:center}
+}
+
+/* ============================================================
+   未来感玻璃增强层（全局）
+   ============================================================ */
+/* 背景流动光晕 */
+.orb{position:fixed;border-radius:50%;filter:blur(110px);z-index:-1;pointer-events:none}
+.orb-a{width:540px;height:540px;left:-170px;top:-130px;background:radial-gradient(closest-side,rgba(124,92,255,.85),transparent);opacity:.6;animation:orbA 22s ease-in-out infinite}
+.orb-b{width:500px;height:500px;right:-150px;top:30%;background:radial-gradient(closest-side,rgba(42,75,215,.8),transparent);opacity:.5;animation:orbB 26s ease-in-out infinite}
+.orb-c{width:440px;height:440px;left:18%;bottom:-190px;background:radial-gradient(closest-side,rgba(255,122,47,.6),transparent);opacity:.32;animation:orbC 30s ease-in-out infinite}
+@keyframes orbA{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(70px,50px) scale(1.14)}66%{transform:translate(-36px,80px) scale(.92)}}
+@keyframes orbB{0%,100%{transform:translate(0,0) scale(1)}40%{transform:translate(-60px,-55px) scale(1.16)}70%{transform:translate(46px,26px) scale(.9)}}
+@keyframes orbC{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-90px,-70px) scale(1.22)}}
+
+/* 星点微网格背景 */
+body{background-image:
+  radial-gradient(1200px 700px at 80% -10%,#1b1a4a 0%,transparent 60%),
+  radial-gradient(900px 600px at -10% 30%,#251233 0%,transparent 55%),
+  linear-gradient(160deg,var(--bg0),var(--bg1) 45%,#080a18),
+  linear-gradient(rgba(255,255,255,.016) 1px,transparent 1px),
+  linear-gradient(90deg,rgba(255,255,255,.016) 1px,transparent 1px);
+  background-size:auto,auto,auto,44px 44px,44px 44px}
+
+/* 玻璃卡片 */
+.card{background:linear-gradient(165deg,rgba(255,255,255,.085),rgba(255,255,255,.028));border:1px solid rgba(255,255,255,.13);box-shadow:0 10px 34px rgba(0,0,0,.32),inset 0 1px 0 rgba(255,255,255,.09);backdrop-filter:blur(16px) saturate(140%);-webkit-backdrop-filter:blur(16px) saturate(140%);transition:border-color .25s,box-shadow .25s,transform .25s}
+.card:hover{border-color:rgba(124,92,255,.45);box-shadow:0 14px 42px rgba(0,0,0,.42),0 0 26px rgba(124,92,255,.14),inset 0 1px 0 rgba(255,255,255,.11)}
+.ad-q,.faq-item,.g-card,.ann-card,.modal-box,.notif-panel{backdrop-filter:blur(14px) saturate(135%);-webkit-backdrop-filter:blur(14px) saturate(135%)}
+
+/* 顶栏玻璃光带 */
+.topbar{background:linear-gradient(180deg,rgba(10,12,26,.86),rgba(10,12,26,.55));backdrop-filter:blur(22px) saturate(160%);-webkit-backdrop-filter:blur(22px) saturate(160%);border-bottom:1px solid rgba(255,255,255,.08)}
+.topbar::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:1px;background:linear-gradient(90deg,transparent,rgba(124,92,255,.65),rgba(255,201,77,.45),transparent);opacity:.7}
+
+/* 按钮流光 */
+.btn{position:relative;overflow:hidden}
+.btn::before{content:"";position:absolute;top:0;left:-85%;width:55%;height:100%;background:linear-gradient(105deg,transparent,rgba(255,255,255,.32),transparent);transform:skewX(-20deg);transition:left .55s ease;pointer-events:none}
+.btn:hover::before{left:135%}
+.btn:active{transform:scale(.97)}
+
+/* 输入框玻璃 */
+input,select,textarea{background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.12);border-radius:11px;padding:10px 12px;transition:border-color .2s,box-shadow .2s}
+input:focus,select:focus,textarea:focus{border-color:rgba(124,92,255,.7);box-shadow:0 0 0 3px rgba(124,92,255,.16),0 0 20px rgba(124,92,255,.12)}
+select option{background:#12152e;color:var(--txt)}
+
+/* 图标呼吸悬浮 */
+.q-ic,.av-ic,.g-img-ph,.stat-ic,.award-ic{animation:icFloat 3.6s ease-in-out infinite}
+@keyframes icFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+
+/* 页面标题渐变流动 */
+.page-h h2{background:linear-gradient(115deg,#ffffff 25%,#b9c2ff 50%,#ffffff 75%);background-size:220% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:gradShift 7s linear infinite}
+@keyframes gradShift{to{background-position:220% center}}
+
+/* 通用进入动画 */
+.view{animation:fadeUp .35s ease}
+@keyframes cardIn{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:none}}
+
+/* 移动端全局舒适化 */
+@media(max-width:560px){
+  .wrap{padding:16px 12px 104px}
+  .page-h{margin-bottom:14px}
+  .card{padding:13px 12px}
+  .btn{min-height:38px}
+  .modal-box{padding:16px}
+  .hero{padding:28px 16px}
+  .stat-strip{gap:10px}
+  .fg input,.fg select,.fg textarea{font-size:15px}
+  .foot-links{gap:12px}
+}
+@media(max-width:900px){
+  .nav a{font-size:14.5px}
+  .nav a.on{background:linear-gradient(135deg,rgba(255,201,77,.32),rgba(255,176,32,.18));border-color:rgba(255,201,77,.7);box-shadow:0 0 20px rgba(255,190,60,.55),inset 0 1px 0 rgba(255,255,255,.22)}
+  .nav a.on::before{filter:drop-shadow(0 0 8px rgba(255,220,120,.9))}
+}
+
+/* ============================================================
+   底部悬浮泡泡 Tab 栏（移动端）
+   ============================================================ */
+.tabbar,.more-panel,.more-mask{display:none}
+@media(max-width:900px){
+  .tabbar{display:flex;position:fixed;left:50%;transform:translateX(-50%);bottom:14px;z-index:140;gap:2px;padding:7px 10px;border-radius:26px;background:rgba(12,14,30,.78);border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(20px) saturate(160%);-webkit-backdrop-filter:blur(20px) saturate(160%);box-shadow:0 14px 44px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.1);padding-bottom:calc(7px + env(safe-area-inset-bottom,0px))}
+  .tab{width:58px;display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px 0 4px;border-radius:18px;cursor:pointer;color:var(--mut);transition:transform .18s}
+  .tab:active{transform:scale(.9)}
+  .tab .t-ic{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:17px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.11);box-shadow:inset 0 1px 0 rgba(255,255,255,.1);transition:transform .2s,box-shadow .2s,background .2s}
+  .tab .t-lb{font-size:9.5px;font-weight:700;letter-spacing:.3px}
+  .tab.on{color:#fff}
+  .tab.on .t-ic{background:linear-gradient(135deg,rgba(255,201,77,.42),rgba(255,176,32,.26));border-color:rgba(255,201,77,.8);box-shadow:0 0 18px rgba(255,190,60,.6),inset 0 1px 0 rgba(255,255,255,.25);transform:translateY(-2px) scale(1.05)}
+  .tab.on .t-lb{color:var(--gold);text-shadow:0 0 8px rgba(255,190,60,.5)}
+  .more-panel{display:block;position:fixed;left:50%;transform:translateX(-50%);bottom:96px;width:calc(100vw - 36px);max-width:430px;background:rgba(14,17,38,.95);border:1px solid rgba(255,255,255,.13);border-radius:22px;padding:16px;z-index:150;box-shadow:0 18px 56px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.08);backdrop-filter:blur(22px) saturate(150%);-webkit-backdrop-filter:blur(22px) saturate(150%);animation:moreUp .25s ease}
+  @keyframes moreUp{from{opacity:0;transform:translateX(-50%) translateY(16px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+  .more-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+  .mi{display:flex;flex-direction:column;align-items:center;gap:5px;padding:13px 4px;border-radius:15px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);transition:transform .15s,box-shadow .15s}
+  .mi:active{transform:scale(.93)}
+  .mi.on{border-color:rgba(255,201,77,.6);background:rgba(255,201,77,.1);box-shadow:0 0 14px rgba(255,190,60,.15)}
+  .mi-ic{font-size:21px;filter:drop-shadow(0 2px 6px rgba(0,0,0,.4))}
+  .mi-lb{font-size:10.5px;font-weight:700;color:var(--mut)}
+  .mi.on .mi-lb{color:var(--gold)}
+  .more-mask{display:block;position:fixed;inset:0;background:rgba(4,5,14,.45);z-index:145}
+}
+</style>
+</head>
+<body>
+
+<!-- 背景流动光晕 -->
+<div class="orb orb-a" aria-hidden="true"></div>
+<div class="orb orb-b" aria-hidden="true"></div>
+<div class="orb orb-c" aria-hidden="true"></div>
+
+<!-- ============ 顶栏 ============ -->
+<header class="topbar">
+  <div class="topbar-in">
+    <div class="logo" onclick="go('#home')">
+      <div class="logo-badge">WZ</div>
+      <div class="logo-txt">王者荣耀代打<small>WZRY · BOOST</small></div>
+    </div>
+    <nav class="nav" id="mainNav">
+      <a href="#home" data-v="home" class="on" data-ic="🏠" data-lb="首页">🏠 首页</a>
+      <a href="#sellers" data-v="sellers" data-ic="👑" data-lb="打手">👑 打手大厅</a>
+      <a href="#board" data-v="board" data-ic="🏆" data-lb="排行">🏆 排行榜</a>
+      <a href="#hall" data-v="hall" data-ic="📋" data-lb="接单">📋 接单大厅</a>
+      <a href="#create" data-v="create" data-ic="📝" data-lb="下单">📝 发布订单</a>
+      <a href="#orders" data-v="orders" data-ic="🗂️" data-lb="订单">🗂️ 我的订单</a>
+      <a href="#goods" data-v="goods" data-ic="🛍️" data-lb="商城">🛍️ 代充代送</a>
+      <a href="#mycenter" data-v="mycenter" data-ic="🧑‍🚀" data-lb="中心">🧑‍🚀 打手中心</a>
+      <a href="#wallet" data-v="wallet" data-ic="💰" data-lb="钱包">💰 我的钱包</a>
+      <a href="#announce" data-v="announce" data-ic="📢" data-lb="公告">📢 公告</a>
+      <a href="#feedback" data-v="feedback" data-ic="💬" data-lb="反馈">💬 反馈</a>
+      <a href="#about" data-v="about" data-ic="ℹ️" data-lb="关于">ℹ️ 关于</a>
+      <a href="#admin" data-v="admin" class="hidden" id="adminNav" data-ic="⚙️" data-lb="后台">⚙️ 管理后台</a>
+    </nav>
+    <div class="burger" onclick="toggleNav()" aria-label="菜单">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h16"/></svg>
+    </div>
+    <div class="top-right">
+      <div class="bell" onclick="toggleNotif()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+        <span class="dot hidden" id="bellDot">0</span>
+      </div>
+      <button class="btn btn-p hidden" id="loginBtn" onclick="openAuth()">登录 / 注册</button>
+      <div class="user-chip hidden" id="userChip" onclick="go('#mycenter')">
+        <div class="lv"><img id="chipLv" src="" alt=""></div>
+        <span class="un" id="chipName">—</span>
+      </div>
+      <button class="btn btn-o hidden" id="logoutBtn" onclick="doLogout()" style="padding:7px 12px;font-size:12.5px">退出</button>
+    </div>
+  </div>
+</header>
+<div class="nav-mask" id="navMask" onclick="toggleNav(false)"></div>
+
+<main class="wrap">
+  <!-- ============ 首页 ============ -->
+  <section class="view on" id="view-home">
+    <div class="hero">
+      <h1>王者荣耀 · <span>专业代打上分</span></h1>
+      <p>资深打手带你稳上分，段位保护、巅峰冲刺、全位置覆盖。平台担保交易：押金托管、完成审核、佣金保障，安全可靠。</p>
+      <div class="btns">
+        <button class="btn btn-g" onclick="go('#create')">⚔️ 发布订单</button>
+        <button class="btn btn-o" onclick="go('#sellers')">👑 查看打手</button>
+        <button class="btn btn-o" onclick="go('#hall')">📋 接单大厅</button>
+      </div>
+    </div>
+    <div class="stat-strip">
+      <div class="stat"><div class="n" id="stSellers">0</div><div class="t">认证打手</div></div>
+      <div class="stat"><div class="n" id="stOpen">0</div><div class="t">大厅待接订单</div></div>
+      <div class="stat"><div class="n" id="stDone">0</div><div class="t">已完成订单</div></div>
+      <div class="stat"><div class="n">100%</div><div class="t">平台担保</div></div>
+    </div>
+
+    <div class="section-h"><div class="bar"></div><h2>为什么选择我们</h2></div>
+    <div class="grid g4">
+      <div class="card"><div style="font-size:24px">🛡️</div><h3 class="mt8">平台担保</h3><p class="muted small">押金全程托管，完成审核后自动结算，杜绝跑单</p></div>
+      <div class="card"><div style="font-size:24px">🎖️</div><h3 class="mt8">资质审核</h3><p class="muted small">打手实名认证 + 段位战绩审核，只留真本事</p></div>
+      <div class="card"><div style="font-size:24px">⚡</div><h3 class="mt8">极速匹配</h3><p class="muted small">资格智能匹配，指定下单直达，无需漫长等待</p></div>
+      <div class="card"><div style="font-size:24px">💬</div><h3 class="mt8">专属客服</h3><p class="muted small">WhatsApp 实时响应，纠纷仲裁全程护航</p></div>
+    </div>
+
+    <div class="section-h"><div class="bar"></div><h2>等级体系 · 接单成长</h2></div>
+    <div class="lv-grid" id="lvHome"></div>
+
+    <div class="section-h"><div class="bar"></div><h2>平台流程</h2></div>
+    <div class="grid g4">
+      <div class="card"><h3>① 注册登录</h3><p class="muted small">选择下单人或接单人身份，完善账户信息</p></div>
+      <div class="card"><h3>② 充值钱包</h3><p class="muted small">扫码转账并上传截图，管理员审核后到账</p></div>
+      <div class="card"><h3>③ 下单 / 接单</h3><p class="muted small">下单人发布订单并托管押金，打手付押金接单</p></div>
+      <div class="card"><h3>④ 完成结算</h3><p class="muted small">打手提交完成证明，审核后押金退还、佣金发放</p></div>
+    </div>
+
+    <div class="section-h"><div class="bar"></div><h2>📜 平台规则</h2></div>
+    <div class="rules-wrap">
+      <div class="card">
+        <h3>👤 账户与角色</h3>
+        <ul>
+          <li>注册时请选择身份：<b>下单人</b> 或 <b>接单人</b>，注册后不可随意更改。</li>
+          <li>接单人昵称<b>全网唯一</b>，每位接单人拥有独立 <b>UID</b> 用于识别。</li>
+          <li>下单人与接单人均需在平台钱包充值后，才能下单 / 接单。</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>💰 押金与担保</h3>
+        <ul>
+          <li>下单押金 = 接单押金 = 订单金额，全程由平台托管。</li>
+          <li>下单人发布订单时托管押金，接单人接单时冻结同额押金。</li>
+          <li>订单完成并经管理员审核后，<b>双方押金自动退还</b>；被驳回的订单同样退还。</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>🎯 资格匹配</h3>
+        <ul>
+          <li><b>段位单</b>：接单人历史最高段位 ≥ 订单目标段位才可接取。</li>
+          <li><b>巅峰单</b>：接单人历史最高巅峰分 ≥ 订单目标巅峰分才可接取。</li>
+          <li>接单人资料须经管理员审核认证，才会展示在打手大厅。</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>📋 接单方式</h3>
+        <ul>
+          <li><b>无指定接单人</b>：订单自动进入接单大厅，符合资格的打手付押金领取。</li>
+          <li><b>有指定接单人</b>：订单自动推送至该接单人，并发送通知提醒。</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>💸 佣金与平台抽佣</h3>
+        <ul>
+          <li>订单完成审核后，佣金<b>自动打入接单人钱包</b>。</li>
+          <li>平台按接单人等级抽佣：<b>LV0/LV1 15% · LV2 12% · LV3 10% · LV4 8% · LV5 5% · LV6 3%</b>。</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>⭐ 经验与等级</h3>
+        <ul>
+          <li>每完成一单按订单价值获得经验（RM1 = 1 exp），经验用于升级等级。</li>
+          <li>等级越高，平台抽佣越低、徽章越尊贵（详见上方等级体系）。</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>🏧 提现规则</h3>
+        <ul>
+          <li>钱包余额（含佣金）可随时申请提现。</li>
+          <li>提现由管理员审核，转账完成后<b>自动扣减钱包余额</b>，可在钱包查看转账凭证。</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>🛡️ 诚信与安全</h3>
+        <ul>
+          <li>严禁私下交易、共享账号、恶意刷单等违规行为，违者将冻结账户。</li>
+          <li>任何问题请通过右下角 <b>WhatsApp 客服</b> 联系平台，谨防诈骗。</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="cta-band">
+      <div>
+        <div class="cta-t">准备好了吗？立即开始你的上分之旅 🚀</div>
+        <div class="cta-s">安全担保 · 专业打手 · 极速匹配 · 全程护航</div>
+      </div>
+      <div class="cta-btns">
+        <button class="btn btn-g" onclick="go('#create')">⚔️ 立即下单</button>
+        <button class="btn btn-o" onclick="go('#sellers')">👑 找打手</button>
+        <button class="btn btn-o" onclick="go('#hall')">📋 去接单</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 排行榜 ============ -->
+  <section class="view" id="view-board">
+    <div class="board-hero">
+      <div class="board-title">🏆 打手荣耀榜</div>
+      <div class="board-sub">每月 1 号重置 · 最有米 & 最肝打手荣誉殿堂</div>
+      <div class="board-tabs">
+        <div class="board-tab on" id="btComm" onclick="loadBoard('comm')">💰 本月最有米</div>
+        <div class="board-tab" id="btOrders" onclick="loadBoard('orders')">⚔️ 本月最肝</div>
+      </div>
+    </div>
+    <div id="boardBody"><div class="card muted" style="text-align:center;padding:40px">加载中…</div></div>
+  </section>
+
+  <!-- ============ 打手大厅 ============ -->
+  <section class="view" id="view-sellers">
+    <div class="page-h">
+      <div><h2>打手大厅</h2><div class="sub">平台认证的专业打手，资料经管理员审核</div></div>
+    </div>
+    <div class="grid g4" id="sellersList"></div>
+  </section>
+
+  <!-- ============ 接单大厅 ============ -->
+  <section class="view" id="view-hall">
+    <div class="page-h">
+      <div><h2>接单大厅</h2><div class="sub">符合资格的打手付押金领取订单（押金在完成后退还）</div></div>
+    </div>
+    <div class="grid g3" id="hallList"></div>
+  </section>
+
+  <!-- ============ 发布订单 ============ -->
+  <section class="view" id="view-create">
+    <div class="page-h"><div><h2>发布订单</h2><div class="sub">下单前请确保钱包余额充足（订单金额将作为押金托管）</div></div></div>
+    <div class="card">
+      <div class="type-pick mb12">
+        <div class="type-opt on" id="tpRank" onclick="pickType('rank')"><div class="ti">🏆</div><b>段位上分</b><span>目前段位 → 目标段位</span></div>
+        <div class="type-opt" id="tpPeak" onclick="pickType('peak')"><div class="ti">⚡</div><b>巅峰上分</b><span>目前巅峰分 → 目标巅峰分</span></div>
+      </div>
+      <div class="form-grid" id="rankFields">
+        <div class="fg"><label>目前段位</label>
+          <select id="curRank"></select></div>
+        <div class="fg"><label>目标段位</label>
+          <select id="tarRank"></select></div>
+      </div>
+      <div class="form-grid hidden" id="peakFields">
+        <div class="fg"><label>目前巅峰分</label><input type="number" id="curPeak" placeholder="例如 1500" min="0"></div>
+        <div class="fg"><label>目标巅峰分</label><input type="number" id="tarPeak" placeholder="例如 1800" min="0"></div>
+      </div>
+      <div class="form-grid mt12">
+        <div class="fg"><label>希望多久完成</label><input id="duration" placeholder="例如：3天内 / 5天内"></div>
+        <div class="fg"><label>单子价格 (RM)</label><input type="number" id="price" placeholder="例如 100" min="1"></div>
+        <div class="fg full"><label>指定接单人（选填：填昵称或 UID，不填则自动进入接单大厅）</label><input id="specified" placeholder="接单人昵称 / UID"><div id="specTip" class="small" style="color:var(--gold);margin-top:4px;min-height:16px"></div></div>
+      </div>
+      <button class="btn btn-g mt16" style="width:100%" onclick="placeOrder()">确认下单 · 托管押金</button>
+    </div>
+  </section>
+
+  <!-- ============ 我的订单 ============ -->
+  <section class="view" id="view-orders">
+    <div class="page-h">
+      <div><h2>我的订单</h2><div class="sub">我发布的订单与接取的订单</div></div>
+    </div>
+    <div class="type-pick mb12" style="max-width:400px">
+      <div class="type-opt on" id="ordTabBuy" onclick="pickOrdTab('buy')"><b>我发布的</b></div>
+      <div class="type-opt" id="ordTabSell" onclick="pickOrdTab('sell')"><b>我接取的</b></div>
+    </div>
+    <div id="ordersList"></div>
+  </section>
+
+  <!-- ============ 代充代送 ============ -->
+  <section class="view" id="view-goods">
+    <div class="page-h">
+      <div><h2>🛍️ 代充 / 代送</h2><div class="sub">微信担保代充 · 商品由平台认证商家提供</div></div>
+      <button class="btn btn-g hidden" id="goodsAddBtn" onclick="openGoodsAdd()">＋ 上传商品</button>
+    </div>
+    <div class="goods-banner">🛡️ 本版块货品全部经由网站担保 · 100%诚信 · 欢迎下单</div>
+    <div class="goods-grid" id="goodsList"></div>
+  </section>
+
+  <!-- ============ 打手中心 ============ -->
+  <section class="view" id="view-mycenter">
+    <div class="page-h"><div><h2>打手中心</h2><div class="sub">填写并提交接单人资料，审核通过后可接单</div></div></div>
+    <div id="mycenterBody"></div>
+  </section>
+
+  <!-- ============ 钱包 ============ -->
+  <section class="view" id="view-wallet">
+    <div class="page-h"><div><h2>我的钱包</h2><div class="sub">充值、押金与佣金明细，全部流水可查</div></div></div>
+    <div class="wallet-hero">
+      <div class="wallet-lab">账户余额</div>
+      <div class="wallet-bal"><small>RM</small> <span id="walBal">0.00</span></div>
+      <div class="wallet-acts">
+        <button class="btn btn-g" onclick="openRecharge()">💳 充值</button>
+        <button class="btn btn-p" onclick="openWithdraw()">💸 提现</button>
+        <button class="btn btn-o" onclick="reloadData()">刷新</button>
+      </div>
+    </div>
+    <div class="grid g3 mt16">
+      <div class="stat"><div class="n" style="color:var(--gold)" id="totComm">0.00</div><div class="t">平台总佣金收入</div></div>
+      <div class="stat"><div class="n" style="color:var(--ok)" id="monComm">0.00</div><div class="t">本月佣金（每月1号重置）</div></div>
+      <div class="stat"><div class="n" style="color:#ffd166" id="totWd">0.00</div><div class="t">历史累计提现</div></div>
+      <div class="stat"><div class="n" id="wdCnt">0</div><div class="t">待审提现申请</div></div>
+    </div>
+    <div class="grid g2 mt16">
+      <div class="card">
+        <h3>资金流水</h3>
+        <div id="txList"></div>
+      </div>
+      <div>
+        <div class="card mb12"><h3>充值记录</h3><div id="rcList"></div></div>
+        <div class="card mb12"><h3>佣金记录</h3><div id="poList"></div></div>
+        <div class="card"><h3>提现记录</h3><div id="wdList"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 平台公告 ============ -->
+  <section class="view" id="view-announce">
+    <div class="page-h">
+      <div><h2>📢 平台公告</h2><div class="sub">最新通知 · 规则更新 · 活动消息</div></div>
+      <button class="btn btn-g hidden" id="annAddBtn" onclick="openAnnAdd()">＋ 发布公告</button>
+    </div>
+    <div id="annList"></div>
+  </section>
+
+  <!-- ============ 投诉与建议 ============ -->
+  <section class="view" id="view-feedback">
+    <div class="page-h">
+      <div><h2>💬 投诉与建议</h2><div class="sub">您的每一条反馈，我们都会认真处理</div></div>
+    </div>
+    <div id="fbBody">
+      <div class="card muted" style="text-align:center;padding:40px">请先登录后提交反馈</div>
+    </div>
+  </section>
+
+  <!-- ============ 关于我们 ============ -->
+  <section class="view" id="view-about">
+    <div class="about-hero">
+      <div class="about-title">ℹ️ 关于我们</div>
+      <div class="about-sub">WZRY·BOOST 王者荣耀代打平台 · 押金托管 · 安全担保 · 值得信赖</div>
+    </div>
+    <div class="about-tabs">
+      <div class="about-tab on" data-t="intro" onclick="aboutTab('intro')">📖 关于我们</div>
+      <div class="about-tab" data-t="faq" onclick="aboutTab('faq')">💬 帮助中心</div>
+      <div class="about-tab" data-t="terms" onclick="aboutTab('terms')">📜 服务条款</div>
+      <div class="about-tab" data-t="privacy" onclick="aboutTab('privacy')">🔒 隐私政策</div>
+    </div>
+
+    <div id="abIntro">
+      <div class="card ab-card">
+        <h3>🤝 平台简介</h3>
+        <p class="ab-p">WZRY·BOOST 是一个专注于《王者荣耀》代打与陪玩服务的专业平台。我们连接有上分需求的玩家与经验丰富的认证打手，通过<b>押金托管、资质审核、完成审核、佣金保障</b>四大机制，为每一次交易提供全程担保。</p>
+        <p class="ab-p">无论你是想安全快速地上分、冲击巅峰赛，还是需要专业陪玩指导，在这里都能找到经过平台认证的可靠打手。</p>
+      </div>
+      <div class="card ab-card">
+        <h3>🎯 我们的使命</h3>
+        <p class="ab-p">让每一位玩家都能<b>安全、快速、放心</b>地达成目标段位，让每一份实力都获得应有的回报。</p>
+      </div>
+      <div class="grid g2">
+        <div class="card ab-value"><div class="av-ic">🛡️</div><b>安全担保</b><p>订单押金全程托管，完成或驳回均自动退还，杜绝跑单风险。</p></div>
+        <div class="card ab-value"><div class="av-ic">🎖️</div><b>专业打手</b><p>每位打手均提交真实段位与战绩资料，经管理员审核认证后才可接单。</p></div>
+        <div class="card ab-value"><div class="av-ic">⚡</div><b>高效服务</b><p>智能匹配符合资格的打手，指定下单直达，快速响应。</p></div>
+        <div class="card ab-value"><div class="av-ic">🤝</div><b>诚信经营</b><p>100% 诚信交易，佣金透明、流水可查，售后有保障。</p></div>
+      </div>
+      <div class="card ab-card">
+        <h3>📬 联系我们</h3>
+        <p class="ab-p">任何问题欢迎通过右下角 <b>WhatsApp 客服</b> 联系我们（工作日 10:00 - 22:00 在线，通常几分钟内回复）。</p>
+        <p class="ab-p">平台邮箱：<b>support@wzry-boost.com</b></p>
+      </div>
+    </div>
+
+    <div id="abFaq" class="hidden">
+      <div class="ab-faq">
+        <details class="faq-item" open><summary>1. 如何注册并选择身份？</summary><p>注册时选择「下单人」或「接单人」身份。下单人发布订单并托管押金；接单人需先提交打手资料，审核通过后即可接单。注册后身份不可随意更改。</p></details>
+        <details class="faq-item"><summary>2. 如何充值？多久到账？</summary><p>在「我的钱包」点击充值，按页面显示的收款二维码或银行账户转账，上传转账截图后提交。管理员审核通过后金额自动入账，通常几分钟至 1 小时内到账。</p></details>
+        <details class="faq-item"><summary>3. 如何下单？</summary><p>在「发布订单」选择段位上分或巅峰上分，填写当前/目标段位、价格、完成时间；可指定打手（昵称或 UID），不指定则自动进入接单大厅。下单前请确保钱包余额充足。</p></details>
+        <details class="faq-item"><summary>4. 如何接单？有什么资格要求？</summary><p>在「接单大厅」或指定订单中选择符合资格的单子，支付押金后接取。段位单要求历史最高段位 ≥ 目标段位；巅峰单要求历史最高巅峰分 ≥ 目标巅峰分。</p></details>
+        <details class="faq-item"><summary>5. 押金如何收取与退还？</summary><p>下单押金 = 接单押金 = 订单金额，由平台托管。订单完成并经管理员审核后，双方押金自动退还至钱包；订单被驳回同样全额退还。</p></details>
+        <details class="faq-item"><summary>6. 佣金如何计算与发放？</summary><p>订单完成后，平台按接单人等级抽取一定比例，剩余佣金自动打入接单人钱包。抽佣比例：LV0/LV1 15%、LV2 12%、LV3 10%、LV4 8%、LV5 5%、LV6 3%。</p></details>
+        <details class="faq-item"><summary>7. 经验与等级如何获得？</summary><p>每完成一单按订单价值获得经验（RM1 = 1 exp）。等级越高抽佣越低、徽章越尊贵，每月可冲击排行榜赢取荣誉。</p></details>
+        <details class="faq-item"><summary>8. 如何提现？最低金额？</summary><p>在「我的钱包」申请提现，最低 RM50。提交申请后管理员审核并转账，转账完成后自动扣减余额，可在提现记录中查看转账凭证。</p></details>
+        <details class="faq-item"><summary>9. 订单多久能完成？</summary><p>下单时填写希望完成的时间（如 3 天内/5 天内），打手须在约定时间内完成并提交完成证明。超时未完成可联系客服介入处理。</p></details>
+        <details class="faq-item"><summary>10. 遇到纠纷怎么办？</summary><p>所有订单均经平台审核。如打手未按时完成、资料不实等，可提交完成证明并联系客服，平台将按规则仲裁：押金全额退还、违规方按情节处理。</p></details>
+        <details class="faq-item"><summary>11. 代充/代送怎么购买？</summary><p>在「代充代送」版块选择商品，点击「购买」复制商家微信号，添加后发送商品名称即可下单。该版块货品全部经由网站担保。</p></details>
+        <details class="faq-item"><summary>12. 怎么联系客服？</summary><p>页面右下角 WhatsApp 客服按钮（wa.me/60175468526），工作日 10:00 - 22:00 在线，通常几分钟内回复。</p></details>
+      </div>
+    </div>
+
+    <div id="abTerms" class="hidden">
+      <div class="card ab-card">
+        <h3>📜 服务条款</h3>
+        <ul class="ab-ul">
+          <li><b>服务内容</b>：本平台提供王者荣耀代打上分、陪玩及代充代送等服务，所有服务均通过平台担保机制完成。</li>
+          <li><b>账户规范</b>：一个账号对应一位用户，请确保注册信息真实有效。禁止转借、共享或恶意注册多个账号。</li>
+          <li><b>交易担保</b>：订单押金由平台托管，仅在订单完成并经管理员审核后发放；驳回订单押金全额退还。</li>
+          <li><b>禁止行为</b>：严禁线下私下交易、共享游戏账号、恶意刷单、虚假提交完成证明、使用外挂或脚本等违规行为。</li>
+          <li><b>违规处理</b>：一经发现违规，平台有权冻结账户、取消接单资格、扣除违规所得，并保留追究责任的权利。</li>
+          <li><b>风险提示</b>：代打/陪玩服务涉及游戏账号共享，用户应自行评估风险；因游戏官方政策导致的账号处罚，平台不承担相关责任。</li>
+          <li><b>条款更新</b>：平台有权根据业务需要修订本条款，修订后将在页面公示，继续使用即视为接受更新后的条款。</li>
+        </ul>
+      </div>
+    </div>
+
+    <div id="abPrivacy" class="hidden">
+      <div class="card ab-card">
+        <h3>🔒 隐私政策</h3>
+        <ul class="ab-ul">
+          <li><b>信息收集</b>：我们仅收集提供服务所必需的信息，包括注册信息（邮箱、手机号）、打手资料（段位、巅峰分、战绩截图）、订单与交易记录。</li>
+          <li><b>信息使用</b>：收集的信息用于账户管理、交易担保、资质审核、客服支持及服务改进，绝不用于其他用途。</li>
+          <li><b>信息保护</b>：我们采取加密存储、权限管控、安全审计等措施保护您的数据，不会向任何第三方出售或出租您的个人信息。</li>
+          <li><b>您的权利</b>：您可以随时查看自己的资料与交易记录；如需更正或删除个人信息，请联系客服协助处理。</li>
+          <li><b>联系我们</b>：如有隐私相关问题，请通过 WhatsApp 客服或邮箱 support@wzry-boost.com 与我们联系。</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 管理后台 ============ -->
+  <section class="view" id="view-admin">
+    <div class="page-h"><div><h2>管理后台</h2><div class="sub">全局管理：用户 / 打手 / 订单 / 充值 / 佣金 / 收款设置</div></div></div>
+    <div class="ad-stat">
+      <div class="ad-mini"><div class="n" id="aUsers">0</div><div class="t">注册用户</div></div>
+      <div class="ad-mini"><div class="n" id="aSellers">0</div><div class="t">待审打手</div></div>
+      <div class="ad-mini"><div class="n" id="aOrders">0</div><div class="t">待审订单</div></div>
+      <div class="ad-mini"><div class="n" id="aRecharges">0</div><div class="t">待审充值</div></div>
+      <div class="ad-mini"><div class="n" id="aPayouts">0</div><div class="t">待审提现</div></div>
+    </div>
+    <div class="ad-quick">
+      <div class="ad-q ad-tab on" data-k="users" onclick="adTab('users')"><div class="q-ic">👥</div><b>用户管理</b><span>注册用户 · 资料 · 等级</span></div>
+      <div class="ad-q ad-tab" data-k="sellers" onclick="adTab('sellers')"><div class="q-ic">🛡️</div><b>打手审核</b><span>资质认证 · 资料上架</span></div>
+      <div class="ad-q ad-tab" data-k="orders" onclick="adTab('orders')"><div class="q-ic">📦</div><b>订单审核</b><span>完成度 · 佣金发放</span></div>
+      <div class="ad-q ad-tab" data-k="recharges" onclick="adTab('recharges')"><div class="q-ic">💳</div><b>充值审批</b><span>转账核对 · 余额入账</span></div>
+      <div class="ad-q ad-tab" data-k="withdrawals" onclick="adTab('withdrawals')"><div class="q-ic">🏧</div><b>提现审批</b><span>转账凭证 · 扣减余额</span></div>
+      <div class="ad-q ad-tab" data-k="feedbacks" onclick="adTab('feedbacks')"><div class="q-ic">💬</div><b>投诉与反馈</b><span id="aFeedbacks">0</span></div>
+      <div class="ad-q ad-tab" data-k="payset" onclick="adTab('payset')"><div class="q-ic">⚙️</div><b>收款设置</b><span>收款码 · 银行账户</span></div>
+    </div>
+    <div id="adBody"></div>
+  </section>
+</main>
+
+<!-- ============ 页脚 ============ -->
+<footer class="site-foot">
+  <div class="foot-in">
+    <div class="foot-logo">
+      <div class="logo-badge">WZ</div>
+      <div><b>王者荣耀代打</b><small>WZRY · BOOST</small></div>
+    </div>
+    <div class="foot-links">
+      <a onclick="goAbout('intro')">关于我们</a>
+      <a onclick="goAbout('faq')">帮助中心</a>
+      <a onclick="goAbout('terms')">服务条款</a>
+      <a onclick="goAbout('privacy')">隐私政策</a>
+    </div>
+    <div class="foot-copy">© 2026 WZRY·BOOST 王者荣耀代打平台 · 押金托管 · 安全担保 · 专业上分</div>
+  </div>
+</footer>
+
+<!-- ============ 认证弹窗 ============ -->
+<div class="modal-mask hidden" id="authModal" onclick="if(event.target===this)closeModal('authModal')">
+  <div class="modal-box" style="position:relative;max-width:480px">
+    <button class="modal-close" onclick="closeModal('authModal')">✕</button>
+    <div class="modal-h" id="authTitle">登录账户</div>
+    <div id="authBody"></div>
+  </div>
+</div>
+
+<!-- ============ 充值弹窗 ============ -->
+<div class="modal-mask hidden" id="rcModal" onclick="if(event.target===this)closeModal('rcModal')">
+  <div class="modal-box" style="position:relative;max-width:380px">
+    <button class="modal-close" onclick="closeModal('rcModal')">✕</button>
+    <div class="modal-h">💳 充值</div>
+    <div id="rcBody"></div>
+  </div>
+</div>
+
+<!-- ============ 提现弹窗 ============ -->
+<div class="modal-mask hidden" id="wdModal" onclick="if(event.target===this)closeModal('wdModal')">
+  <div class="modal-box" style="position:relative;max-width:380px">
+    <button class="modal-close" onclick="closeModal('wdModal')">✕</button>
+    <div class="modal-h">💸 提现</div>
+    <div id="wdBody"></div>
+  </div>
+</div>
+
+<!-- ============ 购买弹窗 ============ -->
+<div class="modal-mask hidden" id="buyModal" onclick="if(event.target===this)closeModal('buyModal')">
+  <div class="modal-box" style="position:relative;max-width:380px">
+    <button class="modal-close" onclick="closeModal('buyModal')">✕</button>
+    <div class="modal-h">🛒 微信下单</div>
+    <div id="buyBody"></div>
+  </div>
+</div>
+
+<!-- ============ 上传商品弹窗 ============ -->
+<div class="modal-mask hidden" id="goodsModal" onclick="if(event.target===this)closeModal('goodsModal')">
+  <div class="modal-box" style="position:relative;max-width:440px">
+    <button class="modal-close" onclick="closeModal('goodsModal')">✕</button>
+    <div class="modal-h">＋ 上传商品</div>
+    <div id="goodsBody"></div>
+  </div>
+</div>
+
+<!-- ============ 通用弹窗 ============ -->
+<div class="modal-mask hidden" id="gModal" onclick="if(event.target===this)closeModal('gModal')">
+  <div class="modal-box" style="position:relative;max-width:520px">
+    <button class="modal-close" onclick="closeModal('gModal')">✕</button>
+    <div id="gBody"></div>
+  </div>
+</div>
+
+<!-- ============ 通知面板 ============ -->
+<div class="notif-panel hidden" id="notifPanel">
+  <div style="padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.08);font-weight:800;display:flex;justify-content:space-between;align-items:center">
+    <span>🔔 通知</span>
+    <button class="small muted" onclick="markAllRead()" style="font-size:11.5px">全部已读</button>
+  </div>
+  <div id="notifList" style="max-height:56vh;overflow:auto"></div>
+</div>
+
+<!-- ============ 客服 ============ -->
+<a class="wa-btn" href="https://wa.me/60175468526" target="_blank" title="联系客服">
+  <span class="wa-pulse"></span>
+  <svg viewBox="0 0 24 24"><path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.5 0 1.47 1.07 2.9 1.22 3.1.15.2 2.1 3.2 5.1 4.49.71.3 1.27.49 1.7.63.72.23 1.37.2 1.88.12.58-.09 1.76-.72 2.01-1.42.25-.7.25-1.29.17-1.42-.07-.13-.27-.2-.57-.35zM12.05 21.79h-.01a9.87 9.87 0 0 1-5.03-1.38l-.36-.21-3.74.98 1-3.65-.24-.37a9.82 9.82 0 0 1-1.51-5.26c0-5.45 4.44-9.88 9.9-9.88a9.82 9.82 0 0 1 6.99 2.9 9.82 9.82 0 0 1 2.9 6.99c0 5.45-4.44 9.88-9.89 9.88zm8.41-18.3A11.82 11.82 0 0 0 12.05 0C5.5 0 .16 5.34.16 11.89c0 2.1.55 4.14 1.59 5.95L.06 24l6.3-1.65a11.87 11.87 0 0 0 5.68 1.45h.01c6.55 0 11.89-5.34 11.89-11.89 0-3.18-1.24-6.16-3.48-8.42z"/></svg>
+</a>
+
+<!-- ============ 大图查看 ============ -->
+<div class="img-view hidden" id="imgView" onclick="this.classList.add('hidden')"><img id="imgViewSrc" src="" alt=""></div>
+
+<!-- ============ 移动端底部 Tab 栏 ============ -->
+<div class="more-mask hidden" id="moreMask" onclick="toggleMore(false)"></div>
+<nav class="tabbar" id="tabbar">
+  <a class="tab on" data-v="home" href="#home"><span class="t-ic">🏠</span><span class="t-lb">首页</span></a>
+  <a class="tab" data-v="sellers" href="#sellers"><span class="t-ic">👑</span><span class="t-lb">打手</span></a>
+  <a class="tab" data-v="hall" href="#hall"><span class="t-ic">📋</span><span class="t-lb">接单</span></a>
+  <a class="tab" data-v="wallet" href="#wallet"><span class="t-ic">💰</span><span class="t-lb">钱包</span></a>
+  <a class="tab" data-v="more" onclick="toggleMore()"><span class="t-ic">▦</span><span class="t-lb">更多</span></a>
+</nav>
+<div class="more-panel hidden" id="morePanel">
+  <div class="page-h" style="margin-bottom:12px"><div><h2 style="font-size:15px">全部功能</h2><div class="sub" style="font-size:11.5px">更多服务入口</div></div></div>
+  <div class="more-grid" id="moreGrid"></div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+/* ============================================================
+   配置
+   ============================================================ */
+const SB_URL = "https://ejthejclbmhqajsvgqxp.supabase.co";
+const SB_KEY = "sb_publishable_ludRXLPvy8PK3tcn6NSHBg_qf4uMGBn";
+const WA_LINK = "https://wa.me/60175468526";
+const sb = supabase.createClient(SB_URL, SB_KEY);
+
+const RANKS = ["青铜","白银","黄金","铂金","钻石","星耀","最强王者（1~24⭐）","无双王者（25~49⭐）","荣耀王者（50~74⭐）","荣耀王者+（75~99⭐）","传奇王者（100⭐以上）"];
+const LANES = ["对抗路","打野","中路","发育路","游走"];
+const LEVELS = [
+  {lv:0, name:"新手新兵", min:0, max:200, rate:15, img:"assets/levels/lv0.png"},
+  {lv:1, name:"青铜武者", min:201, max:500, rate:15, img:"assets/levels/lv1.png"},
+  {lv:2, name:"白银精英", min:501, max:1000, rate:12, img:"assets/levels/lv2.png"},
+  {lv:3, name:"黄金强者", min:1001, max:2500, rate:10, img:"assets/levels/lv3.png"},
+  {lv:4, name:"铂金宗师", min:2501, max:5000, rate:8, img:"assets/levels/lv4.png"},
+  {lv:5, name:"钻石传说", min:5001, max:10000, rate:5, img:"assets/levels/lv5.png"},
+  {lv:6, name:"王者传奇", min:10001, max:20000, rate:3, img:"assets/levels/lv6.png"},
+];
+function lvInfo(exp){ let cur = LEVELS[0]; for (const L of LEVELS) if (exp >= L.min) cur = L; return cur; }
+const ST_MAP = {open:["待接单","st-open"], specified:["待接单 · 指定","st-specified"], claimed:["进行中","st-claimed"], submitted:["待审核","st-submitted"], completed:["已完成","st-completed"], rejected:["已驳回","st-rejected"], cancelled:["已取消","st-rejected"]};
+
+/* ============================================================
+   工具
+   ============================================================ */
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+function fmt(n){ return Number(n||0).toLocaleString("en-MY", {minimumFractionDigits:2, maximumFractionDigits:2}); }
+function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+function toast(msg, ok){ const t = document.createElement("div"); t.className = "toast " + (ok ? "ok" : ""); t.textContent = msg; $("#toast").appendChild(t); setTimeout(()=>t.remove(), 2800); }
+function openModal(id){ $("#"+id).classList.remove("hidden"); }
+function closeModal(id){ $("#"+id).classList.add("hidden"); }
+function showImg(url){ $("#imgViewSrc").src = url; $("#imgView").classList.remove("hidden"); }
+function timeAgo(ts){ if(!ts) return ""; const d = new Date(ts); const s = (Date.now()-d.getTime())/1000; if(s<60) return "刚刚"; if(s<3600) return Math.floor(s/60)+"分钟前"; if(s<86400) return Math.floor(s/3600)+"小时前"; return d.toLocaleDateString("zh-CN")+" "+d.toTimeString().slice(0,5); }
+function go(h){ location.hash = h; }
+function isRankType(t){ return t === "rank"; }
+
+/* 路由 */
+const VIEWS = ["home","sellers","board","hall","create","orders","goods","mycenter","wallet","announce","feedback","about","admin"];
+let sessionReady = false;
+async function router(){
+  if (!sessionReady && !USER) return;
+  const h = (location.hash || "#home").replace("#","");
+  const v = VIEWS.includes(h) ? h : "home";
+  $$(".view").forEach(x => x.classList.remove("on"));
+  $("#view-"+v).classList.add("on");
+  $$(".nav a").forEach(a => a.classList.toggle("on", a.dataset.v === v));
+  $$(".tab").forEach(t => t.classList.toggle("on", t.dataset.v === v));
+  const _moreTab = document.querySelector('#tabbar .tab[data-v=more]');
+  if (_moreTab) _moreTab.classList.toggle("on", MORE_ITEMS.some(x => x.v === v) || v === "admin");
+  toggleNav(false);
+  if (!$("#morePanel").classList.contains("hidden")) toggleMore(false);
+  if (v === "home") loadHome();
+  if (v === "sellers") loadSellers();
+  if (v === "board") loadBoard(boardTab);
+  if (v === "hall") loadHall();
+  if (v === "orders") loadOrders();
+  if (v === "goods") loadGoods();
+  if (v === "mycenter") loadMyCenter();
+  if (v === "wallet") loadWallet();
+  if (v === "announce") loadAnnounce();
+  if (v === "feedback") loadFeedback();
+  if (v === "about") aboutTab(aboutCur);
+  if (v === "admin") loadAdmin();
+}
+window.addEventListener("hashchange", () => { if (sessionReady || USER) router(); });
+
+/* ============================================================
+   认证
+   ============================================================ */
+let USER = null, PROFILE = null, SELLER = null;
+function authUI(){
+  const on = !!USER;
+  $("#loginBtn").classList.toggle("hidden", on);
+  $("#userChip").classList.toggle("hidden", !on);
+  $("#logoutBtn").classList.toggle("hidden", !on);
+  $("#adminNav").classList.toggle("hidden", !(on && PROFILE && PROFILE.role === "admin"));
+  if (on && PROFILE) {
+    $("#chipName").textContent = PROFILE.display_name || PROFILE.email;
+    $("#chipLv").src = SELLER ? lvInfo(SELLER.exp).img : "assets/levels/lv0.png";
+  }
+}
+async function loadSession(){
+  const { data } = await sb.auth.getSession();
+  if (data.session) { USER = data.session.user; await loadUserData(); }
+  sessionReady = true;
+  authUI();
+}
+async function loadUserData(){
+  if (!USER) return;
+  const { data: p } = await sb.from("profiles").select("*").eq("id", USER.id).maybeSingle();
+  PROFILE = p;
+  const { data: s } = await sb.from("seller_profiles").select("*").eq("id", USER.id).maybeSingle();
+  SELLER = s;
+  authUI();
+  loadNotifCount();
+}
+async function doLogout(){
+  await sb.auth.signOut();
+  USER = PROFILE = SELLER = null;
+  authUI(); toast("已退出登录");
+}
+
+/* ---------- 登录 / 注册 ---------- */
+let authMode = "login", regRole = "buyer";
+function openAuth(mode){
+  authMode = mode || "login";
+  regRole = "buyer";
+  $("#authTitle").textContent = authMode === "login" ? "登录账户" : "注册账户";
+  if (authMode === "login") {
+    $("#authBody").innerHTML = `
+      <div class="fg"><label>邮箱</label><input id="auEmail" type="email" placeholder="you@email.com"></div>
+      <div class="fg mt12"><label>密码</label><input id="auPass" type="password" placeholder="密码"></div>
+      <button class="btn btn-p mt16" style="width:100%" onclick="doLogin()">登录</button>
+      <div class="muted small mt12" style="text-align:center">还没有账号？<a style="color:var(--gold);font-weight:700" onclick="openAuth('reg')">立即注册</a></div>`;
+  } else {
+    $("#authBody").innerHTML = `
+      <div class="fg"><label>邮箱</label><input id="auEmail" type="email" placeholder="you@email.com"></div>
+      <div class="fg mt12"><label>密码</label><input id="auPass" type="password" placeholder="至少 6 位"></div>
+      <div class="fg mt12"><label>昵称</label><input id="auName" placeholder="你的昵称"></div>
+      <div class="fg mt12"><label>手机号码</label><input id="auPhone" placeholder="例如 60123456789"></div>
+      <div class="fg mt12"><label>选择身份</label>
+        <div class="role-pick">
+          <div class="role-opt on" id="roleBuyer" onclick="pickRole('buyer')"><b>🛒 下单人</b><span>发布订单 · 找人代打</span></div>
+          <div class="role-opt" id="roleSeller" onclick="pickRole('seller')"><b>⚔️ 接单人</b><span>接单上分 · 赚取佣金</span></div>
+        </div>
+      </div>
+      <button class="btn btn-g mt16" style="width:100%" onclick="doReg()">注册</button>
+      <div class="muted small mt12" style="text-align:center">已有账号？<a style="color:var(--gold);font-weight:700" onclick="openAuth('login')">去登录</a></div>`;
+  }
+  openModal("authModal");
+}
+function pickRole(r){ regRole = r; $("#roleBuyer").classList.toggle("on", r==="buyer"); $("#roleSeller").classList.toggle("on", r==="seller"); }
+async function doLogin(){
+  const email = $("#auEmail").value.trim(), pass = $("#auPass").value;
+  if (!email || !pass) return toast("请填写邮箱和密码", 0);
+  const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
+  if (error) return toast(error.message, 0);
+  USER = data.user;
+  await loadUserData();
+  closeModal("authModal");
+  toast("欢迎回来，"+ (PROFILE?.display_name || email));
+}
+async function doReg(){
+  const email = $("#auEmail").value.trim(), pass = $("#auPass").value;
+  const name = $("#auName").value.trim(), phone = $("#auPhone").value.trim();
+  if (!email || !pass || !name) return toast("请填写完整注册信息", 0);
+  if (pass.length < 6) return toast("密码至少 6 位", 0);
+  const { data, error } = await sb.auth.signUp({ email, password: pass });
+  if (error) return toast(error.message, 0);
+  const { error: e2 } = await sb.from("profiles").insert({ id: data.user.id, email, display_name: name, phone, role: regRole });
+  if (e2) return toast("注册失败：" + e2.message, 0);
+  USER = data.user;
+  await loadUserData();
+  closeModal("authModal");
+  toast("注册成功，欢迎加入！");
+  if (regRole === "seller") go("#mycenter");
+}
+
+/* ============================================================
+   首页
+   ============================================================ */
+async function loadHome(){
+  $("#lvHome").innerHTML = LEVELS.map(L => `
+    <div class="lv-cell">
+      <img src="${L.img}" alt="LV${L.lv}">
+      <div class="nm">LV${L.lv} ${L.name}</div>
+      <div class="ex">${L.min.toLocaleString()} ~ ${L.max.toLocaleString()} exp</div>
+      <div class="cm">抽佣 ${L.rate}%</div>
+    </div>`).join("");
+  try {
+    const [sp, od, od2] = await Promise.all([
+      sb.from("seller_profiles").select("id").eq("status","approved"),
+      sb.from("orders").select("id").eq("status","open"),
+      sb.from("orders").select("id").eq("status","completed")
+    ]);
+    $("#stSellers").textContent = (sp.data||[]).length;
+    $("#stOpen").textContent = (od.data||[]).length;
+    $("#stDone").textContent = (od2.data||[]).length;
+  } catch(e){}
+}
+
+/* ============================================================
+   打手大厅
+   ============================================================ */
+async function loadSellers(){
+  const { data, error } = await sb.from("seller_profiles").select("*").eq("status","approved").order("exp", {ascending:false});
+  if (error) return toast(error.message, 0);
+  const list = data || [];
+  $("#sellersList").innerHTML = list.length ? list.map(s => {
+    const L = lvInfo(s.exp);
+    return `
+    <div class="sp-card">
+      <div class="sp-top">
+        <div class="sp-avatar">${s.avatar_url ? '<img src="' + s.avatar_url + '" alt="头像">' : '<span>' + esc((s.nickname||"?").slice(0,1)) + "</span>"}</div>
+        <div class="sp-id">
+          <div class="sp-name">${esc(s.nickname)}</div>
+          <div class="sp-uid">UID ${esc(s.uid)}</div>
+        </div>
+        <div class="sp-lv" style="width:46px;height:46px;margin:0;flex:none"><img src="${L.img}" alt="LV${L.lv}"></div>
+      </div>
+      <div class="sp-meta">
+        <span>历史段位：<b>${esc(s.historical_rank||"—")}</b></span>
+        <span>历史巅峰：<b>${s.historical_peak ? s.historical_peak + " 分" : "—"}</b></span>
+        <span>分路段位：<b>${esc(laneRanksText(s))}</b></span>
+        <span>等级：<b style="color:var(--gold)">LV${L.lv} ${L.name}</b> · ${s.exp} exp</span>
+      </div>
+      ${s.lanes && s.lanes.length ? '<div class="sp-lanes">' + s.lanes.map(l => '<span class="lane">' + esc(l) + "</span>").join("") + "</div>" : ""}
+      ${s.bio ? '<p class="small muted mt8" style="text-align:left">' + esc(s.bio) + "</p>" : ""}
+      <button class="btn btn-p mt12" style="width:100%" onclick="goSpecified('${esc(s.uid)}')">🎯 指定 TA 下单</button>
+    </div>`;
+  }).join("") : '<div class="card muted" style="text-align:center;padding:40px">暂无已认证打手</div>';
+}
+
+/* ============================================================
+   排行榜
+   ============================================================ */
+let boardTab = "comm";
+async function loadBoard(tab){
+  boardTab = tab;
+  $("#btComm").classList.toggle("on", tab === "comm");
+  $("#btOrders").classList.toggle("on", tab === "orders");
+  const { data, error } = await sb.rpc(tab === "comm" ? "leaderboard_comm" : "leaderboard_orders");
+  if (error) { $("#boardBody").innerHTML = '<div class="card muted" style="text-align:center;padding:40px">加载失败</div>'; return; }
+  const list = (data || []).slice(0, 10);
+  if (!list.length) { $("#boardBody").innerHTML = '<div class="card muted" style="text-align:center;padding:40px">本月暂无上榜打手，快来抢占榜首！</div>'; return; }
+  const fmtV = v => tab === "comm" ? "RM " + fmt(v) : v + " 单";
+  const crown = ["👑","🥈","🥉"];
+  const top3 = list.slice(0, 3);
+  const order = [1, 0, 2];
+  const podium = order.map(i => {
+    const s = top3[i];
+    if (!s) return "";
+    const rank = i + 1;
+    const L = lvInfo(s.level || 0);
+    const big = rank === 1;
+    return `
+    <div class="p-card p${rank} ${big ? "p-first" : ""}">
+      <div class="p-crown">${crown[i]}</div>
+      <div class="p-rank">TOP ${rank}</div>
+      <div class="p-avatar">${s.avatar_url ? '<img src="' + s.avatar_url + '" alt="头像">' : "<span>" + esc((s.nickname||"?").slice(0,1)) + "</span>"}</div>
+      <div class="p-lv"><img src="${L.img}" alt="LV${L.lv}"></div>
+      <div class="p-name">${esc(s.nickname)}</div>
+      <div class="p-uid">UID ${esc(s.uid||"")} · ${esc(L.name)}</div>
+      <div class="p-val">${fmtV(s.comm ?? s.cnt)}</div>
+      <div class="p-meta">${tab === "comm" ? "本月佣金收入" : "本月完成单数"}</div>
+    </div>`;
+  }).join("");
+  const rest = list.slice(3).map((s, idx) => {
+    const r = idx + 4;
+    const L = lvInfo(s.level || 0);
+    return `
+    <div class="p-row">
+      <div class="p-num">${r}</div>
+      <div class="p-avatar">${s.avatar_url ? '<img src="' + s.avatar_url + '" alt="头像">' : "<span>" + esc((s.nickname||"?").slice(0,1)) + "</span>"}</div>
+      <div class="p-id"><div class="p-name">${esc(s.nickname)}</div><div class="p-uid">UID ${esc(s.uid||"")}</div></div>
+      <div class="p-lv" style="width:34px;height:34px"><img src="${L.img}"></div>
+      <div class="p-val">${fmtV(s.comm ?? s.cnt)}</div>
+    </div>`;
+  }).join("");
+  $("#boardBody").innerHTML = `<div class="podium">${podium}</div><div class="board-list">${rest}</div>`;
+}
+
+/* 指定打手下单：跳转并预填 UID */
+function goSpecified(uid){
+  go("#create");
+  setTimeout(() => {
+    const el = $("#specified");
+    if (el) { el.value = uid; el.focus(); }
+    const tip = $("#specTip");
+    if (tip) tip.textContent = "🎯 已指定打手 " + uid + "，该订单将直接推送给该打手";
+  }, 80);
+}
+
+/* ============================================================
+   接单大厅
+   ============================================================ */
+async function loadHall(){
+  if (!USER) { $("#hallList").innerHTML = '<div class="card" style="text-align:center;padding:40px">请先 <a style="color:var(--gold);font-weight:800;cursor:pointer" onclick="openAuth(\'login\')">登录</a> 查看接单大厅</div>'; return; }
+  const { data, error } = await sb.from("orders").select("*").eq("status","open").order("created_at", {ascending:false});
+  if (error) return toast(error.message, 0);
+  const list = data || [];
+  $("#hallList").innerHTML = list.length ? list.map(o => {
+    const tag = o.type === "rank" ? "🏆 段位上分" : "⚡ 巅峰上分";
+    const arr = o.type === "rank"
+      ? '<span>'+esc(o.current_rank)+'</span><span class="ar">→</span><span>'+esc(o.target_rank)+'</span>'
+      : '<span>'+o.current_peak+' 分</span><span class="ar">→</span><span>'+o.target_peak+' 分</span>';
+    return `
+    <div class="od">
+      <div class="od-top"><span class="od-no">${esc(o.order_no)}</span><span class="od-tag">${tag}</span></div>
+      <div class="od-mid"><div class="od-arr">${arr}</div></div>
+      <div class="od-mid"><span class="od-val">⏱ ${esc(o.duration||"待定")}</span></div>
+      <div class="od-bot">
+        <div class="od-price"><small>RM</small> ${fmt(o.price)}</div>
+        <button class="btn btn-p" onclick="claimOrder('${o.id}')">付押金接单</button>
+      </div>
+    </div>`;
+  }).join("") : '<div class="card muted" style="text-align:center;padding:40px">大厅暂无待接订单</div>';
+}
+async function claimOrder(id){
+  if (!USER) return openAuth("login");
+  const { data: o } = await sb.from("orders").select("price").eq("id", id).maybeSingle();
+  if (!confirm("确认领取该订单？\n将冻结 RM" + fmt(o.price) + " 作为接单押金，订单完成后押金自动退还。")) return;
+  const { data, error } = await sb.rpc("claim_order", { p_order_id: id });
+  if (error) return toast(error.message, 0);
+  toast("接单成功！订单号 " + data, 1);
+  loadHall(); loadNotifCount();
+}
+
+/* ============================================================
+   下单
+   ============================================================ */
+let orderType = "rank";
+function initRanks(){
+  $("#curRank").innerHTML = RANKS.map(r => '<option>' + r + '</option>').join("");
+  $("#tarRank").innerHTML = RANKS.map(r => '<option>' + r + '</option>').join("");
+}
+function pickType(t){
+  orderType = t;
+  $("#tpRank").classList.toggle("on", t==="rank");
+  $("#tpPeak").classList.toggle("on", t==="peak");
+  $("#rankFields").classList.toggle("hidden", t!=="rank");
+  $("#peakFields").classList.toggle("hidden", t!=="peak");
+}
+async function placeOrder(){
+  if (!USER) return openAuth("login");
+  const duration = $("#duration").value.trim();
+  const price = Number($("#price").value);
+  const specified = $("#specified").value.trim();
+  if (!price || price <= 0) return toast("请填写有效订单价格", 0);
+  if (!duration) return toast("请填写希望多久完成", 0);
+  if (PROFILE.balance < price) {
+    toast("余额不足，请先充值 (需 RM" + fmt(price) + ")", 0);
+    openRecharge(); return;
+  }
+  const params = {
+    p_type: orderType,
+    p_current_rank: orderType === "rank" ? $("#curRank").value : null,
+    p_target_rank: orderType === "rank" ? $("#tarRank").value : null,
+    p_current_peak: orderType === "peak" ? Number($("#curPeak").value) : null,
+    p_target_peak: orderType === "peak" ? Number($("#tarPeak").value) : null,
+    p_duration: duration, p_price: price, p_specified: specified
+  };
+  if (orderType === "peak" && (!params.p_current_peak || !params.p_target_peak)) return toast("请填写巅峰分", 0);
+  if (orderType === "peak" && params.p_target_peak <= params.p_current_peak) return toast("目标巅峰分需高于目前巅峰分", 0);
+  if (orderType === "rank" && RANKS.indexOf($("#tarRank").value) <= RANKS.indexOf($("#curRank").value)) return toast("目标段位需高于目前段位", 0);
+  const { data, error } = await sb.rpc("place_order", params);
+  if (error) return toast(error.message, 0);
+  toast("下单成功！订单已" + (specified ? "推送至指定接单人" : "进入接单大厅"), 1);
+  await loadUserData();
+  go("#orders");
+}
+
+/* ============================================================
+   我的订单
+   ============================================================ */
+let ordTab = "buy";
+function pickOrdTab(t){
+  ordTab = t;
+  $("#ordTabBuy").classList.toggle("on", t==="buy");
+  $("#ordTabSell").classList.toggle("on", t==="sell");
+  loadOrders();
+}
+async function loadOrders(){
+  if (!USER) { $("#ordersList").innerHTML = '<div class="card" style="text-align:center;padding:40px">请先登录查看订单</div>'; return; }
+  let q = sb.from("orders").select("*");
+  if (ordTab === "buy") q = q.eq("buyer_id", USER.id);
+  else q = q.or("claimed_by.eq." + USER.id + ",seller_id.eq." + USER.id);
+  const { data, error } = await q.order("created_at", {ascending:false});
+  if (error) return toast(error.message, 0);
+  const list = data || [];
+  const cards = await Promise.all(list.map(o => ordCard(o)));
+  $("#ordersList").innerHTML = cards.length ? cards.join("") : '<div class="card muted" style="text-align:center;padding:40px">暂无相关订单</div>';
+}
+async function ordCard(o){
+  const st = ST_MAP[o.status] || [o.status, "st-open"];
+  const tag = o.type === "rank" ? "🏆 段位上分" : "⚡ 巅峰上分";
+  const arr = o.type === "rank"
+    ? esc(o.current_rank) + " → " + esc(o.target_rank)
+    : o.current_peak + " 分 → " + o.target_peak + " 分";
+  let btns = "";
+  if (o.status === "open" && o.buyer_id === USER.id) btns = "";
+  if (o.status === "specified" && o.seller_id === USER.id) {
+    btns = '<button class="btn btn-p" onclick="claimOrder(\'' + o.id + '\')">✅ 确认接单（付押金 RM' + fmt(o.price) + '）</button>';
+  }
+  if (o.status === "claimed" && o.claimed_by === USER.id) {
+    btns = '<button class="btn btn-ok" onclick="openSubmit(\'' + o.id + '\')">提交完成</button>';
+  }
+  if (o.status === "submitted" && o.claimed_by === USER.id) btns = '<span class="small muted">等待平台审核…</span>';
+  const proofs = o.status === "submitted" || o.status === "completed" ? await loadProofs(o.id) : "";
+  return `
+  <div class="od mt12">
+    <div class="od-top"><span class="od-no">${esc(o.order_no)}</span><span class="od-tag">${tag}</span><span class="st ${st[1]}">${st[0]}</span></div>
+    <div class="od-mid"><span class="od-val" style="font-weight:800">${arr}</span></div>
+    <div class="od-mid">
+      <span class="od-val">⏱ ${esc(o.duration||"—")}</span>
+      ${o.specified_name ? '<span class="od-val">🎯 指定：' + esc(o.specified_name) + "</span>" : ""}
+      ${o.reject_reason ? '<span class="od-val" style="color:var(--danger)">驳回：' + esc(o.reject_reason) + "</span>" : ""}
+    </div>
+    <div class="od-bot">
+      <div class="od-price"><small>RM</small> ${fmt(o.price)}</div>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">${proofs}${btns}</div>
+    </div>
+  </div>`;
+}
+async function loadProofs(orderId){
+  const { data } = await sb.from("order_proofs").select("image_url").eq("order_id", orderId);
+  if (!data || !data.length) return "";
+  return '<div class="proof-imgs">' + data.map(p => '<img src="' + p.image_url + '" onclick="showImg(\'' + p.image_url + '\')">').join("") + "</div>";
+}
+/* 提交完成弹窗 */
+async function openSubmit(orderId){
+  $("#gBody").innerHTML = `
+    <div class="modal-h">📤 提交完成证明</div>
+    <p class="muted small mb12">上传完成的段位/巅峰截图，提交后由管理员审核。</p>
+    <div class="upload-zone" onclick="document.getElementById('submitFile').click()">
+      <div class="up-ic">🖼️</div>
+      <div class="up-t">点击上传完成截图</div>
+    </div>
+    <input type="file" id="submitFile" accept="image/*" class="hidden">
+    <div class="up-thumbs" id="submitThumbs"></div>
+    <button class="btn btn-ok mt16" style="width:100%" onclick="doSubmitProof('${orderId}')">提交审核</button>`;
+  openModal("gModal");
+  $("#submitFile").onchange = async e => {
+    const f = e.target.files[0]; if (!f) return;
+    toast("上传中…");
+    const url = await uploadImage(f, "proofs");
+    if (url) {
+      $("#submitThumbs").innerHTML = '<div class="up-thumb"><img src="' + url + '"></div>';
+      window._submitProofUrl = url;
+    }
+  };
+}
+async function doSubmitProof(orderId){
+  if (!window._submitProofUrl) return toast("请先上传完成截图", 0);
+  const { error } = await sb.rpc("submit_order_proof", { p_order_id: orderId, p_image_url: window._submitProofUrl });
+  if (error) return toast(error.message, 0);
+  closeModal("gModal");
+  toast("已提交，等待管理员审核", 1);
+  loadOrders(); loadNotifCount();
+}
+
+/* ============================================================
+   代充代送
+   ============================================================ */
+const SHOP_WECHAT = "ChaOsbubu";
+const isShopAdmin = () => !!PROFILE && (PROFILE.role === "admin" || PROFILE.role === "shop_admin");
+let gEditId = null;
+
+function fmtTime(ts){
+  if (!ts) return "";
+  const d = new Date(ts);
+  const p = n => String(n).padStart(2, "0");
+  return d.getFullYear() + "-" + p(d.getMonth()+1) + "-" + p(d.getDate()) + " " + p(d.getHours()) + ":" + p(d.getMinutes());
+}
+
+async function loadGoods(){
+  const { data, error } = await sb.from("goods").select("*").order("created_at", {ascending:false});
+  if (error) { $("#goodsList").innerHTML = '<div class="card muted" style="text-align:center;padding:40px">加载失败</div>'; return; }
+  const can = isShopAdmin();
+  $("#goodsAddBtn").classList.toggle("hidden", !can);
+  const list = data || [];
+  if (!list.length) { $("#goodsList").innerHTML = '<div class="card muted" style="text-align:center;padding:40px">暂无商品，敬请期待</div>'; return; }
+  $("#goodsList").innerHTML = list.map(g => {
+    const deal = !!g.is_deal;
+    return `
+    <div class="g-card">
+      ${g.image_url ? '<img class="g-img" src="' + g.image_url + '" alt="' + esc(g.title) + '">' : '<div class="g-img g-img-ph">🛍️</div>'}
+      ${deal ? '<div class="g-deal">🔥 限时折扣</div>' : ""}
+      <div class="g-body">
+        <div class="g-title">${esc(g.title)}</div>
+        ${g.desc ? '<div class="g-desc">' + esc(g.desc) + "</div>" : ""}
+        <div class="g-time">🕐 上架于 ${fmtTime(g.created_at)}</div>
+        <div class="g-foot">
+          <div class="g-price">
+            ${deal && g.orig_price ? '<s class="g-orig">RM ' + fmt(g.orig_price) + '</s> ' : ""}
+            <small>RM</small> ${fmt(deal ? g.price : g.price)}
+          </div>
+          <div class="g-acts">
+            <button class="btn btn-p" style="padding:8px 14px" onclick="buyGoods('${g.id}')">🛒 购买</button>
+            ${can ? '<button class="btn btn-o" style="padding:8px 11px" onclick="openGoodsEdit(\'' + g.id + '\')" title="编辑">✏️</button><button class="btn btn-o" style="padding:8px 11px" onclick="delGoods(\'' + g.id + '\')" title="删除">🗑</button>' : ""}
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+function buyGoods(id){
+  openModal("buyModal");
+  $("#buyBody").innerHTML = `
+    <div style="text-align:center;padding:8px 0">
+      <div style="font-size:44px">🛒</div>
+      <div class="muted small" style="margin-top:6px">请在微信添加以下商家账号下单</div>
+      <div class="wx-box" id="wxBox">${SHOP_WECHAT}</div>
+      <button class="btn btn-g" style="width:100%" onclick="copyWechat()">📋 复制微信号</button>
+      <p class="small muted mt12">复制后打开微信 → 搜索添加 → 发送商品名称并下单</p>
+      <p class="small" style="color:var(--ok);margin-top:8px">🛡️ 本平台担保交易，请放心购买</p>
+    </div>`;
+}
+function copyWechat(){
+  const done = () => toast("微信号已复制：" + SHOP_WECHAT, 1);
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(SHOP_WECHAT).then(done).catch(() => { legacyCopy(); done(); });
+  } else { legacyCopy(); done(); }
+}
+function legacyCopy(){
+  const ta = document.createElement("textarea");
+  ta.value = SHOP_WECHAT; document.body.appendChild(ta); ta.select();
+  document.execCommand("copy"); document.body.removeChild(ta);
+}
+function openGoodsAdd(){
+  gEditId = null;
+  openModal("goodsModal");
+  $("#goodsBody").innerHTML = goodsForm("", "", "", false, null, null);
+}
+function openGoodsEdit(id){
+  sb.from("goods").select("*").eq("id", id).maybeSingle().then(({ data }) => {
+    if (!data) return toast("商品不存在", 0);
+    gEditId = id;
+    openModal("goodsModal");
+    $("#goodsBody").innerHTML = goodsForm(data.title, data.desc, data.image_url, !!data.is_deal, data.price, data.orig_price);
+  });
+}
+function goodsForm(title, desc, img, isDeal, price, orig){
+  return `
+    <div class="fg full" style="text-align:center">
+      <label>商品图片</label>
+      <div class="avatar-up" onclick="document.getElementById('gImgFile').click()">
+        <img id="gImgPrev" src="${img || ""}" style="${img ? "" : "display:none"}">
+        <div class="avatar-up-mask">📷 点击上传商品图片</div>
+      </div>
+      <input type="file" id="gImgFile" accept="image/*" class="hidden" onchange="previewGoodsImg(this)">
+    </div>
+    <div class="fg"><label>商品名称</label><input id="gTitle" value="${esc(title||"")}" placeholder="例如：王者荣耀点券代充 1000"></div>
+    <div class="fg full">
+      <label>商品类型</label>
+      <div class="type-pick" style="grid-template-columns:1fr 1fr">
+        <div class="type-opt ${isDeal ? "" : "on"}" id="gTypeNormal" onclick="pickGoodsType(false)"><b>📦 普通商品</b></div>
+        <div class="type-opt ${isDeal ? "on" : ""}" id="gTypeDeal" onclick="pickGoodsType(true)"><b>🔥 限时折扣</b></div>
+      </div>
+    </div>
+    <div class="fg ${isDeal ? "" : "hidden"}" id="gOrigRow"><label>原价 (RM)</label><input type="number" id="gOrigPrice" value="${orig != null ? orig : ""}" placeholder="例如 100" min="0"></div>
+    <div class="fg"><label>${isDeal ? "折扣价 (RM)" : "价格 (RM)"}</label><input type="number" id="gPrice" value="${price != null ? price : ""}" placeholder="例如 50" min="0"></div>
+    <div class="fg full"><label>商品介绍</label><textarea id="gDesc" placeholder="介绍商品内容、到账时间、注意事项等">${esc(desc||"")}</textarea></div>
+    <div class="mt16"><button class="btn btn-g" style="width:100%" onclick="saveGoods()">${gEditId ? "✅ 保存修改" : "✅ 发布商品"}</button></div>`;
+}
+function pickGoodsType(deal){
+  $("#gTypeNormal").classList.toggle("on", !deal);
+  $("#gTypeDeal").classList.toggle("on", deal);
+  $("#gOrigRow").classList.toggle("hidden", !deal);
+}
+function previewGoodsImg(input){
+  const f = input.files[0];
+  if (!f) return;
+  const rd = new FileReader();
+  rd.onload = e => { const img = $("#gImgPrev"); img.src = e.target.result; img.style.display = "block"; };
+  rd.readAsDataURL(f);
+}
+async function saveGoods(){
+  const title = $("#gTitle").value.trim();
+  const desc = $("#gDesc").value.trim();
+  const isDeal = $("#gTypeDeal").classList.contains("on");
+  const price = Number($("#gPrice").value);
+  const orig = isDeal ? Number($("#gOrigPrice").value) : null;
+  if (!title) return toast("请填写商品名称", "warn");
+  if (!price || price <= 0) return toast("请填写有效价格", "warn");
+  if (isDeal && (!orig || orig <= price)) return toast("折扣价需低于原价", "warn");
+  let image_url = $("#gImgPrev").src || "";
+  if (image_url && image_url.startsWith("data:")) {
+    const f = $("#gImgFile").files[0];
+    if (f) image_url = await uploadImage(f, "goods");
+  }
+  const payload = { title, desc, price, orig_price: orig, is_deal: isDeal, image_url };
+  if (gEditId) {
+    const { error } = await sb.from("goods").update(payload).eq("id", gEditId);
+    if (error) return toast(error.message, 0);
+    toast("商品已更新", 1);
+  } else {
+    payload.created_by = USER.id;
+    const { error } = await sb.from("goods").insert(payload);
+    if (error) return toast(error.message, 0);
+    toast("商品已发布", 1);
+  }
+  closeModal("goodsModal");
+  loadGoods();
+}
+async function delGoods(id){
+  if (!confirm("确定删除该商品？")) return;
+  const { error } = await sb.from("goods").delete().eq("id", id);
+  if (error) return toast(error.message, 0);
+  toast("已删除", 1);
+  loadGoods();
+}
+
+/* ============================================================
+   关于我们
+   ============================================================ */
+let aboutCur = "intro";function aboutTab(t){
+  aboutCur = t;
+  $$(".about-tab").forEach(x => x.classList.toggle("on", x.dataset.t === t));
+  $("#abIntro").classList.toggle("hidden", t !== "intro");
+  $("#abFaq").classList.toggle("hidden", t !== "faq");
+  $("#abTerms").classList.toggle("hidden", t !== "terms");
+  $("#abPrivacy").classList.toggle("hidden", t !== "privacy");
+}
+function goAbout(t){ go("#about"); setTimeout(() => aboutTab(t), 60); }
+
+/* 汉堡包菜单 */
+function toggleNav(force){
+  const nav = document.getElementById("mainNav");
+  const mask = document.getElementById("navMask");
+  if (!nav || !mask) return;
+  const open = force === undefined ? !nav.classList.contains("open") : force;
+  nav.classList.toggle("open", open);
+  mask.classList.toggle("show", open);
+}
+
+/* 移动端底部 Tab 栏 */
+const MORE_ITEMS = [
+  {v:"board", ic:"🏆", lb:"排行榜"},
+  {v:"create", ic:"📝", lb:"发布订单"},
+  {v:"orders", ic:"🗂️", lb:"我的订单"},
+  {v:"goods", ic:"🛍️", lb:"代充代送"},
+  {v:"mycenter", ic:"🧑‍🚀", lb:"打手中心"},
+  {v:"announce", ic:"📢", lb:"公告"},
+  {v:"feedback", ic:"💬", lb:"反馈"},
+  {v:"about", ic:"ℹ️", lb:"关于"}
+];
+function renderMore(){
+  const items = MORE_ITEMS.slice();
+  if (USER && PROFILE && PROFILE.role === "admin") items.push({v:"admin", ic:"⚙️", lb:"管理后台"});
+  const cur = (location.hash || "#home").replace("#", "");
+  $("#moreGrid").innerHTML = items.map(it =>
+    '<a class="mi ' + (cur === it.v ? "on" : "") + '" href="#' + it.v + '" onclick="toggleMore(false)"><span class="mi-ic">' + it.ic + '</span><span class="mi-lb">' + it.lb + "</span></a>"
+  ).join("");
+}
+function toggleMore(force){
+  renderMore();
+  const open = force === undefined ? $("#morePanel").classList.contains("hidden") : force;
+  $("#morePanel").classList.toggle("hidden", !open);
+  $("#moreMask").classList.toggle("hidden", !open);
+}
+
+/* ============================================================
+   平台公告
+   ============================================================ */
+async function loadAnnounce(){
+  const { data, error } = await sb.from("announcements").select("*").order("created_at", {ascending:false});
+  if (error) { $("#annList").innerHTML = '<div class="card muted" style="text-align:center;padding:40px">加载失败</div>'; return; }
+  const can = !!USER && PROFILE && PROFILE.role === "admin";
+  $("#annAddBtn").classList.toggle("hidden", !can);
+  const list = (data || []).sort((a,b) => (b.is_pinned ? 1 : 0) - (a.is_pinned ? 1 : 0));
+  if (!list.length) { $("#annList").innerHTML = '<div class="card muted" style="text-align:center;padding:40px">暂无公告</div>'; return; }
+  $("#annList").innerHTML = list.map(a => `
+    <div class="card ann-card">
+      <div class="ann-head">
+        ${a.is_pinned ? '<span class="ann-pin">📌 置顶</span>' : ""}
+        <b class="ann-title">${esc(a.title)}</b>
+        <span class="ann-time">${fmtTime(a.created_at)}</span>
+      </div>
+      <div class="ann-content">${esc(a.content)}</div>
+      ${can ? '<div class="ann-acts"><button class="btn btn-o small" onclick="openAnnEdit(\'' + a.id + '\')">✏️ 编辑</button><button class="btn btn-o small" onclick="delAnnounce(\'' + a.id + '\')">🗑 删除</button></div>' : ""}
+    </div>`).join("");
+}
+function openAnnAdd(){ annForm(null, "", "", false); }
+function openAnnEdit(id){
+  sb.from("announcements").select("*").eq("id", id).maybeSingle().then(({ data }) => {
+    if (!data) return toast("公告不存在", 0);
+    annForm(id, data.title, data.content, !!data.is_pinned);
+  });
+}
+function annForm(id, title, content, pinned){
+  $("#gBody").innerHTML = `
+    <div class="modal-h">📢 ${id ? "编辑公告" : "发布公告"}</div>
+    <div class="fg"><label>标题</label><input id="annTitle" value="${esc(title||"")}" placeholder="公告标题"></div>
+    <div class="fg full"><label>内容</label><textarea id="annContent" placeholder="公告详细内容">${esc(content||"")}</textarea></div>
+    <div class="fg mt8"><label><input type="checkbox" id="annPin" ${pinned ? "checked" : ""}> 📌 置顶显示</label></div>
+    <button class="btn btn-g mt16" style="width:100%" onclick="saveAnnounce('${id||""}')">${id ? "✅ 保存修改" : "✅ 发布公告"}</button>`;
+  openModal("gModal");
+}
+async function saveAnnounce(id){
+  const title = $("#annTitle").value.trim();
+  const content = $("#annContent").value.trim();
+  if (!title) return toast("请填写标题", "warn");
+  if (!content) return toast("请填写内容", "warn");
+  const payload = { title, content, is_pinned: $("#annPin").checked };
+  if (id) {
+    const { error } = await sb.from("announcements").update(payload).eq("id", id);
+    if (error) return toast(error.message, 0);
+    toast("公告已更新", 1);
+  } else {
+    payload.created_by = USER.id;
+    const { error } = await sb.from("announcements").insert(payload);
+    if (error) return toast(error.message, 0);
+    toast("公告已发布", 1);
+  }
+  closeModal("gModal"); loadAnnounce();
+}
+async function delAnnounce(id){
+  if (!confirm("确定删除该公告？")) return;
+  const { error } = await sb.from("announcements").delete().eq("id", id);
+  if (error) return toast(error.message, 0);
+  toast("已删除", 1); loadAnnounce();
+}
+
+/* ============================================================
+   投诉与建议
+   ============================================================ */
+async function loadFeedback(){
+  if (!USER) {
+    $("#fbBody").innerHTML = '<div class="card muted" style="text-align:center;padding:40px">请先登录后提交反馈</div>';
+    return;
+  }
+  const { data, error } = await sb.from("feedbacks").select("*").eq("user_id", USER.id).order("created_at", {ascending:false});
+  const mine = data || [];
+  $("#fbBody").innerHTML = `
+    <div class="fb-wrap">
+      <div class="card">
+        <h3>📝 提交反馈</h3>
+        <p class="muted small" style="margin-bottom:10px">您提交的投诉或建议将直接送达平台管理员，我们会在 24 小时内处理。</p>
+        <div class="fg"><label>反馈类型</label>
+          <select id="fbType">
+            <option value="投诉">😡 投诉</option>
+            <option value="建议">💡 建议</option>
+            <option value="咨询">❓ 咨询</option>
+            <option value="其他">📌 其他</option>
+          </select>
+        </div>
+        <div class="fg full"><label>内容</label><textarea id="fbContent" placeholder="请描述您遇到的问题、建议或想法..."></textarea></div>
+        <button class="btn btn-g" onclick="submitFeedback()">📨 提交反馈</button>
+      </div>
+      <div class="card">
+        <h3>📋 我的反馈记录</h3>
+        <div id="myFbList">${mine.length ? mine.map(f => `
+          <div class="fb-mini">
+            <div class="fb-head">
+              <div class="fb-tag">${esc(f.type||"反馈")}</div>
+              <div class="${f.status === "resolved" ? "fb-ok" : "fb-new"}">${f.status === "resolved" ? "✅ 已处理" : "🕐 待处理"}</div>
+              <span class="muted" style="margin-left:auto">${fmtTime(f.created_at)}</span>
+            </div>
+            <div class="fb-content">${esc(f.content)}</div>
+            ${f.reply ? '<div class="fb-reply">💬 平台回复：' + esc(f.reply) + "</div>" : ""}
+          </div>`).join("") : '<div class="muted small" style="text-align:center;padding:20px">暂无反馈记录</div>'}</div>
+      </div>
+    </div>`;
+}
+async function submitFeedback(){
+  const type = $("#fbType").value;
+  const content = $("#fbContent").value.trim();
+  if (!content) return toast("请填写反馈内容", "warn");
+  const { error } = await sb.from("feedbacks").insert({ user_id: USER.id, type, content });
+  if (error) return toast(error.message, 0);
+  toast("反馈已提交，感谢您的支持", 1);
+  loadFeedback();
+}
+
+/* ============================================================
+   打手中心
+   ============================================================ */
+async function loadMyCenter(){
+  if (!USER) { $("#mycenterBody").innerHTML = '<div class="card" style="text-align:center;padding:40px">请先 <a style="color:var(--gold);font-weight:800;cursor:pointer" onclick="openAuth(\'login\')">登录</a></div>'; return; }
+  await loadUserData();
+  const s = SELLER;
+  const L = lvInfo(s ? s.exp : 0);
+  const pct = Math.min(100, Math.round((s ? s.exp : 0) / L.max * 100));
+  const stBadge = !s ? "" :
+    s.status === "approved" ? '<span class="st st-completed">已认证</span>' :
+    s.status === "pending" ? '<span class="st st-submitted">审核中</span>' :
+    '<span class="st st-rejected">未通过</span>';
+  const statusNote = !s ? "" :
+    s.status === "approved" ? '<p class="small" style="color:var(--ok)">✅ 资料已通过审核，现在可以接单了！</p>' :
+    s.status === "pending" ? '<p class="small muted">⏳ 资料已提交，等待管理员审核…</p>' :
+    '<p class="small" style="color:var(--danger)">❌ 资料被驳回：' + esc(s.reject_reason||"资料不符") + '，请修改后重新提交</p>';
+  $("#mycenterBody").innerHTML = `
+    <div class="grid g3 mb12">
+      <div class="card" style="text-align:center">
+        <div class="sp-lv" style="width:110px;height:110px"><img src="${L.img}" alt="LV${L.lv}"></div>
+        <div style="font-weight:900;font-size:18px;margin-top:8px">LV${L.lv} ${L.name}</div>
+        <div class="muted small">${s ? s.exp : 0} / ${L.max} exp · 平台抽佣 ${L.rate}%</div>
+        <div style="height:8px;border-radius:5px;background:rgba(255,255,255,.08);margin-top:10px;overflow:hidden">
+          <div style="height:100%;width:${pct}%;background:linear-gradient(90deg,#7c5cff,#ffc94d);border-radius:5px"></div>
+        </div>
+        ${stBadge ? '<div style="margin-top:12px">' + stBadge + "</div>" : ""}
+        ${statusNote}
+      </div>
+      <div class="card" style="grid-column:1/-1">
+        <h3>接单人资料</h3>
+        <div class="form-grid">
+          <div class="fg full" style="text-align:center">
+            <label>头像</label>
+            <div class="avatar-up" onclick="document.getElementById('spAvatar').click()">
+              <img id="spAvatarImg" src="${s?.avatar_url || ''}">
+              <div class="avatar-up-mask">📷 点击上传头像</div>
+            </div>
+            <input type="file" id="spAvatar" accept="image/*" class="hidden">
+          </div>
+          <div class="fg"><label>昵称（唯一，不可重复）</label><input id="spNick" value="${esc(s?.nickname||"")}" placeholder="你的游戏昵称"></div>
+          <div class="fg"><label>UID（接单人识别码）</label><input id="spUid" value="${esc(s?.uid||"")}" placeholder="提交时自动生成" readonly style="opacity:.6"></div>
+          <div class="fg"><label>历史段位（最高）</label><select id="spRank">${RANKS.map(r => '<option ' + (s?.historical_rank===r?"selected":"") + '>' + r + "</option>").join("")}</select></div>
+          <div class="fg"><label>历史巅峰分（最高）</label><input type="number" id="spPeak" value="${s?.historical_peak||""}" placeholder="例如 1800" min="0"></div>
+          <div class="fg full"><label>擅长分路（可多选，选择后在下方填写各分路段位，如 10段 / 20段 / 100段）</label>
+            <div style="display:flex;gap:6px;flex-wrap:wrap" id="lanePick">
+              ${LANES.map(l => '<span class="lane" style="cursor:pointer;padding:7px 12px;font-size:12.5px" data-l="'+l+'" onclick="toggleLane(this)">'+l+"</span>").join("")}
+            </div>
+            <div id="laneRanks" style="margin-top:4px"></div>
+          </div>
+          <div class="fg full"><label>自我介绍（选填）</label><textarea id="spBio" placeholder="介绍一下你的实力与风格…">${esc(s?.bio||"")}</textarea></div>
+          <div class="fg full">
+            <label>佐证图片（选填，可多张：战绩/巅峰截图等）</label>
+            <div class="upload-zone" onclick="document.getElementById('spFile').click()">
+              <div class="up-ic">🖼️</div>
+              <div class="up-t">点击上传佐证图片（支持多张）</div>
+            </div>
+            <input type="file" id="spFile" accept="image/*" multiple class="hidden">
+            <div class="up-thumbs" id="spThumbs"></div>
+          </div>
+        </div>
+        <button class="btn btn-p mt16" style="width:100%" onclick="saveSeller()">${s ? "重新提交审核" : "提交审核"}</button>
+      </div>
+    </div>`;
+  window._spProofs = s?.proofs || [];
+  window._spLanes = s?.lanes || [];
+  window._spLaneRanks = s?.lane_ranks || {};
+  window._spAvatar = s?.avatar_url || "";
+  renderLanePick();
+  renderSpThumbs();
+  renderAvatar();
+  $("#spAvatar").onchange = async e => {
+    const f = e.target.files[0]; if (!f) return;
+    toast("头像上传中…");
+    const url = await uploadImage(f, "avatars");
+    if (url) { window._spAvatar = url; renderAvatar(); }
+  };
+  $("#spFile").onchange = async e => {
+    const files = Array.from(e.target.files);
+    for (const f of files) {
+      toast("上传中…");
+      const url = await uploadImage(f, "proofs");
+      if (url) { window._spProofs.push(url); renderSpThumbs(); }
+    }
+  };
+}
+function renderLanePick(){
+  window._spLaneRanks = window._spLaneRanks || {};
+  $$("#lanePick .lane").forEach(el => {
+    const on = window._spLanes.includes(el.dataset.l);
+    el.style.cssText = "cursor:pointer;padding:7px 12px;font-size:12.5px;background:" + (on ? "rgba(124,92,255,.35)" : "rgba(79,124,255,.14)") + ";color:" + (on ? "#fff" : "#9db8ff");
+  });
+  $("#laneRanks").innerHTML = window._spLanes.map(l => `
+    <div style="display:flex;align-items:center;gap:8px;margin-top:8px">
+      <span style="font-size:12.5px;color:#9db8ff;min-width:56px">${esc(l)}</span>
+      <input id="lr_${esc(l)}" placeholder="分路段位，如 10段 / 20段 / 100段" value="${esc(window._spLaneRanks[l]||"")}" style="flex:1">
+    </div>`).join("");
+}
+function toggleLane(el){
+  const l = el.dataset.l;
+  window._spLanes = window._spLanes.includes(l) ? window._spLanes.filter(x => x !== l) : window._spLanes.concat(l);
+  renderLanePick();
+}
+function renderSpThumbs(){
+  $("#spThumbs").innerHTML = (window._spProofs||[]).map((u,i) => '<div class="up-thumb"><img src="' + u + '"><span class="rm" onclick="rmProof(' + i + ')">✕</span></div>').join("");
+}
+function renderAvatar(){
+  const img = $("#spAvatarImg");
+  if (img) img.style.display = window._spAvatar ? "block" : "none";
+}
+function rmProof(i){ window._spProofs.splice(i,1); renderSpThumbs(); }
+async function saveSeller(){
+  const nickname = $("#spNick").value.trim();
+  const rank = $("#spRank").value, peak = Number($("#spPeak").value);
+  const bio = $("#spBio").value.trim();
+  if (!nickname) return toast("请填写昵称", 0);
+  if (window._spLanes.length === 0) return toast("请至少选择一个擅长分路", 0);
+  const laneRanks = {};
+  window._spLanes.forEach(l => { laneRanks[l] = ($("#lr_" + l) || {}).value ? $("#lr_" + l).value.trim() : ""; });
+  let uid = $("#spUid").value.trim();
+  if (!uid) {
+    uid = "WZ" + Math.random().toString(36).slice(2, 8).toUpperCase();
+    const { data: dup } = await sb.from("seller_profiles").select("id").eq("uid", uid).maybeSingle();
+    if (dup) { toast("UID 生成冲突，请重试", 0); return; }
+  }
+  const payload = {
+    id: USER.id, nickname, uid, historical_rank: rank,
+    historical_peak: peak || null,
+    lane_ranks: laneRanks,
+    lane_rank: Object.values(laneRanks).filter(Boolean).join(" / ") || null,
+    lanes: window._spLanes, bio: bio || null,
+    proofs: window._spProofs, avatar_url: window._spAvatar || null,
+    status: "pending"
+  };
+  const { error } = await sb.from("seller_profiles").upsert(payload, { onConflict: "id" });
+  if (error) return toast("提交失败：" + error.message, 0);
+  toast("资料已提交，等待管理员审核", 1);
+  loadMyCenter();
+}
+/* 分路段位展示文本 */
+function laneRanksText(s){
+  const lr = s.lane_ranks || {};
+  const arr = (s.lanes||[]).map(l => lr[l] ? l + " " + lr[l] : l).filter(Boolean);
+  return arr.join(" / ") || (s.lane_rank || "—");
+}
+
+/* ============================================================
+   图片上传
+   ============================================================ */
+async function uploadImage(file, folder){
+  const ext = (file.name.split(".").pop() || "png").toLowerCase();
+  const path = USER.id + "/" + folder + "/" + Date.now() + "." + ext;
+  const { error } = await sb.storage.from("wzry").upload(path, file, { upsert: false });
+  if (error) { toast("上传失败：" + error.message, 0); return null; }
+  const { data } = sb.storage.from("wzry").getPublicUrl(path);
+  return data.publicUrl;
+}
+
+/* ============================================================
+   钱包
+   ============================================================ */
+async function loadWallet(){
+  if (!USER) { $("#walBal").textContent = "0.00"; return; }
+  await loadUserData();
+  $("#walBal").textContent = fmt(PROFILE.balance);
+  const [tx, rc, wd, st] = await Promise.all([
+    sb.from("wallet_transactions").select("*").eq("user_id", USER.id).order("created_at", {ascending:false}).limit(60),
+    sb.from("recharges").select("*").eq("user_id", USER.id).order("created_at", {ascending:false}).limit(20),
+    sb.from("withdrawals").select("*").eq("user_id", USER.id).order("created_at", {ascending:false}).limit(20),
+    sb.rpc("wallet_stats", { p_user_id: USER.id })
+  ]);
+  const stats = st.data || {};
+  $("#totComm").textContent = fmt(stats.total_commission || 0);
+  $("#monComm").textContent = fmt(stats.month_commission || 0);
+  $("#totWd").textContent = fmt((wd.data||[]).filter(x => x.status === "approved").reduce((a,b) => a + Number(b.amount), 0));
+  $("#wdCnt").textContent = (wd.data||[]).filter(x => x.status === "pending").length;
+  const TX_IC = {recharge:"💳", order_pay:"📤", order_deposit:"🔒", deposit_refund:"🔓", commission:"💰", withdraw:"🏧"};
+  const TX_T = {recharge:"充值", order_pay:"下单押金", order_deposit:"接单押金", deposit_refund:"押金退还", commission:"佣金", withdraw:"提现"};
+  $("#txList").innerHTML = (tx.data||[]).length ? tx.data.map(t => `
+    <div class="tx">
+      <div class="tx-ic" style="background:rgba(124,92,255,.15)">${TX_IC[t.type]||"💠"}</div>
+      <div><div class="tt">${TX_T[t.type]||t.type}</div><div class="td">${esc(t.note||"")} · ${timeAgo(t.created_at)}</div></div>
+      <div class="am ${Number(t.amount)>=0?"am-in":"am-out"}">${Number(t.amount)>=0?"+":"-"}RM${fmt(Math.abs(t.amount))}</div>
+    </div>`).join("") : '<div class="muted small" style="padding:12px 0">暂无流水</div>';
+  const RCS = {pending:["待审核","st-submitted"], approved:["已到账","st-completed"], rejected:["已驳回","st-rejected"]};
+  $("#rcList").innerHTML = (rc.data||[]).length ? rc.data.map(r => `
+    <div class="tx"><div class="tx-ic" style="background:rgba(46,230,168,.14)">💳</div>
+      <div><div class="tt">充值 RM${fmt(r.amount)}</div><div class="td">${timeAgo(r.created_at)}</div></div>
+      <div class="am" style="font-size:12px">${(RCS[r.status]||["",""])[0]}</div></div>`).join("") : '<div class="muted small" style="padding:12px 0">暂无充值记录</div>';
+  const comm = (tx.data||[]).filter(t => t.type === "commission");
+  $("#poList").innerHTML = comm.length ? comm.map(p => `
+    <div class="tx"><div class="tx-ic" style="background:rgba(255,201,77,.15)">💰</div>
+      <div><div class="tt">订单佣金 RM${fmt(p.amount)}</div><div class="td">${esc(p.note||"")} · ${timeAgo(p.created_at)}</div></div>
+      <div class="am am-in" style="font-size:12px">+RM${fmt(p.amount)}</div></div>`).join("") : '<div class="muted small" style="padding:12px 0">暂无佣金记录</div>';
+  const WDS = {pending:["待审批","st-submitted"], approved:["已转账","st-completed"], rejected:["已驳回","st-rejected"]};
+  $("#wdList").innerHTML = (wd.data||[]).length ? wd.data.map(w => `
+    <div class="tx"><div class="tx-ic" style="background:rgba(56,132,255,.15)">🏧</div>
+      <div><div class="tt">提现 RM${fmt(w.amount)}</div><div class="td">${timeAgo(w.created_at)}${w.reject_reason ? " · " + esc(w.reject_reason) : ""}</div></div>
+      <div class="am" style="font-size:12px">${(WDS[w.status]||["",""])[0]}</div></div>`).join("") : '<div class="muted small" style="padding:12px 0">暂无提现记录</div>';
+}
+
+/* ---------- 提现 ---------- */
+async function openWithdraw(){
+  if (!USER) return openAuth("login");
+  await loadUserData();
+  $("#wdBody").innerHTML = `
+    <div style="text-align:center;padding:6px 0 14px">
+      <div class="muted small">当前可提现余额</div>
+      <div style="font-size:34px;font-weight:800;margin-top:6px;background:linear-gradient(135deg,#ffd66b,#ff9f43);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">RM ${fmt(PROFILE.balance)}</div>
+    </div>
+    <div class="fg"><label>提现金额 (RM) · 最低 RM50</label><input type="number" id="wdAmount" placeholder="最低提现 RM50" min="50"></div>
+    <p class="small muted mt12">💡 最低提现金额 RM50。提交提现申请后，平台审核并转账，转账完成自动扣减余额。佣金可直接提现。</p>
+    <div class="mt16"><button class="btn btn-p" style="width:100%" onclick="doWithdraw()">提交提现申请</button></div>`;
+  openModal("wdModal");
+}
+async function doWithdraw(){
+  const amt = Number($("#wdAmount").value);
+  if (!amt || amt <= 0) return toast("请输入有效提现金额", "warn");
+  if (amt < 50) return toast("最低提现金额 RM50", "warn");
+  if (amt > PROFILE.balance) return toast("提现金额超过可提现余额", "warn");
+  const { error } = await sb.rpc("request_withdraw", { p_amount: amt });
+  if (error) return toast(error.message, "warn");
+  closeModal("wdModal");
+  toast("提现申请已提交，等待管理员审批");
+  loadWallet();
+}
+
+/* ---------- 充值 ---------- */
+async function openRecharge(){
+  if (!USER) return openAuth("login");
+  const { data: st } = await sb.from("pay_settings").select("*").eq("id",1).maybeSingle();
+  const s = st || {};
+  const qrHtml = s.qr_url
+    ? '<img src="' + s.qr_url + '" style="width:170px;height:170px;border-radius:14px;margin:0 auto;display:block;border:1px solid var(--line)">'
+    : '<div style="padding:26px;text-align:center;color:var(--mut);font-size:12.5px;border:2px dashed rgba(255,255,255,.16);border-radius:14px">收款码暂未配置<br>请联系客服获取收款方式</div>';
+  const accHtml = (s.bank_name || s.account_name || s.account_no)
+    ? `<div style="margin-top:12px;padding:12px;border-radius:12px;background:rgba(255,255,255,.05);border:1px solid var(--line);font-size:13px;line-height:1.9">
+        <div>银行：<b>${esc(s.bank_name||"—")}</b></div>
+        <div>收款人：<b>${esc(s.account_name||"—")}</b></div>
+        <div>账号：<b>${esc(s.account_no||"—")}</b></div>
+      </div>` : "";
+  $("#rcBody").innerHTML = `
+    <div class="fg"><label>充值金额 (RM)</label><input type="number" id="rcAmount" placeholder="例如 100" min="1"></div>
+    <div class="mt12">${qrHtml}${accHtml}</div>
+    <p class="small muted mt12">💡 请先转账至上方账户，再上传转账截图提交审核，审核通过后自动到账。</p>
+    <div class="mt12">
+      <div class="upload-zone" onclick="document.getElementById('rcFile').click()">
+        <div class="up-ic">🧾</div>
+        <div class="up-t">上传转账截图</div>
+      </div>
+      <input type="file" id="rcFile" accept="image/*" class="hidden">
+      <div class="up-thumbs" id="rcThumbs"></div>
+    </div>
+    <button class="btn btn-g mt16" style="width:100%" onclick="doRecharge()">提交充值申请</button>`;
+  openModal("rcModal");
+  $("#rcFile").onchange = async e => {
+    const f = e.target.files[0]; if (!f) return;
+    toast("上传中…");
+    const url = await uploadImage(f, "recharge");
+    if (url) { $("#rcThumbs").innerHTML = '<div class="up-thumb"><img src="' + url + '"></div>'; window._rcProof = url; }
+  };
+}
+async function doRecharge(){
+  const amount = Number($("#rcAmount").value);
+  if (!amount || amount <= 0) return toast("请填写充值金额", 0);
+  if (!window._rcProof) return toast("请上传转账截图", 0);
+  const { error } = await sb.from("recharges").insert({ user_id: USER.id, amount, proof_url: window._rcProof });
+  if (error) return toast(error.message, 0);
+  closeModal("rcModal");
+  toast("充值申请已提交，等待管理员审批", 1);
+  loadWallet();
+}
+
+/* ============================================================
+   通知
+   ============================================================ */
+async function loadNotifCount(){
+  if (!USER) return;
+  const { count } = await sb.from("notifications").select("id", {count:"exact", head:true}).eq("user_id", USER.id).eq("read", false);
+  const dot = $("#bellDot");
+  if (count > 0) { dot.textContent = count > 99 ? "99+" : count; dot.classList.remove("hidden"); }
+  else dot.classList.add("hidden");
+}
+async function toggleNotif(){
+  const p = $("#notifPanel");
+  if (!p.classList.contains("hidden")) { p.classList.add("hidden"); return; }
+  if (!USER) return openAuth("login");
+  const { data } = await sb.from("notifications").select("*").eq("user_id", USER.id).order("created_at", {ascending:false}).limit(40);
+  $("#notifList").innerHTML = (data||[]).length ? data.map(n => `
+    <div class="notif-item ${n.read?"":"unread"}" onclick="markRead('${n.id}')">
+      <div class="nt">${esc(n.title)}</div>
+      <div class="nb">${esc(n.body)}</div>
+      <div class="nd">${timeAgo(n.created_at)}</div>
+    </div>`).join("") : '<div class="muted small" style="padding:30px;text-align:center">暂无通知</div>';
+  p.classList.remove("hidden");
+}
+async function markRead(id){
+  await sb.from("notifications").update({read:true}).eq("id", id);
+  loadNotifCount();
+}
+async function markAllRead(){
+  await sb.from("notifications").update({read:true}).eq("user_id", USER.id).eq("read", false);
+  loadNotifCount(); toggleNotif();
+}
+
+/* ============================================================
+   管理后台
+   ============================================================ */
+let adCur = "users";
+function adTab(t){ adCur = t; $$(".ad-tab").forEach(x => x.classList.toggle("on", x.dataset.k === t)); loadAdmin(); }
+async function loadAdmin(){
+  if (!USER || !PROFILE || PROFILE.role !== "admin") { $("#adBody").innerHTML = '<div class="card" style="text-align:center;padding:40px">需要管理员权限</div>'; return; }
+  const [u, sp, od, rc, wd, fb] = await Promise.all([
+    sb.from("profiles").select("*").order("created_at", {ascending:false}).limit(200),
+    sb.from("seller_profiles").select("*").order("created_at", {ascending:false}).limit(200),
+    sb.from("orders").select("*").order("created_at", {ascending:false}).limit(200),
+    sb.from("recharges").select("*").order("created_at", {ascending:false}).limit(200),
+    sb.from("withdrawals").select("*").order("created_at", {ascending:false}).limit(200),
+    sb.from("feedbacks").select("*").order("created_at", {ascending:false}).limit(200)
+  ]);
+  window._adUsers = u.data || [];
+  window._adSellers = sp.data || [];
+  window._adFeedbacks = fb.data || [];
+  $("#aUsers").textContent = (u.data||[]).length;
+  $("#aSellers").textContent = (sp.data||[]).filter(x => x.status === "pending").length;
+  $("#aOrders").textContent = (od.data||[]).filter(x => x.status === "submitted").length;
+  $("#aRecharges").textContent = (rc.data||[]).filter(x => x.status === "pending").length;
+  $("#aPayouts").textContent = (wd.data||[]).filter(x => x.status === "pending").length;
+  $("#aFeedbacks").textContent = (fb.data||[]).filter(x => x.status === "new").length;
+  const body = {
+    users: () => adUsers(u.data||[]),
+    sellers: () => adSellers(sp.data||[]),
+    orders: () => adOrders(od.data||[]),
+    recharges: () => adRecharges(rc.data||[]),
+    withdrawals: () => adWithdrawals(wd.data||[]),
+    feedbacks: () => adFeedbacks(fb.data||[]),
+    payset: () => adPaySet()
+  };
+  if (adCur === "payset") { $("#adBody").innerHTML = await adPaySet(); }
+  else if (adCur === "orders") { $("#adBody").innerHTML = await adOrders(od.data||[]); }
+  else { $("#adBody").innerHTML = body[adCur] ? body[adCur]() : ""; }
+}
+
+/* 用户管理 */
+function adUsers(list){
+  if (!list.length) return '<div class="card muted" style="text-align:center;padding:30px">暂无用户</div>';
+  return list.map(p => {
+    const sp = (window._adSellers||[]).find(x => x.id === p.id);
+    return `
+    <div class="ad-row">
+      <div class="avatar">${esc((p.display_name||"?").slice(0,1))}</div>
+      <div class="inf">
+        <div class="nm">${esc(p.display_name||"—")} ${p.role==="admin"?'<span style="color:var(--gold);font-size:11px">ADMIN</span>':""} ${p.role==="seller"?'<span style="color:var(--acc);font-size:11px">接单人</span>':p.role==="buyer"?'<span style="color:var(--ok);font-size:11px">下单人</span>':""}</div>
+        <div class="em">${esc(p.email||"")} · ${esc(p.phone||"—")}${sp ? " · LV" + (sp.level||0) + " · " + (sp.exp||0) + "exp" : ""}</div>
+      </div>
+      <div style="text-align:right"><div style="font-weight:900;color:var(--gold)">RM${fmt(p.balance)}</div><div class="small muted">余额</div></div>
+      <button class="btn btn-o small" onclick="editUser('${p.id}')">编辑</button>
+    </div>`;
+  }).join("");
+}
+function editUser(id){
+  const p = (window._adUsers||[]).find(x => x.id === id);
+  $("#gBody").innerHTML = `
+    <div class="modal-h">✏️ 编辑用户</div>
+    <div class="form-grid">
+      <div class="fg"><label>昵称</label><input id="euName" value="${esc(p.display_name||"")}"></div>
+      <div class="fg"><label>手机</label><input id="euPhone" value="${esc(p.phone||"")}"></div>
+      <div class="fg"><label>角色</label><select id="euRole"><option ${p.role==="buyer"?"selected":""} value="buyer">下单人</option><option ${p.role==="seller"?"selected":""} value="seller">接单人</option><option ${p.role==="admin"?"selected":""} value="admin">管理员</option></select></div>
+      <div class="fg"><label>余额 (RM)</label><input type="number" id="euBal" value="${p.balance}"></div>
+    </div>
+    <button class="btn btn-p mt16" style="width:100%" onclick="saveUser('${id}')">保存修改</button>`;
+  openModal("gModal");
+}
+async function saveUser(id){
+  const { error } = await sb.rpc("admin_set_profile", {
+    p_user_id: id, p_display_name: $("#euName").value.trim() || null,
+    p_phone: $("#euPhone").value.trim() || null, p_role: $("#euRole").value,
+    p_balance: Number($("#euBal").value)
+  });
+  if (error) return toast(error.message, 0);
+  closeModal("gModal"); toast("已保存", 1); loadAdmin();
+}
+
+/* 打手审核 */
+function adSellers(list){
+  const pend = list.filter(x => x.status === "pending");
+  const rest = list.filter(x => x.status !== "pending");
+  const card = s => {
+    const L = lvInfo(s.exp);
+    const p = (window._adUsers||[]).find(x => x.id === s.id);
+    return `
+    <div class="card mb12">
+      <div class="row">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div class="sp-avatar" style="width:46px;height:46px;font-size:18px;flex:none">${s.avatar_url ? '<img src="' + s.avatar_url + '">' : '<span>' + esc((s.nickname||"?").slice(0,1)) + "</span>"}</div>
+          <div class="sp-lv" style="width:38px;height:38px;flex:none"><img src="${L.img}"></div>
+          <div>
+            <div class="bold">${esc(s.nickname)} <span class="small" style="color:var(--acc)">UID ${esc(s.uid)}</span></div>
+            <div class="small muted">${esc((p && p.email) || "")}</div>
+          </div>
+        </div>
+        ${s.status === "pending" ? '<span class="st st-submitted">待审核</span>' : s.status === "approved" ? '<span class="st st-completed">已认证</span>' : '<span class="st st-rejected">已驳回</span>'}
+      </div>
+      <div class="row mt8 small">
+        <span>历史段位 <b>${esc(s.historical_rank||"—")}</b></span>
+        <span>历史巅峰 <b>${s.historical_peak||"—"}</b></span>
+        <span>分路段位 <b>${esc(laneRanksText(s))}</b></span>
+        <span>擅长 <b>${(s.lanes||[]).join(" / ")||"—"}</b></span>
+        <span>经验 <b style="color:var(--gold)">${s.exp} exp · LV${L.lv}</b></span>
+      </div>
+      ${s.bio ? '<p class="small muted mt8">' + esc(s.bio) + "</p>" : ""}
+      ${s.proofs && s.proofs.length ? '<div class="proof-imgs">' + s.proofs.map(p => '<img src="' + p + '" onclick="showImg(\'' + p + '\')">').join("") + "</div>" : ""}
+      ${s.reject_reason ? '<p class="small mt8" style="color:var(--danger)">驳回原因：' + esc(s.reject_reason) + "</p>" : ""}
+      <div class="mt12" style="display:flex;gap:8px;flex-wrap:wrap">
+        ${s.status !== "approved" ? '<button class="btn btn-ok" onclick="doApproveSeller(\'' + s.id + '\')">✅ 通过认证</button>' : ""}
+        ${s.status !== "rejected" ? '<button class="btn btn-danger" onclick="doRejectSeller(\'' + s.id + '\')">✕ 驳回</button>' : ""}
+        <button class="btn btn-o" onclick="editSeller(\'' + s.id + '\')">编辑</button>
+      </div>
+    </div>`;
+  };
+  return (pend.length ? '<h3 class="mb12">待审核 (' + pend.length + ")</h3>" + pend.map(card).join("") : "") +
+    (rest.length ? '<h3 class="mt24 mb12">全部打手 (' + rest.length + ")</h3>" + rest.map(card).join("") : "");
+}
+async function doApproveSeller(id){
+  if (!confirm("确认通过该打手的资料认证？")) return;
+  const { error } = await sb.rpc("approve_seller", { p_user_id: id });
+  if (error) return toast(error.message, 0);
+  toast("已通过认证", 1); loadAdmin();
+}
+function doRejectSeller(id){
+  $("#gBody").innerHTML = `
+    <div class="modal-h">驳回打手资料</div>
+    <div class="fg"><label>驳回原因</label><textarea id="rjReason" placeholder="例如：佐证图片不清晰"></textarea></div>
+    <button class="btn btn-danger mt16" style="width:100%" onclick="saveRejectSeller('${id}')">确认驳回</button>`;
+  openModal("gModal");
+}
+async function saveRejectSeller(id){
+  const { error } = await sb.rpc("reject_seller", { p_user_id: id, p_reason: $("#rjReason").value.trim() || "资料不符" });
+  if (error) return toast(error.message, 0);
+  closeModal("gModal"); toast("已驳回", 1); loadAdmin();
+}
+function editSeller(id){
+  const s = (window._adSellers||[]).find(x => x.id === id);
+  $("#gBody").innerHTML = `
+    <div class="modal-h">✏️ 编辑打手资料</div>
+    <div class="form-grid">
+      <div class="fg"><label>昵称</label><input id="esNick" value="${esc(s.nickname)}"></div>
+      <div class="fg"><label>UID</label><input id="esUid" value="${esc(s.uid)}"></div>
+      <div class="fg"><label>历史段位</label><select id="esRank">${RANKS.map(r => '<option ' + (s.historical_rank===r?"selected":"") + '>' + r + "</option>").join("")}</select></div>
+      <div class="fg"><label>历史巅峰</label><input type="number" id="esPeak" value="${s.historical_peak||""}"></div>
+      <div class="fg"><label>状态</label><select id="esStatus"><option ${s.status==="approved"?"selected":""} value="approved">已认证</option><option ${s.status==="pending"?"selected":""} value="pending">待审核</option><option ${s.status==="rejected"?"selected":""} value="rejected">已驳回</option></select></div>
+      <div class="fg full"><label>擅长分路（逗号分隔）</label><input id="esLanes" value="${esc((s.lanes||[]).join(","))}"></div>
+      <div class="fg full"><label>分路段位（格式：分路:段位，逗号分隔，如 打野:10段, 中路:20段）</label><input id="esLaneRanks" value="${esc(Object.entries(s.lane_ranks||{}).map(([k,v]) => k + ":" + v).join(", "))}"></div>
+    </div>
+    <button class="btn btn-p mt16" style="width:100%" onclick="saveEditSeller('${id}')">保存</button>`;
+  openModal("gModal");
+}
+async function saveEditSeller(id){
+  const lanes = $("#esLanes").value.split(",").map(s => s.trim()).filter(Boolean);
+  const laneRanks = {};
+  $("#esLaneRanks").value.split(",").map(s => s.trim()).filter(Boolean).forEach(pair => {
+    const [k, ...v] = pair.split(":");
+    if (k) laneRanks[k.trim()] = v.join(":").trim();
+  });
+  const { error } = await sb.rpc("admin_update_seller", {
+    p_user_id: id, p_nickname: $("#esNick").value.trim(), p_uid: $("#esUid").value.trim().toUpperCase(),
+    p_historical_rank: $("#esRank").value, p_historical_peak: Number($("#esPeak").value) || null,
+    p_lane_rank: null, p_lanes: lanes,
+    p_lane_ranks: laneRanks,
+    p_bio: null, p_status: $("#esStatus").value
+  });
+  if (error) return toast(error.message, 0);
+  closeModal("gModal"); toast("已保存", 1); loadAdmin();
+}
+
+/* 订单审核 */
+async function adOrders(list){
+  if (!list.length) return '<div class="card muted" style="text-align:center;padding:30px">暂无订单</div>';
+  let html = "";
+  for (const o of list) {
+    const st = ST_MAP[o.status] || [o.status, "st-open"];
+    const tag = o.type === "rank" ? "🏆 段位上分" : "⚡ 巅峰上分";
+    const arr = o.type === "rank" ? esc(o.current_rank) + " → " + esc(o.target_rank) : o.current_peak + " 分 → " + o.target_peak + " 分";
+    let buyer = "", seller = "";
+    try {
+      const b = await sb.from("profiles").select("display_name, email, phone").eq("id", o.buyer_id).maybeSingle();
+      buyer = b.data;
+      if (o.claimed_by) {
+        const s2 = await sb.from("profiles").select("display_name, email, phone").eq("id", o.claimed_by).maybeSingle();
+        seller = s2.data;
+      }
+    } catch(e){}
+    const proofs = await loadProofs(o.id);
+    const actBtns = o.status === "submitted" ? `
+      <button class="btn btn-ok" onclick="doApproveOrder('${o.id}')">✅ 通过 · 完成订单</button>
+      <button class="btn btn-danger" onclick="doRejectOrder('${o.id}')">✕ 驳回</button>` : "";
+    html += `
+    <div class="card mb12">
+      <div class="row">
+        <span class="od-no">${esc(o.order_no)}</span>
+        <span class="od-tag">${tag}</span>
+        <span class="st ${st[1]}">${st[0]}</span>
+      </div>
+      <div class="row mt8">
+        <span class="small">${arr}</span>
+        <span class="od-price"><small>RM</small> ${fmt(o.price)}</span>
+      </div>
+      <div class="row mt8 small muted">
+        <span>下单人：<b style="color:var(--txt)">${esc(buyer?.display_name||"—")}</b> ${esc(buyer?.phone||"")} (${esc(buyer?.email||"—")})</span>
+      </div>
+      ${o.claimed_by ? '<div class="row mt4 small muted"><span>接单人：<b style="color:var(--txt)">' + esc(seller?.display_name||"—") + "</b> " + esc(seller?.phone||"") + " (" + esc(seller?.email||"—") + ")</span></div>" : ""}
+      <div class="row mt8 small"><span>⏱ ${esc(o.duration||"—")}</span>${o.specified_name ? "<span>🎯 指定：" + esc(o.specified_name) + "</span>" : ""}</div>
+      ${proofs ? '<div class="mt8">' + proofs + "</div>" : ""}
+      ${o.reject_reason ? '<p class="small mt8" style="color:var(--danger)">驳回：' + esc(o.reject_reason) + "</p>" : ""}
+      <div class="mt12" style="display:flex;gap:8px;flex-wrap:wrap">${actBtns}</div>
+    </div>`;
+  }
+  return html;
+}
+async function doApproveOrder(id){
+  if (!confirm("确认该订单已完成？将退还接单人押金、发放佣金并计入经验。")) return;
+  const { error } = await sb.rpc("approve_order", { p_order_id: id });
+  if (error) return toast(error.message, 0);
+  toast("订单已通过完成审核", 1); loadAdmin();
+}
+function doRejectOrder(id){
+  $("#gBody").innerHTML = `
+    <div class="modal-h">驳回订单</div>
+    <div class="fg"><label>驳回原因</label><textarea id="roReason" placeholder="例如：完成截图不符"></textarea></div>
+    <p class="small muted mt8">驳回后双方押金将自动退还。</p>
+    <button class="btn btn-danger mt16" style="width:100%" onclick="saveRejectOrder('${id}')">确认驳回</button>`;
+  openModal("gModal");
+}
+async function saveRejectOrder(id){
+  const { error } = await sb.rpc("reject_order", { p_order_id: id, p_reason: $("#roReason").value.trim() || "不符合要求" });
+  if (error) return toast(error.message, 0);
+  closeModal("gModal"); toast("已驳回并退还押金", 1); loadAdmin();
+}
+
+/* 充值审批 */
+function adRecharges(list){
+  const pend = list.filter(x => x.status === "pending");
+  const rest = list.filter(x => x.status !== "pending");
+  const card = r => `
+    <div class="ad-row">
+      <div class="inf">
+        <div class="nm">充值 RM${fmt(r.amount)}</div>
+        <div class="em">${timeAgo(r.created_at)} · ${r.status === "approved" ? "已到账" : r.status === "rejected" ? "已驳回" : "待审核"}</div>
+        ${r.proof_url ? '<div class="proof-imgs" style="margin-top:6px"><img src="' + r.proof_url + '" onclick="showImg(\'' + r.proof_url + '\')"></div>' : ""}
+      </div>
+      ${r.status === "pending" ? `<div style="display:flex;gap:6px">
+        <button class="btn btn-ok" onclick="doApproveRc('${r.id}')">✅ 通过入账</button>
+        <button class="btn btn-danger" onclick="doRejectRc('${r.id}')">✕ 驳回</button>
+      </div>` : ""}
+    </div>`;
+  return (pend.length ? '<h3 class="mb12">待审批 (' + pend.length + ")</h3>" + pend.map(card).join("") : "") +
+    (rest.length ? '<h3 class="mt24 mb12">已处理 (' + rest.length + ")</h3>" + rest.map(card).join("") : "");
+}
+async function doApproveRc(id){
+  if (!confirm("确认该充值到账？")) return;
+  const { error } = await sb.rpc("approve_recharge", { p_recharge_id: id });
+  if (error) return toast(error.message, 0);
+  toast("充值已入账", 1); loadAdmin();
+}
+function doRejectRc(id){
+  $("#gBody").innerHTML = `
+    <div class="modal-h">驳回充值</div>
+    <div class="fg"><label>原因</label><input id="rrReason" placeholder="例如：凭证不符"></div>
+    <button class="btn btn-danger mt16" style="width:100%" onclick="saveRejectRc('${id}')">确认驳回</button>`;
+  openModal("gModal");
+}
+async function saveRejectRc(id){
+  const { error } = await sb.rpc("reject_recharge", { p_recharge_id: id, p_reason: $("#rrReason").value.trim() });
+  if (error) return toast(error.message, 0);
+  closeModal("gModal"); toast("已驳回", 1); loadAdmin();
+}
+
+/* 提现审批 */
+function adWithdrawals(list){
+  const pend = list.filter(x => x.status === "pending");
+  const rest = list.filter(x => x.status !== "pending");
+  const card = w => {
+    const p = (window._adUsers||[]).find(x => x.id === w.user_id) || {};
+    return `
+    <div class="ad-row">
+      <div class="inf">
+        <div class="nm">提现 RM${fmt(w.amount)} · ${esc(p.display_name || "—")}</div>
+        <div class="em">${esc(p.email || "")} · ${esc(p.phone || "")} · ${timeAgo(w.created_at)}</div>
+        ${w.status === "approved" && w.proof_url ? '<div class="proof-imgs" style="margin-top:6px"><img src="' + w.proof_url + '" onclick="showImg(\'' + w.proof_url + '\')"></div><div class="small muted">转账凭证</div>' : ""}
+        ${w.status === "rejected" && w.reject_reason ? '<div class="small" style="color:var(--warn);margin-top:4px">驳回原因：' + esc(w.reject_reason) + "</div>" : ""}
+      </div>
+      ${w.status === "pending" ? `<div style="display:flex;gap:6px;flex-wrap:wrap">
+        <button class="btn btn-p" onclick="openWithdrawReview('${w.id}')">💸 转账并上传截图</button>
+        <button class="btn btn-danger" onclick="doRejectWd('${w.id}')">✕ 驳回</button>
+      </div>` : '<span class="st ' + (w.status === "approved" ? "st-completed" : "st-rejected") + '">' + (w.status === "approved" ? "已转账" : "已驳回") + "</span>"}
+    </div>`;
+  };
+  return (pend.length ? '<h3 class="mb12">待审批提现 (' + pend.length + ")</h3>" + pend.map(card).join("") : "") +
+    (rest.length ? '<h3 class="mt24 mb12">已处理 (' + rest.length + ")</h3>" + rest.map(card).join("") : "");
+}
+function openWithdrawReview(id){
+  $("#gBody").innerHTML = `
+    <div class="modal-h">💸 提现审批 · 转账并上传截图</div>
+    <p class="muted small mb12">线下转账给打手后，上传转账截图。确认后将从打手钱包自动扣减提现金额。</p>
+    <div class="upload-zone" onclick="document.getElementById('poFile').click()">
+      <div class="up-ic">🧾</div>
+      <div class="up-t">上传转账截图</div>
+    </div>
+    <input type="file" id="poFile" accept="image/*" class="hidden">
+    <div class="up-thumbs" id="poThumbs"></div>
+    <button class="btn btn-p mt16" style="width:100%" onclick="doApproveWd('${id}')">确认转账完成</button>`;
+  openModal("gModal");
+  $("#poFile").onchange = async e => {
+    const f = e.target.files[0]; if (!f) return;
+    toast("上传中…");
+    const url = await uploadImage(f, "payout");
+    if (url) { $("#poThumbs").innerHTML = '<div class="up-thumb"><img src="' + url + '"></div>'; window._poProof = url; }
+  };
+}
+async function doApproveWd(id){
+  if (!window._poProof) return toast("请先上传转账截图", 0);
+  const { error } = await sb.rpc("approve_withdraw", { p_withdraw_id: id, p_proof_url: window._poProof });
+  if (error) return toast(error.message, 0);
+  closeModal("gModal"); toast("提现已完成，余额已扣减", 1); loadAdmin();
+}
+function doRejectWd(id){
+  $("#gBody").innerHTML = `
+    <div class="modal-h">驳回提现</div>
+    <div class="fg"><label>原因</label><input id="rrReason" placeholder="例如：信息不符"></div>
+    <button class="btn btn-danger mt16" style="width:100%" onclick="saveRejectWd('${id}')">确认驳回</button>`;
+  openModal("gModal");
+}
+async function saveRejectWd(id){
+  const { error } = await sb.rpc("reject_withdraw", { p_withdraw_id: id, p_reason: $("#rrReason").value.trim() });
+  if (error) return toast(error.message, 0);
+  closeModal("gModal"); toast("已驳回", 1); loadAdmin();
+}
+
+/* 投诉与反馈管理 */
+function adFeedbacks(list){
+  if (!list.length) return '<div class="card muted" style="text-align:center;padding:30px">暂无反馈</div>';
+  const users = window._adUsers || [];
+  return list.map(f => {
+    const u = users.find(x => x.id === f.user_id);
+    const isNew = f.status === "new";
+    return `
+    <div class="card fb-row">
+      <div class="fb-head">
+        <div class="fb-tag">${esc(f.type||"反馈")}</div>
+        <div class="fb-status ${isNew ? "fb-new" : "fb-ok"}">${isNew ? "🕐 待处理" : "✅ 已处理"}</div>
+        <div class="fb-user">👤 ${esc((u&&u.display_name)||"用户")} <span class="muted">${esc((u&&u.email)||"")} · ${fmtTime(f.created_at)}</span></div>
+      </div>
+      <div class="fb-content">${esc(f.content)}</div>
+      ${f.reply ? '<div class="fb-reply">💬 平台回复：' + esc(f.reply) + "</div>" : ""}
+      <div class="fb-acts">
+        <button class="btn btn-o small" onclick="replyFeedback('${f.id}')">${f.reply ? "↩ 修改回复" : "↩ 回复"}</button>
+        ${isNew ? '<button class="btn btn-p small" onclick="resolveFeedback(\'' + f.id + '\')">✓ 标记已处理</button>' : ""}
+      </div>
+    </div>`;
+  }).join("");
+}
+function replyFeedback(id){
+  const f = (window._adFeedbacks||[]).find(x => x.id === id);
+  $("#gBody").innerHTML = `
+    <div class="modal-h">💬 回复反馈</div>
+    <div class="fb-content" style="padding:10px 12px;border:1px solid var(--line);border-radius:10px;margin-bottom:12px">${esc(f.content)}</div>
+    <div class="fg"><label>回复内容</label><textarea id="fbReply" placeholder="向用户回复处理结果或建议">${esc(f.reply||"")}</textarea></div>
+    <div class="fg mt8"><label>状态</label><select id="fbStatus"><option value="new" ${f.status==="new"?"selected":""}>待处理</option><option value="resolved" ${f.status==="resolved"?"selected":""}>已处理</option></select></div>
+    <button class="btn btn-g mt16" style="width:100%" onclick="saveReplyFeedback('${id}')">💾 保存回复</button>`;
+  openModal("gModal");
+}
+async function saveReplyFeedback(id){
+  const reply = $("#fbReply").value.trim();
+  const status = $("#fbStatus").value;
+  const payload = { reply: reply || null };
+  if (status === "resolved") payload.status = "resolved";
+  const { error } = await sb.from("feedbacks").update(payload).eq("id", id);
+  if (error) return toast(error.message, 0);
+  closeModal("gModal"); toast("已保存", 1); loadAdmin();
+}
+async function resolveFeedback(id){
+  const { error } = await sb.from("feedbacks").update({ status: "resolved" }).eq("id", id);
+  if (error) return toast(error.message, 0);
+  toast("已标记处理", 1); loadAdmin();
+}
+
+/* 收款设置 */
+async function adPaySet(){
+  const { data: st } = await sb.from("pay_settings").select("*").eq("id", 1).maybeSingle();
+  const s = st || {};
+  return `
+    <div class="card">
+      <h3>收款设置（充值页展示）</h3>
+      <div class="form-grid">
+        <div class="fg full"><label>收款二维码</label>
+          ${s.qr_url ? '<div class="up-thumbs mb12"><div class="up-thumb" style="width:120px;height:120px"><img src="' + s.qr_url + '"></div></div>' : ""}
+          <div class="upload-zone" onclick="document.getElementById('psFile').click()">
+            <div class="up-ic">🖼️</div>
+            <div class="up-t">${s.qr_url ? "重新上传" : "上传收款码图片"}</div>
+          </div>
+          <input type="file" id="psFile" accept="image/*" class="hidden">
+        </div>
+        <div class="fg"><label>银行名称</label><input id="psBank" value="${esc(s.bank_name||"")}" placeholder="例如 Maybank"></div>
+        <div class="fg"><label>收款人名称</label><input id="psName" value="${esc(s.account_name||"")}" placeholder="收款人姓名"></div>
+        <div class="fg full"><label>收款账号</label><input id="psNo" value="${esc(s.account_no||"")}" placeholder="银行账号"></div>
+      </div>
+      <button class="btn btn-p mt16" onclick="savePaySet()">保存收款设置</button>
+    </div>`;
+}
+async function savePaySet(){
+  let qr = window._psQr;
+  if (!qr) { const { data: st } = await sb.from("pay_settings").select("qr_url").eq("id", 1).maybeSingle(); qr = st?.qr_url || null; }
+  const { error } = await sb.from("pay_settings").upsert({
+    id: 1, qr_url: qr, bank_name: $("#psBank").value.trim() || null,
+    account_name: $("#psName").value.trim() || null, account_no: $("#psNo").value.trim() || null,
+    updated_at: new Date().toISOString()
+  });
+  if (error) return toast(error.message, 0);
+  toast("收款设置已保存", 1); loadAdmin();
+}
+/* 收款码上传绑定（admin payset） */
+setInterval(() => {
+  const el = document.getElementById("psFile");
+  if (el && !el._bound) {
+    el._bound = true;
+    el.onchange = async e => {
+      const f = e.target.files[0]; if (!f) return;
+      toast("上传中…");
+      const url = await uploadImage(f, "payqr");
+      if (url) { window._psQr = url; toast("二维码已就绪，点击保存生效", 1); }
+    };
+  }
+}, 800);
+
+/* ============================================================
+   初始化
+   ============================================================ */
+initRanks();
+loadSession().then(() => { sessionReady = true; authUI(); router(); });
+window.addEventListener("load", () => {
+  router();
+  document.addEventListener("click", e => {
+    if (!e.target.closest(".bell") && !e.target.closest("#notifPanel")) $("#notifPanel").classList.add("hidden");
+  });
+});
+</script>
+</body>
+</html>

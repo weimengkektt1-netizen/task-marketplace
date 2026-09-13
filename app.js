@@ -19,7 +19,7 @@ const SUPABASE_KEY = "sb_publishable_aPZF0KY7OFoDaZ_wIT60tg_2Hc_ctLT";
 // const SHOP_HUB_BASE = "https://shophub.yourdomain.com/index.html";
 // ========================================
 
-const SHOP_HUB_BASE = "file:///C:/Users/Internet%20Cafe/Desktop/ShopHub/index.html";
+const SHOP_HUB_BASE = "https://task-hub.co/shophub/index.html";
 
 
 // 组装跳转 ShopHub 指定商品页的链接（携带任务/领取信息）
