@@ -278,6 +278,32 @@ img{display:block}
 .modal-close{position:absolute;top:14px;right:14px;width:30px;height:30px;border-radius:9px;background:var(--card2);font-size:14px;color:var(--mut)}
 .modal-h{font-size:18px;font-weight:800;margin-bottom:16px;display:flex;align-items:center;gap:8px}
 
+/* ---------- 打手详情 / 评价 ---------- */
+.sd-hero{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.sd-ava{width:72px;height:72px;border-radius:20px;overflow:hidden;flex:none;background:linear-gradient(135deg,rgba(124,92,255,.35),rgba(79,124,255,.25));display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:800;border:1px solid rgba(124,92,255,.5)}
+.sd-ava img{width:100%;height:100%;object-fit:cover}
+.sd-id{flex:1;min-width:150px}
+.sd-name{font-size:20px;font-weight:800}
+.sd-uid{font-size:12px;color:var(--mut);margin-top:3px}
+.sd-lv{margin-top:8px;width:56px;height:56px}
+.sd-lv img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 0 12px rgba(255,201,77,.45))}
+.sd-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:12px}
+.sd-stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 8px;text-align:center}
+.sd-stat .n{font-size:19px;font-weight:800;background:linear-gradient(135deg,#ffd66b,#ff9f43);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.sd-stat .t{font-size:11px;color:var(--mut);margin-top:3px}
+.sd-meta{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:8px}
+.sd-m{background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.sd-m span{display:block;font-size:11px;color:var(--mut)}
+.sd-m b{font-size:13.5px}
+.rv-item{border:1px solid var(--line);background:rgba(255,255,255,.03);border-radius:12px;padding:11px 13px;margin-top:8px}
+.rv-head{display:flex;align-items:center;gap:10px;font-size:13px}
+.rv-star{font-weight:800;color:var(--gold)}
+.rv-by{font-size:12px;color:#9db8ff}
+.rv-c{font-size:12.5px;margin-top:7px;color:var(--txt);line-height:1.6}
+.rv-pick{display:flex;gap:10px}
+.rv-opt{flex:1;padding:14px;text-align:center;border-radius:13px;cursor:pointer;font-size:14.5px;font-weight:700;border:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--mut);transition:.15s}
+.rv-opt.on{color:#fff;border-color:rgba(124,92,255,.55);background:linear-gradient(135deg,rgba(124,92,255,.35),rgba(79,124,255,.25))}
+
 /* ---------- 上传 ---------- */
 .upload-zone{border:2px dashed rgba(255,255,255,.18);border-radius:14px;padding:20px;text-align:center;cursor:pointer;transition:.15s;background:rgba(255,255,255,.03)}
 .upload-zone:hover{border-color:var(--acc);background:rgba(124,92,255,.07)}
@@ -844,6 +870,15 @@ select option{background:#12152e;color:var(--txt)}
     <div class="grid g4" id="sellersList"></div>
   </section>
 
+  <!-- ============ 打手详情 ============ -->
+  <section class="view" id="view-sellerDetail">
+    <div class="page-h">
+      <div><h2>打手详情</h2><div class="sub">认证资料 · 战绩 · 口碑评价</div></div>
+      <button class="btn btn-o" onclick="go('#sellers')">← 返回</button>
+    </div>
+    <div id="sellerDetailBody"><div class="card muted" style="text-align:center;padding:40px">加载中…</div></div>
+  </section>
+
   <!-- ============ 接单大厅 ============ -->
   <section class="view" id="view-hall">
     <div class="page-h">
@@ -1056,7 +1091,8 @@ select option{background:#12152e;color:var(--txt)}
       <div class="ad-q ad-tab" data-k="recharges" onclick="adTab('recharges')"><div class="q-ic">💳</div><b>充值审批</b><span>转账核对 · 余额入账</span></div>
       <div class="ad-q ad-tab" data-k="withdrawals" onclick="adTab('withdrawals')"><div class="q-ic">🏧</div><b>提现审批</b><span>转账凭证 · 扣减余额</span></div>
       <div class="ad-q ad-tab" data-k="feedbacks" onclick="adTab('feedbacks')"><div class="q-ic">💬</div><b>投诉与反馈</b><span id="aFeedbacks">0</span></div>
-      <div class="ad-q ad-tab" data-k="payset" onclick="adTab('payset')"><div class="q-ic">⚙️</div><b>收款设置</b><span>收款码 · 银行账户</span></div>
+      <div class="ad-q ad-tab" data-k="payset" onclick="adTab('payset')"><div class="q-ic">⚙️</div><b>收款设置</b><span>收款码 · 银行账户 · WA 号码</span></div>
+      <div class="ad-q ad-tab" data-k="wa" onclick="adTab('wa')"><div class="q-ic">📲</div><b>WhatsApp 同步</b><span id="aWa">0</span></div>
     </div>
     <div id="adBody"></div>
   </section>
@@ -1205,7 +1241,7 @@ function go(h){ location.hash = h; }
 function isRankType(t){ return t === "rank"; }
 
 /* 路由 */
-const VIEWS = ["home","sellers","board","hall","create","orders","goods","mycenter","wallet","announce","feedback","about","admin"];
+const VIEWS = ["home","sellers","sellerDetail","board","hall","create","orders","goods","mycenter","wallet","announce","feedback","about","admin"];
 let sessionReady = false;
 async function router(){
   if (!sessionReady && !USER) return;
@@ -1221,6 +1257,7 @@ async function router(){
   if (!$("#morePanel").classList.contains("hidden")) toggleMore(false);
   if (v === "home") loadHome();
   if (v === "sellers") loadSellers();
+  if (v === "sellerDetail") loadSellerDetail();
   if (v === "board") loadBoard(boardTab);
   if (v === "hall") loadHall();
   if (v === "orders") loadOrders();
@@ -1359,7 +1396,7 @@ async function loadSellers(){
   $("#sellersList").innerHTML = list.length ? list.map(s => {
     const L = lvInfo(s.exp);
     return `
-    <div class="sp-card">
+    <div class="sp-card" onclick="openSellerDetail('${esc(s.uid)}')" style="cursor:pointer" title="点击查看打手详情">
       <div class="sp-top">
         <div class="sp-avatar">${s.avatar_url ? '<img src="' + s.avatar_url + '" alt="头像">' : '<span>' + esc((s.nickname||"?").slice(0,1)) + "</span>"}</div>
         <div class="sp-id">
@@ -1376,9 +1413,114 @@ async function loadSellers(){
       </div>
       ${s.lanes && s.lanes.length ? '<div class="sp-lanes">' + s.lanes.map(l => '<span class="lane">' + esc(l) + "</span>").join("") + "</div>" : ""}
       ${s.bio ? '<p class="small muted mt8" style="text-align:left">' + esc(s.bio) + "</p>" : ""}
-      <button class="btn btn-p mt12" style="width:100%" onclick="goSpecified('${esc(s.uid)}')">🎯 指定 TA 下单</button>
+      <div class="sp-acts" style="display:flex;gap:8px;margin-top:12px">
+        <button class="btn btn-o" style="flex:1" onclick="event.stopPropagation();openSellerDetail('${esc(s.uid)}')">👤 查看详情</button>
+        <button class="btn btn-p" style="flex:1" onclick="event.stopPropagation();goSpecified('${esc(s.uid)}')">🎯 指定 TA 下单</button>
+      </div>
     </div>`;
   }).join("") : '<div class="card muted" style="text-align:center;padding:40px">暂无已认证打手</div>';
+}
+
+/* ============================================================
+   打手详情 / 评价 / WhatsApp 审核同步日志
+   ============================================================ */
+function openSellerDetail(uid){
+  window._sellerUid = uid;
+  go("#sellerDetail");
+}
+async function loadSellerDetail(){
+  const uid = window._sellerUid;
+  const body = $("#sellerDetailBody");
+  if (!uid) { go("#sellers"); return; }
+  const { data: s } = await sb.from("seller_profiles").select("*").eq("uid", uid).eq("status","approved").maybeSingle();
+  if (!s) { body.innerHTML = '<div class="card muted" style="text-align:center;padding:40px">未找到该打手</div>'; return; }
+  const L = lvInfo(s.exp);
+  const [rv, ct] = await Promise.all([
+    sb.from("reviews").select("*").eq("seller_id", s.id).order("created_at", {ascending:false}).limit(50),
+    sb.from("orders").select("id", {count:"exact", head:true}).eq("claimed_by", s.id).eq("status","completed")
+  ]);
+  const rvs = rv.data || [];
+  const done = ct.count || 0;
+  const good = rvs.filter(x => x.rating === 1).length;
+  const rate = rvs.length ? Math.round(good / rvs.length * 100) : null;
+  let names = {};
+  if (rvs.length) {
+    const ids = [...new Set(rvs.map(x => x.buyer_id))];
+    const { data: ps } = await sb.from("profiles").select("id, display_name").in("id", ids);
+    (ps||[]).forEach(p => names[p.id] = p.display_name);
+  }
+  const rvHtml = rvs.length ? rvs.map(r => `
+    <div class="rv-item">
+      <div class="rv-head">
+        <span class="rv-star">${r.rating === 1 ? "😍 好评" : "😞 差评"}</span>
+        <span class="rv-by">${esc(names[r.buyer_id] || "下单人")}</span>
+        <span class="muted" style="margin-left:auto;font-size:11px">${fmtTime(r.created_at)}</span>
+      </div>
+      ${r.comment ? '<div class="rv-c">' + esc(r.comment) + "</div>" : ""}
+    </div>`).join("") : '<div class="muted small" style="text-align:center;padding:20px">暂无评价</div>';
+  body.innerHTML = `
+    <div class="card sd-hero">
+      <div class="sd-ava">${s.avatar_url ? '<img src="' + s.avatar_url + '" alt="头像">' : '<span>' + esc((s.nickname||"?").slice(0,1)) + "</span>"}</div>
+      <div class="sd-id">
+        <div class="sd-name">${esc(s.nickname)}</div>
+        <div class="sd-uid">UID ${esc(s.uid)} · 平台认证打手</div>
+        <div class="sd-lv"><img src="${L.img}" alt="LV${L.lv}"></div>
+      </div>
+      <button class="btn btn-p" onclick="goSpecified('${esc(s.uid)}')">🎯 指定 TA 下单</button>
+    </div>
+    <div class="sd-stats">
+      <div class="sd-stat"><div class="n">${done}</div><div class="t">完成订单</div></div>
+      <div class="sd-stat"><div class="n">${rate === null ? "—" : rate + "%"}</div><div class="t">好评率</div></div>
+      <div class="sd-stat"><div class="n">${rvs.length}</div><div class="t">收到评价</div></div>
+      <div class="sd-stat"><div class="n" style="color:var(--gold)">LV${L.lv}</div><div class="t">${L.name}</div></div>
+    </div>
+    <div class="card mt12">
+      <h3>📋 认证资料</h3>
+      <div class="sd-meta">
+        <div class="sd-m"><span>历史段位</span><b>${esc(s.historical_rank||"—")}</b></div>
+        <div class="sd-m"><span>历史巅峰</span><b>${s.historical_peak ? s.historical_peak + " 分" : "—"}</b></div>
+        <div class="sd-m"><span>分路段位</span><b>${esc(laneRanksText(s))}</b></div>
+        <div class="sd-m"><span>擅长分路</span><b>${s.lanes && s.lanes.length ? s.lanes.join(" / ") : "—"}</b></div>
+        <div class="sd-m"><span>经验值</span><b>${s.exp} exp</b></div>
+      </div>
+      ${s.bio ? '<p class="small mt8">' + esc(s.bio) + "</p>" : ""}
+      ${s.proofs && s.proofs.length ? '<div class="proof-imgs mt8">' + s.proofs.map(u => '<img src="' + u + '" onclick="showImg(\'' + u + '\')">').join("") + "</div>" : ""}
+    </div>
+    <div class="card mt12">
+      <h3>⭐ 下单人评价 (${rvs.length})</h3>
+      ${rvHtml}
+    </div>`;
+}
+async function openReview(orderId){
+  if (!USER) return openAuth("login");
+  window._rvRating = 1;
+  $("#gBody").innerHTML = `
+    <div class="modal-h">⭐ 评价打手</div>
+    <p class="muted small mb12">订单已完成，请对本次服务做出评价，帮助其他下单人参考。</p>
+    <div class="rv-pick">
+      <div class="rv-opt on" id="rvGood" onclick="pickReview(1)">😍 好评</div>
+      <div class="rv-opt" id="rvBad" onclick="pickReview(0)">😞 差评</div>
+    </div>
+    <div class="fg mt12"><label>留言（选填）</label><textarea id="rvComment" placeholder="分享您的体验，例如：打手效率高、沟通顺畅…"></textarea></div>
+    <button class="btn btn-g mt16" style="width:100%" onclick="submitReview('${orderId}')">提交评价</button>`;
+  openModal("gModal");
+}
+function pickReview(r){
+  window._rvRating = r;
+  $("#rvGood").classList.toggle("on", r === 1);
+  $("#rvBad").classList.toggle("on", r === 0);
+}
+async function submitReview(orderId){
+  const comment = $("#rvComment").value.trim();
+  const { error } = await sb.rpc("submit_review", { p_order_id: orderId, p_rating: window._rvRating, p_comment: comment });
+  if (error) return toast(error.message, 0);
+  closeModal("gModal");
+  toast("感谢您的评价！", 1);
+  loadOrders();
+}
+/* 审核事件同步到管理员 WhatsApp（记录队列，供管理员一键发送） */
+async function logWaEvent(type, summary){
+  try { await sb.rpc("log_wa_event", { p_type: type, p_summary: summary }); } catch(e){}
 }
 
 /* ============================================================
@@ -1556,6 +1698,14 @@ async function ordCard(o){
     btns = '<button class="btn btn-ok" onclick="openSubmit(\'' + o.id + '\')">提交完成</button>';
   }
   if (o.status === "submitted" && o.claimed_by === USER.id) btns = '<span class="small muted">等待平台审核…</span>';
+  if (o.status === "completed" && o.buyer_id === USER.id) {
+    btns = reviewed ? '<span class="small muted">已评价 ✅</span>' : '<button class="btn btn-o" onclick="openReview(\'' + o.id + '\')">⭐ 评价打手</button>';
+  }
+  let reviewed = false;
+  if (o.status === "completed" && o.buyer_id === USER.id) {
+    const rv = await sb.from("reviews").select("id").eq("order_id", o.id).maybeSingle();
+    reviewed = !!rv.data;
+  }
   const proofs = o.status === "submitted" || o.status === "completed" ? await loadProofs(o.id) : "";
   return `
   <div class="od mt12">
@@ -1606,6 +1756,8 @@ async function doSubmitProof(orderId){
   if (error) return toast(error.message, 0);
   closeModal("gModal");
   toast("已提交，等待管理员审核", 1);
+  const { data: odx } = await sb.from("orders").select("order_no").eq("id", orderId).maybeSingle();
+  logWaEvent("订单审核", "订单 " + (odx?.order_no || orderId.slice(0,8)) + " 提交完成证明，等待平台审核。");
   loadOrders(); loadNotifCount();
 }
 
@@ -1921,6 +2073,7 @@ async function submitFeedback(){
   const { error } = await sb.from("feedbacks").insert({ user_id: USER.id, type, content });
   if (error) return toast(error.message, 0);
   toast("反馈已提交，感谢您的支持", 1);
+  logWaEvent("投诉反馈", (PROFILE?.display_name || USER.email) + " 提交反馈（" + type + "）：" + content.slice(0, 40));
   loadFeedback();
 }
 
@@ -2061,6 +2214,7 @@ async function saveSeller(){
   const { error } = await sb.from("seller_profiles").upsert(payload, { onConflict: "id" });
   if (error) return toast("提交失败：" + error.message, 0);
   toast("资料已提交，等待管理员审核", 1);
+  logWaEvent("打手审核", "打手「" + nickname + "」提交认证资料，等待管理员审核。");
   loadMyCenter();
 }
 /* 分路段位展示文本 */
@@ -2148,6 +2302,7 @@ async function doWithdraw(){
   if (error) return toast(error.message, "warn");
   closeModal("wdModal");
   toast("提现申请已提交，等待管理员审批");
+  logWaEvent("提现审核", (PROFILE?.display_name || USER.email) + " 申请提现 RM" + fmt(amt) + "，等待管理员转账。");
   loadWallet();
 }
 
@@ -2194,6 +2349,7 @@ async function doRecharge(){
   if (error) return toast(error.message, 0);
   closeModal("rcModal");
   toast("充值申请已提交，等待管理员审批", 1);
+  logWaEvent("充值审核", (PROFILE?.display_name || USER.email) + " 申请充值 RM" + fmt(amount) + "，等待管理员核对入账。");
   loadWallet();
 }
 
@@ -2236,13 +2392,14 @@ let adCur = "users";
 function adTab(t){ adCur = t; $$(".ad-tab").forEach(x => x.classList.toggle("on", x.dataset.k === t)); loadAdmin(); }
 async function loadAdmin(){
   if (!USER || !PROFILE || PROFILE.role !== "admin") { $("#adBody").innerHTML = '<div class="card" style="text-align:center;padding:40px">需要管理员权限</div>'; return; }
-  const [u, sp, od, rc, wd, fb] = await Promise.all([
+  const [u, sp, od, rc, wd, fb, wl] = await Promise.all([
     sb.from("profiles").select("*").order("created_at", {ascending:false}).limit(200),
     sb.from("seller_profiles").select("*").order("created_at", {ascending:false}).limit(200),
     sb.from("orders").select("*").order("created_at", {ascending:false}).limit(200),
     sb.from("recharges").select("*").order("created_at", {ascending:false}).limit(200),
     sb.from("withdrawals").select("*").order("created_at", {ascending:false}).limit(200),
-    sb.from("feedbacks").select("*").order("created_at", {ascending:false}).limit(200)
+    sb.from("feedbacks").select("*").order("created_at", {ascending:false}).limit(200),
+    sb.from("admin_wa_log").select("*").order("created_at", {ascending:false}).limit(100)
   ]);
   window._adUsers = u.data || [];
   window._adSellers = sp.data || [];
@@ -2253,6 +2410,7 @@ async function loadAdmin(){
   $("#aRecharges").textContent = (rc.data||[]).filter(x => x.status === "pending").length;
   $("#aPayouts").textContent = (wd.data||[]).filter(x => x.status === "pending").length;
   $("#aFeedbacks").textContent = (fb.data||[]).filter(x => x.status === "new").length;
+  $("#aWa").textContent = (wl.data||[]).filter(x => x.status === "pending").length;
   const body = {
     users: () => adUsers(u.data||[]),
     sellers: () => adSellers(sp.data||[]),
@@ -2260,11 +2418,56 @@ async function loadAdmin(){
     recharges: () => adRecharges(rc.data||[]),
     withdrawals: () => adWithdrawals(wd.data||[]),
     feedbacks: () => adFeedbacks(fb.data||[]),
-    payset: () => adPaySet()
+    payset: () => adPaySet(),
+    wa: () => adWa(wl.data||[])
   };
   if (adCur === "payset") { $("#adBody").innerHTML = await adPaySet(); }
   else if (adCur === "orders") { $("#adBody").innerHTML = await adOrders(od.data||[]); }
   else { $("#adBody").innerHTML = body[adCur] ? body[adCur]() : ""; }
+}
+
+/* WhatsApp 审核同步队列 */
+function adWa(list){
+  if (!list.length) return '<div class="card muted" style="text-align:center;padding:30px">暂无待同步事件</div>';
+  const pend = list.filter(x => x.status === "pending");
+  const rest = list.filter(x => x.status !== "pending");
+  const card = w => `
+    <div class="ad-row">
+      <div class="inf">
+        <div class="nm">${esc(w.event_type || "事件")}</div>
+        <div class="em">${esc(w.summary)}</div>
+        <div class="small muted" style="margin-top:4px">${timeAgo(w.created_at)} · ${w.status === "sent" ? "已同步" : "待同步"}</div>
+      </div>
+      ${w.status === "pending" ? `<div style="display:flex;gap:6px;flex-wrap:wrap">
+        <button class="btn btn-p" onclick="waSend('${w.id}')">📲 通过 WhatsApp 发送</button>
+        <button class="btn btn-o" onclick="waCopy('${w.id}')">📋 复制</button>
+        <button class="btn btn-o" onclick="markWaSent('${w.id}')">✓ 标记已处理</button>
+      </div>` : ""}
+    </div>`;
+  return (pend.length ? '<h3 class="mb12">待同步 (' + pend.length + ")</h3>" + pend.map(card).join("") : "") +
+    (rest.length ? '<h3 class="mt24 mb12">已处理 (' + rest.length + ")</h3>" + rest.map(card).join("") : "");
+}
+async function waSend(id){
+  const { data: st } = await sb.from("pay_settings").select("wa_admin_number").eq("id", 1).maybeSingle();
+  const num = ((st && st.wa_admin_number) || "").replace(/[^0-9]/g, "");
+  const item = (window._adWa||[]).find(x => x.id === id);
+  if (!item) return;
+  const text = "【WZRY 审核通知】" + (item.event_type || "") + "：" + (item.summary || "");
+  if (!num) { toast("请先在「收款设置」填写管理员 WhatsApp 号码", 0); return; }
+  window.open("https://wa.me/" + num + "?text=" + encodeURIComponent(text), "_blank");
+  markWaSent(id);
+}
+async function waCopy(id){
+  const item = (window._adWa||[]).find(x => x.id === id);
+  if (!item) return;
+  try {
+    await navigator.clipboard.writeText("【WZRY 审核通知】" + (item.event_type||"") + "：" + (item.summary||""));
+    toast("已复制，可粘贴到 WhatsApp 发送", 1);
+  } catch(e){ toast("复制失败，请手动复制", 0); }
+}
+async function markWaSent(id){
+  await sb.rpc("mark_wa_sent", { p_id: id });
+  loadAdmin();
 }
 
 /* 用户管理 */
@@ -2629,6 +2832,7 @@ async function adPaySet(){
         <div class="fg"><label>银行名称</label><input id="psBank" value="${esc(s.bank_name||"")}" placeholder="例如 Maybank"></div>
         <div class="fg"><label>收款人名称</label><input id="psName" value="${esc(s.account_name||"")}" placeholder="收款人姓名"></div>
         <div class="fg full"><label>收款账号</label><input id="psNo" value="${esc(s.account_no||"")}" placeholder="银行账号"></div>
+        <div class="fg full"><label>管理员 WhatsApp 号码（审核通知同步目标）</label><input id="psWa" value="${esc(s.wa_admin_number||"")}" placeholder="例如 60123456789（国家代码+号码，不含+）"></div>
       </div>
       <button class="btn btn-p mt16" onclick="savePaySet()">保存收款设置</button>
     </div>`;
@@ -2638,7 +2842,7 @@ async function savePaySet(){
   if (!qr) { const { data: st } = await sb.from("pay_settings").select("qr_url").eq("id", 1).maybeSingle(); qr = st?.qr_url || null; }
   const { error } = await sb.from("pay_settings").upsert({
     id: 1, qr_url: qr, bank_name: $("#psBank").value.trim() || null,
-    account_name: $("#psName").value.trim() || null, account_no: $("#psNo").value.trim() || null,
+    account_name: $("#psName").value.trim() || null, account_no: $("#psNo").value.trim() || null, wa_admin_number: $("#psWa").value.trim() || null,
     updated_at: new Date().toISOString()
   });
   if (error) return toast(error.message, 0);
