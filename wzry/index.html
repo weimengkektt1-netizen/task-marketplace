@@ -331,11 +331,24 @@ img{display:block}
   .form-grid{grid-template-columns:1fr}
   .hero h1{font-size:26px}
   .hero{padding:30px 20px}
-  .nav{position:fixed;top:0;right:0;height:100vh;width:280px;max-width:86vw;margin:0;flex-direction:column;gap:2px;padding:74px 14px 24px;background:rgba(10,12,26,.98);border-left:1px solid var(--line);box-shadow:-12px 0 44px rgba(0,0,0,.55);transform:translateX(106%);transition:transform .3s ease;z-index:200;overflow-y:auto;flex-wrap:nowrap;align-content:flex-start}
-  .nav.open{transform:translateX(0)}
-  .nav a{padding:12px 14px;font-size:14px;flex:none;width:100%;border-radius:11px;display:flex;align-items:center;gap:8px}
-  .burger{display:flex}
+  /* 右侧泡泡导航（手机） */
+  .burger{display:none}
+  .nav-mask{display:none}
+  .nav{position:fixed;right:8px;top:50%;transform:translateY(-50%);width:auto;height:auto;max-height:92vh;margin:0;flex-direction:column;gap:5px;padding:9px 6px;background:rgba(12,14,30,.5);border:1px solid rgba(255,255,255,.1);border-radius:20px;box-shadow:0 10px 34px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.08);backdrop-filter:blur(16px) saturate(150%);-webkit-backdrop-filter:blur(16px) saturate(150%);z-index:120;overflow-y:auto;flex-wrap:nowrap;align-content:flex-start;scrollbar-width:none}
+  .nav::-webkit-scrollbar{display:none}
+  .nav a{padding:0;width:44px;height:44px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;font-size:0;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);box-shadow:inset 0 1px 0 rgba(255,255,255,.1);transition:transform .18s,box-shadow .18s;position:relative;flex:none}
+  .nav a::before{content:attr(data-ic);font-size:19px;line-height:1;display:block}
+  .nav a::after{content:attr(data-lb);font-size:8.5px;line-height:1;margin-top:3px;color:var(--mut);font-weight:700;display:block}
+  .nav a:hover{transform:scale(1.1)}
+  .nav a:active{transform:scale(.94)}
+  .nav a.on{background:linear-gradient(135deg,rgba(124,92,255,.55),rgba(79,124,255,.38));border-color:rgba(124,92,255,.75);box-shadow:0 0 20px rgba(124,92,255,.55),inset 0 1px 0 rgba(255,255,255,.18)}
+  .nav a.on::after{color:#fff}
+  .nav a.on::before{filter:drop-shadow(0 0 6px rgba(255,255,255,.5))}
   .top-right{gap:8px}
+  .wrap{padding-right:76px}
+  .foot-in{padding-right:60px}
+  .wa-btn{right:auto;left:16px;bottom:22px}
+  .notif-panel{right:72px;width:calc(100vw - 96px);max-width:340px}
 }
 /* ---------- 排行榜（富丽堂皇） ---------- */
 .board-hero{position:relative;text-align:center;padding:34px 20px 26px;border-radius:20px;overflow:hidden;background:
@@ -627,6 +640,8 @@ select option{background:#12152e;color:var(--txt)}
 }
 @media(max-width:900px){
   .nav a{font-size:14.5px}
+  .nav a.on{background:linear-gradient(135deg,rgba(255,201,77,.32),rgba(255,176,32,.18));border-color:rgba(255,201,77,.7);box-shadow:0 0 20px rgba(255,190,60,.55),inset 0 1px 0 rgba(255,255,255,.22)}
+  .nav a.on::before{filter:drop-shadow(0 0 8px rgba(255,220,120,.9))}
 }
 </style>
 </head>
@@ -645,19 +660,19 @@ select option{background:#12152e;color:var(--txt)}
       <div class="logo-txt">王者荣耀代打<small>WZRY · BOOST</small></div>
     </div>
     <nav class="nav" id="mainNav">
-      <a href="#home" data-v="home" class="on">🏠 首页</a>
-      <a href="#sellers" data-v="sellers">👑 打手大厅</a>
-      <a href="#board" data-v="board">🏆 排行榜</a>
-      <a href="#hall" data-v="hall">📋 接单大厅</a>
-      <a href="#create" data-v="create">📝 发布订单</a>
-      <a href="#orders" data-v="orders">🗂️ 我的订单</a>
-      <a href="#goods" data-v="goods">🛍️ 代充代送</a>
-      <a href="#mycenter" data-v="mycenter">🧑‍🚀 打手中心</a>
-      <a href="#wallet" data-v="wallet">💰 我的钱包</a>
-      <a href="#announce" data-v="announce">📢 公告</a>
-      <a href="#feedback" data-v="feedback">💬 反馈</a>
-      <a href="#about" data-v="about">ℹ️ 关于</a>
-      <a href="#admin" data-v="admin" class="hidden" id="adminNav">⚙️ 管理后台</a>
+      <a href="#home" data-v="home" class="on" data-ic="🏠" data-lb="首页">🏠 首页</a>
+      <a href="#sellers" data-v="sellers" data-ic="👑" data-lb="打手">👑 打手大厅</a>
+      <a href="#board" data-v="board" data-ic="🏆" data-lb="排行">🏆 排行榜</a>
+      <a href="#hall" data-v="hall" data-ic="📋" data-lb="接单">📋 接单大厅</a>
+      <a href="#create" data-v="create" data-ic="📝" data-lb="下单">📝 发布订单</a>
+      <a href="#orders" data-v="orders" data-ic="🗂️" data-lb="订单">🗂️ 我的订单</a>
+      <a href="#goods" data-v="goods" data-ic="🛍️" data-lb="商城">🛍️ 代充代送</a>
+      <a href="#mycenter" data-v="mycenter" data-ic="🧑‍🚀" data-lb="中心">🧑‍🚀 打手中心</a>
+      <a href="#wallet" data-v="wallet" data-ic="💰" data-lb="钱包">💰 我的钱包</a>
+      <a href="#announce" data-v="announce" data-ic="📢" data-lb="公告">📢 公告</a>
+      <a href="#feedback" data-v="feedback" data-ic="💬" data-lb="反馈">💬 反馈</a>
+      <a href="#about" data-v="about" data-ic="ℹ️" data-lb="关于">ℹ️ 关于</a>
+      <a href="#admin" data-v="admin" class="hidden" id="adminNav" data-ic="⚙️" data-lb="后台">⚙️ 管理后台</a>
     </nav>
     <div class="burger" onclick="toggleNav()" aria-label="菜单">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h16"/></svg>
