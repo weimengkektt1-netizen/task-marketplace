@@ -5456,6 +5456,14 @@ body.dashboard-body .sidebar {
         z-index: 410;
     }
 
+    /* 手机端：联系客服按钮上移，避免与底部 Tab 栏重叠（仅 ≤900px 生效） */
+    .wa-float {
+        right: 14px;
+        bottom: 96px;
+        z-index: 430;
+    }
+
+
     /* Dashboard：手机端隐藏左侧滑出侧栏与汉堡，用底部 Tab 栏替代 */
     body.dashboard-body .sidebar,
     body.dashboard-body .sidebar-edge-zone,
