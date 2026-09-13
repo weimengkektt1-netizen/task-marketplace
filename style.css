@@ -4299,52 +4299,90 @@ body.dashboard-body .sidebar {
 }
 
 
-/* ================= Dashboard 侧边栏滑出式（edge slider，新增区块，删除本区块即可回滚） ================= */
+/* ================= Dashboard 左侧气泡式导航（常驻，新增区块，删除本区块即可回滚） ================= */
 
-/* 触发热区：固定在左边缘的细指示条 */
-.sidebar-edge-zone {
-    position: fixed;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 16px;
-    z-index: 95;
-    pointer-events: auto;
-    background: linear-gradient(90deg, rgba(109, 93, 252, 0.30), rgba(109, 93, 252, 0.08) 60%, transparent);
-    opacity: 0.85;
-    transition: opacity 0.3s ease;
-    cursor: default;
-}
-.sidebar-edge-zone:hover {
-    opacity: 1;
-    background: linear-gradient(90deg, rgba(109, 93, 252, 0.55), rgba(109, 93, 252, 0.15) 65%, transparent);
-}
-
-/* 桌面端：侧边栏默认藏起，hover 热区或侧边栏时滑出（overlay 式，内容全宽） */
-@media (min-width: 601px) {
+/* 桌面端：侧边栏常驻，导航项为玻璃气泡胶囊 */
+@media (min-width: 901px) {
+    /* 侧边栏：玻璃气泡面板 */
     body.dashboard-body .sidebar {
-        transform: translateX(-100%);
-        transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
-        z-index: 210;
-        box-shadow: 30px 0 60px rgba(0, 0, 0, 0.35);
+        width: 240px;
+        padding: 22px 16px;
+        background: rgba(13, 16, 23, 0.55);
+        backdrop-filter: blur(26px) saturate(1.5);
+        -webkit-backdrop-filter: blur(26px) saturate(1.5);
+        border-right: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 8px 0 40px rgba(0, 0, 0, 0.35), inset -1px 0 0 rgba(255, 255, 255, 0.04);
     }
     body.dashboard-body .dashboard-main {
-        margin-left: 0;
+        margin-left: 240px;
     }
-    body.dashboard-body .sidebar-edge-zone:hover + .sidebar,
-    body.dashboard-body .sidebar:hover,
-    body.dashboard-body .sidebar:focus-within {
-        transform: translateX(0);
+    /* 导航项：气泡胶囊 */
+    body.dashboard-body .side-nav a,
+    body.dashboard-body .sidebar-bottom .logout-btn {
+        position: relative;
+        padding: 10px 15px;
+        margin-bottom: 6px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.10);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.10), 0 4px 14px rgba(0, 0, 0, 0.25);
+        transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+        color: #aab4c8;
     }
-    /* 侧边栏展开时热区保持透明，避免双条视觉 */
-    body.dashboard-body .sidebar-edge-zone:hover,
-    body.dashboard-body .sidebar:hover ~ .sidebar-edge-zone {
-        opacity: 0.35;
+    /* 图标泡泡底 */
+    body.dashboard-body .side-nav a span:first-child {
+        width: 30px;
+        height: 30px;
+        flex: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: rgba(109, 93, 252, 0.18);
+        border: 1px solid rgba(109, 93, 252, 0.35);
+        font-size: 14px;
+        color: #cfd6ff;
     }
-}
-
-/* 移动端：保留汉堡抽屉逻辑（600px 以内原有规则优先，这里仅兜底） */
-@media (max-width: 600px) {
+    /* hover：右移上浮 + 紫色光晕 */
+    body.dashboard-body .side-nav a:hover {
+        transform: translateX(4px) translateY(-1px);
+        background: rgba(109, 93, 252, 0.16);
+        border-color: rgba(109, 93, 252, 0.45);
+        box-shadow: 0 8px 22px rgba(109, 93, 252, 0.30), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+        color: #fff;
+    }
+    /* 当前页：紫色渐变发光气泡 */
+    body.dashboard-body .side-nav a.active {
+        background: linear-gradient(135deg, rgba(109, 93, 252, 0.85), rgba(76, 141, 255, 0.75));
+        border-color: rgba(140, 130, 255, 0.65);
+        box-shadow: 0 8px 26px rgba(109, 93, 252, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+        color: #fff;
+    }
+    body.dashboard-body .side-nav a.active span:first-child {
+        background: rgba(255, 255, 255, 0.22);
+        border-color: rgba(255, 255, 255, 0.4);
+        color: #fff;
+    }
+    /* 管理员入口：去掉分隔线，保持气泡一致 */
+    body.dashboard-body .admin-nav-link {
+        margin-top: 6px;
+        border-top: none;
+        padding-top: 10px;
+    }
+    /* 登出气泡：红调 */
+    body.dashboard-body .sidebar-bottom .logout-btn {
+        background: rgba(255, 82, 82, 0.08);
+        border-color: rgba(255, 82, 82, 0.22);
+        color: #d8a0a6;
+    }
+    body.dashboard-body .sidebar-bottom .logout-btn:hover {
+        transform: translateX(4px) translateY(-1px);
+        background: rgba(255, 82, 82, 0.18);
+        border-color: rgba(255, 82, 82, 0.45);
+        color: #fff;
+        box-shadow: 0 8px 22px rgba(255, 82, 82, 0.30), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    }
+    /* 不再需要左边缘滑出触发条 */
     .sidebar-edge-zone {
         display: none;
     }
