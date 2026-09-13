@@ -765,6 +765,81 @@
         <span class="wa-float-text" data-i18n="common.contactSupport">联系客服</span>
     </a>
 
+    <!-- ============ 移动端底部 Tab 栏（仅手机显示，PC 不变） ============ -->
+    <div class="more-mask-mb hidden" id="moreMaskMb" onclick="toggleMoreMb(false)"></div>
+
+    <nav class="tabbar" id="tabbar">
+        <a class="tab on" data-v="overview" href="dashboard.html"><span class="t-ic">📊</span><span class="t-lb" data-i18n="dash.overview">总览</span></a>
+        <a class="tab" data-v="hall" href="tasks.html"><span class="t-ic">🛒</span><span class="t-lb" data-i18n="dash.taskHall">任务大厅</span></a>
+        <a class="tab" data-v="mytasks" href="dashboard.html#mytasks"><span class="t-ic">📋</span><span class="t-lb" data-i18n="dash.myTasks">我的任务</span></a>
+        <a class="tab" data-v="wallet" href="dashboard.html#wallet"><span class="t-ic">👛</span><span class="t-lb" data-i18n="dash.myWallet">钱包</span></a>
+        <a class="tab" data-v="more" href="javascript:void(0)" onclick="toggleMoreMb()"><span class="t-ic">▦</span><span class="t-lb" id="tabMoreLb">更多</span></a>
+    </nav>
+
+    <div class="more-panel-mb hidden" id="morePanelMb">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+            <div>
+                <h3 style="font-size:15px;color:var(--text,#f5f7fa)">全部功能</h3>
+                <div style="font-size:11.5px;color:var(--text-2,#8b949e)">更多服务入口</div>
+            </div>
+            <button type="button" onclick="toggleMoreMb(false)" style="background:none;border:none;color:var(--text-2,#8b949e);font-size:18px;cursor:pointer;line-height:1">✕</button>
+        </div>
+        <div class="more-grid-mb" id="moreGridMb"></div>
+    </div>
+
+<script>
+        /* 移动端底部 Tab 栏（仅手机显示，PC 不变） */
+        function tabMoreLb() {
+            var el = document.getElementById("tabMoreLb");
+            if (el) el.textContent = (typeof I18N !== "undefined" && I18N.get() === "zh") ? "更多" : "More";
+        }
+        function toggleMoreMb(force) {
+            var panel = document.getElementById("morePanelMb");
+            var mask = document.getElementById("moreMaskMb");
+            if (!panel || !mask) return;
+            renderMoreMb();
+            var open = force === undefined ? panel.classList.contains("hidden") : force;
+            panel.classList.toggle("hidden", !open);
+            mask.classList.toggle("hidden", !open);
+        }
+        function renderMoreMb() {
+            var grid = document.getElementById("moreGridMb");
+            if (!grid) return;
+            var zh = typeof I18N !== "undefined" && I18N.get() === "zh";
+            var items = [
+                { v: "withdraw", ic: "💸", lb: zh ? "提现" : "Withdraw", href: "dashboard.html#withdraw" },
+                { v: "membership", ic: "💎", lb: zh ? "会员中心" : "Membership", href: "dashboard.html#membership" }
+            ];
+            var adminLink = document.getElementById("adminNavLink");
+            if (adminLink && adminLink.style.display !== "none") {
+                items.push({ v: "admin", ic: "⚙️", lb: zh ? "管理后台" : "Admin Panel", href: "admin.html" });
+            }
+            items.push({ v: "logout", ic: "↪", lb: zh ? "登出" : "Log out", act: "logout()" });
+            var h = (location.hash || "").replace("#", "");
+            grid.innerHTML = items.map(function (it) {
+                var on = h === it.v ? " on" : "";
+                if (it.act) {
+                    return '<button type="button" class="mi-mb' + on + '" onclick="' + it.act + '" style="border:none;cursor:pointer;font-family:inherit"><span class="mi-ic-mb">' + it.ic + '</span><span class="mi-lb-mb">' + it.lb + '</span></button>';
+                }
+                return '<a class="mi-mb' + on + '" href="' + it.href + '" onclick="toggleMoreMb(false)"><span class="mi-ic-mb">' + it.ic + '</span><span class="mi-lb-mb">' + it.lb + '</span></a>';
+            }).join("");
+        }
+        function syncTabBar() {
+            var h = (location.hash || "").replace("#", "");
+            var v = "overview";
+            if (h === "mytasks") v = "mytasks";
+            else if (h === "wallet") v = "wallet";
+            else if (h === "withdraw" || h === "membership" || h === "admin") v = "more";
+            var els = document.querySelectorAll("#tabbar .tab");
+            for (var i = 0; i < els.length; i++) els[i].classList.toggle("on", els[i].dataset.v === v);
+            if (v !== "more" && !document.getElementById("morePanelMb").classList.contains("hidden")) toggleMoreMb(false);
+        }
+        window.addEventListener("hashchange", syncTabBar);
+        tabMoreLb();
+        syncTabBar();
+    </script>
+
+
 
 </body>
 

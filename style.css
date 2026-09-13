@@ -4944,3 +4944,890 @@ body.dashboard-body .sidebar {
     display: inline-flex;
 }
 
+/* ========================================
+   钱包统计卡（总佣金收入 / 当前余额）
+   删除本块即可回滚
+   ======================================== */
+
+.wallet-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    margin-bottom: 16px;
+}
+
+.wallet-stat-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 20px;
+    border-radius: 16px;
+    border: 1px solid #222a36;
+    background: linear-gradient(135deg, rgba(109, 93, 252, 0.10), rgba(16, 19, 26, 0.9) 55%);
+}
+
+.wallet-stat-card.wallet-stat-main {
+    background: linear-gradient(135deg, rgba(255, 196, 87, 0.12), rgba(16, 19, 26, 0.9) 60%);
+}
+
+.wallet-stat-icon {
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.wallet-stat-body {
+    min-width: 0;
+}
+
+.wallet-stat-label {
+    display: block;
+    font-size: 12px;
+    color: #8a92a0;
+    margin-bottom: 3px;
+}
+
+.wallet-stat-value {
+    display: block;
+    font-size: 22px;
+    font-weight: 800;
+    color: #f5f7fa;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.3px;
+}
+
+.wallet-stat-main .wallet-stat-value {
+    color: #ffd166;
+}
+
+/* ========================================
+   UI 全面优化覆盖层 v2（2026-09-12）
+   1. 全局 icon 动态效果（发光 / 浮动 / 弹跳 / 流动）
+   2. Admin 界面密度优化（利用每一寸空间）
+   3. 卡片 / 按钮质感微调
+   删除本块即可回滚
+   ======================================== */
+
+/* ---------- 1. 全局 Icon 动态效果 ---------- */
+
+/* ① Logo T：渐变流动 + 高光呼吸 */
+.dashboard-logo .logo-icon,
+.admin-logo .logo-icon,
+.logo .logo-icon,
+.footer-logo-icon,
+.tasks-logo-icon {
+    background-size: 200% 200%;
+    animation: logoFlow 4.5s ease-in-out infinite;
+    position: relative;
+    overflow: hidden;
+}
+@keyframes logoFlow {
+    0%, 100% { background-position: 0% 50%; }
+    50%      { background-position: 100% 50%; }
+}
+.dashboard-logo .logo-icon::after,
+.admin-logo .logo-icon::after,
+.logo .logo-icon::after,
+.footer-logo-icon::after,
+.tasks-logo-icon::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.4), transparent 55%);
+    animation: logoShine 3.2s ease-in-out infinite;
+    pointer-events: none;
+}
+@keyframes logoShine {
+    0%, 100% { opacity: 0.2; }
+    50%      { opacity: 0.7; }
+}
+
+/* ② 侧边栏导航 emoji：hover 弹跳 + 发光 */
+.side-nav a > span:first-child {
+    display: inline-block;
+    transition: transform 0.25s ease, filter 0.25s ease;
+}
+.side-nav a:hover > span:first-child {
+    transform: scale(1.25) rotate(-8deg);
+    filter: drop-shadow(0 0 8px rgba(109,93,252,0.85));
+    animation: iconBounce 0.5s ease;
+}
+@keyframes iconBounce {
+    0%   { transform: scale(1.25) rotate(-8deg) translateY(0); }
+    40%  { transform: scale(1.38) rotate(5deg) translateY(-3px); }
+    70%  { transform: scale(1.18) rotate(-4deg) translateY(0); }
+    100% { transform: scale(1.25) rotate(-8deg) translateY(0); }
+}
+
+/* ③ Admin 导航 icon：hover 前移发光 */
+.admin-nav-item span {
+    display: inline-block;
+    transition: transform 0.25s ease, filter 0.25s ease;
+}
+.admin-nav-item:hover span {
+    transform: translateX(3px) scale(1.2);
+    filter: drop-shadow(0 0 7px rgba(109,93,252,0.9));
+}
+
+/* ④ Admin 统计 icon：常驻微光脉动 + hover 放大 */
+.admin-stat-icon {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, #171d2b, #1d2440);
+    border: 1px solid rgba(109,93,252,0.25);
+    transition: transform 0.25s ease, border-color 0.25s ease;
+}
+.admin-stat-icon::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 20%, rgba(109,93,252,0.45), transparent 70%);
+    animation: iconGlow 2.6s ease-in-out infinite;
+    pointer-events: none;
+}
+.admin-stat-card:hover .admin-stat-icon {
+    transform: scale(1.1);
+    border-color: rgba(109,93,252,0.6);
+}
+@keyframes iconGlow {
+    0%, 100% { opacity: 0.15; }
+    50%      { opacity: 0.6; }
+}
+
+/* ⑤ Index 任务预览图标：常驻浮动 */
+.task-icon {
+    animation: taskFloat 3s ease-in-out infinite;
+}
+@keyframes taskFloat {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-4px); }
+}
+
+/* ⑥ 钱包 / 余额 / 提现图标：hover 放大旋转 + 发光 */
+.balance-icon,
+.wallet-stat-icon,
+.withdraw-wallet-icon {
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.balance-card:hover .balance-icon,
+.wallet-stat-card:hover .wallet-stat-icon,
+.withdraw-card:hover .withdraw-wallet-icon {
+    transform: scale(1.12) rotate(-6deg);
+    box-shadow: 0 0 14px rgba(109,93,252,0.45);
+}
+
+/* ⑦ 按钮流光扫过 */
+.admin-primary-btn,
+.btn-primary,
+.btn-large {
+    position: relative;
+    overflow: hidden;
+}
+.admin-primary-btn::after,
+.btn-primary::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -80%;
+    width: 45%;
+    height: 100%;
+    background: linear-gradient(105deg, transparent, rgba(255,255,255,0.22), transparent);
+    animation: btnSheen 3.4s ease-in-out infinite;
+    pointer-events: none;
+}
+@keyframes btnSheen {
+    0%       { left: -80%; }
+    55%, 100% { left: 140%; }
+}
+
+/* ---------- 2. Admin 界面密度优化（利用每一寸空间） ---------- */
+
+.admin-sidebar {
+    width: 236px;
+    padding: 20px 14px;
+}
+.admin-main {
+    margin-left: 236px;
+    width: calc(100% - 236px);
+    padding: 24px 30px 50px;
+}
+.admin-logo {
+    padding: 0 8px 20px;
+}
+.admin-logo .logo-icon {
+    width: 38px;
+    height: 38px;
+    font-size: 19px;
+}
+.admin-logo .logo-text {
+    font-size: 18px;
+}
+.admin-nav-item {
+    padding: 10px 12px;
+    font-size: 13.5px;
+    gap: 10px;
+}
+.admin-header {
+    margin-bottom: 20px;
+}
+.admin-header h1 {
+    font-size: 24px;
+}
+.admin-header p {
+    margin: 5px 0 0;
+}
+.admin-section {
+    margin-bottom: 34px;
+}
+.admin-section-title {
+    margin-bottom: 14px;
+}
+.admin-section-title h2 {
+    font-size: 19px;
+}
+.admin-section-title p {
+    margin: 4px 0 0;
+}
+.admin-stats {
+    gap: 13px;
+}
+.admin-stat-card {
+    padding: 16px 17px;
+    gap: 13px;
+    border-radius: 13px;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.admin-stat-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(109,93,252,0.45);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+}
+.admin-stat-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 19px;
+}
+.admin-stat-label {
+    margin-bottom: 2px;
+}
+.admin-stat-value {
+    font-size: 22px;
+}
+.admin-form-card {
+    padding: 20px 22px;
+    border-radius: 14px;
+}
+.admin-form-grid {
+    gap: 14px;
+}
+.admin-task-card {
+    padding: 15px 17px;
+    border-radius: 13px;
+}
+.admin-task-card h3 {
+    font-size: 16px;
+}
+.admin-task-description {
+    margin-top: 10px;
+}
+.admin-task-info {
+    margin-top: 12px;
+    padding-top: 12px;
+    gap: 14px;
+}
+
+/* 审核 / 会员卡片 hover 质感 */
+.admin-member-card {
+    transition: border-color 0.2s ease, background 0.2s ease;
+}
+.admin-member-card:hover {
+    border-color: rgba(109,93,252,0.4);
+    background: rgba(109,93,252,0.04);
+}
+
+/* admin 表格更紧凑 */
+.admin-member-card,
+.admin-review-card .admin-task-card {
+    border-radius: 12px;
+}
+
+/* 移动端 admin 侧边栏自适应 */
+@media (max-width: 900px) {
+    .admin-sidebar {
+        width: 76px;
+        padding: 18px 10px;
+    }
+    .admin-main {
+        margin-left: 76px;
+        width: calc(100% - 76px);
+        padding: 18px 16px 40px;
+    }
+    .admin-logo .logo-text,
+    .admin-label,
+    .admin-nav-text {
+        display: none;
+    }
+    .admin-nav-item {
+        justify-content: center;
+        padding: 11px;
+        font-size: 0;
+    }
+    .admin-nav-item span {
+        font-size: 16px;
+    }
+}
+
+.wallet-stat-sub {
+    display: block;
+    margin-top: 3px;
+    font-size: 11px;
+    color: #5c6470;
+}
+
+@media (max-width: 640px) {
+    .wallet-stats {
+        grid-template-columns: 1fr;
+    }
+}
+    width: 18px;
+    height: 18px;
+    display: inline-flex;
+}
+
+/* =====================================================================
+   移动端底部悬浮泡泡 Tab 栏（同步自 WZRY，仅手机端生效，删除本区块即可回滚）
+   ===================================================================== */
+
+.more-mask-mb,
+.tabbar,
+.more-panel-mb {
+    display: none;
+}
+
+@media (max-width: 900px) {
+
+    /* 底部玻璃 Dock */
+    .tabbar {
+        display: flex;
+        position: fixed;
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: 14px;
+        z-index: 400;
+        gap: 2px;
+        padding: 7px 10px;
+        padding-bottom: calc(7px + env(safe-area-inset-bottom, 0px));
+        border-radius: 26px;
+        background: rgba(12, 14, 22, 0.82);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        backdrop-filter: blur(20px) saturate(160%);
+        -webkit-backdrop-filter: blur(20px) saturate(160%);
+        box-shadow: 0 14px 44px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    .tab {
+        width: 58px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+        padding: 5px 0 4px;
+        border-radius: 18px;
+        cursor: pointer;
+        color: #8b949e;
+        text-decoration: none;
+        transition: transform 0.18s;
+    }
+    .tab:active {
+        transform: scale(0.9);
+    }
+    .tab .t-ic {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 17px;
+        background: rgba(255, 255, 255, 0.07);
+        border: 1px solid rgba(255, 255, 255, 0.11);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+    }
+    .tab .t-lb {
+        font-size: 9.5px;
+        font-weight: 700;
+        letter-spacing: 0.3px;
+        color: #8b949e;
+    }
+    .tab.on {
+        color: #fff;
+    }
+    .tab.on .t-ic {
+        background: linear-gradient(135deg, rgba(109, 93, 252, 0.55), rgba(76, 141, 255, 0.4));
+        border-color: rgba(109, 93, 252, 0.8);
+        box-shadow: 0 0 18px rgba(109, 93, 252, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+        transform: translateY(-2px) scale(1.05);
+    }
+    .tab.on .t-lb {
+        color: #b3a8ff;
+        text-shadow: 0 0 8px rgba(109, 93, 252, 0.5);
+    }
+
+    /* 更多面板 */
+    .more-panel-mb {
+        display: block;
+        position: fixed;
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: 96px;
+        width: calc(100vw - 36px);
+        max-width: 430px;
+        background: rgba(16, 19, 26, 0.96);
+        border: 1px solid rgba(255, 255, 255, 0.13);
+        border-radius: 22px;
+        padding: 16px;
+        z-index: 420;
+        box-shadow: 0 18px 56px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(22px) saturate(150%);
+        -webkit-backdrop-filter: blur(22px) saturate(150%);
+        animation: moreUpMb 0.25s ease;
+    }
+    @keyframes moreUpMb {
+        from {
+            opacity: 0;
+            transform: translateX(-50%) translateY(16px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+    }
+    .more-grid-mb {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+    }
+    .mi-mb {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+        padding: 13px 4px;
+        border-radius: 15px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        color: #f5f7fa;
+        text-decoration: none;
+        transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .mi-mb:active {
+        transform: scale(0.93);
+    }
+    .mi-mb.on {
+        border-color: rgba(109, 93, 252, 0.6);
+        background: rgba(109, 93, 252, 0.12);
+        box-shadow: 0 0 14px rgba(109, 93, 252, 0.18);
+    }
+    .mi-ic-mb {
+        font-size: 21px;
+        filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4));
+    }
+    .mi-lb-mb {
+        font-size: 10.5px;
+        font-weight: 700;
+        color: #8b949e;
+    }
+    .mi-mb.on .mi-lb-mb {
+        color: #b3a8ff;
+    }
+    .more-mask-mb {
+        display: block;
+        position: fixed;
+        inset: 0;
+        background: rgba(4, 5, 12, 0.45);
+        z-index: 410;
+    }
+
+    /* Dashboard：手机端隐藏左侧滑出侧栏与汉堡，用底部 Tab 栏替代 */
+    body.dashboard-body .sidebar,
+    body.dashboard-body .sidebar-edge-zone,
+    body.dashboard-body .sidebar-toggle {
+        display: none !important;
+    }
+    body.dashboard-body .dashboard-main {
+        margin-left: 0;
+    }
+
+    /* 内容区底部留白，避免被 Tab 栏遮挡 */
+    body.dashboard-body .dashboard-main,
+    body.tasks-body .tasks-main,
+    body.admin-body .admin-main {
+        padding-bottom: 130px;
+    }
+}
+
+/* ========================================
+   钱包统计卡（总佣金收入 / 当前余额）
+   删除本块即可回滚
+   ======================================== */
+
+.wallet-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    margin-bottom: 16px;
+}
+
+.wallet-stat-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 20px;
+    border-radius: 16px;
+    border: 1px solid #222a36;
+    background: linear-gradient(135deg, rgba(109, 93, 252, 0.10), rgba(16, 19, 26, 0.9) 55%);
+}
+
+.wallet-stat-card.wallet-stat-main {
+    background: linear-gradient(135deg, rgba(255, 196, 87, 0.12), rgba(16, 19, 26, 0.9) 60%);
+}
+
+.wallet-stat-icon {
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.wallet-stat-body {
+    min-width: 0;
+}
+
+.wallet-stat-label {
+    display: block;
+    font-size: 12px;
+    color: #8a92a0;
+    margin-bottom: 3px;
+}
+
+.wallet-stat-value {
+    display: block;
+    font-size: 22px;
+    font-weight: 800;
+    color: #f5f7fa;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.3px;
+}
+
+.wallet-stat-main .wallet-stat-value {
+    color: #ffd166;
+}
+
+/* ========================================
+   UI 全面优化覆盖层 v2（2026-09-12）
+   1. 全局 icon 动态效果（发光 / 浮动 / 弹跳 / 流动）
+   2. Admin 界面密度优化（利用每一寸空间）
+   3. 卡片 / 按钮质感微调
+   删除本块即可回滚
+   ======================================== */
+
+/* ---------- 1. 全局 Icon 动态效果 ---------- */
+
+/* ① Logo T：渐变流动 + 高光呼吸 */
+.dashboard-logo .logo-icon,
+.admin-logo .logo-icon,
+.logo .logo-icon,
+.footer-logo-icon,
+.tasks-logo-icon {
+    background-size: 200% 200%;
+    animation: logoFlow 4.5s ease-in-out infinite;
+    position: relative;
+    overflow: hidden;
+}
+@keyframes logoFlow {
+    0%, 100% { background-position: 0% 50%; }
+    50%      { background-position: 100% 50%; }
+}
+.dashboard-logo .logo-icon::after,
+.admin-logo .logo-icon::after,
+.logo .logo-icon::after,
+.footer-logo-icon::after,
+.tasks-logo-icon::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.4), transparent 55%);
+    animation: logoShine 3.2s ease-in-out infinite;
+    pointer-events: none;
+}
+@keyframes logoShine {
+    0%, 100% { opacity: 0.2; }
+    50%      { opacity: 0.7; }
+}
+
+/* ② 侧边栏导航 emoji：hover 弹跳 + 发光 */
+.side-nav a > span:first-child {
+    display: inline-block;
+    transition: transform 0.25s ease, filter 0.25s ease;
+}
+.side-nav a:hover > span:first-child {
+    transform: scale(1.25) rotate(-8deg);
+    filter: drop-shadow(0 0 8px rgba(109,93,252,0.85));
+    animation: iconBounce 0.5s ease;
+}
+@keyframes iconBounce {
+    0%   { transform: scale(1.25) rotate(-8deg) translateY(0); }
+    40%  { transform: scale(1.38) rotate(5deg) translateY(-3px); }
+    70%  { transform: scale(1.18) rotate(-4deg) translateY(0); }
+    100% { transform: scale(1.25) rotate(-8deg) translateY(0); }
+}
+
+/* ③ Admin 导航 icon：hover 前移发光 */
+.admin-nav-item span {
+    display: inline-block;
+    transition: transform 0.25s ease, filter 0.25s ease;
+}
+.admin-nav-item:hover span {
+    transform: translateX(3px) scale(1.2);
+    filter: drop-shadow(0 0 7px rgba(109,93,252,0.9));
+}
+
+/* ④ Admin 统计 icon：常驻微光脉动 + hover 放大 */
+.admin-stat-icon {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, #171d2b, #1d2440);
+    border: 1px solid rgba(109,93,252,0.25);
+    transition: transform 0.25s ease, border-color 0.25s ease;
+}
+.admin-stat-icon::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 20%, rgba(109,93,252,0.45), transparent 70%);
+    animation: iconGlow 2.6s ease-in-out infinite;
+    pointer-events: none;
+}
+.admin-stat-card:hover .admin-stat-icon {
+    transform: scale(1.1);
+    border-color: rgba(109,93,252,0.6);
+}
+@keyframes iconGlow {
+    0%, 100% { opacity: 0.15; }
+    50%      { opacity: 0.6; }
+}
+
+/* ⑤ Index 任务预览图标：常驻浮动 */
+.task-icon {
+    animation: taskFloat 3s ease-in-out infinite;
+}
+@keyframes taskFloat {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-4px); }
+}
+
+/* ⑥ 钱包 / 余额 / 提现图标：hover 放大旋转 + 发光 */
+.balance-icon,
+.wallet-stat-icon,
+.withdraw-wallet-icon {
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.balance-card:hover .balance-icon,
+.wallet-stat-card:hover .wallet-stat-icon,
+.withdraw-card:hover .withdraw-wallet-icon {
+    transform: scale(1.12) rotate(-6deg);
+    box-shadow: 0 0 14px rgba(109,93,252,0.45);
+}
+
+/* ⑦ 按钮流光扫过 */
+.admin-primary-btn,
+.btn-primary,
+.btn-large {
+    position: relative;
+    overflow: hidden;
+}
+.admin-primary-btn::after,
+.btn-primary::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -80%;
+    width: 45%;
+    height: 100%;
+    background: linear-gradient(105deg, transparent, rgba(255,255,255,0.22), transparent);
+    animation: btnSheen 3.4s ease-in-out infinite;
+    pointer-events: none;
+}
+@keyframes btnSheen {
+    0%       { left: -80%; }
+    55%, 100% { left: 140%; }
+}
+
+/* ---------- 2. Admin 界面密度优化（利用每一寸空间） ---------- */
+
+.admin-sidebar {
+    width: 236px;
+    padding: 20px 14px;
+}
+.admin-main {
+    margin-left: 236px;
+    width: calc(100% - 236px);
+    padding: 24px 30px 50px;
+}
+.admin-logo {
+    padding: 0 8px 20px;
+}
+.admin-logo .logo-icon {
+    width: 38px;
+    height: 38px;
+    font-size: 19px;
+}
+.admin-logo .logo-text {
+    font-size: 18px;
+}
+.admin-nav-item {
+    padding: 10px 12px;
+    font-size: 13.5px;
+    gap: 10px;
+}
+.admin-header {
+    margin-bottom: 20px;
+}
+.admin-header h1 {
+    font-size: 24px;
+}
+.admin-header p {
+    margin: 5px 0 0;
+}
+.admin-section {
+    margin-bottom: 34px;
+}
+.admin-section-title {
+    margin-bottom: 14px;
+}
+.admin-section-title h2 {
+    font-size: 19px;
+}
+.admin-section-title p {
+    margin: 4px 0 0;
+}
+.admin-stats {
+    gap: 13px;
+}
+.admin-stat-card {
+    padding: 16px 17px;
+    gap: 13px;
+    border-radius: 13px;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.admin-stat-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(109,93,252,0.45);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+}
+.admin-stat-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 19px;
+}
+.admin-stat-label {
+    margin-bottom: 2px;
+}
+.admin-stat-value {
+    font-size: 22px;
+}
+.admin-form-card {
+    padding: 20px 22px;
+    border-radius: 14px;
+}
+.admin-form-grid {
+    gap: 14px;
+}
+.admin-task-card {
+    padding: 15px 17px;
+    border-radius: 13px;
+}
+.admin-task-card h3 {
+    font-size: 16px;
+}
+.admin-task-description {
+    margin-top: 10px;
+}
+.admin-task-info {
+    margin-top: 12px;
+    padding-top: 12px;
+    gap: 14px;
+}
+
+/* 审核 / 会员卡片 hover 质感 */
+.admin-member-card {
+    transition: border-color 0.2s ease, background 0.2s ease;
+}
+.admin-member-card:hover {
+    border-color: rgba(109,93,252,0.4);
+    background: rgba(109,93,252,0.04);
+}
+
+/* admin 表格更紧凑 */
+.admin-member-card,
+.admin-review-card .admin-task-card {
+    border-radius: 12px;
+}
+
+/* 移动端 admin 侧边栏自适应 */
+@media (max-width: 900px) {
+    .admin-sidebar {
+        width: 76px;
+        padding: 18px 10px;
+    }
+    .admin-main {
+        margin-left: 76px;
+        width: calc(100% - 76px);
+        padding: 18px 16px 40px;
+    }
+    .admin-logo .logo-text,
+    .admin-label,
+    .admin-nav-text {
+        display: none;
+    }
+    .admin-nav-item {
+        justify-content: center;
+        padding: 11px;
+        font-size: 0;
+    }
+    .admin-nav-item span {
+        font-size: 16px;
+    }
+}
+
+.wallet-stat-sub {
+    display: block;
+    margin-top: 3px;
+    font-size: 11px;
+    color: #5c6470;
+}
+
+@media (max-width: 640px) {
+    .wallet-stats {
+        grid-template-columns: 1fr;
+    }
+}
+    width: 18px;
+    height: 18px;
+    display: inline-flex;
+}
+
