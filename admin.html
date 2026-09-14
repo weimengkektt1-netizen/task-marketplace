@@ -125,6 +125,341 @@
             margin-top: 12px;
         }
 
+        /* ===== 管理后台增强样式 ===== */
+
+        .admin-member-toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 18px;
+            padding: 14px;
+            border-radius: 14px;
+            border: 1px solid rgba(148, 163, 184, .2);
+            background: rgba(255, 255, 255, .03);
+        }
+
+        .admin-tool-input {
+            flex: 1;
+            min-width: 200px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: 1px solid rgba(148, 163, 184, .3);
+            background: rgba(15, 23, 42, .5);
+            color: #f1f5f9;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .admin-tool-input:focus {
+            border-color: #6366f1;
+        }
+
+        .admin-tool-select {
+            padding: 10px 12px;
+            border-radius: 10px;
+            border: 1px solid rgba(148, 163, 184, .3);
+            background: rgba(15, 23, 42, .5);
+            color: #f1f5f9;
+            font-size: 14px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .admin-dash-row {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .admin-dash-panel {
+            padding: 18px;
+            border-radius: 16px;
+            border: 1px solid rgba(148, 163, 184, .22);
+            background: rgba(255, 255, 255, .03);
+        }
+
+        .admin-dash-panel-title {
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .admin-recent-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+            border-bottom: 1px dashed rgba(148, 163, 184, .15);
+            font-size: 13.5px;
+        }
+
+        .admin-recent-item:last-child {
+            border-bottom: 0;
+        }
+
+        .admin-badge {
+            display: inline-block;
+            padding: 2px 9px;
+            border-radius: 999px;
+            font-size: 11.5px;
+            font-weight: 600;
+            line-height: 1.6;
+        }
+
+        .admin-badge-admin {
+            background: rgba(99, 102, 241, .18);
+            color: #a5b4fc;
+            border: 1px solid rgba(99, 102, 241, .4);
+        }
+
+        .admin-badge-user {
+            background: rgba(148, 163, 184, .14);
+            color: #cbd5e1;
+            border: 1px solid rgba(148, 163, 184, .3);
+        }
+
+        .admin-badge-basic { background: rgba(148,163,184,.16); color:#cbd5e1; }
+        .admin-badge-gold { background: rgba(245,158,11,.16); color:#fcd34d; border:1px solid rgba(245,158,11,.35); }
+        .admin-badge-platinum { background: rgba(148,163,184,.2); color:#e2e8f0; border:1px solid rgba(148,163,184,.4); }
+        .admin-badge-diamond { background: linear-gradient(135deg, rgba(56,189,248,.25), rgba(167,139,250,.25)); color:#bae6fd; border:1px solid rgba(56,189,248,.45); }
+
+        .admin-member-actions {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .admin-mini-btn {
+            padding: 6px 11px;
+            border-radius: 8px;
+            border: 1px solid rgba(148, 163, 184, .3);
+            background: rgba(255, 255, 255, .05);
+            color: #e2e8f0;
+            font-size: 12.5px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .admin-mini-btn:hover {
+            border-color: #6366f1;
+            color: #a5b4fc;
+        }
+
+        .admin-mini-btn.gold {
+            border-color: rgba(245, 158, 11, .4);
+            color: #fcd34d;
+        }
+
+        .admin-mini-btn.danger {
+            border-color: rgba(220, 38, 38, .4);
+            color: #fca5a5;
+        }
+
+        .admin-modal-mask {
+            position: fixed;
+            inset: 0;
+            z-index: 999;
+            background: rgba(2, 6, 23, .7);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 40px 16px;
+            overflow-y: auto;
+        }
+
+        .admin-modal-box {
+            width: 100%;
+            max-width: 780px;
+            background: #0f172a;
+            border: 1px solid rgba(148, 163, 184, .28);
+            border-radius: 18px;
+            padding: 22px;
+            box-shadow: 0 24px 60px rgba(0, 0, 0, .5);
+        }
+
+        .admin-modal-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .admin-modal-head h3 {
+            margin: 0;
+            font-size: 17px;
+        }
+
+        .admin-modal-close {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            font-size: 20px;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .admin-modal-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .admin-modal-field label {
+            display: block;
+            font-size: 12px;
+            color: #94a3b8;
+            margin-bottom: 5px;
+        }
+
+        .admin-modal-field input,
+        .admin-modal-field select {
+            width: 100%;
+            padding: 9px 12px;
+            border-radius: 9px;
+            border: 1px solid rgba(148, 163, 184, .3);
+            background: rgba(15, 23, 42, .6);
+            color: #f1f5f9;
+            font-size: 14px;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        .admin-modal-sec {
+            margin-top: 16px;
+            padding-top: 14px;
+            border-top: 1px solid rgba(148, 163, 184, .18);
+        }
+
+        .admin-modal-sec-title {
+            font-weight: 700;
+            font-size: 13.5px;
+            margin-bottom: 10px;
+            color: #cbd5e1;
+        }
+
+        .admin-tx-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 8px 0;
+            border-bottom: 1px dashed rgba(148, 163, 184, .12);
+            font-size: 13px;
+        }
+
+        .admin-tx-row:last-child {
+            border-bottom: 0;
+        }
+
+        .admin-tx-main {
+            min-width: 0;
+        }
+
+        .admin-tx-main b {
+            display: block;
+            font-size: 13px;
+        }
+
+        .admin-tx-main small {
+            color: #94a3b8;
+            font-size: 11.5px;
+        }
+
+        .admin-tx-amt {
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .admin-tx-amt.pos { color: #4ade80; }
+        .admin-tx-amt.neg { color: #f87171; }
+
+        .admin-empty-note {
+            color: #94a3b8;
+            font-size: 13px;
+            padding: 6px 0;
+        }
+
+        /* 流水表格 */
+        .ledger-head-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .admin-ledger-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(255, 255, 255, .02);
+            border-radius: 14px;
+            overflow: hidden;
+            border: 1px solid rgba(148, 163, 184, .18);
+        }
+
+        .admin-ledger-table th {
+            text-align: left;
+            padding: 12px 14px;
+            font-size: 12px;
+            color: #94a3b8;
+            background: rgba(148, 163, 184, .08);
+            white-space: nowrap;
+        }
+
+        .admin-ledger-table td {
+            padding: 11px 14px;
+            font-size: 13.5px;
+            border-top: 1px solid rgba(148, 163, 184, .1);
+            vertical-align: middle;
+        }
+
+        .admin-ledger-table tr:hover td {
+            background: rgba(99, 102, 241, .06);
+        }
+
+        .ledger-user {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .ledger-user .ledger-ava {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            color: #fff;
+            font-size: 12.5px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: none;
+        }
+
+        .ledger-type-tag {
+            display: inline-block;
+            padding: 2px 9px;
+            border-radius: 999px;
+            font-size: 11.5px;
+            font-weight: 600;
+        }
+
+        .ledger-type-reward { background: rgba(74, 222, 128, .14); color: #86efac; }
+        .ledger-type-withdrawal { background: rgba(248, 113, 113, .14); color: #fca5a5; }
+        .ledger-type-adjust { background: rgba(99, 102, 241, .16); color: #a5b4fc; }
+        .ledger-type-other { background: rgba(148, 163, 184, .14); color: #cbd5e1; }
+
+        .admin-ledger-wrap {
+            overflow-x: auto;
+        }
+
+        @media (max-width: 900px) {
+            .admin-ledger-table {
+                min-width: 640px;
+            }
+        }
+
         .admin-error-box {
             padding: 18px;
             border-radius: 10px;
@@ -225,6 +560,12 @@
                    class="admin-nav-item">
                     <span>👥</span>
                     会员管理
+                </a>
+
+                <a href="#ledger" data-i18n="admin.ledgerManage"
+                   class="admin-nav-item">
+                    <span>💳</span>
+                    钱包流水
                 </a>
 
             </nav>
@@ -410,6 +751,173 @@
 
                     </div>
 
+
+                    <!-- Users -->
+
+                    <div class="admin-stat-card">
+
+                        <div class="admin-stat-icon">
+                            👥
+                        </div>
+
+                        <div>
+
+                            <div class="admin-stat-label">
+                                <span data-i18n="admin.statUsers">注册用户</span>
+                            </div>
+
+                            <div
+                                class="admin-stat-value"
+                                id="statUsers">
+                                0
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Today new -->
+
+                    <div class="admin-stat-card">
+
+                        <div class="admin-stat-icon">
+                            🆕
+                        </div>
+
+                        <div>
+
+                            <div class="admin-stat-label">
+                                <span data-i18n="admin.statNewUsers">今日注册</span>
+                            </div>
+
+                            <div
+                                class="admin-stat-value"
+                                id="statNewUsers">
+                                0
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Pending reviews -->
+
+                    <div class="admin-stat-card">
+
+                        <div class="admin-stat-icon">
+                            📝
+                        </div>
+
+                        <div>
+
+                            <div class="admin-stat-label">
+                                <span data-i18n="admin.statPendingReviews">待审核提交</span>
+                            </div>
+
+                            <div
+                                class="admin-stat-value"
+                                id="statPendingReviews">
+                                0
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Pending withdrawals -->
+
+                    <div class="admin-stat-card">
+
+                        <div class="admin-stat-icon">
+                            💰
+                        </div>
+
+                        <div>
+
+                            <div class="admin-stat-label">
+                                <span data-i18n="admin.statPendingWithdrawals">待审核提现</span>
+                            </div>
+
+                            <div
+                                class="admin-stat-value"
+                                id="statPendingWithdrawals">
+                                0
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Total flow -->
+
+                    <div class="admin-stat-card">
+
+                        <div class="admin-stat-icon">
+                            💳
+                        </div>
+
+                        <div>
+
+                            <div class="admin-stat-label">
+                                <span data-i18n="admin.statTotalFlow">累计流水</span>
+                            </div>
+
+                            <div
+                                class="admin-stat-value"
+                                id="statTotalFlow">
+                                RM0.00
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Total rewards -->
+
+                    <div class="admin-stat-card">
+
+                        <div class="admin-stat-icon">
+                            💵
+                        </div>
+
+                        <div>
+
+                            <div class="admin-stat-label">
+                                <span data-i18n="admin.statTotalRewards">累计佣金支出</span>
+                            </div>
+
+                            <div
+                                class="admin-stat-value"
+                                id="statTotalRewards">
+                                RM0.00
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+                <div class="admin-dash-row">
+
+                    <div class="admin-dash-panel">
+
+                        <div class="admin-dash-panel-title">
+                            🕒 <span data-i18n="admin.recentUsers">最近注册</span>
+                        </div>
+
+                        <div id="recentMembersBox">
+                            <div class="admin-loading-box"><span data-i18n="common.loading">正在加载...</span></div>
+                        </div>
+
+                    </div>
 
                 </div>
 
@@ -836,7 +1344,97 @@
                 </div>
 
 
+                <div class="admin-member-toolbar">
+
+                    <input
+                        type="text"
+                        id="memberSearch"
+                        class="admin-tool-input"
+                        placeholder="🔍 搜索昵称 / 邮箱 / 手机号..."
+                        oninput="loadMembers()">
+
+                    <select
+                        id="memberLevelFilter"
+                        class="admin-tool-select"
+                        onchange="loadMembers()">
+                        <option value="">全部等级</option>
+                        <option value="basic">普通</option>
+                        <option value="gold">黄金</option>
+                        <option value="platinum">铂金</option>
+                        <option value="diamond">钻石</option>
+                    </select>
+
+                    <select
+                        id="memberRoleFilter"
+                        class="admin-tool-select"
+                        onchange="loadMembers()">
+                        <option value="">全部角色</option>
+                        <option value="admin">管理员</option>
+                        <option value="user">普通用户</option>
+                    </select>
+
+                </div>
+
+
                 <div id="membersContainer">
+
+                    <div class="admin-loading-box">
+                        <span data-i18n="common.loading">正在加载...</span>
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- ========================================
+                 Ledger（钱包流水）
+                 ======================================== -->
+
+            <section id="ledger" class="admin-section">
+
+                <div class="admin-review-header">
+
+                    <div>
+
+                        <h2>
+                            <span data-i18n="admin.ledgerTitle">钱包流水</span>
+                        </h2>
+
+                        <p>
+                            <span data-i18n="admin.ledgerSub">全平台钱包交易记录与资金动向</span>
+                        </p>
+
+                    </div>
+
+
+                    <div class="ledger-head-actions">
+
+                        <select
+                            id="ledgerTypeFilter"
+                            class="admin-tool-select"
+                            onchange="loadLedger()">
+                            <option value="">全部类型</option>
+                            <option value="task_reward">任务佣金</option>
+                            <option value="withdrawal">提现</option>
+                            <option value="admin_adjust">管理员调整</option>
+                        </select>
+
+                        <button
+                            type="button"
+                            onclick="loadLedger()"
+                            class="admin-refresh-btn">
+
+                            🔄 刷新
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div id="ledgerContainer">
 
                     <div class="admin-loading-box">
                         <span data-i18n="common.loading">正在加载...</span>
@@ -1021,6 +1619,10 @@ async function checkAdmin() {
 
         await loadMembers();
 
+        await loadDashboardStats();
+
+        await loadLedger();
+
 
     } catch (error) {
 
@@ -1049,13 +1651,20 @@ async function loadMembers() {
     const container = document.getElementById("membersContainer");
     if (!container) return;
 
+    const searchInput = document.getElementById("memberSearch");
+    const levelFilter = document.getElementById("memberLevelFilter");
+    const roleFilter = document.getElementById("memberRoleFilter");
+    const kw = (searchInput ? searchInput.value : "") || "";
+    const lv = (levelFilter ? levelFilter.value : "") || "";
+    const rl = (roleFilter ? roleFilter.value : "") || "";
+
     container.innerHTML =
         '<div class="admin-loading-box"><span data-i18n="common.loading">正在加载...</span></div>';
 
     const { data: members, error } =
         await supabaseClient
         .from("profiles")
-        .select("id, display_name, email, phone, balance, membership_level, invite_code, invited_by, created_at, role")
+        .select("id, username, display_name, email, phone, balance, membership_level, invite_code, invited_by, created_at, role")
         .order("created_at", { ascending: false });
 
     if (error) {
@@ -1067,6 +1676,21 @@ async function loadMembers() {
         container.innerHTML = '<div class="admin-loading-box"><span data-i18n="admin.membersEmpty">暂无会员数据</span></div>';
         return;
     }
+
+    let list = members;
+
+    if (kw) {
+        const k = kw.toLowerCase();
+        list = list.filter(function (m) {
+            return (m.display_name || "").toLowerCase().indexOf(k) >= 0 ||
+                   (m.username || "").toLowerCase().indexOf(k) >= 0 ||
+                   (m.email || "").toLowerCase().indexOf(k) >= 0 ||
+                   (m.phone || "").toLowerCase().indexOf(k) >= 0;
+        });
+    }
+
+    if (lv) list = list.filter(function (m) { return m.membership_level === lv; });
+    if (rl) list = list.filter(function (m) { return m.role === rl; });
 
     const { data: allInvites } =
         await supabaseClient
@@ -1083,6 +1707,8 @@ async function loadMembers() {
         if (r.invited_by) invCount[r.invited_by] = (invCount[r.invited_by] || 0) + 1;
     });
 
+    const zh = typeof I18N !== "undefined" && I18N.get() === "zh";
+
     const levelNames = {
         basic: I18N.t("member.basic"),
         gold: I18N.t("member.gold"),
@@ -1090,7 +1716,12 @@ async function loadMembers() {
         diamond: I18N.t("member.diamond")
     };
 
-    const rows = members.map(function (m) {
+    if (list.length === 0) {
+        container.innerHTML = '<div class="admin-empty-box">' + (zh ? "没有符合条件的用户" : "No matching users") + '</div>';
+        return;
+    }
+
+    const rows = list.map(function (m) {
 
         const levelOpts = ["basic", "gold", "platinum", "diamond"].map(function (l) {
             return '<option value="' + l + '"' + (m.membership_level === l ? " selected" : "") + '>' + levelNames[l] + '</option>';
@@ -1099,6 +1730,7 @@ async function loadMembers() {
         const inviter = m.invited_by ? (id2name[m.invited_by] || "?") : "—";
         const name = m.display_name || "—";
         const avatar = name.slice(0, 1).toUpperCase();
+        const isAdmin = m.role === "admin";
 
         return (
             '<div class="admin-member-card" data-uid="' + m.id + '">' +
@@ -1106,9 +1738,11 @@ async function loadMembers() {
             '<div class="admin-member-main">' +
             '<div class="admin-member-avatar">' + avatar + '</div>' +
             '<div class="admin-member-info">' +
-            '<strong class="admin-member-name">' + name + '</strong>' +
+            '<strong class="admin-member-name">' + name +
+            '<span class="admin-badge ' + (isAdmin ? "admin-badge-admin" : "admin-badge-user") + '">' +
+            (isAdmin ? "ADMIN" : "USER") + '</span></strong>' +
             '<span class="admin-member-mail">' + (m.email || "") + '</span>' +
-            '<span class="admin-member-mail">' + (m.phone || "") + '</span>' +
+            '<span class="admin-member-mail">' + (m.phone || "") + (m.username ? " · @" + m.username : "") + '</span>' +
             '</div>' +
             '</div>' +
 
@@ -1130,7 +1764,11 @@ async function loadMembers() {
             '<div class="admin-member-cell">' + fmtMemberDate(m.created_at) + '</div>' +
 
             '<div class="admin-member-cell">' +
+            '<div class="admin-member-actions">' +
+            '<button class="admin-mini-btn" onclick="openMemberDetail(\'' + m.id + '\')">👁 ' + (zh ? "详情" : "Detail") + '</button>' +
+            '<button class="admin-mini-btn gold" onclick="adjustBalance(\'' + m.id + '\')">⚖️ ' + (zh ? "调账" : "Adjust") + '</button>' +
             '<button class="admin-member-save" onclick="saveMember(this)" data-uid="' + m.id + '">' + I18N.t("admin.saveMember") + '</button>' +
+            '</div>' +
             '</div>' +
 
             '</div>'
@@ -1154,6 +1792,484 @@ async function loadMembers() {
 
 }
 
+/* ========================================
+   Dashboard 统计增强
+   ======================================== */
+
+async function loadDashboardStats() {
+
+    try {
+
+        const { count: users } =
+            await supabaseClient
+            .from("profiles")
+            .select("id", { count: "exact" });
+
+        setStat("statUsers", users || 0);
+
+        const malayDate =
+            new Date(Date.now() + 8 * 3600 * 1000)
+            .toISOString().slice(0, 10);
+
+        const dayStartUTC =
+            new Date(malayDate + "T00:00:00Z")
+            .getTime() - 8 * 3600 * 1000;
+
+        const { count: newUsers } =
+            await supabaseClient
+            .from("profiles")
+            .select("id", { count: "exact" })
+            .gte("created_at", new Date(dayStartUTC).toISOString());
+
+        setStat("statNewUsers", newUsers || 0);
+
+        const { count: pendingReviews } =
+            await supabaseClient
+            .from("task_claims")
+            .select("id", { count: "exact" })
+            .eq("status", "submitted");
+
+        setStat("statPendingReviews", pendingReviews || 0);
+
+        try {
+            const { data: pendW } = await supabaseClient.rpc("admin_get_pending_withdrawals");
+            setStat("statPendingWithdrawals", (pendW && pendW.length) || 0);
+        } catch (e) {
+            setStat("statPendingWithdrawals", 0);
+        }
+
+        const { data: txs } =
+            await supabaseClient
+            .from("wallet_transactions")
+            .select("amount, type");
+
+        let totalIn = 0, totalRewards = 0;
+        (txs || []).forEach(function (t) {
+            const a = Number(t.amount || 0);
+            if (a > 0) totalIn += a;
+            if (t.type === "task_reward") totalRewards += a;
+        });
+
+        setStat("statTotalFlow", "RM" + totalIn.toFixed(2));
+        setStat("statTotalRewards", "RM" + totalRewards.toFixed(2));
+
+    } catch (e) {
+        console.error("dashboard stats failed", e);
+    }
+
+    // 最近注册
+    try {
+
+        const box = document.getElementById("recentMembersBox");
+        if (!box) return;
+
+        const { data: recent } =
+            await supabaseClient
+            .from("profiles")
+            .select("display_name, username, email, phone, created_at, role, membership_level")
+            .order("created_at", { ascending: false })
+            .limit(5);
+
+        if (!recent || recent.length === 0) {
+            box.innerHTML = '<div class="admin-empty-note">' + (typeof I18N !== "undefined" && I18N.get() === "zh" ? "暂无用户" : "No users yet") + '</div>';
+            return;
+        }
+
+        const zh = typeof I18N !== "undefined" && I18N.get() === "zh";
+
+        box.innerHTML = recent.map(function (m) {
+            const nm = m.display_name || m.username || m.email || "?";
+            const isAdmin = m.role === "admin";
+            return '<div class="admin-recent-item">' +
+                '<span class="ledger-ava" style="flex:none">' + nm.slice(0, 1).toUpperCase() + '</span>' +
+                '<span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + nm + ' · ' + (m.email || "") + '</span>' +
+                '<span class="admin-badge ' + (isAdmin ? "admin-badge-admin" : "admin-badge-user") + '" style="flex:none">' + (isAdmin ? "ADMIN" : "USER") + '</span>' +
+                '<small style="flex:none;color:#94a3b8">' + fmtMemberDate(m.created_at) + '</small>' +
+                '</div>';
+        }).join("");
+
+    } catch (e) {
+        console.error("recent members failed", e);
+    }
+
+}
+
+function setStat(id, val) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = val;
+}
+
+
+/* ========================================
+   钱包流水（全平台）
+   ======================================== */
+
+async function loadLedger() {
+
+    const container = document.getElementById("ledgerContainer");
+    if (!container) return;
+
+    const filter = (document.getElementById("ledgerTypeFilter") || {}).value || "";
+
+    container.innerHTML =
+        '<div class="admin-loading-box"><span data-i18n="common.loading">正在加载...</span></div>';
+
+    try {
+
+        const { data: txs, error } =
+            await supabaseClient
+            .from("wallet_transactions")
+            .select("id, user_id, amount, type, note, created_at")
+            .order("created_at", { ascending: false })
+            .limit(300);
+
+        if (error) throw error;
+
+        const userIds = [];
+        (txs || []).forEach(function (t) {
+            if (t.user_id && userIds.indexOf(t.user_id) < 0) userIds.push(t.user_id);
+        });
+
+        const userMap = {};
+        if (userIds.length > 0) {
+            const { data: profs } =
+                await supabaseClient
+                .from("profiles")
+                .select("id, display_name, username, email")
+                .in("id", userIds);
+            (profs || []).forEach(function (p) {
+                userMap[p.id] = p.display_name || p.username || p.email || "?";
+            });
+        }
+
+        const zh = typeof I18N !== "undefined" && I18N.get() === "zh";
+
+        let list = txs || [];
+        if (filter) list = list.filter(function (t) { return t.type === filter; });
+
+        if (list.length === 0) {
+            container.innerHTML = '<div class="admin-empty-box">' + (zh ? "暂无流水记录" : "No transactions") + '</div>';
+            return;
+        }
+
+        const typeName = function (t) {
+            if (t === "task_reward") return zh ? "任务佣金" : "Reward";
+            if (t === "withdrawal") return zh ? "提现" : "Withdrawal";
+            if (t === "admin_adjust") return zh ? "管理员调整" : "Adjustment";
+            return zh ? "其他" : "Other";
+        };
+
+        const typeCls = function (t) {
+            if (t === "task_reward") return "ledger-type-reward";
+            if (t === "withdrawal") return "ledger-type-withdrawal";
+            if (t === "admin_adjust") return "ledger-type-adjust";
+            return "ledger-type-other";
+        };
+
+        const rowsHtml = list.map(function (t) {
+            const a = Number(t.amount || 0);
+            const pos = a >= 0;
+            const name = userMap[t.user_id] || "—";
+            const d = t.created_at ? new Date(t.created_at).toLocaleString(zh ? "zh-CN" : "en-GB") : "—";
+            return '<tr>' +
+                '<td><div class="ledger-user"><span class="ledger-ava">' + name.slice(0, 1).toUpperCase() + '</span>' +
+                '<span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:180px">' + name + '</span></div></td>' +
+                '<td><span class="ledger-type-tag ' + typeCls(t.type) + '">' + typeName(t.type) + '</span></td>' +
+                '<td class="admin-tx-amt ' + (pos ? "pos" : "neg") + '">' + (pos ? "+" : "-") + "RM" + Math.abs(a).toFixed(2) + '</td>' +
+                '<td style="max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + (t.note || "—") + '</td>' +
+                '<td style="white-space:nowrap;color:#94a3b8">' + d + '</td>' +
+                '</tr>';
+        }).join("");
+
+        container.innerHTML =
+            '<div class="admin-ledger-wrap">' +
+            '<table class="admin-ledger-table">' +
+            '<thead><tr>' +
+            '<th>' + (zh ? "用户" : "User") + '</th>' +
+            '<th>' + (zh ? "类型" : "Type") + '</th>' +
+            '<th>' + (zh ? "金额" : "Amount") + '</th>' +
+            '<th>' + (zh ? "备注" : "Note") + '</th>' +
+            '<th>' + (zh ? "时间" : "Time") + '</th>' +
+            '</tr></thead><tbody>' + rowsHtml + '</tbody></table></div>';
+
+    } catch (e) {
+        console.error("ledger failed", e);
+        container.innerHTML = '<div class="admin-error-box">' + e.message + '</div>';
+    }
+
+}
+
+
+/* ========================================
+   会员详情弹窗
+   ======================================== */
+
+async function openMemberDetail(uid) {
+
+    closeMemberDetail();
+
+    try {
+
+        const { data: p, error: perr } =
+            await supabaseClient
+            .from("profiles")
+            .select("*")
+            .eq("id", uid)
+            .single();
+
+        if (perr) throw perr;
+        if (!p) return;
+
+        const zh = typeof I18N !== "undefined" && I18N.get() === "zh";
+
+        // 流水
+        const { data: txs } =
+            await supabaseClient
+            .from("wallet_transactions")
+            .select("id, amount, type, note, created_at")
+            .eq("user_id", uid)
+            .order("created_at", { ascending: false })
+            .limit(20);
+
+        // 领取记录 + 任务标题
+        const { data: claims } =
+            await supabaseClient
+            .from("task_claims")
+            .select("id, task_id, status, claimed_at")
+            .eq("user_id", uid)
+            .order("claimed_at", { ascending: false })
+            .limit(20);
+
+        let taskMap = {};
+        if (claims && claims.length > 0) {
+            const { data: tasks } =
+                await supabaseClient
+                .from("tasks")
+                .select("id, title")
+                .in("id", claims.map(function (c) { return c.task_id; }));
+            (tasks || []).forEach(function (t) { taskMap[String(t.id)] = t.title; });
+        }
+
+        // 邀请关系
+        let inviterName = "—";
+        if (p.invited_by) {
+            const { data: inv } = await supabaseClient.from("profiles").select("display_name, username, email").eq("id", p.invited_by).maybeSingle();
+            if (inv) inviterName = inv.display_name || inv.username || inv.email || "?";
+        }
+
+        const { data: invitedList } =
+            await supabaseClient
+            .from("profiles")
+            .select("display_name, username, email, created_at")
+            .eq("invited_by", uid);
+
+        const levelNames = {
+            basic: I18N.t("member.basic"),
+            gold: I18N.t("member.gold"),
+            platinum: I18N.t("member.platinum"),
+            diamond: I18N.t("member.diamond")
+        };
+        const levelOpts = ["basic", "gold", "platinum", "diamond"].map(function (l) {
+            return '<option value="' + l + '"' + (p.membership_level === l ? " selected" : "") + '>' + levelNames[l] + '</option>';
+        }).join("");
+
+        const isAdmin = p.role === "admin";
+        const roleOpts = '<option value="user"' + (!isAdmin ? " selected" : "") + '>' + (zh ? "普通用户" : "User") + '</option>' +
+                         '<option value="admin"' + (isAdmin ? " selected" : "") + '>' + (zh ? "管理员" : "Admin") + '</option>';
+
+        const txRows = (!txs || txs.length === 0)
+            ? '<div class="admin-empty-note">' + (zh ? "暂无流水" : "No transactions") + '</div>'
+            : txs.map(function (t) {
+                const a = Number(t.amount || 0);
+                const pos = a >= 0;
+                const d = t.created_at ? new Date(t.created_at).toLocaleString(zh ? "zh-CN" : "en-GB") : "—";
+                const tn = t.type === "task_reward" ? (zh ? "佣金" : "Reward") : t.type === "withdrawal" ? (zh ? "提现" : "Withdrawal") : t.type === "admin_adjust" ? (zh ? "调整" : "Adjust") : (zh ? "其他" : "Other");
+                return '<div class="admin-tx-row"><div class="admin-tx-main"><b>' + tn + '</b><small>' + (t.note || "") + '</small><small> ' + d + '</small></div>' +
+                    '<div class="admin-tx-amt ' + (pos ? "pos" : "neg") + '">' + (pos ? "+" : "-") + "RM" + Math.abs(a).toFixed(2) + '</div></div>';
+            }).join("");
+
+        const claimRows = (!claims || claims.length === 0)
+            ? '<div class="admin-empty-note">' + (zh ? "暂无任务记录" : "No task records") + '</div>'
+            : claims.map(function (c) {
+                const title = taskMap[String(c.task_id)] || ("#" + c.task_id);
+                const st = c.status;
+                const stTxt = st === "approved" ? (zh ? "已完成" : "Done") : st === "submitted" ? (zh ? "待审核" : "Pending") : st === "rejected" ? (zh ? "已驳回" : "Rejected") : st === "claimed" ? (zh ? "进行中" : "In progress") : st;
+                const d = c.claimed_at ? new Date(c.claimed_at).toLocaleString(zh ? "zh-CN" : "en-GB") : "—";
+                return '<div class="admin-tx-row"><div class="admin-tx-main"><b>' + title + '</b><small>' + stTxt + ' · ' + d + '</small></div></div>';
+            }).join("");
+
+        const invitedRows = (!invitedList || invitedList.length === 0)
+            ? '<div class="admin-empty-note">' + (zh ? "暂无邀请" : "No invites") + '</div>'
+            : invitedList.map(function (u) {
+                const nm = u.display_name || u.username || u.email || "?";
+                return '<div class="admin-tx-row"><div class="admin-tx-main"><b>' + nm + '</b><small>' + (u.email || "") + ' · ' + fmtMemberDate(u.created_at) + '</small></div></div>';
+            }).join("");
+
+        const mask = document.createElement("div");
+        mask.className = "admin-modal-mask";
+        mask.id = "memberDetailMask";
+        mask.innerHTML =
+            '<div class="admin-modal-box">' +
+
+            '<div class="admin-modal-head">' +
+            '<h3>👤 ' + (p.display_name || p.username || p.email || "?") + '</h3>' +
+            '<button class="admin-modal-close" onclick="closeMemberDetail()">✕</button>' +
+            '</div>' +
+
+            '<div class="admin-modal-grid">' +
+            '<div class="admin-modal-field"><label>' + (zh ? "昵称" : "Nickname") + '</label>' +
+            '<input id="mdDisplayName" value="' + (p.display_name || "") + '" /></div>' +
+            '<div class="admin-modal-field"><label>' + (zh ? "电话" : "Phone") + '</label>' +
+            '<input id="mdPhone" value="' + (p.phone || "") + '" /></div>' +
+            '<div class="admin-modal-field"><label>' + (zh ? "等级" : "Level") + '</label>' +
+            '<select id="mdLevel">' + levelOpts + '</select></div>' +
+            '<div class="admin-modal-field"><label>' + (zh ? "余额 (RM)" : "Balance (RM)") + '</label>' +
+            '<input id="mdBalance" type="number" step="0.01" value="' + Number(p.balance || 0) + '" /></div>' +
+            '<div class="admin-modal-field"><label>' + (zh ? "角色" : "Role") + '</label>' +
+            '<select id="mdRole">' + roleOpts + '</select></div>' +
+            '<div class="admin-modal-field"><label>' + (zh ? "邀请码" : "Invite code") + '</label>' +
+            '<input value="' + (p.invite_code || "—") + '" readonly /></div>' +
+            '</div>' +
+
+            '<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:6px">' +
+            '<button class="admin-action-success" onclick="saveMemberDetail()">💾 ' + (zh ? "保存修改" : "Save changes") + '</button>' +
+            '<button class="admin-mini-btn gold" onclick="adjustBalance(\'' + uid + '\')">⚖️ ' + (zh ? "调账" : "Adjust") + '</button>' +
+            '<button class="admin-mini-btn" onclick="setMemberRole()">🔁 ' + (zh ? "切换角色" : "Switch role") + '</button>' +
+            '</div>' +
+
+            '<div class="admin-modal-sec"><div class="admin-modal-sec-title">💳 ' + (zh ? "钱包流水（最近 20 条）" : "Wallet transactions (last 20)") + '</div>' + txRows + '</div>' +
+
+            '<div class="admin-modal-sec"><div class="admin-modal-sec-title">📋 ' + (zh ? "任务记录（最近 20 条）" : "Task records (last 20)") + '</div>' + claimRows + '</div>' +
+
+            '<div class="admin-modal-sec"><div class="admin-modal-sec-title">🤝 ' + (zh ? "邀请关系" : "Invite relations") + '</div>' +
+            '<div class="admin-tx-row"><div class="admin-tx-main"><b>' + (zh ? "邀请人" : "Invited by") + '</b><small>' + inviterName + '</small></div></div>' +
+            '<div class="admin-tx-row"><div class="admin-tx-main"><b>' + (zh ? "已邀请 " + ((invitedList || []).length) + " 人" : "Invited " + ((invitedList || []).length) + " users") + '</b></div></div>' +
+            invitedRows +
+            '</div>' +
+
+            '<input type="hidden" id="mdUid" value="' + uid + '" />' +
+            '<input type="hidden" id="mdRoleVal" value="' + (p.role || "user") + '" />' +
+            '</div>';
+
+        document.body.appendChild(mask);
+
+    } catch (e) {
+        console.error("detail failed", e);
+        alert(e.message);
+    }
+
+}
+
+function closeMemberDetail() {
+    const mask = document.getElementById("memberDetailMask");
+    if (mask) mask.remove();
+}
+
+async function saveMemberDetail() {
+
+    const uid = document.getElementById("mdUid").value;
+    const level = document.getElementById("mdLevel").value;
+    const balance = Number(document.getElementById("mdBalance").value);
+    const dname = document.getElementById("mdDisplayName").value;
+    const phone = document.getElementById("mdPhone").value;
+
+    const { error } =
+        await supabaseClient
+        .rpc("admin_update_membership", {
+            p_user_id: uid,
+            p_level: level,
+            p_balance: balance,
+            p_display_name: dname,
+            p_phone: phone
+        });
+
+    if (error) {
+        alert((typeof I18N !== "undefined" && I18N.get() === "zh" ? "保存失败：" : "Save failed: ") + error.message);
+        return;
+    }
+
+    closeMemberDetail();
+    await loadMembers();
+    await loadDashboardStats();
+
+}
+
+async function setMemberRole() {
+
+    const uid = document.getElementById("mdUid").value;
+    const newRole = document.getElementById("mdRole").value;
+    const zh = typeof I18N !== "undefined" && I18N.get() === "zh";
+
+    if (!confirm(zh ? "确定将角色改为 " + (newRole === "admin" ? "管理员" : "普通用户") + " 吗？" : "Set role to " + newRole + "?")) return;
+
+    const { error } =
+        await supabaseClient
+        .rpc("admin_set_role", {
+            p_user_id: uid,
+            p_role: newRole
+        });
+
+    if (error) {
+        alert((zh ? "操作失败：" : "Failed: ") + error.message);
+        return;
+    }
+
+    alert(zh ? "角色已更新" : "Role updated");
+    closeMemberDetail();
+    await loadMembers();
+
+}
+
+async function adjustBalance(uid) {
+
+    const zh = typeof I18N !== "undefined" && I18N.get() === "zh";
+
+    const { data: p } =
+        await supabaseClient
+        .from("profiles")
+        .select("display_name, username, email, balance")
+        .eq("id", uid)
+        .single();
+
+    const name = (p && (p.display_name || p.username || p.email)) || uid;
+
+    const raw = prompt(
+        (zh ? "为 " + name + " 调账\n当前余额：RM" + (p ? Number(p.balance || 0).toFixed(2) : "0.00") +
+         "\n正数=充值，负数=扣款，例：10 或 -5" : "Adjust balance for " + name +
+         "\nCurrent: RM" + (p ? Number(p.balance || 0).toFixed(2) : "0.00") + "\nPositive=credit, Negative=debit, e.g. 10 or -5")
+    );
+
+    if (raw === null || raw.trim() === "") return;
+
+    const amount = Number(raw);
+    if (isNaN(amount) || amount === 0) {
+        alert(zh ? "请输入有效的非零金额" : "Enter a valid non-zero amount");
+        return;
+    }
+
+    const note = prompt(zh ? "备注（可选，将显示在用户钱包记录中）：" : "Note (optional, shown in user's wallet):") || "";
+
+    const { data: newBal, error } =
+        await supabaseClient
+        .rpc("admin_adjust_balance", {
+            p_user_id: uid,
+            p_amount: amount,
+            p_note: note
+        });
+
+    if (error) {
+        alert((zh ? "调账失败：" : "Adjust failed: ") + error.message);
+        return;
+    }
+
+    alert(zh ? "调账成功，当前余额：RM" + Number(newBal).toFixed(2) : "Done. New balance: RM" + Number(newBal).toFixed(2));
+    await loadMembers();
+    await loadDashboardStats();
+    await loadLedger();
+
+}
+
+
 function fmtMemberDate(iso) {
     if (!iso) return "—";
     const d = new Date(iso);
@@ -1171,6 +2287,13 @@ async function saveMember(btn) {
     const level = card.querySelector('[data-field="membership_level"]').value;
     const balance = Number(card.querySelector('[data-field="balance"]').value);
 
+    // 详情弹窗中的编辑表单（可选）
+    let dname = null, phone = null;
+    if (document.getElementById("mdDisplayName") && document.getElementById("mdUid") && document.getElementById("mdUid").value === uid) {
+        dname = document.getElementById("mdDisplayName").value;
+        phone = document.getElementById("mdPhone").value;
+    }
+
     btn.disabled = true;
 
     const { error } =
@@ -1178,7 +2301,9 @@ async function saveMember(btn) {
         .rpc("admin_update_membership", {
             p_user_id: uid,
             p_level: level,
-            p_balance: balance
+            p_balance: balance,
+            p_display_name: dname,
+            p_phone: phone
         });
 
     btn.disabled = false;
@@ -1190,6 +2315,7 @@ async function saveMember(btn) {
 
     alert(I18N.t("admin.memberEdited"));
     await loadMembers();
+    await loadDashboardStats();
 
 }
 
@@ -1874,11 +3000,28 @@ async function loadAdminTasks() {
                 "";
 
 
+            // 领取/完成统计
+            const claimStat = {};
+            try {
+                const { data: allClaims } =
+                    await supabaseClient
+                    .from("task_claims")
+                    .select("task_id, status");
+                (allClaims || []).forEach(function (c) {
+                    const k = String(c.task_id);
+                    claimStat[k] = claimStat[k] || { claims: 0, done: 0 };
+                    claimStat[k].claims++;
+                    if (c.status === "approved") claimStat[k].done++;
+                });
+            } catch (e) {
+                console.error("claim stat failed", e);
+            }
+
             taskList.forEach(
                 function (task) {
 
                     container.appendChild(
-                        createTaskCard(task)
+                        createTaskCard(task, claimStat[String(task.id)])
                     );
 
                 }
@@ -3120,7 +4263,8 @@ async function rejectWithdrawal(
    ======================================== */
 
 function createTaskCard(
-    task
+    task,
+    claimStat
 ) {
 
     const card =
@@ -3229,6 +4373,12 @@ function createTaskCard(
                     task.id
                 )}
             </div>
+
+            ${
+                claimStat
+                    ? `<div>📥 ${I18N.t("admin.claimedCount")} ${claimStat.claims || 0} · ✅ ${I18N.t("admin.doneCount")} ${claimStat.done || 0}</div>`
+                    : ""
+            }
 
             ${
                 task.shop_product_code
