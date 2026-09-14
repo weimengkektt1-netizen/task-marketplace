@@ -284,9 +284,11 @@
         let currentMembershipLevel = "basic";
 
         function commissionRate(level) {
-            return level === "gold" ? 0.08 :
-                   level === "platinum" ? 0.10 :
-                   level === "diamond" ? 0.15 : 0.05;
+            return level === "silver" ? 0.06 :
+                   level === "gold" ? 0.08 :
+                   level === "platinum" ? 0.12 :
+                   level === "diamond" ? 0.15 :
+                   level === "radiant" ? 0.18 : 0.02;
         }
 
 
@@ -676,9 +678,11 @@
             if (mRole !== "admin") {
 
                 const mLimit =
+                    mLevel === "silver" ? 2 :
                     mLevel === "gold" ? 5 :
                     mLevel === "platinum" ? 10 :
-                    mLevel === "diamond" ? -1 : 1;
+                    mLevel === "diamond" ? 20 :
+                    mLevel === "radiant" ? -1 : 1;
 
                 if (mLimit > 0) {
 

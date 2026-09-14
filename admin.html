@@ -219,9 +219,11 @@
         }
 
         .admin-badge-basic { background: rgba(148,163,184,.16); color:#cbd5e1; }
+        .admin-badge-silver { background: linear-gradient(135deg, rgba(203,213,225,.2), rgba(148,163,184,.2)); color:#e2e8f0; border:1px solid rgba(203,213,225,.4); }
         .admin-badge-gold { background: rgba(245,158,11,.16); color:#fcd34d; border:1px solid rgba(245,158,11,.35); }
-        .admin-badge-platinum { background: rgba(148,163,184,.2); color:#e2e8f0; border:1px solid rgba(148,163,184,.4); }
+        .admin-badge-platinum { background: rgba(167,139,250,.16); color:#c4b5fd; border:1px solid rgba(167,139,250,.4); }
         .admin-badge-diamond { background: linear-gradient(135deg, rgba(56,189,248,.25), rgba(167,139,250,.25)); color:#bae6fd; border:1px solid rgba(56,189,248,.45); }
+        .admin-badge-radiant { background: linear-gradient(135deg, rgba(251,191,36,.22), rgba(168,85,247,.28)); color:#fde68a; border:1px solid rgba(251,191,36,.5); }
 
         .admin-member-actions {
             display: flex;
@@ -1711,9 +1713,11 @@ async function loadMembers() {
 
     const levelNames = {
         basic: I18N.t("member.basic"),
+        silver: I18N.t("member.silver"),
         gold: I18N.t("member.gold"),
         platinum: I18N.t("member.platinum"),
-        diamond: I18N.t("member.diamond")
+        diamond: I18N.t("member.diamond"),
+        radiant: I18N.t("member.radiant")
     };
 
     if (list.length === 0) {
@@ -1723,7 +1727,7 @@ async function loadMembers() {
 
     const rows = list.map(function (m) {
 
-        const levelOpts = ["basic", "gold", "platinum", "diamond"].map(function (l) {
+        const levelOpts = ["basic", "silver", "gold", "platinum", "diamond", "radiant"].map(function (l) {
             return '<option value="' + l + '"' + (m.membership_level === l ? " selected" : "") + '>' + levelNames[l] + '</option>';
         }).join("");
 
@@ -2065,11 +2069,13 @@ async function openMemberDetail(uid) {
 
         const levelNames = {
             basic: I18N.t("member.basic"),
+            silver: I18N.t("member.silver"),
             gold: I18N.t("member.gold"),
             platinum: I18N.t("member.platinum"),
-            diamond: I18N.t("member.diamond")
+            diamond: I18N.t("member.diamond"),
+            radiant: I18N.t("member.radiant")
         };
-        const levelOpts = ["basic", "gold", "platinum", "diamond"].map(function (l) {
+        const levelOpts = ["basic", "silver", "gold", "platinum", "diamond", "radiant"].map(function (l) {
             return '<option value="' + l + '"' + (p.membership_level === l ? " selected" : "") + '>' + levelNames[l] + '</option>';
         }).join("");
 
