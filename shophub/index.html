@@ -427,6 +427,24 @@ input,select,textarea{font-family:inherit;outline:none}
 .role-badge.buyer{background:#f0f3f7;color:#5b6472}
 .admin-user-filters{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
 .seller-orders-head{display:flex;align-items:center;justify-content:space-between;margin:22px 0 12px}
+.pay-cur-tabs{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.pay-currency-row{margin:6px 0 4px;text-align:left}
+.pay-sec-label{font-size:11.5px;color:#9aa3af;font-weight:700;margin:10px 0 6px;letter-spacing:.4px}
+.pay-currency-btns{display:flex;gap:8px;flex-wrap:wrap}
+.pay-cur-btn{padding:8px 14px;border-radius:999px;border:1.5px solid #e6eaf0;background:#fff;font-size:13px;font-weight:700;color:#3a4351;cursor:pointer;transition:all .15s}
+.pay-cur-btn:hover{border-color:#7aa5f7;color:#1ea7f7}
+.pay-cur-btn.on{background:linear-gradient(135deg,#1ea7f7,#7aa5f7);color:#fff;border-color:transparent;box-shadow:0 4px 12px rgba(30,167,247,.28)}
+.pay-bank-list{display:flex;gap:8px;flex-wrap:wrap}
+.pay-bank-btn{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:12px;border:1.5px solid #e6eaf0;background:#fff;font-size:13px;font-weight:600;color:#1c2430;cursor:pointer;transition:all .15s}
+.pay-bank-btn img{width:24px;height:24px;border-radius:6px;object-fit:contain}
+.pay-bank-btn .pay-bank-ic{width:24px;height:24px;border-radius:6px;background:linear-gradient(135deg,#a5c8ff,#7aa5f7);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}
+.pay-bank-btn:hover{border-color:#7aa5f7}
+.pay-bank-btn.on{background:#f0f7ff;border-color:#1ea7f7;color:#1ea7f7;box-shadow:0 4px 12px rgba(30,167,247,.15)}
+.pay-method-card{background:var(--card);border-radius:14px;box-shadow:var(--shadow);padding:12px 14px;margin-bottom:10px;display:flex;align-items:center;gap:12px}
+.pay-method-card .pay-bank-icon{width:40px;height:40px;border-radius:10px;object-fit:contain;flex:none;background:#fff;border:1px solid var(--line)}
+.pay-method-card .pm-meta{flex:1;min-width:0}
+.pay-method-card .pm-name{font-size:14px;font-weight:700;color:var(--dark);display:flex;align-items:center;gap:8px}
+.pay-method-card .pm-sub{font-size:12px;color:var(--muted);margin-top:2px;word-break:break-all}
 .admin-prod-card{background:var(--card);border-radius:14px;box-shadow:var(--shadow);padding:12px 14px;margin-bottom:10px;display:flex;align-items:center;gap:14px}
 .admin-prod-card img{width:52px;height:52px;border-radius:10px;object-fit:cover;flex:none}
 .admin-prod-card .p-meta{flex:1;min-width:0}
@@ -735,9 +753,19 @@ input,select,textarea{font-family:inherit;outline:none}
 
 <!-- ================= 收款码弹窗 ================= -->
 <div class="modal-mask" id="payModal" onclick="if(event.target===this)closeModal('payModal')">
-    <div class="modal-box" style="max-width:340px">
+    <div class="modal-box" style="max-width:360px">
         <button class="modal-close" onclick="closeModal('payModal')">✕</button>
         <h3 style="justify-content:center">扫码付款</h3>
+        <div class="pay-amount">RM<span id="payAmount">0</span></div>
+        <div class="pay-order-no" id="payOrderNo"></div>
+        <div class="pay-currency-row" id="payCurrencyRow" style="display:none">
+            <div class="pay-sec-label">选择支付币种</div>
+            <div class="pay-currency-btns" id="payCurrencyBtns"></div>
+        </div>
+        <div class="pay-banks-row" id="payBanksRow" style="display:none">
+            <div class="pay-sec-label">选择收款银行</div>
+            <div class="pay-bank-list" id="payBankList"></div>
+        </div>
         <div class="pay-qr-wrap">
             <img class="pay-qr-img hidden" id="payQrImg" alt="收款码">
             <div class="pay-qr-placeholder" id="payQrPh">
@@ -750,8 +778,6 @@ input,select,textarea{font-family:inherit;outline:none}
                 <div id="payAccountName" style="font-size:12.5px;color:#3a4351;margin-top:3px">—</div>
                 <div id="payAccountNo" style="font-size:12.5px;color:#3a4351;margin-top:3px">—</div>
             </div>
-            <div class="pay-amount">RM<span id="payAmount">0</span></div>
-            <div class="pay-order-no" id="payOrderNo"></div>
         </div>
         <div class="pay-tip">请使用您的支付应用扫描上方收款码完成付款。付款成功后点击下方按钮上传<b>支付截图</b>，平台客服审核通过后订单即完成。</div>
         <div class="pay-upload">
@@ -1339,40 +1365,100 @@ function submitOrder(){
    收款码弹窗 · 上传支付截图
    ============================================================ */
 let curPayOrder = null;
+let curPayCurrency = "RM";
+let curPayBankId = null;
+let payMethodsCache = [];
+const CURRENCIES = [
+    {k:"RM", t:"马币 RM", flag:"🇲🇾"},
+    {k:"SGD", t:"新币 SGD", flag:"🇸🇬"},
+    {k:"EUR", t:"欧元 EUR", flag:"🇪🇺"},
+    {k:"USD", t:"美金 USD", flag:"🇺🇸"}
+];
 async function openPayModal(order){
     curPayOrder = order;
+    curPayCurrency = "RM";
+    curPayBankId = null;
     const ub = document.querySelector(".upload-btn");
     if (ub) ub.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V4m0 0l-4 4m4-4l4 4"/><path d="M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/></svg> 我已付款 · 上传支付截图';
     document.getElementById("payAmount").textContent = fmt(Number(order.total));
     document.getElementById("payOrderNo").textContent = "订单号 " + order.order_no;
+    try {
+        const { data: methods } = await sb.from("shop_payment_methods").select("*").eq("enabled", true).order("sort", {ascending: true});
+        payMethodsCache = methods || [];
+    } catch (e) { payMethodsCache = []; }
+    renderPayCurrencyRow();
+    renderPayBanks();
+    openModal("payModal");
+}
+function renderPayCurrencyRow(){
+    const row = document.getElementById("payCurrencyRow");
+    if (!row) return;
+    const hasAny = payMethodsCache.length > 0;
+    row.style.display = hasAny ? "block" : "none";
+    if (!hasAny) return;
+    const currs = CURRENCIES.filter(c => payMethodsCache.some(m => m.currency === c.k));
+    document.getElementById("payCurrencyBtns").innerHTML = currs.map(c =>
+        '<button class="pay-cur-btn' + (curPayCurrency === c.k ? " on" : "") + '" onclick="selectPayCurrency(\'' + c.k + '\')">' + c.flag + " " + c.t + "</button>"
+    ).join("");
+    if (!currs.some(c => c.k === curPayCurrency)) curPayCurrency = currs[0].k;
+}
+function selectPayCurrency(k){
+    curPayCurrency = k;
+    curPayBankId = null;
+    renderPayCurrencyRow();
+    renderPayBanks();
+}
+function renderPayBanks(){
+    const row = document.getElementById("payBanksRow");
+    const list = document.getElementById("payBankList");
     const img = document.getElementById("payQrImg"), ph = document.getElementById("payQrPh");
     const acc = document.getElementById("payAccount");
-    try {
-        const { data: st } = await sb.from("shop_payment_settings").select("*").eq("id", 1).maybeSingle();
-        const s = st || {};
-        if (s.qr_url) {
-            img.src = s.qr_url;
-            img.classList.remove("hidden");
-            ph.classList.add("hidden");
-        } else {
-            img.classList.add("hidden");
-            ph.classList.remove("hidden");
-        }
-        if (acc) {
-            if (s.bank_name || s.account_name || s.account_no) {
-                acc.style.display = "block";
-                document.getElementById("payAccountBank").textContent = s.bank_name || "—";
-                document.getElementById("payAccountName").textContent = "收款人：" + (s.account_name || "—");
-                document.getElementById("payAccountNo").textContent = "账号：" + (s.account_no || "—");
-            } else {
-                acc.style.display = "none";
-            }
-        }
-    } catch (e) {
+    const banks = payMethodsCache.filter(m => m.currency === curPayCurrency);
+    if (banks.length > 1) {
+        row.style.display = "block";
+        list.innerHTML = banks.map(b =>
+            '<button class="pay-bank-btn' + (curPayBankId === b.id ? " on" : "") + '" onclick="selectPayBank(' + b.id + ')">' +
+            (b.bank_icon ? '<img src="' + b.bank_icon + '" onerror="this.style.display=\'none\'">' : '<span class="pay-bank-ic">' + esc((b.bank_name || "B").charAt(0).toUpperCase()) + "</span>") +
+            "<span>" + esc(b.bank_name) + "</span></button>"
+        ).join("");
+    } else {
+        row.style.display = "none";
+    }
+    if (!banks.length) {
+        img.classList.add("hidden"); ph.classList.remove("hidden");
+        if (acc) acc.style.display = "none";
+        return;
+    }
+    const b = curPayBankId ? banks.find(x => x.id === curPayBankId) : banks[0];
+    if (b && !curPayBankId) curPayBankId = b.id;
+    if (b) showPayBank(b);
+}
+function selectPayBank(id){
+    curPayBankId = id;
+    renderPayBanks();
+}
+function showPayBank(b){
+    const img = document.getElementById("payQrImg"), ph = document.getElementById("payQrPh");
+    const acc = document.getElementById("payAccount");
+    if (!b) return;
+    if (b.qr_url) {
+        img.src = b.qr_url;
+        img.classList.remove("hidden");
+        ph.classList.add("hidden");
+    } else {
         img.classList.add("hidden");
         ph.classList.remove("hidden");
     }
-    openModal("payModal");
+    if (acc) {
+        if (b.bank_name || b.account_name || b.account_no) {
+            acc.style.display = "block";
+            document.getElementById("payAccountBank").textContent = b.bank_name || "—";
+            document.getElementById("payAccountName").textContent = "收款人：" + (b.account_name || "—");
+            document.getElementById("payAccountNo").textContent = "账号：" + (b.account_no || "—");
+        } else {
+            acc.style.display = "none";
+        }
+    }
 }
 function uploadPayProof(input){
     const file = input.files && input.files[0];
@@ -1390,7 +1476,8 @@ function uploadPayProof(input){
             return;
         }
         const url = sb.storage.from("payproof").getPublicUrl(path).data.publicUrl;
-        sb.from("shop_orders").update({pay_proof_url: url, status: "awaiting_review"}).eq("id", curPayOrder.id).then(u => {
+        const selBank = payMethodsCache.find(m => m.id === curPayBankId);
+        sb.from("shop_orders").update({pay_proof_url: url, status: "awaiting_review", pay_currency: curPayCurrency || "RM", pay_bank: selBank ? selBank.bank_name : ""}).eq("id", curPayOrder.id).then(u => {
             if (u.error) { toast("提交失败：" + u.error.message); return; }
             closeModal("payModal");
             toast("支付凭证已提交，等待平台客服审核");
@@ -1738,8 +1825,11 @@ async function renderAdminList(){
         const item = (o.items && o.items[0]) || {};
         const addr = o.addr || {};
         let proof = "";
+        if (o.pay_currency || o.pay_bank) {
+            proof = '<div class="shop-proof"><div class="proof-info"><b>支付方式：</b>' + esc(o.pay_currency || "—") + (o.pay_bank ? " · " + esc(o.pay_bank) : "") + "</div></div>";
+        }
         if (o.pay_proof_url) {
-            proof = '<div class="shop-proof"><img src="' + o.pay_proof_url + '" onclick="window.open(\'' + o.pay_proof_url + '\')" alt="支付截图">' +
+            proof += '<div class="shop-proof"><img src="' + o.pay_proof_url + '" onclick="window.open(\'' + o.pay_proof_url + '\')" alt="支付截图">' +
                 '<div class="proof-info"><b>支付截图</b> · 点击放大核对<br>提交于 ' + esc(new Date(o.created_at).toLocaleString("zh-CN")) + "</div>" +
                 (o.status === "awaiting_review" ? '<div class="admin-btns"><button class="admin-btn approve" onclick="adminReview(\'' + o.id + '\',\'completed\')">通过 · 完成订单</button>' +
                     '<input class="reject-input" id="rej' + o.id + '" placeholder="拒绝原因"><button class="admin-btn reject" onclick="adminReview(\'' + o.id + '\',\'rejected\')">拒绝</button></div>' : "") +
@@ -1904,54 +1994,135 @@ async function removeSeller(uid){
     toast("已取消卖家身份");
     renderAdminUsers();
 }
+let payCurTab = "RM";
+function setPayCurTab(k){ payCurTab = k; renderAdminPay(); }
 async function renderAdminPay(){
     const wrap = document.getElementById("adminOrders");
-    const { data: st, error } = await sb.from("shop_payment_settings").select("*").eq("id", 1).maybeSingle();
+    const { data: list, error } = await sb.from("shop_payment_methods").select("*").order("sort", {ascending: true});
     if (error) { wrap.innerHTML = '<div class="empty"><p>加载失败：' + esc(error.message) + "</p></div>"; return; }
-    const s = st || {};
+    const methods = list || [];
+    const cur = methods.filter(m => m.currency === payCurTab);
+    const tabs = CURRENCIES.map(c => '<button class="order-tab' + (payCurTab === c.k ? " on" : "") + '" onclick="setPayCurTab(\'' + c.k + '\')">' + c.flag + " " + c.t + "</button>").join("");
+    const curName = CURRENCIES.find(c => c.k === payCurTab);
+    const cards = cur.map(m =>
+        '<div class="pay-method-card">' +
+        (m.bank_icon ? '<img class="pay-bank-icon" src="' + m.bank_icon + '" onerror="this.style.display=\'none\'">' : '<span class="pay-bank-ic" style="width:40px;height:40px;font-size:16px">' + esc((m.bank_name || "B").charAt(0).toUpperCase()) + '</span>') +
+        '<div class="pm-meta"><div class="pm-name">' + esc(m.bank_name) + (m.enabled ? '<span class="role-badge seller">启用</span>' : '<span class="role-badge reject">停用</span>') + '</div>' +
+        '<div class="pm-sub">' + esc(m.account_name || "—") + ' · ' + esc(m.account_no || "—") + '</div></div>' +
+        '<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">' +
+        '<button class="admin-btn approve" style="padding:6px 10px;font-size:12px" onclick="editPayMethod(' + m.id + ')">编辑</button>' +
+        '<button class="admin-btn" style="padding:6px 10px;font-size:12px" onclick="togglePayMethod(' + m.id + ')">' + (m.enabled ? "停用" : "启用") + '</button>' +
+        '<button class="admin-btn reject" style="padding:6px 10px;font-size:12px" onclick="delPayMethod(' + m.id + ')">删除</button>' +
+        "</div></div>"
+    ).join("");
     wrap.innerHTML =
-        '<div style="max-width:560px">' +
-        '<div class="form-card"><h4>收款码</h4>' +
-        '<div style="display:flex;align-items:center;gap:18px;flex-wrap:wrap">' +
-        (s.qr_url
-            ? '<img src="' + s.qr_url + '" style="width:172px;height:172px;border-radius:14px;border:1px solid var(--line);object-fit:contain;background:#fff">'
-            : '<div style="width:172px;height:172px;border-radius:14px;background:#fafbfc;border:1.5px dashed #d5d9de;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:12px;text-align:center;padding:10px">尚未上传收款码<br>上传后客户下单时将显示收款码</div>') +
-        '<div><div style="font-size:12px;color:var(--muted);margin-bottom:8px">上传新的收款码（JPG / PNG，≤5MB）</div>' +
-        '<label class="btn btn-primary" style="cursor:pointer;display:inline-flex;align-items:center;gap:6px;padding:10px 18px">📷 选择图片<input type="file" accept="image/*" class="hidden" onchange="uploadPayQr(this)"></label></div>' +
-        "</div></div>" +
-        '<div class="form-card"><h4>付款账户</h4>' +
-        '<div class="form-field"><label>银行 / 支付平台名称</label><input id="payBankName" placeholder="如：Maybank" value="' + esc(s.bank_name || "") + '"></div>' +
-        '<div class="form-field"><label>收款人名称</label><input id="payAccountName2" placeholder="如：TASKHUB SDN BHD" value="' + esc(s.account_name || "") + '"></div>' +
-        '<div class="form-field"><label>收款账号</label><input id="payAccountNo2" placeholder="如：1234 5678 9012" value="' + esc(s.account_no || "") + '"></div>' +
-        '<button class="btn btn-primary" onclick="savePaySettings()" style="margin-top:6px">保存设置</button>' +
+        '<div style="max-width:680px">' +
+        '<div class="pay-cur-tabs">' + tabs + "</div>" +
+        '<div class="form-card"><h4>添加 / 编辑 ' + (curName ? curName.t : "") + ' 收款方式</h4>' +
+        '<input type="hidden" id="pmEditId" value="">' +
+        '<div class="form-row"><div class="form-field"><label>银行 / 支付平台名称 *</label><input id="pmBankName" placeholder="如：Maybank"></div>' +
+        '<div class="form-field"><label>银行图标</label>' +
+        '<input type="hidden" id="pmBankIcon" value="">' +
+        '<label class="btn" style="cursor:pointer;display:inline-flex;align-items:center;gap:6px;padding:8px 14px;font-size:13px">📷 上传图标<input type="file" accept="image/*" class="hidden" onchange="uploadPayIcon(this)"></label>' +
+        '<div id="pmIconPrev"></div></div></div>' +
+        '<div class="form-row"><div class="form-field"><label>收款码</label>' +
+        '<input type="hidden" id="pmQr" value="">' +
+        '<label class="btn" style="cursor:pointer;display:inline-flex;align-items:center;gap:6px;padding:8px 14px;font-size:13px">📷 上传收款码<input type="file" accept="image/*" class="hidden" onchange="uploadPayQr2(this)"></label>' +
+        '<div id="pmQrPrev"></div></div>' +
+        '<div class="form-field"><label>收款人名称</label><input id="pmAccountName" placeholder="如：TASKHUB SDN BHD"></div>' +
+        '<div class="form-field"><label>收款账号</label><input id="pmAccountNo" placeholder="如：1234 5678 9012"></div></div>' +
+        '<div style="display:flex;gap:10px;margin-top:8px"><button class="btn btn-primary" onclick="savePayMethod()">保存收款方式</button>' +
+        '<button class="btn" onclick="resetPayForm()">清空表单</button></div>' +
         "</div>" +
-        (s.updated_at ? '<div style="font-size:12px;color:var(--muted);margin-top:4px">最近更新：' + new Date(s.updated_at).toLocaleString("zh-CN") + "</div>" : "") +
+        (cur.length ? '<div class="form-card"><h4>' + (curName ? curName.t : "") + ' 收款方式列表</h4>' + cards + "</div>" : '<div class="empty"><p>该币种暂无收款方式，请在上方添加</p></div>') +
         "</div>";
 }
-function uploadPayQr(input){
+function resetPayForm(){
+    document.getElementById("pmEditId").value = "";
+    document.getElementById("pmBankName").value = "";
+    document.getElementById("pmBankIcon").value = "";
+    document.getElementById("pmQr").value = "";
+    document.getElementById("pmAccountName").value = "";
+    document.getElementById("pmAccountNo").value = "";
+    document.getElementById("pmIconPrev").innerHTML = "";
+    document.getElementById("pmQrPrev").innerHTML = "";
+}
+async function editPayMethod(id){
+    const { data: m } = await sb.from("shop_payment_methods").select("*").eq("id", id).single();
+    if (!m) { toast("未找到该收款方式"); return; }
+    document.getElementById("pmEditId").value = m.id;
+    document.getElementById("pmBankName").value = m.bank_name || "";
+    document.getElementById("pmBankIcon").value = m.bank_icon || "";
+    document.getElementById("pmQr").value = m.qr_url || "";
+    document.getElementById("pmAccountName").value = m.account_name || "";
+    document.getElementById("pmAccountNo").value = m.account_no || "";
+    document.getElementById("pmIconPrev").innerHTML = m.bank_icon ? '<img src="' + m.bank_icon + '" style="width:36px;height:36px;border-radius:8px;object-fit:cover;margin-top:6px">' : "";
+    document.getElementById("pmQrPrev").innerHTML = m.qr_url ? '<img src="' + m.qr_url + '" style="width:64px;height:64px;border-radius:8px;object-fit:cover;margin-top:6px">' : "";
+}
+function uploadPayIcon(input){
     const file = input.files && input.files[0];
     if (!file) return;
     if (file.size > 5 * 1024 * 1024) { toast("图片不能超过 5MB"); input.value = ""; return; }
-    const path = "payqr/settings-" + Date.now() + ".jpg";
+    const path = "payicons/" + payCurTab + "-" + Date.now() + ".png";
     sb.storage.from("payproof").upload(path, file, {contentType: file.type}).then(res => {
         if (res.error) { toast("上传失败：" + res.error.message); input.value = ""; return; }
         const url = sb.storage.from("payproof").getPublicUrl(path).data.publicUrl;
-        sb.from("shop_payment_settings").upsert({id: 1, qr_url: url, updated_at: new Date().toISOString()}).then(u => {
-            if (u.error) { toast("保存失败：" + u.error.message); return; }
-            toast("收款码已更新");
-            renderAdminPay();
-        });
+        document.getElementById("pmBankIcon").value = url;
+        document.getElementById("pmIconPrev").innerHTML = '<img src="' + url + '" style="width:36px;height:36px;border-radius:8px;object-fit:cover;margin-top:6px">';
+        toast("图标已上传");
+        input.value = "";
     });
 }
-function savePaySettings(){
-    const bank = document.getElementById("payBankName").value.trim();
-    const name = document.getElementById("payAccountName2").value.trim();
-    const no = document.getElementById("payAccountNo2").value.trim();
-    sb.from("shop_payment_settings").upsert({id: 1, bank_name: bank, account_name: name, account_no: no, updated_at: new Date().toISOString()}).then(u => {
-        if (u.error) { toast("保存失败：" + u.error.message); return; }
-        toast("付款账户已更新");
+function uploadPayQr2(input){
+    const file = input.files && input.files[0];
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) { toast("图片不能超过 5MB"); input.value = ""; return; }
+    const path = "payqr/" + payCurTab + "-" + Date.now() + ".jpg";
+    sb.storage.from("payproof").upload(path, file, {contentType: file.type}).then(res => {
+        if (res.error) { toast("上传失败：" + res.error.message); input.value = ""; return; }
+        const url = sb.storage.from("payproof").getPublicUrl(path).data.publicUrl;
+        document.getElementById("pmQr").value = url;
+        document.getElementById("pmQrPrev").innerHTML = '<img src="' + url + '" style="width:64px;height:64px;border-radius:8px;object-fit:cover;margin-top:6px">';
+        toast("收款码已上传");
+        input.value = "";
+    });
+}
+function savePayMethod(){
+    const name = document.getElementById("pmBankName").value.trim();
+    if (!name) { toast("请填写银行 / 支付平台名称"); return; }
+    const editId = document.getElementById("pmEditId").value;
+    const payload = {
+        currency: payCurTab,
+        bank_name: name,
+        bank_icon: document.getElementById("pmBankIcon").value,
+        qr_url: document.getElementById("pmQr").value,
+        account_name: document.getElementById("pmAccountName").value.trim(),
+        account_no: document.getElementById("pmAccountNo").value.trim(),
+        enabled: true
+    };
+    if (editId) payload.id = parseInt(editId, 10);
+    else payload.sort = (payMethodsCache.filter(m => m.currency === payCurTab).length || 0) + 1;
+    sb.from("shop_payment_methods").upsert(payload).then(res => {
+        if (res.error) { toast("保存失败：" + res.error.message); return; }
+        toast(editId ? "收款方式已更新" : "收款方式已添加");
+        resetPayForm();
         renderAdminPay();
     });
+}
+async function togglePayMethod(id){
+    const { data: m } = await sb.from("shop_payment_methods").select("enabled").eq("id", id).single();
+    const ne = m && m.enabled ? false : true;
+    const res = await sb.from("shop_payment_methods").update({enabled: ne}).eq("id", id);
+    if (res.error) { toast("操作失败：" + res.error.message); return; }
+    toast(ne ? "已启用" : "已停用");
+    renderAdminPay();
+}
+async function delPayMethod(id){
+    if (!confirm("确定删除该收款方式？")) return;
+    const res = await sb.from("shop_payment_methods").delete().eq("id", id);
+    if (res.error) { toast("删除失败：" + res.error.message); return; }
+    toast("已删除");
+    renderAdminPay();
 }
 /* ============================================================
    卖家中心（卖家店铺管理 + 管理员代管）
