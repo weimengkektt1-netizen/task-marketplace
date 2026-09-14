@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>ShopHub · 精选好物商城</title>
+<link rel="icon" href="assets/favicon.png" type="image/png">
 <style>
 /* ============================================================
    ShopHub - 单文件商城（首页/列表/详情/购物车/结算/订单/个人中心）
@@ -38,8 +39,7 @@ input,select,textarea{font-family:inherit;outline:none}
 .topbar{position:sticky;top:0;z-index:100;background:var(--card);box-shadow:0 1px 0 var(--line)}
 .topbar-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:16px;padding:10px 16px}
 .logo{display:flex;align-items:center;gap:8px;cursor:pointer;flex:none}
-.logo-badge{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--orange),var(--orange-2));display:flex;align-items:center;justify-content:center;box-shadow:0 4px 10px rgba(245,61,45,.3)}
-.logo-badge svg{width:20px;height:20px;stroke:#fff}
+.logo-badge{width:34px;height:34px;border-radius:10px;display:block;object-fit:cover;box-shadow:0 4px 10px rgba(245,61,45,.3)}
 .logo-text{font-size:20px;font-weight:800;letter-spacing:-.5px;color:var(--dark)}
 .logo-text b{color:var(--orange)}
 .search-box{flex:1;display:flex;align-items:center;background:var(--orange-bg);border-radius:999px;padding:3px 4px 3px 16px;max-width:560px;margin:0 auto;transition:box-shadow .2s}
@@ -490,9 +490,7 @@ input,select,textarea{font-family:inherit;outline:none}
 <header class="topbar">
     <div class="topbar-inner">
         <div class="logo" onclick="go('#home')">
-            <span class="logo-badge">
-                <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16v3l-2.5 2v8h-11v-8L4 10V7z"/><path d="M9 20v-5h6v5"/></svg>
-            </span>
+            <img class="logo-badge" src="assets/logo.png" alt="ShopHub" title="ShopHub">
             <span class="logo-text">Shop<b>Hub</b></span>
         </div>
         <div class="search-box">
