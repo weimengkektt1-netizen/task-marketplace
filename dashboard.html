@@ -3673,13 +3673,10 @@ async function loadMembership() {
     const navIco = document.getElementById("navMemberIco");
     if (navIco) navIco.innerHTML = tierIcon("diamond");
 
-    const { count } =
-        await supabaseClient
-        .from("profiles")
-        .select("id", { count: "exact" })
-        .eq("invited_by", currentUser.id);
+    const { data: invitedCount, error: invErr } =
+        await supabaseClient.rpc("get_my_invite_count");
 
-    const invited = count || 0;
+    const invited = (!invErr && typeof invitedCount === "number") ? invitedCount : 0;
 
     document.getElementById("memberTierName").textContent = memberName(cur);
     document.getElementById("memberCommission").textContent = conf.rate + "%";
