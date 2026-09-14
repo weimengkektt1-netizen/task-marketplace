@@ -154,7 +154,8 @@
                 flex-direction: column;
             }
         }
-    </style>
+    .admin-task-shopcode{margin-top:8px;font-size:12px;color:#f0b429;background:rgba(240,180,41,.08);border:1px dashed rgba(240,180,41,.35);border-radius:8px;padding:5px 10px;display:inline-block}
+</style>
 </head>
 
 
@@ -537,17 +538,17 @@
                             <div class="admin-form-group full">
 
                                 <label>
-                                <span data-i18n="admin.shopProduct">绑定 ShopHub 商品（选填，刷单任务）</span>
+                                <span data-i18n="admin.shopProduct">绑定 ShopHub 商品识别码（选填，刷单任务）</span>
                                 </label>
 
                                 <input
-                                    type="number"
-                                    id="taskShopProduct"
-                                    placeholder="例如：3" data-i18n-placeholder="admin.shopProductPh"
-                                    min="1">
+                                    type="text"
+                                    id="taskShopProductCode"
+                                    placeholder="例如：SH0001" data-i18n-placeholder="admin.shopProductPh"
+                                    style="text-transform:uppercase">
 
                                 <small class="admin-form-hint" style="display:block;margin-top:6px;font-size:12px;color:#8a94a6;line-height:1.6;">
-                                    <span data-i18n="admin.shopProductHint">填写 ShopHub 商品 ID（商品详情页 #product/ 后面的数字）。填写后该任务为刷单任务：用户领取后跳转商城下单，付款审核通过后任务自动完成并发放佣金。</span>
+                                    <span data-i18n="admin.shopProductHint">填写 ShopHub 商品的识别码（如 SH0001）。填写后该任务为刷单任务：用户领取后跳转对应商品下单，付款审核通过后任务自动完成并发放佣金。</span>
                                 </small>
 
                             </div>
@@ -1472,16 +1473,13 @@ async function createTask(event) {
 
     const shopProductElement =
         document.getElementById(
-            "taskShopProduct"
+            "taskShopProductCode"
         );
 
 
     const shopProductValue =
         shopProductElement && shopProductElement.value.trim()
-            ? parseInt(
-                shopProductElement.value,
-                10
-            )
+            ? shopProductElement.value.trim().toUpperCase()
             : null;
 
 
@@ -1677,6 +1675,9 @@ async function createTask(event) {
                         taskImageUrl,
 
                     shop_product_id:
+                        null,
+
+                    shop_product_code:
                         shopProductValue,
 
                     shop_product_price:
@@ -3648,8 +3649,6 @@ function escapeJs(
     </footer>
 
 
-
-
     <!-- ============ 移动端底部 Tab 栏（仅手机显示，PC 不变） ============ -->
     <div class="more-mask-mb hidden" id="moreMaskMb" onclick="toggleMoreMb(false)"></div>
 
@@ -3672,8 +3671,8 @@ function escapeJs(
         <div class="more-grid-mb" id="moreGridMb"></div>
     </div>
 
-<script>
-        /* 移动端底部 Tab 栏（仅手机显示，PC 不变） */
+    <script>
+        /* 移动端底部 Tab 栏（管理页：管理后台高亮，更多面板提供用户中心/登出） */
         function tabMoreLb() {
             var el = document.getElementById("tabMoreLb");
             if (el) el.textContent = (typeof I18N !== "undefined" && I18N.get() === "zh") ? "更多" : "More";
@@ -3694,30 +3693,20 @@ function escapeJs(
             var items = [
                 { v: "mytasks", ic: "📋", lb: zh ? "我的任务" : "My Tasks", href: "dashboard.html#mytasks" },
                 { v: "withdraw", ic: "💸", lb: zh ? "提现" : "Withdraw", href: "dashboard.html#withdraw" },
-                { v: "membership", ic: "💎", lb: zh ? "会员中心" : "Membership", href: "dashboard.html#membership" }
+                { v: "membership", ic: "💎", lb: zh ? "会员中心" : "Membership", href: "dashboard.html#membership" },
+                { v: "logout", ic: "↪", lb: zh ? "登出" : "Log out", act: "adminLogout()" }
             ];
-            
-            items.push({ v: "logout", ic: "↪", lb: zh ? "登出" : "Log out", act: "adminLogout()" });
-            var h = (location.hash || "").replace("#", "");
             grid.innerHTML = items.map(function (it) {
-                var on = h === it.v ? " on" : "";
+                var on = "";
                 if (it.act) {
                     return '<button type="button" class="mi-mb' + on + '" onclick="' + it.act + '" style="border:none;cursor:pointer;font-family:inherit"><span class="mi-ic-mb">' + it.ic + '</span><span class="mi-lb-mb">' + it.lb + '</span></button>';
                 }
                 return '<a class="mi-mb' + on + '" href="' + it.href + '" onclick="toggleMoreMb(false)"><span class="mi-ic-mb">' + it.ic + '</span><span class="mi-lb-mb">' + it.lb + '</span></a>';
             }).join("");
         }
-        function syncTabBar() {
-            var h = (location.hash || "").replace("#", "");
-            var v = "overview";
-            if (h === "mytasks") v = "mytasks";
-            else if (h === "wallet") v = "wallet";
-            else if (h === "withdraw" || h === "membership" || h === "admin") v = "more";
-            var els = document.querySelectorAll("#tabbar .tab");
-            for (var i = 0; i < els.length; i++) els[i].classList.toggle("on", els[i].dataset.v === v);
-            if (v !== "more" && !document.getElementById("morePanelMb").classList.contains("hidden")) toggleMoreMb(false);
-        }
         tabMoreLb();
     </script>
+
+
 </body>
 </html>

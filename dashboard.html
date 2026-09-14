@@ -325,6 +325,7 @@
         padding: 20px;
     }
 }
+.ht-shopcode{margin:8px 0 4px;font-size:12px;color:#f0b429;background:rgba(240,180,41,.08);border:1px dashed rgba(240,180,41,.35);border-radius:8px;padding:6px 10px}
 </style>
 
 </head>
@@ -1910,7 +1911,7 @@ async function loadTasks() {
 
 
                 ${
-                    task.shop_product_id && task.shop_product_price
+                    (task.shop_product_code || task.shop_product_id) && task.shop_product_price
                         ? `
                         <div class="ht-commission">
                             <div>
@@ -1927,6 +1928,12 @@ async function loadTasks() {
                 }
 
 
+                ${
+                    task.shop_product_code
+                        ? `<div class="ht-shopcode">🛒 刷单任务 · 商品识别码 <b>${task.shop_product_code}</b></div>`
+                        : ""
+                }
+
                 <div class="ht-slots">
                     ${I18N.t("tasks.applied")} ${appliedCount} ·
                     ${I18N.t("tasks.slotsLeft")} <strong>${task.remaining_slots}</strong>
@@ -1935,10 +1942,10 @@ async function loadTasks() {
 
                 <button
                     class="task-action-btn"
-                    onclick="claimTask(${task.id}, ${task.shop_product_id || "null"})">
+                    onclick="claimTask(${task.id}, '${task.shop_product_code || ""}', ${task.shop_product_id || "null"})">
 
                     ${
-                        task.shop_product_id
+                        (task.shop_product_code || task.shop_product_id)
                             ? I18N.t("dash.shopTask")
                             : I18N.t("dash.claim")
                     }
@@ -1963,7 +1970,7 @@ async function loadTasks() {
 // CLAIM TASK
 // ========================================
 
-async function claimTask(taskId, shopProductId) {
+async function claimTask(taskId, shopProductCode, shopProductId) {
 
     const {
         data: existing
@@ -2091,8 +2098,8 @@ async function claimTask(taskId, shopProductId) {
 
 
     // 刷单任务：领取成功后直接跳转 ShopHub 下单
-    if (shopProductId && data && data.id) {
-        window.location.href = shopHubUrl(shopProductId, taskId, data.id);
+    if ((shopProductCode || shopProductId) && data && data.id) {
+        window.location.href = shopHubUrl(shopProductCode || shopProductId, taskId, data.id);
         return;
     }
 
@@ -2245,11 +2252,11 @@ async function loadMyTasks() {
 
             ${
                 item.status === "claimed"
-                    ? (item.tasks?.shop_product_id
+                    ? (item.tasks?.shop_product_code || item.tasks?.shop_product_id
                         ? `
                             <button
                                 class="task-action-btn ht-shop-btn"
-                                onclick="goShopTask(${item.id}, ${item.tasks.id}, ${item.tasks.shop_product_id})">
+                                onclick="goShopTask(${item.id}, ${item.tasks.id}, '${item.tasks.shop_product_code || item.tasks.shop_product_id || ""}')">
 
                                 ${I18N.t("dash.shopTaskGo")}
 
@@ -2316,9 +2323,9 @@ let currentSubmitTask = null;
 // 刷单任务：前往 ShopHub 商城完成下单（携带领取记录）
 // ========================================
 
-function goShopTask(claimId, taskId, productId) {
+function goShopTask(claimId, taskId, productRef) {
 
-    if (!productId) {
+    if (!productRef) {
 
         alert(
             I18N.t("msg.shopOrderNotPlaced")
@@ -2330,7 +2337,7 @@ function goShopTask(claimId, taskId, productId) {
 
     window.location.href =
         shopHubUrl(
-            productId,
+            productRef,
             taskId,
             claimId
         );

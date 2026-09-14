@@ -23,7 +23,7 @@ const SHOP_HUB_BASE = "https://task-hub.co/shophub/index.html";
 
 
 // 组装跳转 ShopHub 指定商品页的链接（携带任务/领取信息）
-function shopHubUrl(productId, taskId, claimId) {
+function shopHubUrl(productRef, taskId, claimId) {
 
     const params = [];
 
@@ -33,7 +33,9 @@ function shopHubUrl(productId, taskId, claimId) {
 
     const query = params.length > 0 ? "?" + params.join("&") : "";
 
-    return SHOP_HUB_BASE + "#product/" + productId + query;
+    const seg = (productRef != null && productRef !== "") ? productRef : "1";
+
+    return SHOP_HUB_BASE + "#product/" + seg + query;
 
 }
 

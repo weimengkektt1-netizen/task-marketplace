@@ -213,9 +213,24 @@ function createTaskCard(task) {
                 ${escapeHtml(task.id)}
             </div>
 
+            ${
+                task.shop_product_code
+                    ? `<div class="admin-task-shopcode">🛒 绑定商品 <b>${escapeHtml(task.shop_product_code)}</b></div>`
+                    : ""
+            }
+
         </div>
 
         <div class="admin-task-actions">
+
+            <button
+                class="admin-small-btn"
+                onclick="openEditTask(
+                    '${escapeHtml(JSON.stringify(task).replace(/'/g, "&#39;"))}'
+                )"
+            >
+                ✏️ 编辑
+            </button>
 
             <button
                 class="admin-small-btn"
@@ -455,4 +470,60 @@ function escapeHtml(value) {
             "&#039;"
         );
 
+}
+
+// ========================================
+// 编辑任务（弹窗）
+// ========================================
+
+let editingTask = null;
+
+function openEditTask(taskJson) {
+    try {
+        editingTask = typeof taskJson === "string" ? JSON.parse(taskJson) : taskJson;
+    } catch (e) {
+        alert("无法解析任务数据");
+        return;
+    }
+    const t = editingTask;
+    const title = prompt("任务标题", t.title || "");
+    if (title === null) return;
+    const desc = prompt("任务描述", t.description || "");
+    if (desc === null) return;
+    const reward = prompt("任务奖励（RM）", t.reward != null ? t.reward : "");
+    if (reward === null) return;
+    const maxClaims = prompt("最多可领取人数", t.max_claims != null ? t.max_claims : "");
+    if (maxClaims === null) return;
+    const code = prompt("绑定 ShopHub 商品识别码（留空则无）", t.shop_product_code || "");
+    if (code === null) return;
+    const price = prompt("商品价格 RM（刷单佣金基数，选填）", t.shop_product_price != null ? t.shop_product_price : "");
+    if (price === null) return;
+    if (!title.trim() || !desc.trim() || !(parseFloat(reward) > 0) || !(parseInt(maxClaims) > 0)) {
+        alert("标题、描述、奖励、名额均为必填且需有效");
+        return;
+    }
+    saveTask({
+        title: title.trim(),
+        description: desc.trim(),
+        reward: parseFloat(reward),
+        max_claims: parseInt(maxClaims),
+        shop_product_code: code.trim().toUpperCase() || null,
+        shop_product_price: price.trim() !== "" ? parseFloat(price) : null
+    });
+}
+
+async function saveTask(updates) {
+    try {
+        const { error } = await supabaseClient
+            .from("tasks")
+            .update(updates)
+            .eq("id", editingTask.id);
+        if (error) throw error;
+        alert("任务已更新");
+        editingTask = null;
+        await loadAdminTasks();
+    } catch (error) {
+        console.error(error);
+        alert("保存失败：\n" + error.message);
+    }
 }
