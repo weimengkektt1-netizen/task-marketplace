@@ -422,7 +422,7 @@
         "admin.shopProductHint": { zh: "填写 ShopHub 商品的识别码（如 SH0001）。填写后该任务为刷单任务：用户领取后跳转对应商品下单，付款审核通过后任务自动完成并发放佣金。", en: "Enter the ShopHub product code (e.g. SH0001). Once set, this task becomes a shop task: users jump to that product and order after claiming; when payment is approved the task auto-completes and commission is paid." },
         "admin.shopPrice": { zh: "商品价格（RM）（选填，刷单任务）", en: "Product Price (RM) (optional, shop task)" },
         "admin.shopPricePh": { zh: "例如：89.00", en: "e.g. 89.00" },
-        "admin.shopPriceHint": { zh: "填写 ShopHub 商品售价，用于展示用户完成该订单可得佣金（按会员等级比例计算，5% / 8% / 10% / 15%）。", en: "Enter the ShopHub product price, used to show the commission users earn for completing this order (by membership tier: 5% / 8% / 10% / 15%)." },
+        "admin.shopPriceHint": { zh: "填写 ShopHub 商品售价，用于展示用户完成该订单可得佣金（按会员等级比例计算：初章 2% / 银章 6% / 金章 8% / 铂章 12% / 钻章 15% / 曜章 18%）。", en: "Enter the ShopHub product price, used to show the commission users earn for completing this order (by membership tier: 2% / 6% / 8% / 12% / 15% / 18%)." },
         "admin.uploadImage": { zh: "选择图片", en: "Choose Image" },
         "admin.needImageFile": { zh: "请选择图片文件。", en: "Please choose an image file." },
         "admin.imageTooLarge": { zh: "图片不能超过 5MB。", en: "Image must be under 5MB." },
