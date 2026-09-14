@@ -887,7 +887,7 @@ function go(hash){
     const v = hash.replace("#", "");
     if (v.startsWith("product/")) {
         parseTaskCtx(hash);
-        const seg = (v.split("/")[1] || "").trim();
+        const seg = (v.split("/")[1] || "").split("?")[0].trim();
         const isCode = /^[A-Za-z]{2,}\d+$/.test(seg);
         const tp = isCode ? PRODUCTS.find(x => (x.code || "").toUpperCase() === seg.toUpperCase()) : byId(parseInt(seg, 10));
         if (!tp) { showView("home"); return; }
