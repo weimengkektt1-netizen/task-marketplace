@@ -435,6 +435,7 @@
         "admin.id": { zh: "ID：", en: "ID: " },
         "admin.closeTask": { zh: "🔴 关闭任务", en: "🔴 Close Task" },
         "admin.openTask": { zh: "🟢 开放任务", en: "🟢 Open Task" },
+        "admin.editBtn": { zh: "编辑", en: "Edit" },
         "admin.deleteBtn": { zh: "🗑 删除", en: "🗑 Delete" },
         "admin.withdrawAmount": { zh: "💰 提现 RM {amount}", en: "💰 Withdraw RM {amount}" },
         "admin.method": { zh: "💳 提现方式：", en: "💳 Method: " },

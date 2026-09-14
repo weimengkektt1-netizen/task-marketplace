@@ -3230,10 +3230,28 @@ function createTaskCard(
                 )}
             </div>
 
+            ${
+                task.shop_product_code
+                    ? `<div class="admin-task-shopcode">🛒 绑定商品 <b>${escapeHtml(task.shop_product_code)}</b></div>`
+                    : ""
+            }
+
         </div>
 
 
         <div class="admin-task-actions">
+
+            <button
+                type="button"
+                class="admin-small-btn"
+                onclick="openEditTask(
+                    ${Number(
+                        task.id
+                    )}
+                )"
+            >
+                ✏️ ${I18N.t("admin.editBtn")}
+            </button>
 
             <button
                 type="button"
@@ -3432,6 +3450,186 @@ async function deleteTask(
 
 }
 
+
+
+/* ========================================
+   编辑任务
+   ======================================== */
+
+let editingTaskId = null;
+
+
+async function openEditTask(
+    taskId
+) {
+
+    const {
+        data: task,
+        error
+    } =
+        await supabaseClient
+            .from("tasks")
+            .select("*")
+            .eq(
+                "id",
+                taskId
+            )
+            .single();
+
+
+    if (error || !task) {
+
+        alert(
+            "加载任务失败"
+        );
+
+        return;
+
+    }
+
+
+    const title =
+        prompt(
+            "任务标题",
+            task.title || ""
+        );
+
+    if (title === null) return;
+
+
+    const desc =
+        prompt(
+            "任务描述",
+            task.description || ""
+        );
+
+    if (desc === null) return;
+
+
+    const reward =
+        prompt(
+            "任务奖励（RM）",
+            task.reward != null ? task.reward : ""
+        );
+
+    if (reward === null) return;
+
+
+    const maxClaims =
+        prompt(
+            "最多可领取人数",
+            task.max_claims != null ? task.max_claims : ""
+        );
+
+    if (maxClaims === null) return;
+
+
+    const code =
+        prompt(
+            "绑定 ShopHub 商品识别码（留空则无）",
+            task.shop_product_code || ""
+        );
+
+    if (code === null) return;
+
+
+    const price =
+        prompt(
+            "商品价格 RM（刷单佣金基数，选填）",
+            task.shop_product_price != null ? task.shop_product_price : ""
+        );
+
+    if (price === null) return;
+
+
+    if (
+        !title.trim() ||
+        !desc.trim() ||
+        !(parseFloat(reward) > 0) ||
+        !(parseInt(maxClaims) > 0)
+    ) {
+
+        alert(
+            "标题、描述、奖励、名额均为必填且需有效"
+        );
+
+        return;
+
+    }
+
+
+    editingTaskId =
+        taskId;
+
+
+    await saveTask(
+        {
+            title: title.trim(),
+            description: desc.trim(),
+            reward: parseFloat(reward),
+            max_claims: parseInt(maxClaims),
+            shop_product_code:
+                code.trim() ? code.trim().toUpperCase() : null,
+            shop_product_price:
+                price.trim() !== "" ? parseFloat(price) : null
+        }
+    );
+
+}
+
+
+async function saveTask(
+    updates
+) {
+
+    try {
+
+        const {
+            error
+        } =
+            await supabaseClient
+                .from("tasks")
+                .update(
+                    updates
+                )
+                .eq(
+                    "id",
+                    editingTaskId
+                );
+
+
+        if (error) {
+
+            throw error;
+
+        }
+
+
+        alert(
+            "任务已更新"
+        );
+
+
+        editingTaskId =
+            null;
+
+
+        await loadAdminTasks();
+
+
+    } catch (error) {
+
+        console.error(error);
+
+
+        alert(
+            "保存失败：\n" +
+            error.message
+        );
+
+    }
+
+}
 
 
 /* ========================================
