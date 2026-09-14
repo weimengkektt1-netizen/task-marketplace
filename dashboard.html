@@ -466,7 +466,7 @@
             </span>
 
             <h1>
-                <span data-i18n="dash.welcome">欢迎回来 👋</span>
+                <span id="greetingTitle">欢迎回来 👋</span>
             </h1>
 
         </div>
@@ -1100,11 +1100,7 @@
 
             <div class="member-invite-progress">
                 <div class="member-invite-bar"><span id="memberInviteBar"></span></div>
-                <div class="member-invite-labels">
-                    <span class="invite-milestone"><span class="invite-milestone-ico tier-gold"><svg class="tier-svg" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="tg-gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fef3c7"/><stop offset="0.5" stop-color="#f59e0b"/><stop offset="1" stop-color="#b45309"/></linearGradient><linearGradient id="tg-gold-r" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fef9c3"/><stop offset="1" stop-color="#d97706"/></linearGradient></defs><circle cx="32" cy="32" r="29" fill="url(#tg-gold)"/><circle cx="32" cy="32" r="29" fill="none" stroke="url(#tg-gold-r)" stroke-width="2"/><circle cx="32" cy="32" r="24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1"/><path d="M32 16.5 L35.8 26.5 L46.5 27.6 L38.4 34.7 L40.6 45.3 L32 40.1 L23.4 45.3 L25.6 34.7 L17.5 27.6 L28.2 26.5 Z" fill="#ffffff" opacity="0.97"/><ellipse cx="23" cy="20" rx="13" ry="7" fill="rgba(255,255,255,0.4)" transform="rotate(-30 23 20)"/></svg></span> 3</span>
-                    <span class="invite-milestone"><span class="invite-milestone-ico tier-platinum"><svg class="tier-svg" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="tg-plat" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f5f3ff"/><stop offset="0.5" stop-color="#a78bfa"/><stop offset="1" stop-color="#6d28d9"/></linearGradient><linearGradient id="tg-plat-r" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ede9fe"/><stop offset="1" stop-color="#7c3aed"/></linearGradient></defs><circle cx="32" cy="32" r="29" fill="url(#tg-plat)"/><circle cx="32" cy="32" r="29" fill="none" stroke="url(#tg-plat-r)" stroke-width="2"/><circle cx="32" cy="32" r="24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1"/><path d="M32 16 L45.5 32 L32 48 L18.5 32 Z" fill="#ffffff" opacity="0.97"/><path d="M32 22.5 L40.5 32 L32 41.5 L23.5 32 Z" fill="rgba(109,40,217,0.5)"/><ellipse cx="23" cy="20" rx="13" ry="7" fill="rgba(255,255,255,0.4)" transform="rotate(-30 23 20)"/></svg></span> 6</span>
-                    <span class="invite-milestone"><span class="invite-milestone-ico tier-diamond"><svg class="tier-svg" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="tg-dia" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e0f2fe"/><stop offset="0.5" stop-color="#38bdf8"/><stop offset="1" stop-color="#0369a1"/></linearGradient><linearGradient id="tg-dia-r" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#bae6fd"/><stop offset="1" stop-color="#0284c7"/></linearGradient></defs><circle cx="32" cy="32" r="29" fill="url(#tg-dia)"/><circle cx="32" cy="32" r="29" fill="none" stroke="url(#tg-dia-r)" stroke-width="2"/><circle cx="32" cy="32" r="24" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="1"/><path d="M19 42 L19 27 L26.5 32.5 L32 22.5 L37.5 32.5 L45 27 L45 42 Z" fill="#ffffff" opacity="0.97"/><path d="M19 44 h26 v3 h-26 Z" fill="#ffffff" opacity="0.9"/><ellipse cx="23" cy="20" rx="13" ry="7" fill="rgba(255,255,255,0.45)" transform="rotate(-30 23 20)"/></svg></span> 10</span>
-                </div>
+                <div class="member-invite-labels"><span class="invite-milestone"><span class="invite-milestone-ico tier-silver"><img class="tier-svg" src="assets/tier/silver.png" alt=""></span> 3</span><span class="invite-milestone"><span class="invite-milestone-ico tier-gold"><img class="tier-svg" src="assets/tier/gold.png" alt=""></span> 6</span><span class="invite-milestone"><span class="invite-milestone-ico tier-platinum"><img class="tier-svg" src="assets/tier/platinum.png" alt=""></span> 10</span></div>
                 <div class="member-invite-count" id="memberInviteCount">0 / 10</div>
             </div>
 
@@ -1329,9 +1325,11 @@ let currentUser = null;
 let currentMembershipLevel = "basic";
 
 function commissionRate(level) {
-    return level === "gold" ? 0.08 :
-           level === "platinum" ? 0.10 :
-           level === "diamond" ? 0.15 : 0.05;
+    return level === "silver" ? 0.06 :
+           level === "gold" ? 0.08 :
+           level === "platinum" ? 0.12 :
+           level === "diamond" ? 0.15 :
+           level === "radiant" ? 0.18 : 0.02;
 }
 
 
@@ -1435,6 +1433,11 @@ async function loadProfile() {
     // 记录当前会员等级（用于展示刷单任务预计佣金）
     currentMembershipLevel =
         data.membership_level || "basic";
+
+    // 等级问候语 + 等级专属背景（LV3+）
+    setGreeting();
+    initTierBackground();
+    document.addEventListener("taskhub:langchange", setGreeting);
 
 
     document
@@ -2070,9 +2073,11 @@ async function claimTask(taskId, shopProductCode, shopProductId) {
     if (mRole !== "admin") {
 
         const mLimit =
+            mLevel === "silver" ? 2 :
             mLevel === "gold" ? 5 :
             mLevel === "platinum" ? 10 :
-            mLevel === "diamond" ? -1 : 1;
+            mLevel === "diamond" ? 20 :
+            mLevel === "radiant" ? -1 : 1;
 
         if (mLimit > 0) {
 
@@ -3625,19 +3630,23 @@ document.addEventListener(
 // ========================================
 
 const MEMBER_TIERS = [
-    { key: "basic",    rate: 5,  limit: 1,  price: 0,    invite: 0  },
-    { key: "gold",     rate: 8,  limit: 5,  price: 19.9, invite: 3  },
-    { key: "platinum", rate: 10, limit: 10, price: 69.9, invite: 6  },
-    { key: "diamond",  rate: 15, limit: -1, price: 99.9, invite: 10 }
+    { key: "basic",    rate: 2,  limit: 1,  price: 0,    invite: 0  },
+    { key: "silver",   rate: 6,  limit: 2,  price: 0,    invite: 3  },
+    { key: "gold",     rate: 8,  limit: 5,  price: 0,    invite: 6  },
+    { key: "platinum", rate: 12, limit: 10, price: 49.9, invite: 10 },
+    { key: "diamond",  rate: 15, limit: 20, price: 69.9, invite: -1 },
+    { key: "radiant",  rate: 18, limit: -1, price: 199.9, invite: -1 }
 ];
 
 function tierIcon(key) {
 
     const SVG = {
-        basic: '<svg class="tier-svg" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="tg-basic" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e2e8f0"/><stop offset="0.5" stop-color="#94a3b8"/><stop offset="1" stop-color="#475569"/></linearGradient><linearGradient id="tg-basic-r" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f8fafc"/><stop offset="1" stop-color="#64748b"/></linearGradient></defs><circle cx="32" cy="32" r="29" fill="url(#tg-basic)"/><circle cx="32" cy="32" r="29" fill="none" stroke="url(#tg-basic-r)" stroke-width="2"/><circle cx="32" cy="32" r="24" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="1"/><path d="M24 20 h16 v4.5 h-5.5 v15 h-5 V24.5 h-5.5 Z" fill="#ffffff" opacity="0.97"/><ellipse cx="23" cy="20" rx="13" ry="7" fill="rgba(255,255,255,0.35)" transform="rotate(-30 23 20)"/></svg>',
-        gold: '<svg class="tier-svg" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="tg-gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fef3c7"/><stop offset="0.5" stop-color="#f59e0b"/><stop offset="1" stop-color="#b45309"/></linearGradient><linearGradient id="tg-gold-r" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fef9c3"/><stop offset="1" stop-color="#d97706"/></linearGradient></defs><circle cx="32" cy="32" r="29" fill="url(#tg-gold)"/><circle cx="32" cy="32" r="29" fill="none" stroke="url(#tg-gold-r)" stroke-width="2"/><circle cx="32" cy="32" r="24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1"/><path d="M32 16.5 L35.8 26.5 L46.5 27.6 L38.4 34.7 L40.6 45.3 L32 40.1 L23.4 45.3 L25.6 34.7 L17.5 27.6 L28.2 26.5 Z" fill="#ffffff" opacity="0.97"/><ellipse cx="23" cy="20" rx="13" ry="7" fill="rgba(255,255,255,0.4)" transform="rotate(-30 23 20)"/></svg>',
-        platinum: '<svg class="tier-svg" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="tg-plat" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f5f3ff"/><stop offset="0.5" stop-color="#a78bfa"/><stop offset="1" stop-color="#6d28d9"/></linearGradient><linearGradient id="tg-plat-r" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ede9fe"/><stop offset="1" stop-color="#7c3aed"/></linearGradient></defs><circle cx="32" cy="32" r="29" fill="url(#tg-plat)"/><circle cx="32" cy="32" r="29" fill="none" stroke="url(#tg-plat-r)" stroke-width="2"/><circle cx="32" cy="32" r="24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1"/><path d="M32 16 L45.5 32 L32 48 L18.5 32 Z" fill="#ffffff" opacity="0.97"/><path d="M32 22.5 L40.5 32 L32 41.5 L23.5 32 Z" fill="rgba(109,40,217,0.5)"/><ellipse cx="23" cy="20" rx="13" ry="7" fill="rgba(255,255,255,0.4)" transform="rotate(-30 23 20)"/></svg>',
-        diamond: '<svg class="tier-svg" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="tg-dia" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e0f2fe"/><stop offset="0.5" stop-color="#38bdf8"/><stop offset="1" stop-color="#0369a1"/></linearGradient><linearGradient id="tg-dia-r" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#bae6fd"/><stop offset="1" stop-color="#0284c7"/></linearGradient></defs><circle cx="32" cy="32" r="29" fill="url(#tg-dia)"/><circle cx="32" cy="32" r="29" fill="none" stroke="url(#tg-dia-r)" stroke-width="2"/><circle cx="32" cy="32" r="24" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="1"/><path d="M19 42 L19 27 L26.5 32.5 L32 22.5 L37.5 32.5 L45 27 L45 42 Z" fill="#ffffff" opacity="0.97"/><path d="M19 44 h26 v3 h-26 Z" fill="#ffffff" opacity="0.9"/><ellipse cx="23" cy="20" rx="13" ry="7" fill="rgba(255,255,255,0.45)" transform="rotate(-30 23 20)"/></svg>'
+        basic: '<img class="tier-svg" src="assets/tier/basic.png" alt="">',
+        silver: '<img class="tier-svg" src="assets/tier/silver.png" alt="">',
+        gold: '<img class="tier-svg" src="assets/tier/gold.png" alt="">',
+        platinum: '<img class="tier-svg" src="assets/tier/platinum.png" alt="">',
+        diamond: '<img class="tier-svg" src="assets/tier/diamond.png" alt="">',
+        radiant: '<img class="tier-svg" src="assets/tier/radiant.png" alt="">'
     };
 
     return SVG[key] || SVG.basic;
@@ -3695,22 +3704,45 @@ async function loadMembership() {
     wrap.innerHTML = MEMBER_TIERS.map(function (t) {
 
         const isCur = t.key === cur;
-        const unlocked = t.invite === 0 || invited >= t.invite;
+        // 邀请解锁：invite > 0 且人数达标（diamond/radiant 为 -1，不可通过邀请解锁）
+        const inviteUnlocked = t.invite > 0 && invited >= t.invite;
+        const freeByInvite = t.invite > 0 && t.price === 0;
+        const payOnly = t.invite < 0;
+        const canPay = t.price > 0;
+        const zh = typeof I18N !== "undefined" && I18N.get() === "zh";
+
         let action = "";
 
         if (isCur) {
             action = '<span class="member-badge-cur" data-i18n="member.current">当前等级</span>';
-        } else if (t.invite > 0 && !unlocked) {
+        } else if (inviteUnlocked) {
+            action = '<span class="member-badge-unlocked">✓</span>';
+        } else if (freeByInvite || t.invite > 0) {
             action = '<span class="member-badge-need">' +
                 I18N.t("member.need").replace("{n}", String(t.invite - invited)) + '</span>';
-        } else if (t.invite > 0) {
-            action = '<span class="member-badge-unlocked">✓</span>';
+        } else if (payOnly) {
+            action = '<span class="member-badge-need">💳 ' + (zh ? "付费解锁" : "Pay") + '</span>';
         }
 
-        const priceLine = t.price > 0
-            ? '<div class="member-tier-price">RM ' + t.price.toFixed(1) +
-              ' <em>· ' + I18N.t("member.upgradeByInvite").replace("{n}", String(t.invite)) + '</em></div>'
-            : '<div class="member-tier-price"><em>' + I18N.t("member.upgradeByInvite").replace("{n}", "0") + '</em></div>';
+        let priceLine = "";
+        if (t.invite > 0 && t.price > 0) {
+            priceLine = '<div class="member-tier-price">' + I18N.t("member.inviteOrPay")
+                .replace("{n}", String(t.invite)).replace("{price}", t.price.toFixed(1)) + '</div>';
+        } else if (payOnly) {
+            priceLine = '<div class="member-tier-price">' + I18N.t("member.payUnlock")
+                .replace("{price}", t.price.toFixed(1)) + '</div>';
+        } else if (t.invite > 0) {
+            priceLine = '<div class="member-tier-price"><em>' + I18N.t("member.upgradeByInvite").replace("{n}", String(t.invite)) + '</em></div>';
+        } else {
+            priceLine = '<div class="member-tier-price"><em>' + I18N.t("member.upgradeByInvite").replace("{n}", "0") + '</em></div>';
+        }
+
+        // 按钮：可付费且未达标 → 显示升级（走付费流程）
+        let btnHtml = "";
+        if (!isCur && canPay && !inviteUnlocked) {
+            btnHtml = '<button class="member-upgrade-btn" onclick="upgradeMember(\'' + t.key + '\',' + t.price + ')">' +
+                I18N.t("member.join") + '</button>';
+        }
 
         return (
             '<div class="member-tier' + (isCur ? " is-current" : "") + '">' +
@@ -3722,12 +3754,7 @@ async function loadMembership() {
             '<div><span data-i18n="member.commission">任务佣金</span><b>' + t.rate + '%</b></div>' +
             '<div><span data-i18n="member.dailyLimit">每日可领任务</span><b>' +
             (t.limit < 0 ? I18N.t("member.unlimited") : t.limit + " " + I18N.t("member.perDay")) + '</b></div>' +
-            '</div>' + priceLine +
-            (isCur ? "" :
-                (t.invite > 0 && !unlocked
-                    ? ""
-                    : '<button class="member-upgrade-btn" onclick="upgradeMember(\'' + t.key + '\',' + t.price + ')">' +
-                      I18N.t("member.join") + '</button>')) +
+            '</div>' + priceLine + btnHtml +
             '</div>'
         );
 
@@ -3847,6 +3874,267 @@ document.addEventListener(
 
     }
 );
+
+
+
+
+// ========================================
+// 等级问候语（等级越高越尊敬）
+// ========================================
+
+const GREETING_BY_TIER = {
+    basic:    { zh: "欢迎回来，{name} 👋", en: "Welcome back, {name} 👋" },
+    silver:   { zh: "欢迎回来，{name}，祝您接单顺利 ✨", en: "Welcome back, {name}, happy tasking ✨" },
+    gold:     { zh: "欢迎光临，{name} 🌟", en: "Welcome, honored {name} 🌟" },
+    platinum: { zh: "尊贵的铂章会员 {name}，欢迎您的到来 💫", en: "Noble Platinum member {name}, welcome 💫" },
+    diamond:  { zh: "尊敬的钻石会员 {name}，您的光临让平台蓬荜生辉 💎", en: "Esteemed Diamond member {name}, your presence honors us 💎" },
+    radiant:  { zh: "至高无上的曜章会员 {name}，恭迎您驾临 👑", en: "Almighty Radiant member {name}, we welcome your arrival 👑" }
+};
+
+function setGreeting() {
+    const el = document.getElementById("greetingTitle");
+    if (!el) return;
+    const nameEl = document.getElementById("userName");
+    const name = (nameEl && nameEl.textContent) || "VIP";
+    const zh = typeof I18N !== "undefined" && I18N.get() === "zh";
+    const tier = GREETING_BY_TIER[currentMembershipLevel] || GREETING_BY_TIER.basic;
+    el.textContent = (zh ? tier.zh : tier.en).replace("{name}", name);
+}
+
+// ========================================
+// 等级专属背景：LV3 星空 / LV4 发光星云 / LV5 流星动效 / LV6 奢华星空
+// ========================================
+
+function initTierBackground() {
+    const lv = { gold: 3, platinum: 4, diamond: 5, radiant: 6 }[currentMembershipLevel] || 0;
+    if (lv < 3) return;
+
+    let canvas = document.getElementById("bgCanvas");
+    if (canvas && canvas.dataset.lv === String(lv)) return; // 已初始化同等级
+    if (canvas) canvas.remove();
+
+    canvas = document.createElement("canvas");
+    canvas.id = "bgCanvas";
+    canvas.className = "dashboard-bg";
+    canvas.dataset.lv = String(lv);
+    canvas.style.opacity = "1";
+    document.body.insertBefore(canvas, document.body.firstChild);
+
+    const ctx = canvas.getContext("2d");
+    const isMobile = Math.min(window.innerWidth, window.innerHeight) < 768;
+    const DPR = Math.min(window.devicePixelRatio || 1, 1.5);
+    let W = 0, H = 0;
+
+    function resize() {
+        W = window.innerWidth;
+        H = window.innerHeight;
+        canvas.width = Math.floor(W * DPR);
+        canvas.height = Math.floor(H * DPR);
+        ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    }
+    resize();
+    window.addEventListener("resize", resize);
+
+    // 星星（更亮、数量随等级递增）
+    const starCount = isMobile
+        ? ({ 3: 90, 4: 120, 5: 160, 6: 220 })[lv]
+        : ({ 3: 200, 4: 280, 5: 340, 6: 460 })[lv];
+    const stars = Array.from({ length: starCount }, function () {
+        return {
+            x: Math.random() * W,
+            y: Math.random() * H,
+            r: Math.random() * 1.4 + 0.4,
+            base: Math.random() * 0.5 + 0.45,
+            tw: Math.random() * 0.03 + 0.01,
+            ph: Math.random() * Math.PI * 2,
+            color: lv >= 6
+                ? (Math.random() < 0.3 ? "255,225,160" : (Math.random() < 0.45 ? "255,255,255" : "190,215,255"))
+                : (lv >= 4 ? (Math.random() < 0.25 ? "190,215,255" : "255,255,255") : "255,255,255")
+        };
+    });
+
+    // 星云（LV4+，明显发光）
+    const nebCount = { 3: 0, 4: 4, 5: 5, 6: 7 }[lv];
+    const nebs = Array.from({ length: nebCount }, function () {
+        return {
+            x: Math.random() * W,
+            y: Math.random() * H,
+            r: Math.random() * 190 + 110,
+            hue: Math.random() < 0.5 ? (Math.random() * 40 + 215) : (Math.random() * 50 + 265),
+            a: Math.random() * 0.15 + 0.12,
+            speed: Math.random() * 0.0008 + 0.0004,
+            ph: Math.random() * Math.PI * 2
+        };
+    });
+
+    // 发光光斑（LV4+ 新增发光素材，呼吸脉动）
+    const glowCount = { 3: 0, 4: 6, 5: 10, 6: 16 }[lv];
+    const glowHues = [215, 235, 265, 285, 320, 40];
+    const glows = Array.from({ length: glowCount }, function () {
+        return {
+            x: Math.random() * W,
+            y: Math.random() * H,
+            r: Math.random() * 15 + 6,
+            hue: glowHues[Math.floor(Math.random() * glowHues.length)],
+            a: Math.random() * 0.4 + 0.3,
+            speed: Math.random() * 0.05 + 0.02,
+            ph: Math.random() * Math.PI * 2
+        };
+    });
+
+    // 流星（LV5+）
+    const meteorCount = { 3: 0, 4: 0, 5: 3, 6: 4 }[lv];
+    function newMeteor() {
+        return {
+            x: Math.random() * W,
+            y: Math.random() * H * 0.6,
+            vx: -(Math.random() * 3 + 2.5),
+            vy: Math.random() * 1.6 + 1.4,
+            len: Math.random() * 90 + 60,
+            life: 0,
+            max: Math.random() * 180 + 120
+        };
+    }
+    const meteors = Array.from({ length: meteorCount }, newMeteor);
+
+    // 金色粒子（LV6 专属，奢华感）
+    const dust = lv >= 6
+        ? Array.from({ length: isMobile ? 45 : 85 }, function () {
+            return {
+                x: Math.random() * W,
+                y: Math.random() * H,
+                r: Math.random() * 1.8 + 0.7,
+                vx: (Math.random() - 0.5) * 0.14,
+                vy: -Math.random() * 0.3 - 0.06,
+                ph: Math.random() * Math.PI * 2
+            };
+        })
+        : [];
+
+    // LV6 顶部光环（缓慢旋转的椭圆光带）
+    const halo = lv >= 6 ? { a: 0.10 } : null;
+
+    let t = 0;
+    function frame() {
+        t++;
+        ctx.clearRect(0, 0, W, H);
+
+        // 星云光晕
+        for (const n of nebs) {
+            const a = n.a * (0.7 + 0.3 * Math.sin(t * n.speed + n.ph));
+            const g = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, n.r);
+            g.addColorStop(0, "hsla(" + n.hue + ",90%,62%," + a + ")");
+            g.addColorStop(0.5, "hsla(" + (n.hue + 15) + ",90%,52%," + (a * 0.45) + ")");
+            g.addColorStop(1, "hsla(" + n.hue + ",90%,50%,0)");
+            ctx.fillStyle = g;
+            ctx.fillRect(n.x - n.r, n.y - n.r, n.r * 2, n.r * 2);
+        }
+
+        // 发光光斑（呼吸脉动）
+        for (const g0 of glows) {
+            const a = g0.a * (0.6 + 0.4 * Math.sin(t * g0.speed + g0.ph));
+            const g = ctx.createRadialGradient(g0.x, g0.y, 0, g0.x, g0.y, g0.r);
+            g.addColorStop(0, "hsla(" + g0.hue + ",100%,75%," + Math.max(0, a) + ")");
+            g.addColorStop(1, "hsla(" + g0.hue + ",100%,70%,0)");
+            ctx.fillStyle = g;
+            ctx.beginPath();
+            ctx.arc(g0.x, g0.y, g0.r, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        // 星星（闪烁）
+        for (const s of stars) {
+            const alpha = s.base + s.tw * Math.sin(t * 0.06 + s.ph);
+            const a = Math.max(0, Math.min(1, alpha));
+            ctx.beginPath();
+            ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+            ctx.fillStyle = "rgba(" + s.color + "," + a + ")";
+            ctx.fill();
+            // LV5+ 大星星加光晕
+            if (lv >= 5 && s.r > 1.0) {
+                ctx.beginPath();
+                ctx.arc(s.x, s.y, s.r * 3.2, 0, Math.PI * 2);
+                ctx.fillStyle = "rgba(" + s.color + "," + (a * 0.16) + ")";
+                ctx.fill();
+            }
+        }
+
+        // 金色粒子（LV6）
+        for (const p of dust) {
+            p.x += p.vx;
+            p.y += p.vy;
+            if (p.y < -10) { p.y = H + 10; p.x = Math.random() * W; }
+            if (p.x < -10) p.x = W + 10;
+            if (p.x > W + 10) p.x = -10;
+            const a = 0.4 + 0.35 * Math.sin(t * 0.05 + p.ph);
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+            ctx.fillStyle = "rgba(255,225,160," + Math.max(0, a) + ")";
+            ctx.fill();
+            if (p.r > 1.2) {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.r * 2.5, 0, Math.PI * 2);
+                ctx.fillStyle = "rgba(255,225,160," + Math.max(0, a * 0.2) + ")";
+                ctx.fill();
+            }
+        }
+
+        // 流星（LV5+）
+        for (let i = 0; i < meteors.length; i++) {
+            const m = meteors[i];
+            m.life++;
+            m.x += m.vx;
+            m.y += m.vy;
+            if (m.life > m.max || m.y > H || m.x < 0) meteors[i] = newMeteor();
+            const g = ctx.createLinearGradient(m.x, m.y, m.x - m.vx * m.len, m.y - m.vy * m.len);
+            g.addColorStop(0, "rgba(255,255,255,0.95)");
+            g.addColorStop(1, "rgba(180,200,255,0)");
+            ctx.strokeStyle = g;
+            ctx.lineWidth = 1.8;
+            ctx.beginPath();
+            ctx.moveTo(m.x, m.y);
+            ctx.lineTo(m.x - m.vx * m.len, m.y - m.vy * m.len);
+            ctx.stroke();
+            // 流星头部亮点
+            ctx.beginPath();
+            ctx.arc(m.x, m.y, 1.8, 0, Math.PI * 2);
+            ctx.fillStyle = "rgba(255,255,255,0.9)";
+            ctx.fill();
+        }
+
+        // LV6 顶部奢华光晕 + 光环
+        if (lv >= 6) {
+            const cx = W * 0.5, cy = H * 0.26, r = Math.max(W, H) * 0.6;
+            const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
+            g.addColorStop(0, "rgba(255,220,160,0.09)");
+            g.addColorStop(1, "rgba(255,220,160,0)");
+            ctx.fillStyle = g;
+            ctx.fillRect(0, 0, W, H);
+
+            // 旋转光环（两圈）
+            const ex = W * 0.5, ey = H * 0.30, rx = Math.max(W, H) * 0.38, ry = rx * 0.28;
+            const ang = t * 0.004;
+            ctx.save();
+            ctx.translate(ex, ey);
+            ctx.rotate(ang);
+            ctx.strokeStyle = "rgba(255,225,180," + (halo.a * (0.7 + 0.3 * Math.sin(t * 0.02))) + ")";
+            ctx.lineWidth = 1.2;
+            ctx.beginPath();
+            ctx.ellipse(0, 0, rx, ry, 0, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.rotate(-ang * 1.6);
+            ctx.strokeStyle = "rgba(190,215,255," + (halo.a * 0.5) + ")";
+            ctx.beginPath();
+            ctx.ellipse(0, 0, rx * 0.62, ry * 0.62, 0, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.restore();
+        }
+
+        requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+}
+
 
 </script>
 <!-- =========================
