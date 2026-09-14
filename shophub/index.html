@@ -423,6 +423,10 @@ input,select,textarea{font-family:inherit;outline:none}
 .admin-user-card .u-stats b{color:var(--text);font-size:13px}
 .role-badge{font-size:11px;font-weight:700;padding:2px 9px;border-radius:999px;background:#fff1ec;color:var(--orange)}
 .role-badge.admin{background:#fff3e6;color:#f58a1f}
+.role-badge.seller{background:#eaf8ff;color:#1ea7f7}
+.role-badge.buyer{background:#f0f3f7;color:#5b6472}
+.admin-user-filters{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.seller-orders-head{display:flex;align-items:center;justify-content:space-between;margin:22px 0 12px}
 .admin-prod-card{background:var(--card);border-radius:14px;box-shadow:var(--shadow);padding:12px 14px;margin-bottom:10px;display:flex;align-items:center;gap:14px}
 .admin-prod-card img{width:52px;height:52px;border-radius:10px;object-fit:cover;flex:none}
 .admin-prod-card .p-meta{flex:1;min-width:0}
@@ -631,6 +635,11 @@ input,select,textarea{font-family:inherit;outline:none}
             <button class="btn btn-primary" onclick="openSellerProductModal()">＋ 添加商品</button>
         </div>
         <div id="sellerProducts"></div>
+        <div class="seller-orders-head">
+            <h4>待确认订单（我店铺的商品）</h4>
+            <button class="btn" style="font-size:12.5px;padding:6px 12px" onclick="renderSellerOrders(curSellerUid)">刷新</button>
+        </div>
+        <div id="sellerOrders"></div>
     </section>
 
 </main>
@@ -1755,6 +1764,8 @@ async function renderAdminList(){
         );
     }).join("");
 }
+let adminUserFilter = "";
+function setAdminUserFilter(f){ adminUserFilter = f; renderAdmin(); }
 async function renderAdminUsers(){
     const wrap = document.getElementById("adminOrders");
     const kw = (document.getElementById("adminSearch").value || "").trim().toLowerCase();
@@ -1772,21 +1783,40 @@ async function renderAdminUsers(){
         if (o.status === "completed") s.v += Number(o.total);
     });
     let list = uRes.data || [];
+    if (adminUserFilter === "sellers") list = list.filter(u => u.seller_status === "active" || u.seller_status === "disabled");
+    else if (adminUserFilter === "buyers") list = list.filter(u => !(u.seller_status === "active" || u.seller_status === "disabled") && u.role !== "admin");
     if (kw) {
         list = list.filter(u => String(u.display_name || "").toLowerCase().indexOf(kw) >= 0 || String(u.email || "").toLowerCase().indexOf(kw) >= 0 || String(u.phone || "").indexOf(kw) >= 0);
     }
-    if (!list.length) { wrap.innerHTML = '<div class="empty"><p>暂无用户</p></div>'; return; }
-    wrap.innerHTML = list.map(u => {
+    const filterBar =
+        '<div class="admin-user-filters">' +
+        [["", "全部用户"], ["buyers", "买家"], ["sellers", "卖家"]].map(f =>
+            '<button class="order-tab' + (adminUserFilter === f[0] ? " on" : "") + '" onclick="setAdminUserFilter(\'' + f[0] + '\')">' + f[1] + '</button>').join("") +
+        "</div>";
+    if (!list.length) { wrap.innerHTML = filterBar + '<div class="empty"><p>暂无用户</p></div>'; return; }
+    wrap.innerHTML = filterBar + list.map(u => {
         const s = stat[u.id] || {n: 0, v: 0};
+        const isAdmin = u.role === "admin";
+        const isSeller = u.seller_status === "active" || u.seller_status === "disabled";
+        const roleTxt = isAdmin ? "管理员" : (isSeller ? "卖家" : "买家");
+        const roleCls = isAdmin ? " admin" : (isSeller ? " seller" : " buyer");
         return (
-            '<div class="admin-user-card" onclick="openUserOrders(\'' + u.id + '\',\'' + esc(String(u.display_name || "")) + '\')">' +
+            '<div class="admin-user-card">' +
             '<span class="u-ava">' + esc((u.display_name || "U").charAt(0).toUpperCase()) + "</span>" +
             '<div class="u-meta"><div class="u-name">' + esc(u.display_name || "未设置昵称") +
-            '<span class="role-badge' + (u.role === "admin" ? " admin" : "") + '">' + esc(u.role === "admin" ? "管理员" : "用户") + "</span></div>" +
+            '<span class="role-badge' + roleCls + '">' + roleTxt + "</span></div>" +
             '<div class="u-mail">' + esc(u.email || "") + (u.phone ? " · " + esc(u.phone) : "") + "</div></div>" +
             '<div class="u-stats"><span>订单 <b>' + s.n + '</b></span><span>消费 <b>RM' + fmt(s.v) + "</b></span></div>" +
-            (u.seller_status === "active" || u.seller_status === "disabled" ? '<button class="admin-btn approve" style="padding:6px 10px;font-size:12px" onclick="event.stopPropagation();enterSeller(\'' + u.id + '\')">进入户口</button>' : "") +
-            "</div>"
+            '<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">' +
+            '<button class="admin-btn approve" style="padding:6px 10px;font-size:12px" onclick="openUserOrders(\'' + u.id + '\',\'' + esc(String(u.display_name || "")) + '\')">订单</button>' +
+            (isSeller ? '<button class="admin-btn" style="padding:6px 10px;font-size:12px" onclick="enterSeller(\'' + u.id + '\')">进入户口</button>' : "") +
+            (isAdmin ?
+                '<button class="admin-btn reject" style="padding:6px 10px;font-size:12px" onclick="setUserRole(\'' + u.id + '\',\'user\')">撤销管理员</button>' :
+                '<button class="admin-btn" style="padding:6px 10px;font-size:12px" onclick="setUserRole(\'' + u.id + '\',\'admin\')">设为管理员</button>') +
+            (isSeller ?
+                '<button class="admin-btn reject" style="padding:6px 10px;font-size:12px" onclick="removeSeller(\'' + u.id + '\')">取消卖家</button>' :
+                '<button class="admin-btn" style="padding:6px 10px;font-size:12px" onclick="addSellerById(\'' + u.id + '\')">设为卖家</button>') +
+            "</div></div>"
         );
     }).join("");
 }
@@ -1797,16 +1827,82 @@ function openUserOrders(id, name){
     renderAdmin();
     toast(name ? "已筛选该用户的订单" : "全部订单");
 }
-function renderAdminProducts(){
+async function renderAdminProducts(){
     const wrap = document.getElementById("adminOrders");
-    wrap.innerHTML = PRODUCTS.map(p => {
-        const cat = CATS.find(c => c.id === p.cat);
+    wrap.innerHTML = '<div class="empty"><p>加载中…</p></div>';
+    const [pRes, sRes] = await Promise.all([
+        sb.from("shop_products").select("*").order("id", {ascending: true}),
+        sb.from("profiles").select("id, display_name")
+    ]);
+    if (pRes.error) { wrap.innerHTML = '<div class="empty"><p>加载失败：' + esc(pRes.error.message) + "</p></div>"; return; }
+    const sellers = {};
+    (sRes.data || []).forEach(s => sellers[s.id] = s.display_name || "卖家");
+    const list = pRes.data || [];
+    if (!list.length) { wrap.innerHTML = '<div class="empty"><p>暂无商品</p></div>'; return; }
+    const head = '<div style="display:flex;justify-content:flex-end;margin-bottom:10px"><button class="btn btn-primary" onclick="adminAddProduct()">＋ 发布新商品</button></div>';
+    wrap.innerHTML = head + list.map(p => {
+        const st = p.status === "active";
         return (
-            '<div class="admin-prod-card"><img src="' + p.img + '"><div class="p-meta"><div class="p-name">' + esc(p.name) + '</div>' +
-            '<div class="p-sub">' + esc(cat ? cat.name : "") + (p.tags && p.tags.length ? " · " + esc(p.tags.slice(0, 2).join(" / ")) : "") + "</div></div>" +
-            '<div class="p-right"><div class="p-price">RM' + fmt(p.price) + '</div><div class="p-sold">已售 ' + (p.sold || 0) + "</div></div></div>"
+            '<div class="admin-prod-card">' +
+            (p.img ? '<img src="' + p.img + '">' : '<div style="width:52px;height:52px;border-radius:10px;background:#f1f3f5;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:11px">无图</div>') +
+            '<div class="p-meta"><div class="p-name">' + esc(p.name) + '</div>' +
+            '<div class="p-sub">卖家：' + esc(sellers[p.seller_id] || "—") + (p.code ? ' · 识别码 <b>' + esc(p.code) + '</b>' : '') + '</div>' +
+            '<div class="p-sub" style="font-size:11px">' + esc(p.cat || "未分类") + ' · 已售 ' + (p.sales || 0) + ' · 库存 ' + (p.stock || 0) + ' · ' + (st ? '<span style="color:#00b578">● 在售</span>' : '<span style="color:var(--red)">● 已下架</span>') + '</div></div>' +
+            '<div class="p-right"><div class="p-price">RM' + fmt(Number(p.price)) + '</div>' +
+            '<div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap">' +
+            '<button class="admin-btn approve" style="padding:6px 10px;font-size:12px" onclick="adminEditProduct(' + p.id + ')">编辑</button>' +
+            '<button class="admin-btn" style="padding:6px 10px;font-size:12px" onclick="adminToggleProduct(' + p.id + ')">' + (st ? "下架" : "上架") + '</button>' +
+            '<button class="admin-btn reject" style="padding:6px 10px;font-size:12px" onclick="adminDelProduct(' + p.id + ')">删除</button>' +
+            "</div></div></div>"
         );
     }).join("");
+}
+async function adminAddProduct(){
+    curSellerUid = (curUser && curUser.id) || null;
+    openSellerProductModal();
+}
+async function adminEditProduct(pid){
+    const { data: p } = await sb.from("shop_products").select("seller_id").eq("id", pid).single();
+    if (!p) { toast("商品不存在"); return; }
+    curSellerUid = p.seller_id;
+    openSellerProductModal(pid);
+}
+async function adminToggleProduct(pid){
+    const { data: p } = await sb.from("shop_products").select("status").eq("id", pid).single();
+    const ns = p && p.status === "active" ? "inactive" : "active";
+    const res = await sb.from("shop_products").update({status: ns}).eq("id", pid);
+    if (res.error) { toast("操作失败：" + res.error.message); return; }
+    toast(ns === "active" ? "已上架" : "已下架");
+    await loadProducts();
+    renderAdminProducts();
+}
+async function adminDelProduct(pid){
+    if (!confirm("确定删除该商品？删除后不可恢复。")) return;
+    const res = await sb.from("shop_products").delete().eq("id", pid);
+    if (res.error) { toast("删除失败：" + res.error.message); return; }
+    toast("商品已删除");
+    await loadProducts();
+    renderAdminProducts();
+}
+async function setUserRole(uid, role){
+    const res = await sb.from("profiles").update({role: role}).eq("id", uid);
+    if (res.error) { toast("操作失败：" + res.error.message); return; }
+    toast(role === "admin" ? "已设为管理员" : "已撤销管理员");
+    renderAdminUsers();
+}
+async function addSellerById(uid){
+    const res = await sb.from("profiles").update({seller_status: "active"}).eq("id", uid);
+    if (res.error) { toast("操作失败：" + res.error.message); return; }
+    toast("已设为卖家");
+    renderAdminUsers();
+}
+async function removeSeller(uid){
+    if (!confirm("确定取消该用户的卖家身份？其商品将下架。")) return;
+    const res = await sb.from("profiles").update({seller_status: ""}).eq("id", uid);
+    if (res.error) { toast("操作失败：" + res.error.message); return; }
+    await sb.from("shop_products").update({status: "inactive"}).eq("seller_id", uid);
+    toast("已取消卖家身份");
+    renderAdminUsers();
 }
 async function renderAdminPay(){
     const wrap = document.getElementById("adminOrders");
@@ -1883,6 +1979,7 @@ async function renderSeller(){
         '<div style="font-size:12.5px;color:var(--muted);margin-top:2px">' + esc((seller && seller.email) || "") + (seller && seller.phone ? " · " + esc(seller.phone) : "") + "</div></div>" +
         '<span class="role-badge" style="margin-left:auto">卖家</span></div>';
     await renderSellerProducts(uid, isAdminEnter);
+    await renderSellerOrders(uid);
 }
 async function renderSellerProducts(uid, isAdminEnter){
     const wrap = document.getElementById("sellerProducts");
@@ -1906,6 +2003,49 @@ async function renderSellerProducts(uid, isAdminEnter){
             "</div></div></div>"
         );
     }).join("");
+}
+async function renderSellerOrders(uid){
+    const wrap = document.getElementById("sellerOrders");
+    if (!wrap) return;
+    if (!uid) { wrap.innerHTML = '<div class="empty"><p>暂无店铺</p></div>'; return; }
+    wrap.innerHTML = '<div class="empty"><p>加载中…</p></div>';
+    const { data: prods } = await sb.from("shop_products").select("id").eq("seller_id", uid);
+    const ids = new Set((prods || []).map(p => p.id));
+    if (!ids.size) { wrap.innerHTML = '<div class="empty"><p>该店铺暂无待确认订单</p></div>'; return; }
+    const { data, error } = await sb.from("shop_orders").select("*").order("created_at", {ascending: false});
+    if (error) { wrap.innerHTML = '<div class="empty"><p>加载失败</p></div>'; return; }
+    const mine = (data || []).filter(o => (o.items || []).some(i => ids.has(i.id)));
+    if (!mine.length) { wrap.innerHTML = '<div class="empty"><p>该店铺暂无待确认订单</p></div>'; return; }
+    const uids = mine.map(o => o.user_id).filter((v, i, a) => a.indexOf(v) === i);
+    const { data: pr } = await sb.from("profiles").select("id, display_name").in("id", uids);
+    const pm = {}; (pr || []).forEach(p => pm[p.id] = p.display_name || "买家");
+    wrap.innerHTML = mine.map(o => {
+        const buyer = pm[o.user_id] || "买家";
+        const item = (o.items && o.items[0]) || {};
+        const cls = o.status === "completed" ? "st-done" : o.status === "rejected" ? "st-rejected" : o.status === "awaiting_review" ? "st-await" : "st-pending";
+        const btns = o.status === "awaiting_review" ?
+            '<div class="admin-btns"><button class="admin-btn approve" onclick="sellerReview(\'' + o.id + '\',\'completed\')">通过 · 完成订单</button>' +
+            '<input class="reject-input" id="srej' + o.id + '" placeholder="拒绝原因"><button class="admin-btn reject" onclick="sellerReview(\'' + o.id + '\',\'rejected\')">拒绝</button></div>' : "";
+        return '<div class="shop-order-card">' +
+        '<div class="shop-order-head"><span class="shop-buyer"><span class="shop-buyer-avatar">' + esc(buyer.charAt(0).toUpperCase()) + '</span>' + esc(buyer) + '</span>' +
+        '<span class="order-status ' + cls + '">' + esc(orderStatusText(o.status)) + '</span></div>' +
+        '<div class="shop-order-body">' +
+        '<div class="shop-items"><div class="shop-item">' + (item.img ? '<img src="' + item.img + '">' : '') +
+        '<div><b>' + esc(item.name || "") + '</b><div>' + esc(o.order_no) + ' · ×' + (item.qty || 1) + '</div></div>' +
+        '<div style="margin-left:auto;font-weight:700">RM' + fmt(Number(o.total)) + '</div></div></div>' +
+        (o.pay_proof_url ? '<div class="shop-proof"><img src="' + o.pay_proof_url + '" onclick="window.open(\'' + o.pay_proof_url + '\')" alt="支付截图">' +
+        '<div class="proof-info"><b>支付截图</b> · 点击放大核对<br>提交于 ' + esc(new Date(o.created_at).toLocaleString("zh-CN")) + '</div>' + btns + '</div>' : '') +
+        '</div></div>';
+    }).join("");
+}
+function sellerReview(id, status){
+    const reason = status === "rejected" ? (document.getElementById("srej" + id).value.trim() || "") : "";
+    if (status === "rejected" && !reason) { toast("请填写拒绝原因"); return; }
+    sb.rpc("seller_review_shop_order", {p_order_id: id, p_status: status, p_reject_reason: reason || null}).then(res => {
+        if (res.error) { toast("操作失败：" + res.error.message); return; }
+        toast(status === "completed" ? "已通过，订单完成" : "已拒绝该订单");
+        renderSellerOrders(curSellerUid);
+    });
 }
 function openSellerProductModal(pid){
     const p = pid ? byId(pid) : null;
@@ -1991,7 +2131,8 @@ async function saveSellerProduct(){
     if (res.error) { toast("保存失败：" + res.error.message); return; }
     toast(editId ? "商品已更新" : "商品已上架");
     await loadProducts();
-    await renderSeller();
+    if ((location.hash || "").indexOf("#admin") === 0) renderAdminProducts();
+    else await renderSeller();
 }
 async function toggleSellerProduct(pid){
     const { data: p } = await sb.from("shop_products").select("status").eq("id", pid).single();
