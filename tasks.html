@@ -191,13 +191,139 @@
             color: #22c55e;
         }
 
+        /* =========================
+           侧边导航（与 dashboard 一致，滑出式）
+        ========================= */
+
+        .tasks-header .sidebar-toggle {
+            margin-bottom: 0;
+            flex: none;
+        }
+
+        @media (min-width: 601px) {
+
+            body.tasks-body .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+                z-index: 210;
+                box-shadow: 30px 0 60px rgba(0, 0, 0, 0.35);
+            }
+
+            body.tasks-body .sidebar-edge-zone:hover + .sidebar,
+            body.tasks-body .sidebar:hover,
+            body.tasks-body .sidebar:focus-within {
+                transform: translateX(0);
+            }
+
+            body.tasks-body .sidebar-edge-zone:hover,
+            body.tasks-body .sidebar:hover ~ .sidebar-edge-zone {
+                opacity: 0.35;
+            }
+
+        }
     </style>
 
 </head>
 
 <body class="tasks-body">
+    <!-- =========================
+         侧边导航（与 dashboard 一致，滑出式）
+    ========================= -->
 
-    <header class="tasks-header">
+    <div class="sidebar-edge-zone" aria-hidden="true" title="导航"></div>
+
+    <aside class="sidebar">
+
+        <div class="logo dashboard-logo">
+
+            <img src="assets/logo-icon.png" class="logo-icon logo-img" alt="TaskHub">
+
+            <span>TaskHub</span>
+
+        </div>
+
+        <nav class="side-nav">
+
+            <a href="dashboard.html">
+
+                <span>📊</span>
+
+                <span class="nav-text" data-i18n="dash.overview">总览</span>
+
+            </a>
+
+            <a href="tasks.html" class="active">
+
+                <span>🛒</span>
+
+                <span class="nav-text" data-i18n="dash.taskHall">任务大厅</span>
+
+            </a>
+
+            <a href="dashboard.html#mytasks">
+
+                <span>📋</span>
+
+                <span class="nav-text" data-i18n="dash.myTasks">我的任务</span>
+
+            </a>
+
+            <a href="dashboard.html#wallet">
+
+                <span>👛</span>
+
+                <span class="nav-text" data-i18n="dash.myWallet">我的钱包</span>
+
+            </a>
+
+            <a href="dashboard.html#withdraw">
+
+                <span>💸</span>
+
+                <span class="nav-text" data-i18n="dash.withdraw">提现</span>
+
+            </a>
+
+            <a href="dashboard.html#membership">
+
+                <span class="nav-ico tier-diamond"><img class="tier-svg" src="assets/tier/diamond.png" alt=""></span>
+
+                <span class="nav-text" data-i18n="member.title">会员中心</span>
+
+            </a>
+
+            <a
+                href="admin.html"
+                class="admin-nav-link"
+                id="adminNavLink"
+                style="display: none;">
+
+                <span>⚙️</span>
+
+                <span class="nav-text" data-i18n="dash.adminPanel">管理后台</span>
+
+            </a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+
+            <button
+                onclick="logout()"
+                class="logout-btn">
+
+                <span>↪</span>
+
+                <span class="nav-text" data-i18n="dash.logout">登出</span>
+
+            </button>
+
+        </div>
+
+    </aside>
+
+
+        <header class="tasks-header">
 
         <a
             href="dashboard.html"
@@ -209,6 +335,14 @@
 
         </a>
 
+        <button
+            type="button"
+            class="sidebar-toggle"
+            onclick="toggleSidebar()"
+            aria-label="打开菜单">
+            ☰
+        </button>
+
         <div class="tasks-header-actions">
 
             <button
@@ -216,19 +350,6 @@
                 class="lang-btn"
                 onclick="I18N.toggle()"
                 data-i18n-lang>EN</button>
-
-            <a
-                href="dashboard.html"
-                class="tasks-back-btn">
-                <span data-i18n="tasks.backToDashboard">返回仪表盘</span>
-            </a>
-
-            <button
-                type="button"
-                class="tasks-logout-btn"
-                onclick="logout()">
-                <span data-i18n="dash.logout">登出</span>
-            </button>
 
         </div>
 
@@ -323,14 +444,21 @@
             } =
                 await supabaseClient
                     .from("profiles")
-                    .select("membership_level")
+                    .select("membership_level, role")
                     .eq("id", currentUser.id)
                     .single();
 
             if (!profileError && profile) {
 
                 currentMembershipLevel =
-                    profile.membership_level || "basic";
+                                if (!profileError && profile && profile.role === "admin") {
+
+                const adminNavLink =
+                    document.getElementById("adminNavLink");
+
+                if (adminNavLink) {
+                    adminNavLink.style.display = "flex";
+                }
 
             }
 
@@ -801,62 +929,62 @@
     </a>
 
 
-    <!-- ============ 移动端底部 Tab 栏（仅手机显示，PC 不变） ============ -->
-    <div class="more-mask-mb hidden" id="moreMaskMb" onclick="toggleMoreMb(false)"></div>
-
-    <nav class="tabbar" id="tabbar">
-        <a class="tab" data-v="overview" href="dashboard.html"><span class="t-ic">📊</span><span class="t-lb" data-i18n="dash.overview">总览</span></a>
-        <a class="tab on" data-v="hall" href="tasks.html"><span class="t-ic">🛒</span><span class="t-lb" data-i18n="dash.taskHall">任务大厅</span></a>
-        <a class="tab" data-v="mytasks" href="dashboard.html#mytasks"><span class="t-ic">📋</span><span class="t-lb" data-i18n="dash.myTasks">我的任务</span></a>
-        <a class="tab" data-v="wallet" href="dashboard.html#wallet"><span class="t-ic">👛</span><span class="t-lb" data-i18n="dash.myWallet">钱包</span></a>
-        <a class="tab" data-v="more" href="javascript:void(0)" onclick="toggleMoreMb()"><span class="t-ic">▦</span><span class="t-lb" id="tabMoreLb">更多</span></a>
-    </nav>
-
-    <div class="more-panel-mb hidden" id="morePanelMb">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-            <div>
-                <h3 style="font-size:15px;color:var(--text,#f5f7fa)">全部功能</h3>
-                <div style="font-size:11.5px;color:var(--text-2,#8b949e)">更多服务入口</div>
-            </div>
-            <button type="button" onclick="toggleMoreMb(false)" style="background:none;border:none;color:var(--text-2,#8b949e);font-size:18px;cursor:pointer;line-height:1">✕</button>
-        </div>
-        <div class="more-grid-mb" id="moreGridMb"></div>
-    </div>
+        <!-- ============ 侧边导航（与 dashboard 一致，滑出式） ============ -->
 
     <script>
-        /* 移动端底部 Tab 栏 */
-        function tabMoreLb() {
-            var el = document.getElementById("tabMoreLb");
-            if (el) el.textContent = (typeof I18N !== "undefined" && I18N.get() === "zh") ? "更多" : "More";
+
+        /* 侧边导航 */
+        function toggleSidebar() {
+
+            const sidebar =
+                document.querySelector(
+                    ".sidebar"
+                );
+
+            if (sidebar) {
+                sidebar.classList.toggle("open");
+            }
+
         }
-        function toggleMoreMb(force) {
-            var panel = document.getElementById("morePanelMb");
-            var mask = document.getElementById("moreMaskMb");
-            if (!panel || !mask) return;
-            renderMoreMb();
-            var open = force === undefined ? panel.classList.contains("hidden") : force;
-            panel.classList.toggle("hidden", !open);
-            mask.classList.toggle("hidden", !open);
-        }
-        function renderMoreMb() {
-            var grid = document.getElementById("moreGridMb");
-            if (!grid) return;
-            var zh = typeof I18N !== "undefined" && I18N.get() === "zh";
-            var items = [
-                { v: "withdraw", ic: "💸", lb: zh ? "提现" : "Withdraw", href: "dashboard.html#withdraw" },
-                { v: "membership", ic: "💎", lb: zh ? "会员中心" : "Membership", href: "dashboard.html#membership" }
-            ];
-            items.push({ v: "logout", ic: "↪", lb: zh ? "登出" : "Log out", act: "logout()" });
-            var h = (location.hash || "").replace("#", "");
-            grid.innerHTML = items.map(function (it) {
-                var on = h === it.v ? " on" : "";
-                if (it.act) {
-                    return '<button type="button" class="mi-mb' + on + '" onclick="' + it.act + '" style="border:none;cursor:pointer;font-family:inherit"><span class="mi-ic-mb">' + it.ic + '</span><span class="mi-lb-mb">' + it.lb + '</span></button>';
+
+        // 点击菜单外部区域时自动关闭
+        document.addEventListener(
+            "click",
+            function (event) {
+
+                const sidebar =
+                    document.querySelector(
+                        ".sidebar"
+                    );
+
+                const toggle =
+                    document.querySelector(
+                        ".sidebar-toggle"
+                    );
+
+                if (
+                    sidebar &&
+                    sidebar.classList.contains(
+                        "open"
+                    ) &&
+                    toggle &&
+                    !sidebar.contains(
+                        event.target
+                    ) &&
+                    !toggle.contains(
+                        event.target
+                    )
+                ) {
+
+                    sidebar.classList.remove(
+                        "open"
+                    );
+
                 }
-                return '<a class="mi-mb' + on + '" href="' + it.href + '" onclick="toggleMoreMb(false)"><span class="mi-ic-mb">' + it.ic + '</span><span class="mi-lb-mb">' + it.lb + '</span></a>';
-            }).join("");
-        }
-        tabMoreLb();
+
+            }
+        );
+
     </script>
 
 
