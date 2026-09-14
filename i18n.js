@@ -267,6 +267,7 @@
         "wallet.empty": { zh: "暂时没有交易记录", en: "No transactions yet" },
         "wallet.generic": { zh: "钱包交易", en: "Wallet Transaction" },
         "wallet.taskReward": { zh: "任务奖励", en: "Task Reward" },
+        "wallet.shoppingReward": { zh: "购物奖励", en: "Shopping Reward" },
 
         /* ========== 提现 ========== */
         "withdraw.title": { zh: "提现", en: "Withdraw" },
@@ -394,6 +395,11 @@
         "admin.recentUsers": { zh: "最近注册", en: "Recent Signups" },
         "admin.ledgerTitle": { zh: "钱包流水", en: "Wallet Ledger" },
         "admin.ledgerSub": { zh: "全平台钱包交易记录与资金动向", en: "All wallet transactions across the platform" },
+        "admin.refundManage": { zh: "退款审核", en: "Refund Review" },
+        "admin.refundTitle": { zh: "任务退款审核", en: "Task Refund Review" },
+        "admin.refundSub": { zh: "按任务订单总价归还用户购物奖励", en: "Return the task order total to the user's wallet as a shopping reward" },
+        "admin.refreshRefunds": { zh: "🔄 刷新退款", en: "🔄 Refresh Refunds" },
+        "admin.refundLoading": { zh: "正在加载退款记录...", en: "Loading refund records..." },
         "admin.claimedCount": { zh: "已领取", en: "claimed" },
         "admin.doneCount": { zh: "已完成", en: "done" },
 

@@ -557,6 +557,12 @@
                     提现审核
                 </a>
 
+                <a href="#refunds" data-i18n="admin.refundManage"
+                   class="admin-nav-item">
+                    <span>💸</span>
+                    退款审核
+                </a>
+
 
                 <a href="#members" data-i18n="admin.memberManage"
                    class="admin-nav-item">
@@ -1313,6 +1319,53 @@
 
 
             <!-- ========================================
+                 任务退款审核（归还购物奖励）
+                 ======================================== -->
+
+            <section
+                id="refunds"
+                class="admin-section admin-review-section">
+
+                <div class="admin-review-header">
+
+                    <div>
+
+                        <h2>
+                            <span data-i18n="admin.refundTitle">任务退款审核</span>
+                        </h2>
+
+                        <p>
+                            <span data-i18n="admin.refundSub">按任务订单总价归还用户购物奖励</span>
+                        </p>
+
+                    </div>
+
+
+                    <button
+                        type="button"
+                        onclick="loadPendingRefunds()" data-i18n="admin.refreshRefunds"
+                        class="admin-refresh-btn">
+
+                        🔄 刷新退款
+
+                    </button>
+
+                </div>
+
+
+                <div id="pendingRefundsContainer">
+
+                    <div class="admin-loading-box">
+                        <span data-i18n="admin.refundLoading">正在加载退款记录...</span>
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- ========================================
                  Members（会员管理）
                  ======================================== -->
 
@@ -1420,6 +1473,7 @@
                             <option value="task_reward">任务佣金</option>
                             <option value="withdrawal">提现</option>
                             <option value="adjustment">管理员调整</option>
+                            <option value="shopping_reward">购物奖励</option>
                         </select>
 
                         <button
@@ -1513,6 +1567,7 @@ document.addEventListener(
                 loadAdminTasks();
                 loadPendingSubmissions();
                 loadPendingWithdrawals();
+                loadPendingRefunds();
                 loadMembers();
 
             }
@@ -1618,6 +1673,8 @@ async function checkAdmin() {
         await loadPendingSubmissions();
 
         await loadPendingWithdrawals();
+
+        await loadPendingRefunds();
 
         await loadMembers();
 
@@ -1960,6 +2017,7 @@ async function loadLedger() {
             if (t === "task_reward") return zh ? "任务佣金" : "Reward";
             if (t === "withdrawal") return zh ? "提现" : "Withdrawal";
             if (t === "adjustment") return zh ? "管理员调整" : "Adjustment";
+            if (t === "shopping_reward") return zh ? "购物奖励" : "Shopping Reward";
             return zh ? "其他" : "Other";
         };
 
@@ -1967,6 +2025,7 @@ async function loadLedger() {
             if (t === "task_reward") return "ledger-type-reward";
             if (t === "withdrawal") return "ledger-type-withdrawal";
             if (t === "adjustment") return "ledger-type-adjust";
+            if (t === "shopping_reward") return "ledger-type-reward";
             return "ledger-type-other";
         };
 
@@ -2089,7 +2148,7 @@ async function openMemberDetail(uid) {
                 const a = Number(t.amount || 0);
                 const pos = a >= 0;
                 const d = t.created_at ? new Date(t.created_at).toLocaleString(zh ? "zh-CN" : "en-GB") : "—";
-                const tn = t.type === "task_reward" ? (zh ? "佣金" : "Reward") : t.type === "withdrawal" ? (zh ? "提现" : "Withdrawal") : t.type === "adjustment" ? (zh ? "调整" : "Adjust") : (zh ? "其他" : "Other");
+                const tn = t.type === "task_reward" ? (zh ? "佣金" : "Reward") : t.type === "withdrawal" ? (zh ? "提现" : "Withdrawal") : t.type === "adjustment" ? (zh ? "调整" : "Adjust") : t.type === "shopping_reward" ? (zh ? "购物奖励" : "Shopping Reward") : (zh ? "其他" : "Other");
                 return '<div class="admin-tx-row"><div class="admin-tx-main"><b>' + tn + '</b><small>' + (t.note || "") + '</small><small> ' + d + '</small></div>' +
                     '<div class="admin-tx-amt ' + (pos ? "pos" : "neg") + '">' + (pos ? "+" : "-") + "RM" + Math.abs(a).toFixed(2) + '</div></div>';
             }).join("");
@@ -4262,6 +4321,270 @@ async function rejectWithdrawal(
 
 }
 
+
+
+/* ========================================
+   任务退款审核（归还购物奖励）
+   ======================================== */
+
+async function loadPendingRefunds() {
+
+    const container =
+        document.getElementById(
+            "pendingRefundsContainer"
+        );
+
+    if (!container) {
+        return;
+    }
+
+    const zh =
+        typeof I18N !== "undefined" && I18N.get() === "zh";
+
+    container.innerHTML =
+        '<div class="admin-loading-box">' +
+        (zh ? "正在加载退款记录..." : "Loading refund records...") +
+        '</div>';
+
+    try {
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient
+                .rpc(
+                    "admin_get_pending_refunds"
+                );
+
+        if (error) {
+            throw error;
+        }
+
+        if (!data || data.length === 0) {
+
+            container.innerHTML =
+                '<div class="admin-empty-box">' +
+                (zh ? "暂无可退款的领取记录" : "No refundable claims") +
+                '</div>';
+
+            return;
+
+        }
+
+        container.innerHTML = "";
+
+        data.forEach(function (item) {
+
+            container.appendChild(
+                createRefundCard(item)
+            );
+
+        });
+
+    } catch (error) {
+
+        console.error(
+            "加载退款记录失败:",
+            error
+        );
+
+        container.innerHTML =
+            '<div class="admin-error-box">' +
+            (zh ? "加载退款记录失败：" : "Failed to load refund records: ") +
+            escapeHtml(error.message) +
+            '</div>';
+
+    }
+
+}
+
+
+/* ========================================
+   创建退款卡片
+   ======================================== */
+
+function createRefundCard(item) {
+
+    const zh =
+        typeof I18N !== "undefined" && I18N.get() === "zh";
+
+    const card =
+        document.createElement("div");
+
+    card.className =
+        "admin-withdrawal-item";
+
+    const amount =
+        Number(
+            item.shop_product_price || 0
+        ).toFixed(2);
+
+    const userName =
+        escapeHtml(
+            item.user_name || "?"
+        );
+
+    const userEmail =
+        escapeHtml(
+            item.user_email || "-"
+        );
+
+    const taskTitle =
+        escapeHtml(
+            item.task_title || ("#" + item.task_id)
+        );
+
+    const shopCode =
+        escapeHtml(
+            item.shop_product_code || "-"
+        );
+
+    const statusText =
+        item.status === "approved" ? (zh ? "已完成" : "Done") :
+        item.status === "submitted" ? (zh ? "待审核" : "Pending") :
+        item.status === "rejected" ? (zh ? "已驳回" : "Rejected") :
+        item.status === "claimed" ? (zh ? "进行中" : "In progress") :
+        escapeHtml(String(item.status || "-"));
+
+    const claimedAt =
+        item.claimed_at
+            ? new Date(
+                item.claimed_at
+              ).toLocaleString(
+                zh ? "zh-CN" : "en-GB"
+              )
+            : "-";
+
+    card.innerHTML =
+        `
+        <div class="withdrawal-amount">
+            ${zh ? "订单总价" : "Order Total"} RM${amount}
+        </div>
+
+        <div class="withdrawal-info">
+
+            <div>
+                ${zh ? "用户" : "User"}
+                ${userName} · ${userEmail}
+            </div>
+
+            <div>
+                ${zh ? "任务" : "Task"}
+                ${taskTitle}
+            </div>
+
+            <div>
+                ${zh ? "商品识别码" : "Product Code"}
+                ${shopCode}
+            </div>
+
+            <div>
+                ${zh ? "状态" : "Status"}
+                ${statusText}
+            </div>
+
+            <div>
+                ${zh ? "领取时间" : "Claimed at"}
+                ${escapeHtml(claimedAt)}
+            </div>
+
+            <div>
+                ${zh ? "领取ID" : "Claim ID"}
+                ${escapeHtml(String(item.id))}
+            </div>
+
+        </div>
+
+        <div class="withdrawal-actions">
+
+            <button
+                type="button"
+                class="admin-action-success"
+                onclick="refundTask(
+                    ${Number(item.id)},
+                    ${Number(item.shop_product_price || 0)}
+                )"
+            >
+                💸 ${zh ? "归还购物奖励" : "Return Shopping Reward"}
+            </button>
+
+        </div>
+        `;
+
+    return card;
+
+}
+
+
+/* ========================================
+   执行任务退款（归还订单总价到钱包）
+   ======================================== */
+
+async function refundTask(
+    claimId,
+    amount
+) {
+
+    const zh =
+        typeof I18N !== "undefined" && I18N.get() === "zh";
+
+    if (
+        !confirm(
+            (zh
+                ? "确认将订单总价 RM" + Number(amount).toFixed(2) + " 归还到该用户钱包吗？\n\n流水描述将显示为「购物奖励」，该领取记录将标记为已退款，且不可重复操作。"
+                : "Return order total RM" + Number(amount).toFixed(2) + " to this user's wallet?\n\nThe transaction note will show \"Shopping Reward\", and this claim will be marked as refunded.")
+        )
+    ) {
+        return;
+    }
+
+    try {
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient
+                .rpc(
+                    "admin_refund_task",
+                    {
+                        p_claim_id: Number(claimId)
+                    }
+                );
+
+        if (error) {
+            throw error;
+        }
+
+        const returned =
+            data && data.amount != null
+                ? Number(data.amount).toFixed(2)
+                : Number(amount).toFixed(2);
+
+        alert(
+            (zh
+                ? "已归还 RM" + returned + " 到用户钱包（购物奖励）。"
+                : "RM" + returned + " returned to the user's wallet (Shopping Reward).")
+        );
+
+        await loadPendingRefunds();
+
+    } catch (error) {
+
+        console.error(
+            "归还失败:",
+            error
+        );
+
+        alert(
+            (zh ? "归还失败：" : "Refund failed: ") +
+            error.message
+        );
+
+    }
+
+}
 
 
 /* ========================================

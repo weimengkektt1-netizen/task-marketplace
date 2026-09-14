@@ -1682,6 +1682,17 @@ async function loadWalletTransactions() {
             }
 
 
+            if (
+                item.type ===
+                "shopping_reward"
+            ) {
+
+                typeText =
+                    I18N.t("wallet.shoppingReward");
+
+            }
+
+
             return `
                 <div class="wallet-transaction-item">
 

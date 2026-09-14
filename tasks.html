@@ -451,13 +451,17 @@
             if (!profileError && profile) {
 
                 currentMembershipLevel =
-                                if (!profileError && profile && profile.role === "admin") {
+                    profile.membership_level || "basic";
 
-                const adminNavLink =
-                    document.getElementById("adminNavLink");
+                if (profile.role === "admin") {
 
-                if (adminNavLink) {
-                    adminNavLink.style.display = "flex";
+                    const adminNavLink =
+                        document.getElementById("adminNavLink");
+
+                    if (adminNavLink) {
+                        adminNavLink.style.display = "flex";
+                    }
+
                 }
 
             }
