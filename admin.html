@@ -1417,7 +1417,7 @@
                             <option value="">全部类型</option>
                             <option value="task_reward">任务佣金</option>
                             <option value="withdrawal">提现</option>
-                            <option value="admin_adjust">管理员调整</option>
+                            <option value="adjustment">管理员调整</option>
                         </select>
 
                         <button
@@ -1955,14 +1955,14 @@ async function loadLedger() {
         const typeName = function (t) {
             if (t === "task_reward") return zh ? "任务佣金" : "Reward";
             if (t === "withdrawal") return zh ? "提现" : "Withdrawal";
-            if (t === "admin_adjust") return zh ? "管理员调整" : "Adjustment";
+            if (t === "adjustment") return zh ? "管理员调整" : "Adjustment";
             return zh ? "其他" : "Other";
         };
 
         const typeCls = function (t) {
             if (t === "task_reward") return "ledger-type-reward";
             if (t === "withdrawal") return "ledger-type-withdrawal";
-            if (t === "admin_adjust") return "ledger-type-adjust";
+            if (t === "adjustment") return "ledger-type-adjust";
             return "ledger-type-other";
         };
 
@@ -2083,7 +2083,7 @@ async function openMemberDetail(uid) {
                 const a = Number(t.amount || 0);
                 const pos = a >= 0;
                 const d = t.created_at ? new Date(t.created_at).toLocaleString(zh ? "zh-CN" : "en-GB") : "—";
-                const tn = t.type === "task_reward" ? (zh ? "佣金" : "Reward") : t.type === "withdrawal" ? (zh ? "提现" : "Withdrawal") : t.type === "admin_adjust" ? (zh ? "调整" : "Adjust") : (zh ? "其他" : "Other");
+                const tn = t.type === "task_reward" ? (zh ? "佣金" : "Reward") : t.type === "withdrawal" ? (zh ? "提现" : "Withdrawal") : t.type === "adjustment" ? (zh ? "调整" : "Adjust") : (zh ? "其他" : "Other");
                 return '<div class="admin-tx-row"><div class="admin-tx-main"><b>' + tn + '</b><small>' + (t.note || "") + '</small><small> ' + d + '</small></div>' +
                     '<div class="admin-tx-amt ' + (pos ? "pos" : "neg") + '">' + (pos ? "+" : "-") + "RM" + Math.abs(a).toFixed(2) + '</div></div>';
             }).join("");
