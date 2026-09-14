@@ -4937,28 +4937,44 @@ body.dashboard-body .sidebar {
 }
 
 .tier-basic    { --glow: rgba(148, 163, 184, 0.55); }
+.tier-silver   { --glow: rgba(203, 213, 225, 0.6); }
 .tier-gold     { --glow: rgba(245, 158, 11, 0.65); }
 .tier-platinum { --glow: rgba(167, 139, 250, 0.7); }
 .tier-diamond  { --glow: rgba(56, 189, 248, 0.75); }
+.tier-radiant  { --glow: rgba(251, 191, 36, 0.8); }
 
 .member-tier-icon svg,
 .member-tier-badge svg,
-.invite-milestone-ico svg {
+.invite-milestone-ico svg,
+.member-tier-icon img,
+.member-tier-badge img,
+.invite-milestone-ico img {
+    border-radius: 50%;
+    object-fit: cover;
     filter: drop-shadow(0 0 5px var(--glow, rgba(255, 255, 255, 0.35)));
     animation: tierGlow 2.8s ease-in-out infinite;
 }
 
 .member-tier-icon.tier-gold svg,
 .member-tier-badge.tier-gold svg,
-.invite-milestone-ico.tier-gold svg { animation-delay: 0.15s; }
+.invite-milestone-ico.tier-gold svg,
+.member-tier-icon.tier-gold img,
+.member-tier-badge.tier-gold img,
+.invite-milestone-ico.tier-gold img { animation-delay: 0.15s; }
 
 .member-tier-icon.tier-platinum svg,
 .member-tier-badge.tier-platinum svg,
-.invite-milestone-ico.tier-platinum svg { animation-delay: 0.3s; }
+.invite-milestone-ico.tier-platinum svg,
+.member-tier-icon.tier-platinum img,
+.member-tier-badge.tier-platinum img,
+.invite-milestone-ico.tier-platinum img { animation-delay: 0.3s; }
 
 .member-tier-icon.tier-diamond svg,
 .member-tier-badge.tier-diamond svg,
-.invite-milestone-ico.tier-diamond svg { animation-delay: 0.45s; }
+.invite-milestone-ico.tier-diamond svg,
+.member-tier-icon.tier-diamond img,
+.member-tier-badge.tier-diamond img,
+.invite-milestone-ico.tier-diamond img { animation-delay: 0.45s; }
 
 @keyframes tierGlow {
     0%, 100% { filter: drop-shadow(0 0 4px var(--glow, rgba(255, 255, 255, 0.35))); }
@@ -6155,4 +6171,17 @@ body.dashboard-body .sidebar {
     .about-stat strong {
         font-size: 24px;
     }
+}
+
+
+/* ===== 等级专属星空背景（LV3+，由 dashboard.html 动态注入） ===== */
+.dashboard-bg {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 1s ease;
 }
