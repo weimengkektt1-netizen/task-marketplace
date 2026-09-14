@@ -660,6 +660,35 @@
         </div>
 
 
+        <div class="my-task-tabs">
+
+            <button
+                type="button"
+                class="my-task-tab active"
+                data-tab="active"
+                onclick="switchMyTaskTab('active')">
+                <span data-i18n="dash.tabActive">进行中</span>
+            </button>
+
+            <button
+                type="button"
+                class="my-task-tab"
+                data-tab="done"
+                onclick="switchMyTaskTab('done')">
+                <span data-i18n="dash.tabDone">已完成</span>
+            </button>
+
+            <button
+                type="button"
+                class="my-task-tab"
+                data-tab="expired"
+                onclick="switchMyTaskTab('expired')">
+                <span data-i18n="dash.tabExpired">已失效</span>
+            </button>
+
+        </div>
+
+
         <div
             id="myTaskList"
             class="my-task-list">
@@ -1810,9 +1839,33 @@ async function loadTasks() {
     }
 
 
+    // 排除当前用户已领取的任务
+    const {
+        data: myClaims
+    } =
+        await supabaseClient
+        .from("task_claims")
+        .select("task_id")
+        .eq(
+            "user_id",
+            currentUser.id
+        );
+
+
+    const claimedIds =
+        new Set(
+            (myClaims || []).map(c => c.task_id)
+        );
+
+
+    const visibleTasks =
+        (data || []).filter(
+            t => !claimedIds.has(t.id)
+        );
+
+
     if (
-        !data ||
-        data.length === 0
+        visibleTasks.length === 0
     ) {
 
         taskList.innerHTML =
@@ -1838,14 +1891,14 @@ async function loadTasks() {
     if (moreBtn) {
 
         moreBtn.style.display =
-            data.length > 4
+            visibleTasks.length > 4
                 ? ""
                 : "none";
 
     }
 
 
-    data.slice(0, 4).forEach(task => {
+    visibleTasks.slice(0, 4).forEach(task => {
 
         const badgeInfo =
             taskBadgeInfo(task);
@@ -2113,6 +2166,11 @@ async function claimTask(taskId, shopProductCode, shopProductId) {
 // LOAD MY TASKS
 // ========================================
 
+let myClaimsData = null;
+
+let myTaskTab = "active";
+
+
 async function loadMyTasks() {
 
     const list =
@@ -2132,7 +2190,9 @@ async function loadMyTasks() {
             tasks (
                 title,
                 reward,
-                shop_product_id
+                shop_product_id,
+                shop_product_code,
+                status
             )
         `)
         .eq(
@@ -2156,22 +2216,8 @@ async function loadMyTasks() {
     }
 
 
-    if (
-        !data ||
-        data.length === 0
-    ) {
-
-        list.innerHTML =
-            `<div class="empty-box">
-                ${I18N.t("dash.noMyTasks")}
-            </div>`;
-
-        return;
-
-    }
-
-
-    list.innerHTML = "";
+    myClaimsData =
+        data || [];
 
 
     let completed = 0;
@@ -2179,7 +2225,7 @@ async function loadMyTasks() {
     let active = 0;
 
 
-    data.forEach(item => {
+    myClaimsData.forEach(item => {
 
         if (
             item.status ===
@@ -2202,6 +2248,160 @@ async function loadMyTasks() {
 
         }
 
+    });
+
+
+    document
+        .getElementById(
+            "completedTasks"
+        )
+        .textContent =
+        completed;
+
+
+    document
+        .getElementById(
+            "activeTasks"
+        )
+        .textContent =
+        active;
+
+
+    renderMyTasks();
+
+}
+
+
+function isExpiredClaim(
+    item
+) {
+
+    return (
+        item.status === "rejected" ||
+        item.status === "cancelled" ||
+        (
+            item.tasks?.status === "closed" &&
+            item.status !== "approved"
+        )
+    );
+
+}
+
+
+function switchMyTaskTab(
+    tab
+) {
+
+    myTaskTab =
+        tab;
+
+
+    document
+        .querySelectorAll(
+            ".my-task-tab"
+        )
+        .forEach(btn => {
+
+            btn.classList.toggle(
+                "active",
+                btn.dataset.tab === tab
+            );
+
+        });
+
+
+    renderMyTasks();
+
+}
+
+
+function renderMyTasks() {
+
+    const list =
+        document.getElementById(
+            "myTaskList"
+        );
+
+
+    if (
+        !myClaimsData ||
+        myClaimsData.length === 0
+    ) {
+
+        list.innerHTML =
+            `<div class="empty-box">
+                ${I18N.t("dash.noMyTasks")}
+            </div>`;
+
+        return;
+
+    }
+
+
+    const filtered =
+        myClaimsData.filter(item => {
+
+            if (
+                myTaskTab ===
+                "done"
+            ) {
+
+                return (
+                    item.status ===
+                    "approved"
+                );
+
+            }
+
+
+            if (
+                myTaskTab ===
+                "expired"
+            ) {
+
+                return isExpiredClaim(
+                    item
+                );
+
+            }
+
+
+            return (
+                item.status ===
+                "claimed" ||
+                item.status ===
+                "submitted"
+            );
+
+        });
+
+
+    list.innerHTML = "";
+
+
+    if (
+        filtered.length === 0
+    ) {
+
+        list.innerHTML =
+            `<div class="empty-box">
+                ${
+                    I18N.t(
+                        myTaskTab === "active"
+                            ? "dash.tabActiveEmpty"
+                            : myTaskTab === "done"
+                                ? "dash.tabDoneEmpty"
+                                : "dash.tabExpiredEmpty"
+                    )
+                }
+            </div>`;
+
+        return;
+
+    }
+
+
+    filtered.forEach(item => {
 
         const row =
             document.createElement(
@@ -2211,6 +2411,11 @@ async function loadMyTasks() {
 
         row.className =
             "my-task-row";
+
+
+        const isShopTask =
+            item.tasks?.shop_product_code ||
+            item.tasks?.shop_product_id;
 
 
         row.innerHTML = `
@@ -2252,7 +2457,7 @@ async function loadMyTasks() {
 
             ${
                 item.status === "claimed"
-                    ? (item.tasks?.shop_product_code || item.tasks?.shop_product_id
+                    ? (isShopTask
                         ? `
                             <button
                                 class="task-action-btn ht-shop-btn"
@@ -2272,16 +2477,6 @@ async function loadMyTasks() {
                             </button>
                           `)
                     : ""
-                    ? `
-                        <button
-                            class="task-action-btn"
-                            onclick="submitTask(${item.id})">
-
-                            ${I18N.t("dash.submitTask")}
-
-                        </button>
-                      `
-                    : ""
             }
 
         `;
@@ -2292,22 +2487,6 @@ async function loadMyTasks() {
         );
 
     });
-
-
-    document
-        .getElementById(
-            "completedTasks"
-        )
-        .textContent =
-        completed;
-
-
-    document
-        .getElementById(
-            "activeTasks"
-        )
-        .textContent =
-        active;
 
 }
 

@@ -479,9 +479,38 @@
 
             }
 
+            // 排除当前用户已领取的任务（未登录则不过滤）
+            let visibleTasks = data || [];
+
+            if (currentUser) {
+
+                const {
+                    data: myClaims
+                } =
+                    await supabaseClient
+                        .from("task_claims")
+                        .select("task_id")
+                        .eq(
+                            "user_id",
+                            currentUser.id
+                        );
+
+
+                const claimedIds =
+                    new Set(
+                        (myClaims || []).map(c => c.task_id)
+                    );
+
+
+                visibleTasks =
+                    visibleTasks.filter(
+                        t => !claimedIds.has(t.id)
+                    );
+
+            }
+
             if (
-                !data ||
-                data.length === 0
+                visibleTasks.length === 0
             ) {
 
                 taskList.innerHTML =
@@ -495,7 +524,7 @@
 
             taskList.innerHTML = "";
 
-            data.forEach(task => {
+            visibleTasks.forEach(task => {
 
                 const badgeInfo =
                     taskBadgeInfo(task);

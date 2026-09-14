@@ -1231,6 +1231,60 @@ body {
 
 /* MY TASK */
 
+.my-task-tabs {
+    display: flex;
+
+    gap: 10px;
+
+    margin-bottom: 16px;
+
+    flex-wrap: wrap;
+}
+
+
+.my-task-tab {
+    background: #171b24;
+
+    border: 1px solid #222731;
+
+    color: #8a93a3;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    padding: 9px 18px;
+
+    border-radius: 999px;
+
+    cursor: pointer;
+
+    transition: all .25s ease;
+}
+
+
+.my-task-tab:hover {
+    color: #e8ecf4;
+
+    border-color: #2c3444;
+}
+
+
+.my-task-tab.active {
+    background: linear-gradient(
+        135deg,
+        #3b82f6,
+        #8b5cf6
+    );
+
+    border-color: transparent;
+
+    color: #fff;
+
+    box-shadow: 0 4px 14px rgba(99, 102, 241, .35);
+}
+
+
 .my-task-list,
 .wallet-box {
     background: #10131a;
