@@ -1953,6 +1953,14 @@ function uploadProductImg(input){
         toast("图片上传成功");
     });
 }
+async function genShopCode(){
+    for (let i = 0; i < 10; i++) {
+        const c = "SH" + Math.floor(1000 + Math.random() * 9000);
+        const { data } = await sb.from("shop_products").select("id").eq("code", c).maybeSingle();
+        if (!data) return c;
+    }
+    return "SH" + Date.now().toString().slice(-4);
+}
 async function saveSellerProduct(){
     const name = document.getElementById("spName").value.trim();
     const price = parseFloat(document.getElementById("spPrice").value);
@@ -1967,7 +1975,7 @@ async function saveSellerProduct(){
     }
     const codeEl = document.getElementById("spCode");
     let code = codeEl ? codeEl.value.trim().toUpperCase() : "";
-    if (!code) code = "SH" + String(id).padStart(4, "0");
+    if (!code) code = await genShopCode();
     const payload = {
         id: id, seller_id: curSellerUid, code: code,
         name: name,
