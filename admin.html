@@ -965,6 +965,59 @@
                         <div class="admin-form-grid">
 
 
+                            <!-- 任务类型 -->
+
+                            <div class="admin-form-group full">
+
+                                <label>
+                                <span data-i18n="admin.taskType">任务类型</span>
+                                </label>
+
+                                <div class="admin-task-type-picker">
+
+                                    <label class="admin-type-option">
+                                        <input type="radio" name="taskType" value="like" id="taskTypeLike" onchange="onTaskTypeChange()">
+                                        <span class="admin-type-icon">👍</span>
+                                        <span data-i18n="admin.taskTypeLike">点赞任务</span>
+                                    </label>
+
+                                    <label class="admin-type-option">
+                                        <input type="radio" name="taskType" value="shop" id="taskTypeShop" checked onchange="onTaskTypeChange()">
+                                        <span class="admin-type-icon">🛒</span>
+                                        <span data-i18n="admin.taskTypeShop">商城刷单任务</span>
+                                    </label>
+
+                                    <label class="admin-type-option">
+                                        <input type="radio" name="taskType" value="review" id="taskTypeReview" onchange="onTaskTypeChange()">
+                                        <span class="admin-type-icon">⭐</span>
+                                        <span data-i18n="admin.taskTypeReview">评价任务</span>
+                                    </label>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- 任务链接（点赞任务专用） -->
+
+                            <div class="admin-form-group full" id="taskLinkGroup">
+
+                                <label>
+                                <span data-i18n="admin.taskLink">任务链接（点赞/评价任务）</span>
+                                </label>
+
+                                <input
+                                    type="url"
+                                    id="taskLink"
+                                    placeholder="https://www.tiktok.com/..." data-i18n-placeholder="admin.taskLinkPh">
+
+                                <small class="admin-form-hint" style="display:block;margin-top:6px;font-size:12px;color:#8a94a6;line-height:1.6;">
+                                    <span data-i18n="admin.taskLinkHint">用户领取任务后自动跳转到该链接，完成点赞/评价后截图提交，管理员审核通过即发放佣金。</span>
+                                </small>
+
+                            </div>
+
+
                             <!-- Title -->
 
                             <div class="admin-form-group full">
@@ -1051,7 +1104,7 @@
 
                             <!-- ShopHub 商品绑定 -->
 
-                            <div class="admin-form-group full">
+                            <div class="admin-form-group full shop-task-field">
 
                                 <label>
                                 <span data-i18n="admin.shopProduct">绑定 ShopHub 商品识别码（选填，刷单任务）</span>
@@ -1072,7 +1125,7 @@
 
                             <!-- ShopHub 商品价格（刷单佣金基数） -->
 
-                            <div class="admin-form-group full">
+                            <div class="admin-form-group full shop-task-field">
 
                                 <label>
                                 <span data-i18n="admin.shopPrice">商品价格（RM）（选填，刷单任务）</span>
@@ -1555,6 +1608,8 @@ document.addEventListener(
             );
 
         }
+
+        onTaskTypeChange();
 
 
         await checkAdmin();
@@ -2632,6 +2687,45 @@ async function uploadTaskImage() {
    发布任务
    ======================================== */
 
+// ========================================
+// 任务类型切换：点赞任务 / 商城刷单任务
+// ========================================
+
+function onTaskTypeChange() {
+
+    const typeInput =
+        document.querySelector(
+            'input[name="taskType"]:checked'
+        );
+
+    const type =
+        (typeInput && typeInput.value) ||
+        "shop";
+
+    const linkGroup =
+        document.getElementById(
+            "taskLinkGroup"
+        );
+
+    if (linkGroup) {
+
+        linkGroup.style.display =
+            (type === "like" || type === "review") ? "" : "none";
+
+    }
+
+    document
+        .querySelectorAll(".shop-task-field")
+        .forEach(el => {
+
+            el.style.display =
+                type === "shop" ? "" : "none";
+
+        });
+
+}
+
+
 async function createTask(event) {
 
     event.preventDefault();
@@ -2685,6 +2779,25 @@ async function createTask(event) {
                 shopPriceElement.value
             )
             : null;
+
+    const taskLinkElement =
+        document.getElementById(
+            "taskLink"
+        );
+
+    const taskLinkValue =
+        taskLinkElement && taskLinkElement.value.trim()
+            ? taskLinkElement.value.trim()
+            : null;
+
+    const taskTypeInput =
+        document.querySelector(
+            'input[name="taskType"]:checked'
+        );
+
+    const taskType =
+        (taskTypeInput && taskTypeInput.value) ||
+        "shop";
 
 
     const title =
@@ -2872,7 +2985,13 @@ async function createTask(event) {
                         shopProductValue,
 
                     shop_product_price:
-                        shopPriceValue
+                        shopPriceValue,
+
+                    task_type:
+                        taskType,
+
+                    task_link:
+                        taskLinkValue
 
                 });
 
@@ -5012,6 +5131,15 @@ async function openEditTask(
     if (code === null) return;
 
 
+    const link =
+        prompt(
+            "任务链接（点赞任务用，留空则无）",
+            task.task_link || ""
+        );
+
+    if (link === null) return;
+
+
     const price =
         prompt(
             "商品价格 RM（刷单佣金基数，选填）",
@@ -5050,7 +5178,11 @@ async function openEditTask(
             shop_product_code:
                 code.trim() ? code.trim().toUpperCase() : null,
             shop_product_price:
-                price.trim() !== "" ? parseFloat(price) : null
+                price.trim() !== "" ? parseFloat(price) : null,
+            task_type:
+                task.task_type || "shop",
+            task_link:
+                link.trim() ? link.trim() : null
         }
     );
 

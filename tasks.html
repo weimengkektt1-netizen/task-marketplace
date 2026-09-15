@@ -703,6 +703,13 @@
 
                         <h3>
                             ${escapeHtml(task.title)}
+                            <span class="ht-type-badge ${task.task_type === "like" ? "like" : task.task_type === "review" ? "review" : "shop"}">
+                                ${task.task_type === "like"
+                                    ? I18N.t("tasks.typeLike")
+                                    : task.task_type === "review"
+                                        ? I18N.t("tasks.typeReview")
+                                        : I18N.t("tasks.typeShop")}
+                            </span>
                         </h3>
 
                         <p class="ht-card-desc">
@@ -711,11 +718,6 @@
                                 I18N.t("dash.noTaskDesc")
                             )}
                         </p>
-
-                        <div class="ht-reward">
-                            RM${Number(task.reward).toFixed(2)}
-                            <small>${I18N.t("tasks.perTask")}</small>
-                        </div>
 
                         ${
                             task.shop_product_id && task.shop_product_price
@@ -741,12 +743,16 @@
 
                         <button
                             class="task-action-btn"
-                            onclick="claimTask(${task.id}, ${task.shop_product_id || "null"})">
+                            onclick="claimTask(${task.id}, ${task.shop_product_id || "null"}, '${(task.task_link || "").replace(/'/g, "\\'")}')">
 
                             ${
-                                task.shop_product_id
-                                    ? I18N.t("dash.shopTask")
-                                    : I18N.t("dash.claim")
+                                task.task_type === "like"
+                                    ? I18N.t("tasks.claimLike")
+                                    : task.task_type === "review"
+                                        ? I18N.t("tasks.claimReview")
+                                        : task.shop_product_id
+                                            ? I18N.t("dash.shopTask")
+                                            : I18N.t("dash.claim")
                             }
 
                         </button>
@@ -766,7 +772,7 @@
         // 领取任务
         // ========================================
 
-        async function claimTask(taskId, shopProductId) {
+        async function claimTask(taskId, shopProductId, taskLink) {
 
             const {
                 data: existing
@@ -887,6 +893,15 @@
             alert(
                 I18N.t("msg.claimSuccess")
             );
+
+            // 点赞任务：领取成功后跳转到指定链接
+            if (taskLink && data && data.id) {
+
+                window.location.href = taskLink;
+
+                return;
+
+            }
 
             // 刷单任务：领取成功后直接跳转 ShopHub 下单
             if (shopProductId && data && data.id) {

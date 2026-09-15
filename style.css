@@ -6212,3 +6212,79 @@ body.dashboard-body .sidebar {
     background: none !important;
     box-shadow: 0 4px 14px rgba(109, 93, 252, 0.35);
 }
+
+/* =========================
+   任务类型选择器（admin 新建任务）
+   ========================= */
+.admin-task-type-picker {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+.admin-type-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 18px;
+    border: 2px solid rgba(109, 93, 252, 0.25);
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.06);
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    color: #c7cdda;
+    transition: all .25s ease;
+    user-select: none;
+}
+.admin-type-option:hover {
+    border-color: rgba(109, 93, 252, 0.55);
+    background: rgba(109, 93, 252, 0.10);
+}
+.admin-type-option input[type="radio"] {
+    accent-color: #6d5dfc;
+    width: 16px;
+    height: 16px;
+    margin: 0;
+}
+.admin-type-option:has(input:checked) {
+    border-color: #6d5dfc;
+    background: rgba(109, 93, 252, 0.18);
+    color: #fff;
+    box-shadow: 0 0 18px rgba(109, 93, 252, 0.35);
+}
+.admin-type-icon {
+    font-size: 18px;
+}
+
+/* =========================
+   任务类型标签（任务卡片）
+   ========================= */
+.ht-type-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .4px;
+    padding: 3px 9px;
+    border-radius: 20px;
+    margin-left: 8px;
+    vertical-align: 2px;
+    white-space: nowrap;
+}
+.ht-type-badge.like {
+    color: #ffd88a;
+    background: rgba(255, 180, 60, 0.16);
+    border: 1px solid rgba(255, 180, 60, 0.35);
+}
+.ht-type-badge.shop {
+    color: #8be9c9;
+    background: rgba(60, 220, 170, 0.14);
+    border: 1px solid rgba(60, 220, 170, 0.35);
+}
+
+.ht-type-badge.review {
+    color: #b4a7ff;
+    background: rgba(139, 122, 255, 0.16);
+    border: 1px solid rgba(139, 122, 255, 0.40);
+}

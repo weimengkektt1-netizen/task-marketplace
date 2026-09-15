@@ -1962,6 +1962,13 @@ async function loadTasks() {
 
                 <h3>
                     ${escapeHtml(task.title)}
+                    <span class="ht-type-badge ${task.task_type === "like" ? "like" : task.task_type === "review" ? "review" : "shop"}">
+                        ${task.task_type === "like"
+                            ? I18N.t("tasks.typeLike")
+                            : task.task_type === "review"
+                                ? I18N.t("tasks.typeReview")
+                                : I18N.t("tasks.typeShop")}
+                    </span>
                 </h3>
 
 
@@ -1971,12 +1978,6 @@ async function loadTasks() {
                         I18N.t("dash.noTaskDesc")
                     )}
                 </p>
-
-
-                <div class="ht-reward">
-                    RM${Number(task.reward).toFixed(2)}
-                    <small>${I18N.t("tasks.perTask")}</small>
-                </div>
 
 
                 ${
@@ -2011,12 +2012,16 @@ async function loadTasks() {
 
                 <button
                     class="task-action-btn"
-                    onclick="claimTask(${task.id}, '${task.shop_product_code || ""}', ${task.shop_product_id || "null"})">
+                    onclick="claimTask(${task.id}, '${task.shop_product_code || ""}', ${task.shop_product_id || "null"}, '${(task.task_link || "").replace(/'/g, "\\'")}')">
 
                     ${
-                        (task.shop_product_code || task.shop_product_id)
-                            ? I18N.t("dash.shopTask")
-                            : I18N.t("dash.claim")
+                        task.task_type === "like"
+                            ? I18N.t("tasks.claimLike")
+                            : task.task_type === "review"
+                                ? I18N.t("tasks.claimReview")
+                                : (task.shop_product_code || task.shop_product_id)
+                                    ? I18N.t("dash.shopTask")
+                                    : I18N.t("dash.claim")
                     }
 
                 </button>
@@ -2039,7 +2044,7 @@ async function loadTasks() {
 // CLAIM TASK
 // ========================================
 
-async function claimTask(taskId, shopProductCode, shopProductId) {
+async function claimTask(taskId, shopProductCode, shopProductId, taskLink) {
 
     const {
         data: existing
@@ -2168,6 +2173,12 @@ async function claimTask(taskId, shopProductCode, shopProductId) {
     );
 
 
+    // 点赞任务：领取成功后跳转到指定链接
+    if (taskLink && data && data.id) {
+        window.open(taskLink, "_blank");
+        return;
+    }
+
     // 刷单任务：领取成功后直接跳转 ShopHub 下单
     if ((shopProductCode || shopProductId) && data && data.id) {
         window.location.href = shopHubUrl(shopProductCode || shopProductId, taskId, data.id);
@@ -2210,6 +2221,8 @@ async function loadMyTasks() {
                 reward,
                 shop_product_id,
                 shop_product_code,
+                task_type,
+                task_link,
                 status
             )
         `)
@@ -2431,6 +2444,10 @@ function renderMyTasks() {
             "my-task-row";
 
 
+        const isLikeTask =
+            (item.tasks?.task_type === "like" || item.tasks?.task_type === "review") ||
+            !!item.tasks?.task_link;
+
         const isShopTask =
             item.tasks?.shop_product_code ||
             item.tasks?.shop_product_id;
@@ -2459,13 +2476,6 @@ function renderMyTasks() {
             </div>
 
 
-            <strong>
-                RM${Number(
-                    item.tasks?.reward || 0
-                ).toFixed(2)}
-            </strong>
-
-
             <span class="status-${item.status}">
                 ${getStatusText(
                     item.status
@@ -2475,8 +2485,18 @@ function renderMyTasks() {
 
             ${
                 item.status === "claimed"
-                    ? (isShopTask
+                    ? (isLikeTask
                         ? `
+                            <button
+                                class="task-action-btn ht-shop-btn"
+                                onclick="goLikeTask(${item.id}, '${(item.tasks?.task_link || "").replace(/'/g, "\\'")}')">
+
+                                ${I18N.t("dash.linkTaskGo")}
+
+                            </button>
+                          `
+                        : isShopTask
+                            ? `
                             <button
                                 class="task-action-btn ht-shop-btn"
                                 onclick="goShopTask(${item.id}, ${item.tasks.id}, '${item.tasks.shop_product_code || item.tasks.shop_product_id || ""}')">
@@ -2485,7 +2505,7 @@ function renderMyTasks() {
 
                             </button>
                           `
-                        : `
+                            : `
                             <button
                                 class="task-action-btn"
                                 onclick="submitTask(${item.id})">
@@ -2519,6 +2539,23 @@ let currentSubmitTask = null;
 // ========================================
 // 刷单任务：前往 ShopHub 商城完成下单（携带领取记录）
 // ========================================
+
+function goLikeTask(claimId, taskLink) {
+
+    if (!taskLink) {
+
+        alert(
+            I18N.t("msg.shopOrderNotPlaced")
+        );
+
+        return;
+
+    }
+
+    window.open(taskLink, "_blank");
+
+}
+
 
 function goShopTask(claimId, taskId, productRef) {
 
