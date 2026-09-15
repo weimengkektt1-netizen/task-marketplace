@@ -2224,6 +2224,11 @@ async function loadMyTasks() {
                 task_type,
                 task_link,
                 status
+            ),
+            task_reviews (
+                rating,
+                comment,
+                created_at
             )
         `)
         .eq(
@@ -2452,6 +2457,10 @@ function renderMyTasks() {
             item.tasks?.shop_product_code ||
             item.tasks?.shop_product_id;
 
+        const reviewed =
+            Array.isArray(item.task_reviews) &&
+            item.task_reviews.length > 0;
+
 
         row.innerHTML = `
 
@@ -2514,7 +2523,23 @@ function renderMyTasks() {
 
                             </button>
                           `)
-                    : ""
+                    : item.status === "approved" && isShopTask
+                        ? (reviewed
+                            ? `
+                            <span class="my-task-reviewed">
+                                ✓ ${I18N.t("dash.reviewed")}
+                            </span>
+                          `
+                            : `
+                            <button
+                                class="task-action-btn ht-review-btn"
+                                onclick="openReviewModal(${item.id}, '${(item.tasks?.title || "").replace(/'/g, "\\'")}')">
+
+                                ${I18N.t("dash.reviewTask")}
+
+                            </button>
+                          `)
+                        : ""
             }
 
         `;
@@ -2575,6 +2600,175 @@ function goShopTask(claimId, taskId, productRef) {
             taskId,
             claimId
         );
+
+}
+
+
+// ========================================
+// 商品点评（购买任务完成后评价）
+// ========================================
+
+let currentReviewClaim = null;
+
+let currentReviewRating = 0;
+
+
+function openReviewModal(claimId, title) {
+
+    currentReviewClaim =
+        claimId;
+
+    currentReviewRating =
+        0;
+
+
+    document.getElementById(
+        "reviewTaskName"
+    ).textContent =
+        title || "";
+
+
+    document.getElementById(
+        "reviewComment"
+    ).value =
+        "";
+
+
+    renderReviewStars();
+
+
+    document
+        .getElementById(
+            "reviewModal"
+        )
+        .classList.add(
+            "active"
+        );
+
+}
+
+
+function closeReviewModal() {
+
+    document
+        .getElementById(
+            "reviewModal"
+        )
+        .classList.remove(
+            "active"
+        );
+
+}
+
+
+function setReviewStar(v) {
+
+    currentReviewRating =
+        v;
+
+
+    renderReviewStars();
+
+}
+
+
+function renderReviewStars() {
+
+    document
+        .querySelectorAll(
+            "#reviewStars .ht-star"
+        )
+        .forEach(btn => {
+
+            btn.classList.toggle(
+                "on",
+                Number(btn.dataset.v) <=
+                currentReviewRating
+            );
+
+        });
+
+
+    document
+        .querySelectorAll(
+            "#reviewStars .ht-star-zero"
+        )
+        .forEach(btn => {
+
+            btn.classList.toggle(
+                "on",
+                currentReviewRating === 0
+            );
+
+        });
+
+}
+
+
+async function submitReview() {
+
+    if (
+        !currentReviewClaim
+    ) {
+
+        return;
+
+    }
+
+
+    const comment =
+        document
+        .getElementById(
+            "reviewComment"
+        )
+        .value
+        .trim();
+
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+        .rpc(
+            "submit_task_review",
+            {
+
+                p_claim_id:
+                    currentReviewClaim,
+
+                p_rating:
+                    currentReviewRating,
+
+                p_comment:
+                    comment || null
+
+            }
+        );
+
+
+    if (error) {
+
+        alert(
+            I18N.t("msg.reviewError") +
+            (error.message || "")
+        );
+
+
+        return;
+
+    }
+
+
+    closeReviewModal();
+
+
+    alert(
+        I18N.t("msg.reviewSuccess")
+    );
+
+
+    await loadMyTasks();
 
 }
 
@@ -4268,9 +4462,209 @@ function initTierBackground() {
 
 </div>
 
+<!-- =========================
+     REVIEW MODAL
+========================= -->
+
+<div
+    id="reviewModal"
+    class="modal-overlay">
+
+    <div class="modal-box">
+
+
+        <div class="modal-header">
+
+            <h2>
+                <span data-i18n="dash.reviewTitle">商品点评</span>
+            </h2>
+
+
+            <button
+                type="button"
+                onclick="closeReviewModal()"
+                class="modal-close">
+
+                ×
+
+            </button>
+
+        </div>
+
+
+
+        <div class="modal-body">
+
+
+            <p id="reviewTaskName"
+                class="review-task-name"></p>
+
+
+
+            <label>
+                <span data-i18n="dash.reviewRating">评分（0~5星）</span>
+            </label>
+
+
+            <div class="ht-star-picker" id="reviewStars">
+
+                <button
+                    type="button"
+                    class="ht-star"
+                    data-v="1"
+                    onclick="setReviewStar(1)">★</button>
+
+                <button
+                    type="button"
+                    class="ht-star"
+                    data-v="2"
+                    onclick="setReviewStar(2)">★</button>
+
+                <button
+                    type="button"
+                    class="ht-star"
+                    data-v="3"
+                    onclick="setReviewStar(3)">★</button>
+
+                <button
+                    type="button"
+                    class="ht-star"
+                    data-v="4"
+                    onclick="setReviewStar(4)">★</button>
+
+                <button
+                    type="button"
+                    class="ht-star"
+                    data-v="5"
+                    onclick="setReviewStar(5)">★</button>
+
+                <button
+                    type="button"
+                    class="ht-star-zero"
+                    data-v="0"
+                    onclick="setReviewStar(0)">0星</button>
+
+            </div>
+
+
+
+            <label>
+                <span data-i18n="dash.reviewComment">点评内容</span>
+            </label>
+
+
+            <textarea
+                id="reviewComment"
+                rows="4"
+                data-i18n-placeholder="dash.reviewCommentPh"></textarea>
+
+
+
+            <button
+                type="button"
+                class="task-action-btn ht-review-submit"
+                onclick="submitReview()">
+
+                <span data-i18n="dash.reviewSubmit">提交点评</span>
+
+            </button>
+
+
+        </div>
+
+    </div>
+
+</div>
+
 
 
 <style>
+/* ========================================
+   商品点评弹窗
+   ======================================== */
+
+.ht-star-picker {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 8px 0 16px;
+    flex-wrap: wrap;
+}
+
+.ht-star {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    border: 1px solid rgba(148, 163, 184, 0.25);
+    background: rgba(148, 163, 184, 0.08);
+    color: #64748b;
+    font-size: 26px;
+    line-height: 1;
+    cursor: pointer;
+    transition: all .18s ease;
+}
+
+.ht-star:hover {
+    transform: translateY(-2px);
+    color: #f59e0b;
+    border-color: rgba(245, 158, 11, 0.5);
+}
+
+.ht-star.on {
+    color: #f59e0b;
+    background: rgba(245, 158, 11, 0.15);
+    border-color: rgba(245, 158, 11, 0.55);
+    box-shadow: 0 4px 14px rgba(245, 158, 11, 0.25);
+}
+
+.ht-star-zero {
+    padding: 0 14px;
+    height: 44px;
+    border-radius: 12px;
+    border: 1px solid rgba(148, 163, 184, 0.25);
+    background: rgba(148, 163, 184, 0.08);
+    color: #94a3b8;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all .18s ease;
+}
+
+.ht-star-zero.on {
+    color: #ef4444;
+    background: rgba(239, 68, 68, 0.12);
+    border-color: rgba(239, 68, 68, 0.45);
+}
+
+.review-task-name {
+    font-size: 14px;
+    color: #94a3b8;
+    margin: 0 0 14px;
+}
+
+.ht-review-btn {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.9), rgba(245, 158, 11, 0.65));
+    border: 1px solid rgba(245, 158, 11, 0.5);
+    color: #0f172a;
+}
+
+.ht-review-submit {
+    margin-top: 6px;
+    width: 100%;
+}
+
+.my-task-reviewed {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #4ade80;
+    background: rgba(34, 197, 94, 0.12);
+    border: 1px solid rgba(34, 197, 94, 0.35);
+    padding: 8px 14px;
+    border-radius: 10px;
+}
+
 /* ========================================
    刷单任务：订单总价 + 预计佣金
    ======================================== */
