@@ -1224,6 +1224,22 @@ function renderProdTab(tab){
             '<div class="review-text">' + esc(r.t) + "</div>" +
             '<div class="review-date">2026-' + String(2 + (i % 9)).padStart(2, "0") + "-1" + (i % 9) + "</div></div>"
         ).join("");
+        sb.from("task_reviews").select("user_name, rating, comment, created_at")
+            .eq("product_id", p.id).order("created_at", {ascending: false})
+            .then(res => {
+                if (res.error || !res.data || !res.data.length) return;
+                const real = res.data.map(r =>
+                    '<div class="review-item review-real"><div class="review-head">' +
+                    '<span class="review-avatar">' + esc((r.user_name || "客").charAt(0)) + "</span>" +
+                    '<span class="review-name">' + esc(r.user_name || "用户") + "</span>" +
+                    '<span class="review-stars">' + (r.rating > 0 ? "★".repeat(r.rating) : "") + "</span>" +
+                    (r.rating === 0 ? '<span class="review-zero">0星</span>' : "") +
+                    "</div>" +
+                    '<div class="review-text">' + esc(r.comment || "") + "</div>" +
+                    '<div class="review-date">' + esc((r.created_at || "").slice(0, 10)) + "</div></div>"
+                ).join("");
+                panel.innerHTML += '<div class="review-divider">来自完成任务的真实点评</div>' + real;
+            });
     }
 }
 
@@ -2465,3 +2481,10 @@ document.addEventListener("DOMContentLoaded", async function(){ await loadProduc
 </script>
 </body>
 </html>
+
+<style>
+.review-real { border: 1px solid rgba(0, 181, 120, .18); background: rgba(0, 181, 120, .045); border-radius: 12px; padding: 12px; margin-bottom: 10px; }
+.review-divider { display: flex; align-items: center; gap: 10px; color: #00b578; font-size: 13px; font-weight: 600; margin: 16px 0 10px; }
+.review-divider::before, .review-divider::after { content: ""; flex: 1; height: 1px; background: rgba(0, 181, 120, .22); }
+.review-zero { font-size: 11px; color: #ef4444; border: 1px solid rgba(239, 68, 68, .4); border-radius: 6px; padding: 1px 6px; margin-left: 4px; }
+</style>
