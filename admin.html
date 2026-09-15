@@ -343,6 +343,149 @@
             color: #cbd5e1;
         }
 
+        .admin-task-toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 0 0 16px;
+        }
+
+        .admin-tool-input,
+        .admin-tool-select {
+            padding: 9px 12px;
+            border-radius: 9px;
+            border: 1px solid rgba(148, 163, 184, 0.3);
+            background: rgba(15, 23, 42, 0.7);
+            color: #f1f5f9;
+            font-size: 13px;
+            outline: none;
+            font-family: inherit;
+        }
+
+        .admin-tool-input {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .admin-task-title-wrap {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 0;
+        }
+
+        .admin-task-thumb {
+            width: 52px;
+            height: 52px;
+            border-radius: 10px;
+            object-fit: cover;
+            flex-shrink: 0;
+            border: 1px solid rgba(148, 163, 184, 0.2);
+        }
+
+        .admin-task-thumb-ph {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(148, 163, 184, 0.12);
+            font-size: 22px;
+        }
+
+        .admin-task-tags {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 5px;
+        }
+
+        .admin-task-type-badge {
+            font-size: 10.5px;
+            padding: 2px 8px;
+            border-radius: 999px;
+            font-weight: 600;
+        }
+
+        .admin-task-type-badge.like { background: rgba(96, 165, 250, 0.16); color: #93c5fd; }
+        .admin-task-type-badge.shop { background: rgba(74, 222, 128, 0.15); color: #86efac; }
+        .admin-task-type-badge.review { background: rgba(251, 191, 36, 0.16); color: #fcd34d; }
+        .admin-task-type-badge.follow { background: rgba(192, 132, 252, 0.16); color: #d8b4fe; }
+
+        .admin-task-reward small {
+            display: block;
+            font-size: 10.5px;
+            color: #8a94a6;
+            margin-bottom: 2px;
+        }
+
+        .admin-task-slots b {
+            color: #4ade80;
+        }
+
+        .admin-claimer-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 6px;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.14);
+        }
+
+        .admin-claimer-row:last-child {
+            border-bottom: none;
+        }
+
+        .admin-claimer-ava {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: var(--brand-gradient, linear-gradient(135deg, #6d5dfc, #8b5cf6));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .admin-claimer-main {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .admin-claimer-main strong {
+            display: block;
+            font-size: 13px;
+        }
+
+        .admin-claimer-main small {
+            display: block;
+            font-size: 11px;
+            color: #8a94a6;
+        }
+
+        .admin-claimer-status {
+            font-size: 11px;
+            padding: 3px 10px;
+            border-radius: 999px;
+            white-space: nowrap;
+        }
+
+        .admin-claimer-status.st-claimed { background: rgba(217, 182, 111, 0.16); color: #d9b66f; }
+        .admin-claimer-status.st-submitted { background: rgba(127, 168, 217, 0.16); color: #7fa8d9; }
+        .admin-claimer-status.st-approved { background: rgba(131, 207, 145, 0.16); color: #83cf91; }
+        .admin-claimer-status.st-rejected { background: rgba(215, 125, 125, 0.16); color: #d77d7d; }
+        .admin-claimer-status.st-expired { background: rgba(148, 163, 184, 0.16); color: #94a3b8; }
+
+        .admin-claimer-time {
+            font-size: 11px;
+            color: #8a94a6;
+            white-space: nowrap;
+        }
+
+        .withdrawal-user {
+            color: #4ade80;
+            font-weight: 600;
+        }
+
         .admin-tx-row {
             display: flex;
             align-items: center;
@@ -1269,6 +1412,36 @@
 
                 </div>
 
+
+                <div class="admin-task-toolbar">
+                    <input
+                        type="text"
+                        id="adminTaskSearch"
+                        class="admin-tool-input"
+                        placeholder="搜索任务标题 / ID"
+                        data-i18n-placeholder="admin.taskSearchPh"
+                        oninput="loadAdminTasks()">
+
+                    <select
+                        id="adminTaskTypeFilter"
+                        class="admin-tool-select"
+                        onchange="loadAdminTasks()">
+                        <option value="" data-i18n="admin.typeAll">全部类型</option>
+                        <option value="like" data-i18n="admin.taskTypeLike">点赞任务</option>
+                        <option value="shop" data-i18n="admin.taskTypeShop">商城任务</option>
+                        <option value="review" data-i18n="admin.taskTypeReview">评价任务</option>
+                        <option value="follow" data-i18n="admin.taskTypeFollow">关注任务</option>
+                    </select>
+
+                    <select
+                        id="adminTaskStatusFilter"
+                        class="admin-tool-select"
+                        onchange="loadAdminTasks()">
+                        <option value="" data-i18n="admin.statusAll">全部状态</option>
+                        <option value="open" data-i18n="admin.statusOpen">开放</option>
+                        <option value="closed" data-i18n="admin.statusClosed">关闭</option>
+                    </select>
+                </div>
 
                 <div
                     id="adminTasksContainer"
@@ -3164,8 +3337,55 @@ async function loadAdminTasks() {
         }
 
 
-        const taskList =
+        let taskList =
             tasks || [];
+
+
+        // 工具条筛选：关键词 / 类型 / 状态
+        const searchInput =
+            document.getElementById("adminTaskSearch");
+
+        const typeFilter =
+            document.getElementById("adminTaskTypeFilter");
+
+        const statusFilter =
+            document.getElementById("adminTaskStatusFilter");
+
+        const kw =
+            ((searchInput && searchInput.value) || "").trim().toLowerCase();
+
+        const tf =
+            typeFilter ? typeFilter.value : "";
+
+        const sf =
+            statusFilter ? statusFilter.value : "";
+
+        if (kw || tf || sf) {
+
+            taskList = taskList.filter(function (tk) {
+
+                if (tf && (tk.task_type || "shop") !== tf) return false;
+
+                if (sf && (tk.status || "") !== sf) return false;
+
+                if (kw) {
+
+                    const hay = (
+                        (tk.title || "") + " " +
+                        (tk.description || "") + " " +
+                        (tk.shop_product_code || "") + " " +
+                        tk.id
+                    ).toLowerCase();
+
+                    if (hay.indexOf(kw) < 0) return false;
+
+                }
+
+                return true;
+
+            });
+
+        }
 
 
         updateStatistics(
@@ -4093,12 +4313,39 @@ async function loadPendingWithdrawals() {
             "";
 
 
+        // 拉取提现用户昵称 / 电话
+        let wUserMap = {};
+
+        try {
+
+            const ids = (data || []).map(function (d) { return d.user_id; });
+
+            const { data: wProfiles } =
+                await supabaseClient
+                    .from("profiles")
+                    .select("id, display_name, username, email, phone")
+                    .in("id", ids);
+
+            (wProfiles || []).forEach(function (p) {
+
+                wUserMap[p.id] = p;
+
+            });
+
+        } catch (e) {
+
+            console.error("withdrawal user map failed", e);
+
+        }
+
+
         data.forEach(
             function (item) {
 
                 const card =
                     createWithdrawalCard(
-                        item
+                        item,
+                        wUserMap[item.user_id] || null
                     );
 
                 container.appendChild(
@@ -4138,7 +4385,8 @@ async function loadPendingWithdrawals() {
    ======================================== */
 
 function createWithdrawalCard(
-    item
+    item,
+    userInfo
 ) {
 
     const card =
@@ -4184,6 +4432,20 @@ function createWithdrawalCard(
 
 
         <div class="withdrawal-info">
+
+            <div class="withdrawal-user">
+                ${I18N.t("admin.userName")}
+                ${escapeHtml(
+                    userInfo ? (userInfo.display_name || userInfo.username || userInfo.email || "-") : "-"
+                )}
+            </div>
+
+            <div>
+                📞 ${I18N.t("admin.userPhone")}
+                ${escapeHtml(
+                    userInfo && userInfo.phone ? userInfo.phone : "-"
+                )}
+            </div>
 
             <div>
                 ${I18N.t("admin.userId")}
@@ -4763,31 +5025,82 @@ function createTaskCard(
         ).toFixed(2);
 
 
+    const ttype =
+        task.task_type || "shop";
+
+
+    const typeBadgeCls =
+        ttype === "like" ? "like"
+            : ttype === "review" ? "review"
+                : ttype === "follow" ? "follow"
+                    : "shop";
+
+
+    const typeLabel =
+        ttype === "like" ? I18N.t("admin.taskTypeLike")
+            : ttype === "review" ? I18N.t("admin.taskTypeReview")
+                : ttype === "follow" ? I18N.t("admin.taskTypeFollow")
+                    : I18N.t("admin.taskTypeShop");
+
+
+    const claimed =
+        claimStat ? (claimStat.claims || 0) : 0;
+
+    const done =
+        claimStat ? (claimStat.done || 0) : 0;
+
+    const remaining =
+        task.remaining_slots != null
+            ? task.remaining_slots
+            : "-";
+
+    const totalSlots =
+        task.max_claims != null
+            ? task.max_claims
+            : (task.slots || 0);
+
+
     card.innerHTML =
         `
 
         <div class="admin-task-top">
 
-            <div>
+            <div class="admin-task-title-wrap">
 
-                <div
-                    class="admin-task-status ${statusClass}"
-                >
-                    ${statusText}
+                ${
+                    task.image_url
+                        ? `<img class="admin-task-thumb" src="${escapeHtml(task.image_url)}" alt="">`
+                        : `<div class="admin-task-thumb admin-task-thumb-ph">📋</div>`
+                }
+
+                <div>
+
+                    <div class="admin-task-tags">
+
+                        <span class="admin-task-status ${statusClass}">
+                            ${statusText}
+                        </span>
+
+                        <span class="admin-task-type-badge ${typeBadgeCls}">
+                            ${typeLabel}
+                        </span>
+
+                    </div>
+
+                    <h3>
+                        ${escapeHtml(
+                            task.title
+                        )}
+                    </h3>
+
                 </div>
-
-
-                <h3>
-                    ${escapeHtml(
-                        task.title
-                    )}
-                </h3>
 
             </div>
 
 
             <div class="admin-task-reward">
-                RM ${reward}
+                <small>${I18N.t("admin.reward")}</small>
+                <b>RM ${reward}</b>
             </div>
 
         </div>
@@ -4796,7 +5109,7 @@ function createTaskCard(
         <div class="admin-task-description">
 
             ${escapeHtml(
-                task.description
+                task.description || ""
             )}
 
         </div>
@@ -4807,11 +5120,18 @@ function createTaskCard(
             <div>
                 ${I18N.t("admin.maxLabel")}
                 ${escapeHtml(
-                    task.max_claims || 0
+                    totalSlots
                 )}
                 ${I18N.t("admin.people")}
             </div>
 
+            <div class="admin-task-slots">
+                ${I18N.t("admin.remainingLabel")}
+                <b>${remaining}</b>
+                / ${escapeHtml(
+                    totalSlots
+                )}
+            </div>
 
             <div>
                 📅
@@ -4819,7 +5139,6 @@ function createTaskCard(
                     createdTime
                 )}
             </div>
-
 
             <div>
                 ${I18N.t("admin.id")}
@@ -4830,13 +5149,25 @@ function createTaskCard(
 
             ${
                 claimStat
-                    ? `<div>📥 ${I18N.t("admin.claimedCount")} ${claimStat.claims || 0} · ✅ ${I18N.t("admin.doneCount")} ${claimStat.done || 0}</div>`
+                    ? `<div>📥 ${I18N.t("admin.claimedCount")} ${claimed} · ✅ ${I18N.t("admin.doneCount")} ${done}</div>`
+                    : ""
+            }
+
+            ${
+                task.task_link
+                    ? `<div class="admin-task-shopcode">🔗 <a href="${escapeHtml(task.task_link)}" target="_blank" rel="noopener noreferrer" style="color:#60a5fa">${escapeHtml(task.task_link.slice(0, 60))}</a></div>`
                     : ""
             }
 
             ${
                 task.shop_product_code
                     ? `<div class="admin-task-shopcode">🛒 绑定商品 <b>${escapeHtml(task.shop_product_code)}</b></div>`
+                    : ""
+            }
+
+            ${
+                task.deadline
+                    ? `<div>⏰ ${I18N.t("admin.deadline")} ${new Date(task.deadline).toLocaleString(I18N.get() === "en" ? "en-US" : "zh-CN")}</div>`
                     : ""
             }
 
@@ -4878,6 +5209,29 @@ function createTaskCard(
                 }
             </button>
 
+            <button
+                type="button"
+                class="admin-small-btn"
+                onclick="duplicateTask(
+                    ${Number(
+                        task.id
+                    )}
+                )"
+            >
+                📋 ${I18N.t("admin.copyTask")}
+            </button>
+
+            <button
+                type="button"
+                class="admin-small-btn"
+                onclick="viewTaskClaimers(
+                    ${Number(
+                        task.id
+                    )}
+                )"
+            >
+                👥 ${I18N.t("admin.viewClaimers")}
+            </button>
 
             <button
                 type="button"
@@ -4902,6 +5256,255 @@ function createTaskCard(
 
 
 
+/* ========================================
+   复制任务
+   ======================================== */
+
+async function duplicateTask(
+    taskId
+) {
+
+    const {
+        data: task,
+        error
+    } =
+        await supabaseClient
+            .from("tasks")
+            .select("*")
+            .eq(
+                "id",
+                taskId
+            )
+            .single();
+
+    if (error || !task) {
+
+        alert(I18N.t("admin.loadTaskFailed"));
+
+        return;
+
+    }
+
+    if (
+        !confirm(
+            I18N.t("admin.copyConfirm") +
+            escapeHtml(task.title)
+        )
+    ) {
+
+        return;
+
+    }
+
+    const {
+        data: { user }
+    } =
+        await supabaseClient
+            .auth
+            .getUser();
+
+    const { error: insError } =
+        await supabaseClient
+            .from("tasks")
+            .insert({
+
+                title:
+                    (task.title || "任务") +
+                    I18N.t("admin.copySuffix"),
+
+                description: task.description || "",
+
+                requirements: task.requirements || null,
+
+                reward: task.reward != null ? task.reward : 0,
+
+                max_claims: task.max_claims != null ? task.max_claims : 100,
+
+                slots: task.max_claims != null ? task.max_claims : 100,
+
+                remaining_slots: task.max_claims != null ? task.max_claims : 100,
+
+                status: "open",
+
+                created_by: user ? user.id : task.created_by,
+
+                image_url: task.image_url || null,
+
+                shop_product_id: task.shop_product_id || null,
+
+                shop_product_code: task.shop_product_code || null,
+
+                shop_product_price: task.shop_product_price || null,
+
+                task_type: task.task_type || "shop",
+
+                task_link: task.task_link || null,
+
+                deadline: task.deadline || null
+
+            });
+
+    if (insError) {
+
+        console.error(insError);
+
+        alert(I18N.t("admin.copyFailed") + insError.message);
+
+        return;
+
+    }
+
+    alert(I18N.t("admin.copyTaskDone"));
+
+    await loadAdminTasks();
+
+}
+
+
+
+/* ========================================
+   查看领取用户
+   ======================================== */
+
+async function viewTaskClaimers(
+    taskId
+) {
+
+    const {
+        data: claims,
+        error
+    } =
+        await supabaseClient
+            .from("task_claims")
+            .select("id, user_id, status, claimed_at")
+            .eq(
+                "task_id",
+                taskId
+            )
+            .order(
+                "claimed_at",
+                { ascending: false }
+            )
+            .limit(200);
+
+    if (error) {
+
+        console.error(error);
+
+        alert(error.message);
+
+        return;
+
+    }
+
+    const userMap = {};
+
+    if (claims && claims.length > 0) {
+
+        const ids = claims.map(c => c.user_id);
+
+        const { data: profiles } =
+            await supabaseClient
+                .from("profiles")
+                .select("id, display_name, username, email, phone")
+                .in("id", ids);
+
+        (profiles || []).forEach(function (p) {
+
+            userMap[p.id] = p;
+
+        });
+
+    }
+
+    const zh =
+        typeof I18N !== "undefined" && I18N.get() === "zh";
+
+    const statusLabels = {
+        claimed: zh ? "已领取" : "Claimed",
+        submitted: zh ? "待审核" : "Submitted",
+        approved: zh ? "已完成" : "Approved",
+        rejected: zh ? "已拒绝" : "Rejected",
+        expired: zh ? "已失效" : "Expired"
+    };
+
+    const rows =
+        !claims || claims.length === 0
+            ? `<div style="color:#8a94a6;padding:8px 0">${I18N.t("admin.claimersEmpty")}</div>`
+            : claims.map(function (c) {
+
+                const u =
+                    userMap[c.user_id] || null;
+
+                const name =
+                    u ? (u.display_name || u.username || u.email || "?") : "?";
+
+                const phone =
+                    u && u.phone ? u.phone : "-";
+
+                const email =
+                    u && u.email ? u.email : "-";
+
+                const st =
+                    statusLabels[c.status] || c.status;
+
+                const at =
+                    c.claimed_at
+                        ? new Date(c.claimed_at).toLocaleString(zh ? "zh-MY" : "en-MY")
+                        : "-";
+
+                return `
+                    <div class="admin-claimer-row">
+                        <div class="admin-claimer-ava">${escapeHtml(name.charAt(0).toUpperCase())}</div>
+                        <div class="admin-claimer-main">
+                            <strong>${escapeHtml(name)}</strong>
+                            <small>${escapeHtml(email)} · 📞 ${escapeHtml(phone)}</small>
+                        </div>
+                        <span class="admin-claimer-status st-${c.status}">${escapeHtml(st)}</span>
+                        <small class="admin-claimer-time">${escapeHtml(at)}</small>
+                    </div>
+                `;
+
+            }).join("");
+
+    const mask =
+        document.createElement("div");
+
+    mask.className = "admin-modal-mask";
+
+    mask.id = "claimersModal";
+
+    mask.innerHTML =
+        '<div class="admin-modal-box" style="max-width:720px">' +
+        '<div class="admin-modal-head">' +
+        '<h3>👥 ' + (zh ? "领取用户明细" : "Claimed Users") + '</h3>' +
+        '<button class="admin-modal-close" onclick="closeClaimersModal()">✕</button>' +
+        '</div>' +
+        '<div style="font-size:12.5px;color:#8a94a6;margin-bottom:10px">' +
+        (zh ? "任务 ID " : "Task ID ") + taskId + ' · ' + (zh ? "共 " : "") +
+        (claims ? claims.length : 0) + (zh ? " 人领取" : " claims") +
+        '</div>' +
+        '<div>' + rows + '</div>' +
+        '</div>';
+
+    document.body.appendChild(mask);
+
+}
+
+
+function closeClaimersModal() {
+
+    const m =
+        document.getElementById("claimersModal");
+
+    if (m) m.remove();
+
+}
+
+
+
+/* ========================================
+   修改任务状态
 /* ========================================
    修改任务状态
    ======================================== */
@@ -5062,6 +5665,49 @@ async function deleteTask(
 
 let editingTaskId = null;
 
+let editTaskImageFile = null;
+
+let editTaskImageChanged = false; // false=保留原图 | "file"=上传新图 | "remove"=移除图片
+
+
+function onEditTaskTypeChange() {
+
+    const typeInput =
+        document.querySelector(
+            'input[name="editTaskType"]:checked'
+        );
+
+    const type =
+        (typeInput && typeInput.value) ||
+        "shop";
+
+    const linkField =
+        document.getElementById(
+            "editTaskLinkField"
+        );
+
+    if (linkField) {
+
+        linkField.style.display =
+            (type === "like" || type === "review" || type === "follow")
+                ? ""
+                : "none";
+
+    }
+
+    document
+        .querySelectorAll(
+            ".edit-shop-field"
+        )
+        .forEach(el => {
+
+            el.style.display =
+                type === "shop" ? "" : "none";
+
+        });
+
+}
+
 
 async function openEditTask(
     taskId
@@ -5080,117 +5726,533 @@ async function openEditTask(
             )
             .single();
 
-
     if (error || !task) {
 
         alert(
-            "加载任务失败"
+            I18N.t("admin.loadTaskFailed")
         );
 
         return;
 
     }
-
-
-    const title =
-        prompt(
-            "任务标题",
-            task.title || ""
-        );
-
-    if (title === null) return;
-
-
-    const desc =
-        prompt(
-            "任务描述",
-            task.description || ""
-        );
-
-    if (desc === null) return;
-
-
-    const reward =
-        prompt(
-            "任务奖励（RM）",
-            task.reward != null ? task.reward : ""
-        );
-
-    if (reward === null) return;
-
-
-    const maxClaims =
-        prompt(
-            "最多可领取人数",
-            task.max_claims != null ? task.max_claims : ""
-        );
-
-    if (maxClaims === null) return;
-
-
-    const code =
-        prompt(
-            "绑定 ShopHub 商品识别码（留空则无）",
-            task.shop_product_code || ""
-        );
-
-    if (code === null) return;
-
-
-    const link =
-        prompt(
-            "任务链接（点赞任务用，留空则无）",
-            task.task_link || ""
-        );
-
-    if (link === null) return;
-
-
-    const price =
-        prompt(
-            "商品价格 RM（商城任务佣金基数，选填）",
-            task.shop_product_price != null ? task.shop_product_price : ""
-        );
-
-    if (price === null) return;
-
-
-    if (
-        !title.trim() ||
-        !desc.trim() ||
-        !(parseFloat(reward) > 0) ||
-        !(parseInt(maxClaims) > 0)
-    ) {
-
-        alert(
-            "标题、描述、奖励、名额均为必填且需有效"
-        );
-
-        return;
-
-    }
-
 
     editingTaskId =
         taskId;
 
+    editTaskImageFile = null;
 
-    await saveTask(
-        {
-            title: title.trim(),
-            description: desc.trim(),
-            reward: parseFloat(reward),
-            max_claims: parseInt(maxClaims),
-            shop_product_code:
-                code.trim() ? code.trim().toUpperCase() : null,
-            shop_product_price:
-                price.trim() !== "" ? parseFloat(price) : null,
-            task_type:
-                task.task_type || "shop",
-            task_link:
-                link.trim() ? link.trim() : null
-        }
+    editTaskImageChanged = false;
+
+
+    // 填充表单
+    const typeVal =
+        task.task_type || "shop";
+
+    const typeRadio =
+        document.querySelector(
+            'input[name="editTaskType"][value="' + typeVal + '"]'
+        );
+
+    if (typeRadio) typeRadio.checked = true;
+
+    document.getElementById("editTaskTitle").value =
+        task.title || "";
+
+    document.getElementById("editTaskDescription").value =
+        task.description || "";
+
+    document.getElementById("editTaskRequirements").value =
+        task.requirements || "";
+
+    document.getElementById("editTaskLink").value =
+        task.task_link || "";
+
+    document.getElementById("editTaskShopCode").value =
+        task.shop_product_code || "";
+
+    document.getElementById("editTaskShopPrice").value =
+        task.shop_product_price != null ? task.shop_product_price : "";
+
+    document.getElementById("editTaskReward").value =
+        task.reward != null ? task.reward : "";
+
+    document.getElementById("editTaskMaxClaims").value =
+        task.max_claims != null ? task.max_claims : "";
+
+    document.getElementById("editTaskStatus").value =
+        task.status || "open";
+
+    const dl =
+        task.deadline
+            ? new Date(task.deadline)
+            : null;
+
+    document.getElementById("editTaskDeadline").value =
+        dl ? toLocalInputValue(dl) : "";
+
+    document.getElementById("editTaskShopId").value =
+        task.shop_product_id != null ? task.shop_product_id : "";
+
+    document.getElementById("editTaskCreatedAt").value =
+        task.created_at
+            ? new Date(task.created_at).toLocaleString(
+                (typeof I18N !== "undefined" && I18N.get() === "zh") ? "zh-MY" : "en-MY"
+              )
+            : "";
+
+
+    // 名额展示
+    const claimed =
+        (task.slots || 0) -
+        (task.remaining_slots || 0);
+
+    document.getElementById("editTaskClaimed").textContent =
+        claimed;
+
+    document.getElementById("editTaskRemaining").textContent =
+        task.remaining_slots != null
+            ? task.remaining_slots
+            : "-";
+
+
+    // 图片
+    const imgInput =
+        document.getElementById("editTaskImage");
+
+    const imgName =
+        document.getElementById("editTaskImageName");
+
+    const imgPrev =
+        document.getElementById("editTaskImagePreview");
+
+    const imgRm =
+        document.getElementById("editTaskImageRemove");
+
+    if (imgInput) imgInput.value = "";
+
+    if (task.image_url) {
+
+        imgPrev.src = task.image_url;
+
+        imgPrev.style.display = "block";
+
+        imgName.textContent =
+            I18N.t("admin.editImageKeep");
+
+        imgRm.style.display = "";
+
+    } else {
+
+        imgPrev.style.display = "none";
+
+        imgName.textContent = "";
+
+        imgRm.style.display = "none";
+
+    }
+
+
+    onEditTaskTypeChange();
+
+
+    document.getElementById("editTaskModal").style.display = "flex";
+
+}
+
+
+function closeEditTask() {
+
+    document.getElementById("editTaskModal").style.display = "none";
+
+    editingTaskId = null;
+
+}
+
+
+function previewEditTaskImage() {
+
+    const input =
+        document.getElementById(
+            "editTaskImage"
+        );
+
+    const file =
+        input && input.files
+            ? input.files[0]
+            : null;
+
+    if (!file) return;
+
+    if (
+        !file.type ||
+        file.type.indexOf(
+            "image/"
+        ) !== 0
+    ) {
+
+        alert(
+            I18N.t("admin.needImageFile")
+        );
+
+        input.value = "";
+
+        return;
+
+    }
+
+    if (
+        file.size >
+        5 * 1024 * 1024
+    ) {
+
+        alert(
+            I18N.t("admin.imageTooLarge")
+        );
+
+        input.value = "";
+
+        return;
+
+    }
+
+    editTaskImageFile = file;
+
+    editTaskImageChanged = "file";
+
+    document.getElementById("editTaskImageName").textContent =
+        file.name;
+
+    document.getElementById("editTaskImagePreview").src =
+        URL.createObjectURL(file);
+
+    document.getElementById("editTaskImagePreview").style.display =
+        "block";
+
+    document.getElementById("editTaskImageRemove").style.display =
+        "";
+
+}
+
+
+function clearEditTaskImage() {
+
+    const input =
+        document.getElementById(
+            "editTaskImage"
+        );
+
+    if (input) input.value = "";
+
+    editTaskImageFile = null;
+
+    editTaskImageChanged = "remove";
+
+    document.getElementById("editTaskImageName").textContent = "";
+
+    document.getElementById("editTaskImagePreview").style.display = "none";
+
+    document.getElementById("editTaskImageRemove").style.display = "none";
+
+}
+
+
+async function uploadEditTaskImage() {
+
+    if (!editTaskImageFile) return null;
+
+    const file =
+        editTaskImageFile;
+
+    const ext =
+        (
+            file.name.split(".").pop() ||
+            "jpg"
+        ).toLowerCase()
+            .replace(
+                /[^a-z0-9]/g,
+                ""
+            );
+
+    const path =
+        "task_" +
+        Date.now() +
+        "_" +
+        Math.random()
+            .toString(36)
+            .slice(2, 8) +
+        "." +
+        ext;
+
+    const {
+        error: upError
+    } =
+        await supabaseClient
+            .storage
+            .from("task-images")
+            .upload(
+                path,
+                file,
+                {
+                    cacheControl: "3600",
+                    upsert: false,
+                    contentType:
+                        file.type ||
+                        "image/jpeg"
+                }
+            );
+
+    if (upError) {
+
+        throw new Error(
+            I18N.t("admin.imageUploadFailed") +
+            upError.message
+        );
+
+    }
+
+    const {
+        data: pubData
+    } =
+        supabaseClient
+            .storage
+            .from("task-images")
+            .getPublicUrl(
+                path
+            );
+
+    return (
+        pubData &&
+        pubData.publicUrl
     );
+
+}
+
+
+function toLocalInputValue(d) {
+
+    const pad =
+        n => String(n).padStart(2, "0");
+
+    return (
+        d.getFullYear() +
+        "-" +
+        pad(d.getMonth() + 1) +
+        "-" +
+        pad(d.getDate()) +
+        "T" +
+        pad(d.getHours()) +
+        ":" +
+        pad(d.getMinutes())
+    );
+
+}
+
+
+async function saveEditTask() {
+
+    if (!editingTaskId) return;
+
+    const title =
+        document.getElementById("editTaskTitle").value.trim();
+
+    const desc =
+        document.getElementById("editTaskDescription").value.trim();
+
+    const reward =
+        parseFloat(
+            document.getElementById("editTaskReward").value
+        );
+
+    const maxClaims =
+        parseInt(
+            document.getElementById("editTaskMaxClaims").value,
+            10
+        );
+
+    if (!title) {
+
+        alert(I18N.t("admin.needTitle"));
+
+        return;
+
+    }
+
+    if (!Number.isFinite(reward) || reward <= 0) {
+
+        alert(I18N.t("admin.needReward"));
+
+        return;
+
+    }
+
+    if (!Number.isInteger(maxClaims) || maxClaims <= 0) {
+
+        alert(I18N.t("admin.needClaims"));
+
+        return;
+
+    }
+
+    const typeInput =
+        document.querySelector(
+            'input[name="editTaskType"]:checked'
+        );
+
+    const taskType =
+        (typeInput && typeInput.value) ||
+        "shop";
+
+
+    // 图片处理
+    let imageUrl = null;
+
+    let keepImage = true;
+
+    if (editTaskImageChanged === "file" && editTaskImageFile) {
+
+        try {
+
+            imageUrl =
+                await uploadEditTaskImage();
+
+        } catch (e) {
+
+            alert(e.message);
+
+            return;
+
+        }
+
+        keepImage = false;
+
+    } else if (editTaskImageChanged === "remove") {
+
+        keepImage = false;
+
+    }
+
+
+    // 名额一致性：已领取人数保持不变，剩余名额自动重算
+    const {
+        data: cur
+    } =
+        await supabaseClient
+            .from("tasks")
+            .select("slots, remaining_slots")
+            .eq("id", editingTaskId)
+            .single();
+
+    const claimed =
+        (cur && ((cur.slots || 0) - (cur.remaining_slots || 0))) || 0;
+
+    const newRemaining =
+        Math.max(0, maxClaims - claimed);
+
+    const deadlineVal =
+        document.getElementById("editTaskDeadline").value;
+
+    let deadline = null;
+
+    if (deadlineVal) {
+
+        const dd = new Date(deadlineVal);
+
+        if (!isNaN(dd.getTime())) {
+
+            deadline = dd.toISOString();
+
+        }
+
+    }
+
+    const shopCode =
+        document.getElementById("editTaskShopCode").value.trim();
+
+    const shopPriceVal =
+        document.getElementById("editTaskShopPrice").value.trim();
+
+    const shopIdVal =
+        document.getElementById("editTaskShopId").value.trim();
+
+    const updates = {
+
+        title: title,
+
+        description: desc,
+
+        requirements:
+            document.getElementById("editTaskRequirements").value.trim() || null,
+
+        reward: reward,
+
+        max_claims: maxClaims,
+
+        slots: maxClaims,
+
+        remaining_slots: newRemaining,
+
+        status:
+            document.getElementById("editTaskStatus").value,
+
+        task_type: taskType,
+
+        task_link:
+            document.getElementById("editTaskLink").value.trim() || null,
+
+        shop_product_code:
+            shopCode ? shopCode.toUpperCase() : null,
+
+        shop_product_price:
+            shopPriceVal !== "" ? parseFloat(shopPriceVal) : null,
+
+        shop_product_id:
+            shopIdVal !== "" ? parseInt(shopIdVal, 10) : null,
+
+        deadline: deadline
+
+    };
+
+    if (!keepImage) {
+
+        updates.image_url = imageUrl;
+
+    }
+
+
+    const {
+        error
+    } =
+        await supabaseClient
+            .from("tasks")
+            .update(updates)
+            .eq(
+                "id",
+                editingTaskId
+            );
+
+    if (error) {
+
+        console.error(error);
+
+        alert(
+            I18N.t("admin.saveTaskFailedMsg") +
+            error.message
+        );
+
+        return;
+
+    }
+
+
+    alert(
+        I18N.t("admin.taskSaved")
+    );
+
+
+    closeEditTask();
+
+
+    await loadAdminTasks();
 
 }
 
@@ -5452,6 +6514,142 @@ function escapeJs(
 }
 
 </script>
+
+    <!-- ============ 编辑任务弹窗（完整详情编辑） ============ -->
+    <div class="admin-modal-mask" id="editTaskModal" style="display:none">
+        <div class="admin-modal-box" style="max-width:880px">
+            <div class="admin-modal-head">
+                <h3>📝 <span data-i18n="admin.editTaskTitle">编辑任务</span></h3>
+                <button type="button" class="admin-modal-close" onclick="closeEditTask()">✕</button>
+            </div>
+            <div class="admin-modal-grid" style="grid-template-columns:1fr 1fr">
+
+                <!-- 任务类型 -->
+                <div class="admin-modal-field" style="grid-column:1/-1">
+                    <label><span data-i18n="admin.taskType">任务类型</span></label>
+                    <div class="admin-task-type-picker">
+                        <label class="admin-type-option">
+                            <input type="radio" name="editTaskType" value="like" id="editTaskTypeLike" onchange="onEditTaskTypeChange()">
+                            <span class="admin-type-icon">👍</span>
+                            <span data-i18n="admin.taskTypeLike">点赞任务</span>
+                        </label>
+                        <label class="admin-type-option">
+                            <input type="radio" name="editTaskType" value="shop" id="editTaskTypeShop" onchange="onEditTaskTypeChange()">
+                            <span class="admin-type-icon">🛒</span>
+                            <span data-i18n="admin.taskTypeShop">商城任务</span>
+                        </label>
+                        <label class="admin-type-option">
+                            <input type="radio" name="editTaskType" value="review" id="editTaskTypeReview" onchange="onEditTaskTypeChange()">
+                            <span class="admin-type-icon">⭐</span>
+                            <span data-i18n="admin.taskTypeReview">评价任务</span>
+                        </label>
+                        <label class="admin-type-option">
+                            <input type="radio" name="editTaskType" value="follow" id="editTaskTypeFollow" onchange="onEditTaskTypeChange()">
+                            <span class="admin-type-icon">👁</span>
+                            <span data-i18n="admin.taskTypeFollow">关注任务</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 标题 -->
+                <div class="admin-modal-field" style="grid-column:1/-1">
+                    <label><span data-i18n="admin.taskTitle">任务标题</span></label>
+                    <input type="text" id="editTaskTitle" placeholder="例如：点赞 TikTok 视频">
+                </div>
+
+                <!-- 描述 -->
+                <div class="admin-modal-field" style="grid-column:1/-1">
+                    <label><span data-i18n="admin.taskDesc">任务描述</span></label>
+                    <textarea id="editTaskDescription" rows="3" placeholder="详细说明用户需要完成什么任务..."></textarea>
+                </div>
+
+                <!-- 任务要求 -->
+                <div class="admin-modal-field" style="grid-column:1/-1">
+                    <label><span data-i18n="admin.requirements">任务要求</span></label>
+                    <textarea id="editTaskRequirements" rows="2" data-i18n-placeholder="admin.requirementsPh" placeholder="补充用户完成任务的具体要求（选填）"></textarea>
+                </div>
+
+                <!-- 任务图片 -->
+                <div class="admin-modal-field" style="grid-column:1/-1">
+                    <label><span data-i18n="admin.taskImage">任务图片</span></label>
+                    <div class="task-image-uploader">
+                        <input type="file" id="editTaskImage" accept="image/*" onchange="previewEditTaskImage()" hidden>
+                        <button type="button" class="admin-primary-btn admin-image-btn" onclick="document.getElementById('editTaskImage').click()">📷 <span data-i18n="admin.uploadImage">选择图片</span></button>
+                        <span class="admin-image-name" id="editTaskImageName"></span>
+                        <button type="button" class="admin-image-remove" id="editTaskImageRemove" style="display:none" onclick="clearEditTaskImage()">✕</button>
+                    </div>
+                    <img id="editTaskImagePreview" class="task-image-preview" style="display:none;max-height:150px;margin-top:8px;border-radius:10px" alt="">
+                </div>
+
+                <!-- 任务链接 -->
+                <div class="admin-modal-field" id="editTaskLinkField" style="grid-column:1/-1">
+                    <label><span data-i18n="admin.taskLink">任务链接</span></label>
+                    <input type="url" id="editTaskLink" placeholder="https://www.tiktok.com/...">
+                </div>
+
+                <!-- 商品识别码 -->
+                <div class="admin-modal-field edit-shop-field">
+                    <label><span data-i18n="admin.shopProduct">绑定 ShopHub 商品识别码</span></label>
+                    <input type="text" id="editTaskShopCode" style="text-transform:uppercase" placeholder="例如：SH0001">
+                </div>
+
+                <!-- 商品价格 -->
+                <div class="admin-modal-field edit-shop-field">
+                    <label><span data-i18n="admin.shopPrice">商品价格（RM）</span></label>
+                    <input type="number" id="editTaskShopPrice" step="0.01" min="0" placeholder="例如：89.00">
+                </div>
+
+                <!-- 任务奖励 -->
+                <div class="admin-modal-field">
+                    <label><span data-i18n="admin.reward">任务奖励（RM）</span></label>
+                    <input type="number" id="editTaskReward" step="0.01" min="0">
+                </div>
+
+                <!-- 最大领取人数 -->
+                <div class="admin-modal-field">
+                    <label><span data-i18n="admin.maxClaims">最大领取人数</span></label>
+                    <input type="number" id="editTaskMaxClaims" min="1">
+                    <small style="display:block;margin-top:5px;font-size:11.5px;color:#8a94a6"><span data-i18n="admin.claimedPrefix">已领取</span> <b id="editTaskClaimed" style="color:#4ade80">0</b> <span data-i18n="admin.claimedSuffix">· 剩余</span> <b id="editTaskRemaining" style="color:#4ade80">0</b> <span data-i18n="admin.slotsInfoTail">，修改名额后剩余自动重算</span></small>
+                </div>
+
+                <!-- 状态 -->
+                <div class="admin-modal-field">
+                    <label><span data-i18n="admin.taskStatus">任务状态</span></label>
+                    <select id="editTaskStatus">
+                        <option value="open" data-i18n="admin.statusOpen">开放</option>
+                        <option value="closed" data-i18n="admin.statusClosed">关闭</option>
+                    </select>
+                </div>
+
+                <!-- 截止时间 -->
+                <div class="admin-modal-field">
+                    <label><span data-i18n="admin.deadline">截止时间</span></label>
+                    <input type="datetime-local" id="editTaskDeadline">
+                    <small style="display:block;margin-top:5px;font-size:11.5px;color:#8a94a6" data-i18n="admin.deadlineHint">留空表示长期有效</small>
+                </div>
+
+                <!-- 高级设置 -->
+                <div class="admin-modal-sec" style="grid-column:1/-1">
+                    <div class="admin-modal-sec-title">⚙️ <span data-i18n="admin.editAdvanced">高级设置</span></div>
+                    <div class="admin-modal-grid" style="grid-template-columns:1fr 1fr;margin-bottom:0">
+                        <div class="admin-modal-field">
+                            <label><span data-i18n="admin.productId">ShopHub 商品 ID（选填）</span></label>
+                            <input type="number" id="editTaskShopId" min="1">
+                        </div>
+                        <div class="admin-modal-field">
+                            <label><span data-i18n="admin.createdAt">创建时间</span></label>
+                            <input type="text" id="editTaskCreatedAt" disabled>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="admin-form-actions" style="margin-top:16px">
+                <button type="button" class="admin-primary-btn" onclick="saveEditTask()">💾 <span data-i18n="admin.editTaskSave">保存修改</span></button>
+                <button type="button" class="admin-refresh-btn" onclick="closeEditTask()" style="margin-left:8px"><span data-i18n="admin.editTaskCancel">取消</span></button>
+            </div>
+        </div>
+    </div>
 
     <footer class="site-footer">
         <div class="footer-inner">

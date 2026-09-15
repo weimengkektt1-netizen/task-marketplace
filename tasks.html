@@ -221,6 +221,58 @@
             }
 
         }
+        /* ---------- 任务分类筛选条 ---------- */
+        .task-filter-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 0 0 20px;
+        }
+
+        .tf-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            border-radius: 999px;
+            border: 1px solid rgba(148, 163, 184, 0.22);
+            background: rgba(255, 255, 255, 0.04);
+            color: #9aa4b2;
+            font-size: 12.5px;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tf-btn:hover {
+            border-color: rgba(109, 93, 252, 0.5);
+            color: #dbe1ea;
+        }
+
+        .tf-btn.on {
+            background: var(--brand-gradient, linear-gradient(135deg, #6d5dfc, #8b5cf6));
+            color: #fff;
+            border-color: transparent;
+            box-shadow: 0 4px 14px rgba(109, 93, 252, 0.35);
+        }
+
+        .tf-count {
+            font-size: 10.5px;
+            min-width: 18px;
+            height: 18px;
+            padding: 0 5px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.1);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: inherit;
+        }
+
+        .tf-btn.on .tf-count {
+            background: rgba(255, 255, 255, 0.22);
+        }
+
     </style>
 
 </head>
@@ -377,6 +429,24 @@
             <span data-i18n="tasks.hint">领取后请在仪表盘的「我的任务」中提交完成证明。</span>
         </p>
 
+        <div class="task-filter-bar" id="taskFilterBar">
+            <button type="button" class="tf-btn on" data-t="all" onclick="setTaskFilter('all')">
+                <span data-i18n="tasks.filterAll">全部</span><span class="tf-count" id="tfCountAll">0</span>
+            </button>
+            <button type="button" class="tf-btn" data-t="like" onclick="setTaskFilter('like')">
+                <span data-i18n="tasks.typeLike">👍 点赞任务</span><span class="tf-count" id="tfCountLike">0</span>
+            </button>
+            <button type="button" class="tf-btn" data-t="shop" onclick="setTaskFilter('shop')">
+                <span data-i18n="tasks.typeShop">🛒 商城任务</span><span class="tf-count" id="tfCountShop">0</span>
+            </button>
+            <button type="button" class="tf-btn" data-t="review" onclick="setTaskFilter('review')">
+                <span data-i18n="tasks.typeReview">⭐ 评价任务</span><span class="tf-count" id="tfCountReview">0</span>
+            </button>
+            <button type="button" class="tf-btn" data-t="follow" onclick="setTaskFilter('follow')">
+                <span data-i18n="tasks.typeFollow">👁 关注任务</span><span class="tf-count" id="tfCountFollow">0</span>
+            </button>
+        </div>
+
         <div
             id="taskList"
             class="dashboard-task-grid">
@@ -405,6 +475,51 @@
 
         // 当前用户会员等级（用于刷单任务展示预计佣金）
         let currentMembershipLevel = "basic";
+
+        // 任务大厅分类筛选
+        let taskFilterType = "all";
+
+        function setTaskFilter(type) {
+
+            taskFilterType = type || "all";
+
+            const bar = document.getElementById("taskFilterBar");
+
+            if (bar) {
+
+                bar.querySelectorAll(".tf-btn").forEach(function (btn) {
+
+                    btn.classList.toggle("on", btn.getAttribute("data-t") === taskFilterType);
+
+                });
+
+            }
+
+            loadTasks();
+
+        }
+
+        function updateTaskFilterCounts(tasks) {
+
+            const counts = { all: tasks.length, like: 0, shop: 0, review: 0, follow: 0 };
+
+            (tasks || []).forEach(function (t) {
+
+                const k = t.task_type === "like" ? "like" : t.task_type === "review" ? "review" : t.task_type === "follow" ? "follow" : "shop";
+
+                counts[k] = (counts[k] || 0) + 1;
+
+            });
+
+            ["all", "like", "shop", "review", "follow"].forEach(function (k) {
+
+                const el = document.getElementById("tfCount" + k.charAt(0).toUpperCase() + k.slice(1));
+
+                if (el) el.textContent = counts[k] || 0;
+
+            });
+
+        }
 
         function commissionRate(level) {
             return level === "silver" ? 0.06 :
@@ -645,13 +760,27 @@
 
             }
 
+            // 分类筛选
+            updateTaskFilterCounts(visibleTasks);
+
+            if (taskFilterType !== "all") {
+
+                visibleTasks =
+                    visibleTasks.filter(
+                        t => (t.task_type || "shop") === taskFilterType
+                    );
+
+            }
+
             if (
                 visibleTasks.length === 0
             ) {
 
                 taskList.innerHTML =
                     `<div class="empty-box">
-                        ${I18N.t("dash.noTasks")}
+                        ${taskFilterType === "all"
+                            ? I18N.t("dash.noTasks")
+                            : I18N.t("tasks.filterEmpty")}
                     </div>`;
 
                 return;
