@@ -984,13 +984,19 @@
                                     <label class="admin-type-option">
                                         <input type="radio" name="taskType" value="shop" id="taskTypeShop" checked onchange="onTaskTypeChange()">
                                         <span class="admin-type-icon">🛒</span>
-                                        <span data-i18n="admin.taskTypeShop">商城刷单任务</span>
+                                        <span data-i18n="admin.taskTypeShop">商城任务</span>
                                     </label>
 
                                     <label class="admin-type-option">
                                         <input type="radio" name="taskType" value="review" id="taskTypeReview" onchange="onTaskTypeChange()">
                                         <span class="admin-type-icon">⭐</span>
                                         <span data-i18n="admin.taskTypeReview">评价任务</span>
+                                    </label>
+
+                                    <label class="admin-type-option">
+                                        <input type="radio" name="taskType" value="follow" id="taskTypeFollow" onchange="onTaskTypeChange()">
+                                        <span class="admin-type-icon">👁</span>
+                                        <span data-i18n="admin.taskTypeFollow">关注任务</span>
                                     </label>
 
                                 </div>
@@ -1107,7 +1113,7 @@
                             <div class="admin-form-group full shop-task-field">
 
                                 <label>
-                                <span data-i18n="admin.shopProduct">绑定 ShopHub 商品识别码（选填，刷单任务）</span>
+                                <span data-i18n="admin.shopProduct">绑定 ShopHub 商品识别码（选填，商城任务）</span>
                                 </label>
 
                                 <input
@@ -1117,7 +1123,7 @@
                                     style="text-transform:uppercase">
 
                                 <small class="admin-form-hint" style="display:block;margin-top:6px;font-size:12px;color:#8a94a6;line-height:1.6;">
-                                    <span data-i18n="admin.shopProductHint">填写 ShopHub 商品的识别码（如 SH0001）。填写后该任务为刷单任务：用户领取后跳转对应商品下单，付款审核通过后任务自动完成并发放佣金。</span>
+                                    <span data-i18n="admin.shopProductHint">填写 ShopHub 商品的识别码（如 SH0001）。填写后该任务为商城任务：用户领取后跳转对应商品下单，付款审核通过后任务自动完成并发放佣金。</span>
                                 </small>
 
                             </div>
@@ -1128,7 +1134,7 @@
                             <div class="admin-form-group full shop-task-field">
 
                                 <label>
-                                <span data-i18n="admin.shopPrice">商品价格（RM）（选填，刷单任务）</span>
+                                <span data-i18n="admin.shopPrice">商品价格（RM）（选填，商城任务）</span>
                                 </label>
 
                                 <input
@@ -2688,7 +2694,7 @@ async function uploadTaskImage() {
    ======================================== */
 
 // ========================================
-// 任务类型切换：点赞任务 / 商城刷单任务
+// 任务类型切换：点赞 / 商城 / 评价 / 关注任务
 // ========================================
 
 function onTaskTypeChange() {
@@ -2710,7 +2716,7 @@ function onTaskTypeChange() {
     if (linkGroup) {
 
         linkGroup.style.display =
-            (type === "like" || type === "review") ? "" : "none";
+            (type === "like" || type === "review" || type === "follow") ? "" : "none";
 
     }
 
@@ -5142,7 +5148,7 @@ async function openEditTask(
 
     const price =
         prompt(
-            "商品价格 RM（刷单佣金基数，选填）",
+            "商品价格 RM（商城任务佣金基数，选填）",
             task.shop_product_price != null ? task.shop_product_price : ""
         );
 

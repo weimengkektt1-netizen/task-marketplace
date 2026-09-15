@@ -1962,12 +1962,14 @@ async function loadTasks() {
 
                 <h3>
                     ${escapeHtml(task.title)}
-                    <span class="ht-type-badge ${task.task_type === "like" ? "like" : task.task_type === "review" ? "review" : "shop"}">
+                    <span class="ht-type-badge ${task.task_type === "like" ? "like" : task.task_type === "review" ? "review" : task.task_type === "follow" ? "follow" : "shop"}">
                         ${task.task_type === "like"
                             ? I18N.t("tasks.typeLike")
                             : task.task_type === "review"
                                 ? I18N.t("tasks.typeReview")
-                                : I18N.t("tasks.typeShop")}
+                                : task.task_type === "follow"
+                                    ? I18N.t("tasks.typeFollow")
+                                    : I18N.t("tasks.typeShop")}
                     </span>
                 </h3>
 
@@ -2000,7 +2002,7 @@ async function loadTasks() {
 
                 ${
                     task.shop_product_code
-                        ? `<div class="ht-shopcode">🛒 刷单任务 · 商品识别码 <b>${task.shop_product_code}</b></div>`
+                        ? `<div class="ht-shopcode">🛒 商城任务 · 商品识别码 <b>${task.shop_product_code}</b></div>`
                         : ""
                 }
 
@@ -2019,9 +2021,11 @@ async function loadTasks() {
                             ? I18N.t("tasks.claimLike")
                             : task.task_type === "review"
                                 ? I18N.t("tasks.claimReview")
-                                : (task.shop_product_code || task.shop_product_id)
-                                    ? I18N.t("dash.shopTask")
-                                    : I18N.t("dash.claim")
+                                : task.task_type === "follow"
+                                    ? I18N.t("tasks.claimFollow")
+                                    : (task.shop_product_code || task.shop_product_id)
+                                        ? I18N.t("dash.shopTask")
+                                        : I18N.t("dash.claim")
                     }
 
                 </button>
@@ -2450,7 +2454,7 @@ function renderMyTasks() {
 
 
         const isLikeTask =
-            (item.tasks?.task_type === "like" || item.tasks?.task_type === "review") ||
+            (item.tasks?.task_type === "like" || item.tasks?.task_type === "review" || item.tasks?.task_type === "follow") ||
             !!item.tasks?.task_link;
 
         const isShopTask =
@@ -2500,7 +2504,7 @@ function renderMyTasks() {
                                 class="task-action-btn ht-shop-btn"
                                 onclick="goLikeTask(${item.id}, '${(item.tasks?.task_link || "").replace(/'/g, "\\'")}')">
 
-                                ${I18N.t("dash.linkTaskGo")}
+                                ${item.tasks?.task_type === "follow" ? I18N.t("dash.followTaskGo") : I18N.t("dash.linkTaskGo")}
 
                             </button>
                           `
