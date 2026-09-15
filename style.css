@@ -1339,6 +1339,37 @@ body {
     font-size: 14px;
 }
 
+.my-task-row.has-actions {
+    grid-template-columns: 1fr 250px 100px;
+}
+
+.my-task-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.my-task-actions .task-action-btn {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+    font-size: 12px;
+    padding: 9px 10px;
+}
+
+.my-task-actions .ht-proof-btn {
+    background: rgba(139, 148, 158, 0.16);
+    color: #e6e9ef;
+    box-shadow: none;
+    border: 1px solid rgba(148, 163, 184, 0.22);
+}
+
+.my-task-actions .ht-proof-btn:hover {
+    background: rgba(139, 148, 158, 0.28);
+    border-color: rgba(148, 163, 184, 0.4);
+    box-shadow: none;
+}
+
 
 .status-claimed {
     color: #d9b66f;

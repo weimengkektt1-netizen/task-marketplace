@@ -2449,10 +2449,6 @@ function renderMyTasks() {
             );
 
 
-        row.className =
-            "my-task-row";
-
-
         const isLikeTask =
             (item.tasks?.task_type === "like" || item.tasks?.task_type === "review" || item.tasks?.task_type === "follow") ||
             !!item.tasks?.task_link;
@@ -2464,6 +2460,11 @@ function renderMyTasks() {
         const reviewed =
             Array.isArray(item.task_reviews) &&
             item.task_reviews.length > 0;
+
+
+        row.className =
+            "my-task-row" +
+            (isLikeTask ? " has-actions" : "");
 
 
         row.innerHTML = `
@@ -2500,13 +2501,23 @@ function renderMyTasks() {
                 item.status === "claimed"
                     ? (isLikeTask
                         ? `
-                            <button
-                                class="task-action-btn ht-shop-btn"
-                                onclick="goLikeTask(${item.id}, '${(item.tasks?.task_link || "").replace(/'/g, "\\'")}')">
+                            <div class="my-task-actions">
+                                <button
+                                    class="task-action-btn ht-shop-btn"
+                                    onclick="goLikeTask(${item.id}, '${(item.tasks?.task_link || "").replace(/'/g, "\\'")}')">
 
-                                ${item.tasks?.task_type === "follow" ? I18N.t("dash.followTaskGo") : I18N.t("dash.linkTaskGo")}
+                                    ${item.tasks?.task_type === "follow" ? I18N.t("dash.followTaskGo") : I18N.t("dash.linkTaskGo")}
 
-                            </button>
+                                </button>
+
+                                <button
+                                    class="task-action-btn ht-proof-btn"
+                                    onclick="submitTask(${item.id})">
+
+                                    📷 ${I18N.t("dash.submitProofBtn")}
+
+                                </button>
+                            </div>
                           `
                         : isShopTask
                             ? `
