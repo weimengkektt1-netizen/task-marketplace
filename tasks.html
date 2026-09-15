@@ -1055,6 +1055,44 @@
         // 启动
         // ========================================
 
+        // 动态客服链接（从 settings 表读取）
+        let siteContactLink = "https://wa.me/601139706264";
+
+        async function loadSiteContactLink() {
+
+            try {
+
+                const { data } =
+                    await supabaseClient
+                        .from("settings")
+                        .select("value")
+                        .eq("key", "contact_whatsapp")
+                        .maybeSingle();
+
+                if (data && data.value) {
+
+                    siteContactLink = data.value;
+
+                    document
+                        .querySelectorAll(".wa-float")
+                        .forEach(function (a) {
+
+                            a.href = siteContactLink;
+
+                        });
+
+                }
+
+            } catch (e) {
+
+                console.error("加载客服链接失败", e);
+
+            }
+
+        }
+
+        loadSiteContactLink();
+
         // 切换语言后重渲染动态任务卡片
         document.addEventListener(
             "taskhub:langchange",

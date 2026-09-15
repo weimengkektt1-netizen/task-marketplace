@@ -3864,10 +3864,52 @@ async function logout() {
 
 
 // ========================================
+// 动态客服链接（从 settings 表读取）
+// ========================================
+
+let siteContactLink = "https://wa.me/601139706264";
+
+async function loadSiteContactLink() {
+
+    try {
+
+        const { data } =
+            await supabaseClient
+                .from("settings")
+                .select("value")
+                .eq("key", "contact_whatsapp")
+                .maybeSingle();
+
+        if (data && data.value) {
+
+            siteContactLink = data.value;
+
+            document
+                .querySelectorAll(".wa-float")
+                .forEach(function (a) {
+
+                    a.href = siteContactLink;
+
+                });
+
+        }
+
+    } catch (e) {
+
+        console.error("加载客服链接失败", e);
+
+    }
+
+}
+
+
+// ========================================
 // START
 // ========================================
 
 checkUser();
+
+loadSiteContactLink();
 
 // 语言切换时重新渲染动态内容
 document.addEventListener(
@@ -4062,7 +4104,7 @@ function upgradeMember(level, price) {
             I18N.t("member.upgradeByPay").replace("{price}", String(price)) +
             "\n\n" + I18N.t("member.payHint")
         );
-        window.open("https://wa.me/601139706264", "_blank");
+        window.open(siteContactLink || "https://wa.me/601139706264", "_blank");
 
     } else {
 

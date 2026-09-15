@@ -343,6 +343,71 @@
             color: #cbd5e1;
         }
 
+        .admin-settings-card {
+            background: rgba(15, 23, 42, 0.55);
+            border: 1px solid rgba(148, 163, 184, 0.18);
+            border-radius: 14px;
+            padding: 22px 24px;
+            max-width: 640px;
+        }
+
+        .admin-settings-label {
+            display: block;
+            font-size: 13.5px;
+            font-weight: 600;
+            color: #e2e8f0;
+            margin-bottom: 10px;
+        }
+
+        .admin-settings-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .admin-settings-row .admin-tool-input {
+            flex: 1;
+            min-width: 260px;
+        }
+
+        .admin-settings-save {
+            padding: 9px 18px;
+            border-radius: 9px;
+            border: none;
+            background: linear-gradient(135deg, #6d5dfc, #8b5cf6);
+            color: #fff;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            font-family: inherit;
+        }
+
+        .admin-settings-save:hover {
+            opacity: 0.88;
+        }
+
+        .admin-settings-hint {
+            font-size: 12px;
+            color: #8a94a6;
+            margin: 12px 0 4px;
+        }
+
+        .admin-settings-status {
+            font-size: 12.5px;
+            min-height: 18px;
+            margin-top: 4px;
+            color: #8a94a6;
+        }
+
+        .admin-settings-status.ok {
+            color: #4ade80;
+        }
+
+        .admin-settings-status.error {
+            color: #f87171;
+        }
+
         .admin-task-toolbar {
             display: flex;
             flex-wrap: wrap;
@@ -717,6 +782,12 @@
                    class="admin-nav-item">
                     <span>💳</span>
                     钱包流水
+                </a>
+
+                <a href="#settings" data-i18n="admin.settingsTitle"
+                   class="admin-nav-item">
+                    <span>⚙️</span>
+                    网站设置
                 </a>
 
             </nav>
@@ -1733,6 +1804,60 @@
             </section>
 
 
+            <section id="settings" class="admin-section">
+
+                <div class="admin-review-header">
+
+                    <div>
+
+                        <h2>
+                            <span data-i18n="admin.settingsTitle">网站设置</span>
+                        </h2>
+
+                        <p>
+                            <span data-i18n="admin.settingsSub">管理全站通用配置，保存后对所有页面即时生效</span>
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="admin-settings-card">
+
+                    <label class="admin-settings-label">
+                        <span data-i18n="admin.contactLinkLabel">💬 联系客服链接</span>
+                    </label>
+
+                    <div class="admin-settings-row">
+
+                        <input
+                            type="text"
+                            id="contactLinkInput"
+                            class="admin-tool-input"
+                            placeholder="https://wa.me/601139706264"
+                            data-i18n-placeholder="admin.contactLinkPh">
+
+                        <button
+                            type="button"
+                            class="admin-settings-save"
+                            onclick="saveContactLink()">
+                            💾 <span data-i18n="admin.saveSettings">保存</span>
+                        </button>
+
+                    </div>
+
+                    <p class="admin-settings-hint" data-i18n="admin.settingsHint">
+                        修改后，首页 / 任务大厅 / 仪表盘右下角的联系客服按钮将自动使用新链接。
+                    </p>
+
+                    <div class="admin-settings-status" id="contactLinkStatus"></div>
+
+                </div>
+
+            </section>
+
+
         </main>
 
     </div>
@@ -1770,6 +1895,164 @@ const supabaseClient =
    页面初始化
    ======================================== */
 
+async function loadSiteSettings() {
+
+    const input =
+        document.getElementById(
+            "contactLinkInput"
+        );
+
+    if (!input) {
+
+        return;
+
+    }
+
+    try {
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient
+                .from("settings")
+                .select("value")
+                .eq("key", "contact_whatsapp")
+                .maybeSingle();
+
+        if (error) {
+
+            throw error;
+
+        }
+
+        if (data && data.value) {
+
+            input.value =
+                data.value;
+
+        }
+
+    } catch (e) {
+
+        console.error(
+            "加载网站设置失败",
+            e
+        );
+
+    }
+
+}
+
+
+async function saveContactLink() {
+
+    const input =
+        document.getElementById(
+            "contactLinkInput"
+        );
+
+    const status =
+        document.getElementById(
+            "contactLinkStatus"
+        );
+
+    if (!input || !status) {
+
+        return;
+
+    }
+
+    const value =
+        (input.value || "").trim();
+
+    if (!value) {
+
+        status.textContent =
+            I18N.t("admin.needLink");
+
+        status.className =
+            "admin-settings-status error";
+
+        return;
+
+    }
+
+    // 简单校验：必须是 http/https 链接
+    if (
+        !/^https?:\/\//i.test(value)
+    ) {
+
+        status.textContent =
+            I18N.t("admin.linkInvalid");
+
+        status.className =
+            "admin-settings-status error";
+
+        return;
+
+    }
+
+    status.textContent =
+        I18N.t("admin.saving");
+
+    status.className =
+        "admin-settings-status";
+
+    try {
+
+        const {
+            error
+        } =
+            await supabaseClient
+                .from("settings")
+                .upsert(
+                    {
+                        key: "contact_whatsapp",
+                        value: value,
+                        updated_at:
+                            new Date().toISOString()
+                    },
+                    {
+                        onConflict: "key"
+                    }
+                );
+
+        if (error) {
+
+            throw error;
+
+        }
+
+        status.textContent =
+            I18N.t("admin.settingsSaved");
+
+        status.className =
+            "admin-settings-status ok";
+
+        setTimeout(function () {
+
+            status.textContent =
+                "";
+
+        }, 4000);
+
+    } catch (e) {
+
+        console.error(e);
+
+        status.textContent =
+            I18N.t("admin.settingsSaveFailed") +
+            e.message;
+
+        status.className =
+            "admin-settings-status error";
+
+    }
+
+}
+
+
 document.addEventListener(
     "DOMContentLoaded",
     async function () {
@@ -1792,6 +2075,8 @@ document.addEventListener(
 
 
         await checkAdmin();
+
+        await loadSiteSettings();
 
         // 语言切换时重新渲染动态内容
         document.addEventListener(
