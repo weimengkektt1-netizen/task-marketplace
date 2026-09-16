@@ -436,6 +436,71 @@
             flex-wrap: wrap;
         }
 
+        /* 代理权限开关弹窗 */
+        .admin-perm-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 4px;
+        }
+        .admin-perm-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            background: rgba(148, 163, 184, .08);
+            border: 1px solid rgba(148, 163, 184, .18);
+            border-radius: 12px;
+            padding: 10px 12px;
+            cursor: pointer;
+            transition: border-color .15s ease, background .15s ease;
+        }
+        .admin-perm-item:hover {
+            border-color: rgba(99, 102, 241, .55);
+            background: rgba(99, 102, 241, .08);
+        }
+        .admin-perm-item .admin-perm-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13.5px;
+            color: #e2e8f0;
+            font-weight: 500;
+        }
+        .admin-perm-switch {
+            position: relative;
+            width: 38px;
+            height: 21px;
+            flex: none;
+            border-radius: 999px;
+            background: rgba(148, 163, 184, .35);
+            transition: background .18s ease;
+            cursor: pointer;
+        }
+        .admin-perm-switch::after {
+            content: "";
+            position: absolute;
+            top: 2.5px;
+            left: 3px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #fff;
+            transition: transform .18s ease;
+        }
+        .admin-perm-switch.on {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        }
+        .admin-perm-switch.on::after {
+            transform: translateX(16px);
+        }
+        .admin-perm-note {
+            margin-top: 10px;
+            font-size: 12px;
+            color: #8b93a7;
+            line-height: 1.6;
+        }
+
         .admin-mini-btn.danger {
             border-color: rgba(220, 38, 38, .4);
             color: #fca5a5;
@@ -2409,6 +2474,7 @@ document.addEventListener(
 
 let currentAdminRole = "user";
 let currentAgentUserId = null;
+let currentAgentPerms = {};
 
 async function getMyUserIds() {
 
@@ -2522,6 +2588,12 @@ async function checkAdmin() {
         currentAgentUserId =
             (profile.role === "agent") ? user.id : null;
 
+        // 代理权限开关：admin 不受限制；agent 读取 agent_permissions（缺失键默认开启）
+        currentAgentPerms =
+            (profile.role === "agent" && profile.agent_permissions && typeof profile.agent_permissions === "object")
+                ? profile.agent_permissions
+                : {};
+
         applyRoleLayout(currentAdminRole);
 
 
@@ -2546,6 +2618,12 @@ async function checkAdmin() {
 
             await loadAgents();
 
+        } else {
+
+            // 代理：按权限开关加载对应版块数据
+            if (currentAgentPerms.tasks !== false) await loadAdminTasks();
+            if (currentAgentPerms.create !== false) await loadAdminTasks();
+            if (currentAgentPerms.settings !== false) await loadSiteSettings();
         }
 
 
@@ -2574,6 +2652,33 @@ function applyRoleLayout(role) {
 
     const isAdmin = role === "admin";
 
+    // 代理权限开关映射：导航 id / 版块 id -> 权限 key
+    // 缺失的 key 默认视为开启（兼容旧代理，全部可见）
+    const permNavMap = {
+        navTasks: "tasks",
+        navCreate: "create",
+        navReviews: "reviews",
+        navWithdrawals: "withdrawals",
+        navRefunds: "refunds",
+        navMembers: "members",
+        navLedger: "ledger",
+        navSettings: "settings"
+    };
+    const permSectionMap = {
+        tasks: "tasks",
+        create: "create",
+        reviews: "reviews",
+        withdrawals: "withdrawals",
+        refunds: "refunds",
+        members: "members",
+        ledger: "ledger",
+        settings: "settings"
+    };
+    const agentPerm = function (key) {
+        // 缺失或非 false 视为开启
+        return currentAgentPerms[key] !== false;
+    };
+
     const navIds = [
         "navDashboard",
         "navTasks",
@@ -2598,10 +2703,16 @@ function applyRoleLayout(role) {
     navIds.forEach(function (id) {
         const el = document.getElementById(id);
         if (!el) return;
-        if (!isAdmin && adminOnlyNav.indexOf(id) >= 0) {
-            el.style.display = "none";
-        } else {
+        if (isAdmin) {
             el.style.display = "";
+            return;
+        }
+        const key = permNavMap[id];
+        if (adminOnlyNav.indexOf(id) >= 0) {
+            // 管理员专属：有权限开关的按开关，无开关的（概览/代理管理）代理一律隐藏
+            el.style.display = key ? (agentPerm(key) ? "" : "none") : "none";
+        } else {
+            el.style.display = (key && !agentPerm(key)) ? "none" : "";
         }
     });
 
@@ -2630,10 +2741,15 @@ function applyRoleLayout(role) {
     sectionIds.forEach(function (id) {
         const el = document.getElementById(id);
         if (!el) return;
-        if (!isAdmin && adminOnlySections.indexOf(id) >= 0) {
-            el.style.display = "none";
-        } else {
+        if (isAdmin) {
             el.style.display = "";
+            return;
+        }
+        const key = permSectionMap[id];
+        if (adminOnlySections.indexOf(id) >= 0) {
+            el.style.display = key ? (agentPerm(key) ? "" : "none") : "none";
+        } else {
+            el.style.display = (key && !agentPerm(key)) ? "none" : "";
         }
     });
 
@@ -2657,9 +2773,27 @@ function applyRoleLayout(role) {
             : (I18N.get() === "zh" ? "代理工作台" : "Agent Workspace");
     }
 
-    // 代理默认定位到任务审核
-    if (!isAdmin && (!location.hash || location.hash === "#dashboard")) {
-        history.replaceState(null, "", "#reviews");
+    // 代理默认定位到任务审核（若该权限被关闭则跳到第一个可用版块）
+    if (!isAdmin) {
+        const sectionIds = [
+            "reviews", "withdrawals", "refunds", "members", "ledger",
+            "tasks", "create", "settings"
+        ];
+        const current = (location.hash || "#reviews").replace("#", "");
+        const secEl = document.getElementById(current);
+        if (secEl && secEl.style.display === "none") {
+            const first = sectionIds.find(function (s) {
+                const el = document.getElementById(s);
+                return el && el.style.display !== "none";
+            });
+            history.replaceState(null, "", "#" + (first || "reviews"));
+        } else if (!location.hash || location.hash === "#dashboard") {
+            const first = sectionIds.find(function (s) {
+                const el = document.getElementById(s);
+                return el && el.style.display !== "none";
+            });
+            history.replaceState(null, "", "#" + (first || "reviews"));
+        }
     }
 
 }
@@ -2706,7 +2840,7 @@ async function loadAgents() {
     try {
         const { data: agents, error } = await supabaseClient
             .from("profiles")
-            .select("id, display_name, username, email, phone, status, role, created_at")
+            .select("id, display_name, username, email, phone, status, role, created_at, agent_permissions")
             .eq("role", "agent")
             .order("created_at", { ascending: false });
         if (error) throw error;
@@ -2732,7 +2866,8 @@ async function loadAgents() {
                 const active = a.status === "active";
                 const joined = a.created_at ? new Date(a.created_at).toLocaleDateString(zh ? "zh-CN" : "en-GB") : "—";
                 const nameEsc = escapeHtml(name).replace(/'/g, "\\'");
-                return '<div class="admin-agent-card">' +
+                const permsJson = JSON.stringify(a.agent_permissions || {}).replace(/'/g, "&#39;");
+                return '<div class="admin-agent-card" data-perms=\'' + permsJson + '\' data-agent-id=\'' + a.id + '\'>' +
                     '<div class="admin-agent-head">' +
                     '<div class="admin-agent-ava">' + escapeHtml(name.slice(0, 1).toUpperCase()) + '</div>' +
                     '<div style="flex:1;min-width:0">' +
@@ -2748,6 +2883,7 @@ async function loadAgents() {
                     '<div class="admin-agent-actions">' +
                     '<button class="admin-mini-btn" onclick="viewAgentUsers(\'' + a.id + '\',\'' + nameEsc + '\')">👥 ' + (zh ? "名下用户" : "Users") + '</button>' +
                     '<button class="admin-mini-btn gold" onclick="viewAgentLedger(\'' + a.id + '\',\'' + nameEsc + '\')">💳 ' + (zh ? "流水" : "Ledger") + '</button>' +
+                    '<button class="admin-mini-btn" onclick="openAgentPerms(\'' + a.id + '\',\'' + nameEsc + '\')">🔐 ' + (zh ? "权限" : "Perms") + '</button>' +
                     '<button class="admin-mini-btn" onclick="toggleAgentStatus(\'' + a.id + '\',\'' + a.status + '\')">' + (active ? "⏸ " + (zh ? "停用" : "Disable") : "▶️ " + (zh ? "启用" : "Enable")) + '</button>' +
                     '<button class="admin-mini-btn danger" onclick="adminDemoteAgent(\'' + a.id + '\')">🔻 ' + (zh ? "降级" : "Demote") + '</button>' +
                     '</div>' +
@@ -2878,6 +3014,87 @@ async function adminRemoveAgentUser(agentId, userId) {
         closeAgentModal();
         await loadAgents();
     } catch (e) { alert("移除失败：" + e.message); }
+}
+
+// 管理员：代理权限开关弹窗
+const AGENT_PERM_KEYS = [
+    { key: "tasks",       icon: "📋", zh: "任务管理", en: "Task Management" },
+    { key: "create",      icon: "➕", zh: "发布任务", en: "Create Tasks" },
+    { key: "reviews",     icon: "📝", zh: "任务审核", en: "Review Tasks" },
+    { key: "withdrawals", icon: "💰", zh: "提现审核", en: "Withdraw Review" },
+    { key: "refunds",     icon: "💸", zh: "退款审核", en: "Refund Review" },
+    { key: "members",     icon: "👥", zh: "会员管理", en: "Member Management" },
+    { key: "ledger",      icon: "💳", zh: "钱包流水", en: "Wallet Ledger" },
+    { key: "settings",    icon: "⚙️", zh: "网站设置", en: "Site Settings" }
+];
+
+function openAgentPerms(agentId, agentName) {
+    const zh = typeof I18N !== "undefined" && I18N.get() === "zh";
+    // 从卡片读取当前权限
+    const card = document.querySelector('.admin-agent-card[data-agent-id="' + agentId + '"]');
+    let perms = {};
+    try {
+        perms = card && card.getAttribute("data-perms") ? JSON.parse(card.getAttribute("data-perms").replace(/&#39;/g, "'")) : {};
+    } catch (e) { perms = {}; }
+
+    const items = AGENT_PERM_KEYS.map(function (p) {
+        const on = perms[p.key] !== false;
+        return '<div class="admin-perm-item" data-key="' + p.key + '" onclick="toggleAgentPerm(this)">' +
+            '<span class="admin-perm-label"><span>' + p.icon + '</span>' + (zh ? p.zh : p.en) + '</span>' +
+            '<span class="admin-perm-switch' + (on ? " on" : "") + '"></span>' +
+            '</div>';
+    }).join("");
+
+    const mask = document.createElement("div");
+    mask.className = "admin-modal-mask";
+    mask.id = "agentPermMask";
+    mask.innerHTML =
+        '<div class="admin-modal-box">' +
+        '<div class="admin-modal-head"><h3>🔐 ' + escapeHtml(agentName || "") + (zh ? " · 权限设置" : " · Permissions") + '</h3>' +
+        '<button class="admin-modal-close" onclick="closeAgentPerms()">✕</button></div>' +
+        '<div class="admin-modal-field" style="margin-bottom:8px"><label>' + (zh ? "控制该代理可访问的版块" : "Control which sections this agent can access") + '</label></div>' +
+        '<div class="admin-perm-grid">' + items + '</div>' +
+        '<div class="admin-perm-note">' + (zh ? "关闭某项后，该代理登录工作台时将看不到对应版块；数据隔离仍按代理名下用户执行。概览与代理管理为总管理员专属，不可授权。" : "When disabled, the agent won't see that section. Data isolation still follows the agent's own users. Dashboard & Agent Management are admin-only.") + '</div>' +
+        '<div style="display:flex;justify-content:flex-end;gap:8px;margin-top:16px">' +
+        '<button class="admin-primary-btn" onclick="saveAgentPerms(\'' + agentId + '\')">' + (zh ? "保存权限" : "Save Perms") + '</button>' +
+        '</div>' +
+        '</div>';
+    document.body.appendChild(mask);
+}
+
+function toggleAgentPerm(el) {
+    const sw = el.querySelector(".admin-perm-switch");
+    if (!sw) return;
+    sw.classList.toggle("on");
+}
+
+function closeAgentPerms() {
+    const mask = document.getElementById("agentPermMask");
+    if (mask) mask.remove();
+}
+
+// 管理员：保存代理权限
+async function saveAgentPerms(agentId) {
+    const zh = typeof I18N !== "undefined" && I18N.get() === "zh";
+    const perms = {};
+    document.querySelectorAll("#agentPermMask .admin-perm-item").forEach(function (el) {
+        const key = el.getAttribute("data-key");
+        if (!key) return;
+        const on = el.querySelector(".admin-perm-switch") && el.querySelector(".admin-perm-switch").classList.contains("on");
+        perms[key] = on;
+    });
+    if (!confirm(zh ? "确定保存该代理的权限设置吗？" : "Save these permission settings?")) return;
+    try {
+        const { error } = await supabaseClient
+            .from("profiles")
+            .update({ agent_permissions: perms })
+            .eq("id", agentId)
+            .eq("role", "agent");
+        if (error) throw error;
+        alert(zh ? "权限已保存" : "Permissions saved");
+        closeAgentPerms();
+        await loadAgents();
+    } catch (e) { alert(zh ? "保存失败：" + e.message : "Save failed: " + e.message); }
 }
 
 // 管理员：查看代理名下流水（弹窗）
