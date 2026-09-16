@@ -381,6 +381,11 @@
         "admin.reviewTask": { zh: "任务审核", en: "Task Review" },
         "admin.withdrawReview": { zh: "提现审核", en: "Withdrawal Review" },
         "admin.memberManage": { zh: "会员管理", en: "Members" },
+        "admin.agentsManage": { zh: "代理管理", en: "Agents" },
+        "admin.agentsTitle": { zh: "代理管理", en: "Agent Management" },
+        "admin.agentsSub": { zh: "管理二级管理员（代理）：新增、编辑权限、查看名下用户与独立流水", en: "Manage agents: add, edit permissions, view their users and isolated ledgers" },
+        "admin.agentsAdd": { zh: "添加代理", en: "Add Agent" },
+        "admin.agentsAddUser": { zh: "添加用户", en: "Add User" },
 
         "admin.backUser": { zh: "← 用户中心", en: "← User Center" },
         "admin.logout": { zh: "🚪 登出", en: "🚪 Log out" },

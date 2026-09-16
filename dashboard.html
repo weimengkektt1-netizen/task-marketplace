@@ -1369,7 +1369,7 @@ async function checkUser() {
             .eq("id", currentUser.id)
             .single();
 
-    if (!profileError && profile && profile.role === "admin") {
+    if (!profileError && profile && (profile.role === "admin" || profile.role === "agent")) {
         const adminNavLink =
             document.getElementById("adminNavLink");
 

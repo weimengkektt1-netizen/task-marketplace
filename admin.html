@@ -255,6 +255,140 @@
         }
 
         .admin-mini-btn.danger {
+            border-color: rgba(244, 63, 94, .45);
+            color: #fda4af;
+        }
+
+        .admin-mini-btn.danger:hover {
+            border-color: #fb7185;
+            color: #fecdd3;
+        }
+
+        .admin-primary-btn {
+            padding: 10px 18px;
+            border-radius: 10px;
+            border: none;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            box-shadow: 0 4px 14px rgba(99, 102, 241, .35);
+        }
+
+        .admin-primary-btn:hover {
+            filter: brightness(1.1);
+        }
+
+        /* ---- 代理管理卡片 ---- */
+        .admin-agent-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 14px;
+            margin-top: 6px;
+        }
+
+        .admin-agent-card {
+            background: rgba(255, 255, 255, .05);
+            border: 1px solid rgba(148, 163, 184, .22);
+            border-radius: 14px;
+            padding: 14px;
+            transition: border-color .2s, transform .2s;
+        }
+
+        .admin-agent-card:hover {
+            border-color: rgba(99, 102, 241, .55);
+            transform: translateY(-2px);
+        }
+
+        .admin-agent-head {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .admin-agent-ava {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 18px;
+            color: #fff;
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            flex-shrink: 0;
+        }
+
+        .admin-agent-name {
+            font-weight: 600;
+            color: #f1f5f9;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .admin-agent-mail {
+            font-size: 12px;
+            color: #94a3b8;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .admin-agent-status {
+            font-size: 11.5px;
+            padding: 3px 9px;
+            border-radius: 999px;
+            flex-shrink: 0;
+        }
+
+        .admin-agent-status.on {
+            background: rgba(34, 197, 94, .16);
+            color: #4ade80;
+            border: 1px solid rgba(34, 197, 94, .4);
+        }
+
+        .admin-agent-status.off {
+            background: rgba(148, 163, 184, .16);
+            color: #94a3b8;
+            border: 1px solid rgba(148, 163, 184, .35);
+        }
+
+        .admin-agent-stats {
+            display: flex;
+            gap: 12px;
+            margin: 12px 0;
+        }
+
+        .admin-agent-stats > div {
+            flex: 1;
+            text-align: center;
+            background: rgba(0, 0, 0, .18);
+            border-radius: 10px;
+            padding: 8px 4px;
+        }
+
+        .admin-agent-stats b {
+            display: block;
+            font-size: 16px;
+            color: #e2e8f0;
+        }
+
+        .admin-agent-stats small {
+            font-size: 11px;
+            color: #94a3b8;
+        }
+
+        .admin-agent-actions {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .admin-mini-btn.danger {
             border-color: rgba(220, 38, 38, .4);
             color: #fca5a5;
         }
@@ -736,36 +870,42 @@
             <nav class="admin-nav">
 
                 <a href="#dashboard"
+                   id="navDashboard"
                    class="admin-nav-item active" data-i18n="admin.dashboard">
                     <span>📊</span>
                     Dashboard
                 </a>
 
                 <a href="#tasks" data-i18n="admin.taskManage"
+                   id="navTasks"
                    class="admin-nav-item">
                     <span>📋</span>
                     任务管理
                 </a>
 
                 <a href="#create" data-i18n="admin.createTask"
+                   id="navCreate"
                    class="admin-nav-item">
                     <span>➕</span>
                     发布任务
                 </a>
 
                 <a href="#reviews" data-i18n="admin.reviewTask"
+                   id="navReviews"
                    class="admin-nav-item">
                     <span>📝</span>
                     任务审核
                 </a>
 
                 <a href="#withdrawals" data-i18n="admin.withdrawReview"
+                   id="navWithdrawals"
                    class="admin-nav-item">
                     <span>💰</span>
                     提现审核
                 </a>
 
                 <a href="#refunds" data-i18n="admin.refundManage"
+                   id="navRefunds"
                    class="admin-nav-item">
                     <span>💸</span>
                     退款审核
@@ -773,18 +913,28 @@
 
 
                 <a href="#members" data-i18n="admin.memberManage"
+                   id="navMembers"
                    class="admin-nav-item">
                     <span>👥</span>
                     会员管理
                 </a>
 
                 <a href="#ledger" data-i18n="admin.ledgerManage"
+                   id="navLedger"
                    class="admin-nav-item">
                     <span>💳</span>
                     钱包流水
                 </a>
 
+                <a href="#agents" data-i18n="admin.agentsManage"
+                   id="navAgents"
+                   class="admin-nav-item">
+                    <span>🛡️</span>
+                    代理管理
+                </a>
+
                 <a href="#settings" data-i18n="admin.settingsTitle"
+                   id="navSettings"
                    class="admin-nav-item">
                     <span>⚙️</span>
                     网站设置
@@ -1702,6 +1852,29 @@
                 </div>
 
 
+                <div id="agentAddUserBar"
+                     class="admin-member-toolbar"
+                     style="display:none">
+
+                    <input
+                        type="text"
+                        id="agentUserEmail"
+                        class="admin-tool-input"
+                        placeholder="✉️ 输入用户邮箱，添加到自己名下管理..."
+                        style="flex:1">
+
+                    <button
+                        type="button"
+                        onclick="agentAddUser()"
+                        class="admin-primary-btn">
+
+                        ➕ <span data-i18n="admin.agentsAddUser">添加用户</span>
+
+                    </button>
+
+                </div>
+
+
                 <div class="admin-member-toolbar">
 
                     <input
@@ -1728,6 +1901,7 @@
                         onchange="loadMembers()">
                         <option value="">全部角色</option>
                         <option value="admin">管理员</option>
+                        <option value="agent">代理</option>
                         <option value="user">普通用户</option>
                     </select>
 
@@ -1794,6 +1968,69 @@
 
 
                 <div id="ledgerContainer">
+
+                    <div class="admin-loading-box">
+                        <span data-i18n="common.loading">正在加载...</span>
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <section id="agents" class="admin-section">
+
+                <div class="admin-review-header">
+
+                    <div>
+
+                        <h2>
+                            <span data-i18n="admin.agentsTitle">代理管理</span>
+                        </h2>
+
+                        <p>
+                            <span data-i18n="admin.agentsSub">管理二级管理员（代理）：新增、编辑权限、查看名下用户与独立流水</span>
+                        </p>
+
+                    </div>
+
+
+                    <button
+                        type="button"
+                        onclick="loadAgents()"
+                        class="admin-refresh-btn"
+                        data-i18n="common.refresh">
+
+                        🔄 刷新
+
+                    </button>
+
+                </div>
+
+
+                <div class="admin-member-toolbar">
+
+                    <input
+                        type="text"
+                        id="agentAddEmail"
+                        class="admin-tool-input"
+                        placeholder="✉️ 输入用户邮箱，将其设为代理..."
+
+                        style="flex:1">
+
+                    <button
+                        type="button"
+                        onclick="adminAddAgent()"
+                        class="admin-primary-btn">
+
+                        ➕ <span data-i18n="admin.agentsAdd">添加代理</span>
+
+                    </button>
+
+                </div>
+
+
+                <div id="agentsContainer">
 
                     <div class="admin-loading-box">
                         <span data-i18n="common.loading">正在加载...</span>
@@ -2076,7 +2313,9 @@ document.addEventListener(
 
         await checkAdmin();
 
-        await loadSiteSettings();
+        if (currentAdminRole === "admin") {
+            await loadSiteSettings();
+        }
 
         // 语言切换时重新渲染动态内容
         document.addEventListener(
@@ -2088,6 +2327,8 @@ document.addEventListener(
                 loadPendingWithdrawals();
                 loadPendingRefunds();
                 loadMembers();
+                loadLedger();
+                if (currentAdminRole === "admin") loadAgents();
 
             }
         );
@@ -2098,8 +2339,31 @@ document.addEventListener(
 
 
 /* ========================================
-   检查管理员
+   检查管理员 / 代理
    ======================================== */
+
+let currentAdminRole = "user";
+let currentAgentUserId = null;
+
+async function getMyUserIds() {
+
+    // 代理名下用户 id 列表（admin 返回空，表示不限制）
+    if (currentAdminRole !== "agent") return null;
+
+    const { data: user, error: ue } = await supabaseClient.auth.getUser();
+    if (ue || !user) return [];
+
+    const { data, error } = await supabaseClient
+        .from("agent_relations")
+        .select("user_id")
+        .eq("agent_id", user.user.id);
+
+    if (error) {
+        console.error("读取名下用户失败", error);
+        return [];
+    }
+    return (data || []).map(function (r) { return r.user_id; });
+}
 
 async function checkAdmin() {
 
@@ -2172,7 +2436,8 @@ async function checkAdmin() {
 
         if (
             !profile ||
-            profile.role !== "admin"
+            (profile.role !== "admin" && profile.role !== "agent") ||
+            (profile.role === "agent" && profile.status !== "active")
         ) {
 
             alert(
@@ -2187,7 +2452,13 @@ async function checkAdmin() {
         }
 
 
-        await loadAdminTasks();
+        currentAdminRole = profile.role;
+
+        currentAgentUserId =
+            (profile.role === "agent") ? user.id : null;
+
+        applyRoleLayout(currentAdminRole);
+
 
         await loadPendingSubmissions();
 
@@ -2197,9 +2468,20 @@ async function checkAdmin() {
 
         await loadMembers();
 
-        await loadDashboardStats();
-
         await loadLedger();
+
+
+        if (currentAdminRole === "admin") {
+
+            await loadAdminTasks();
+
+            await loadDashboardStats();
+
+            await loadSiteSettings();
+
+            await loadAgents();
+
+        }
 
 
     } catch (error) {
@@ -2218,6 +2500,383 @@ async function checkAdmin() {
 
 }
 
+
+/* ========================================
+   按角色显示/隐藏导航与版块
+   ======================================== */
+
+function applyRoleLayout(role) {
+
+    const isAdmin = role === "admin";
+
+    const navIds = [
+        "navDashboard",
+        "navTasks",
+        "navCreate",
+        "navReviews",
+        "navWithdrawals",
+        "navRefunds",
+        "navMembers",
+        "navLedger",
+        "navAgents",
+        "navSettings"
+    ];
+
+    const adminOnlyNav = [
+        "navDashboard",
+        "navTasks",
+        "navCreate",
+        "navAgents",
+        "navSettings"
+    ];
+
+    navIds.forEach(function (id) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        if (!isAdmin && adminOnlyNav.indexOf(id) >= 0) {
+            el.style.display = "none";
+        } else {
+            el.style.display = "";
+        }
+    });
+
+    // 版块显隐
+    const sectionIds = [
+        "dashboard",
+        "tasks",
+        "create",
+        "reviews",
+        "withdrawals",
+        "refunds",
+        "members",
+        "ledger",
+        "agents",
+        "settings"
+    ];
+
+    const adminOnlySections = [
+        "dashboard",
+        "tasks",
+        "create",
+        "agents",
+        "settings"
+    ];
+
+    sectionIds.forEach(function (id) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        if (!isAdmin && adminOnlySections.indexOf(id) >= 0) {
+            el.style.display = "none";
+        } else {
+            el.style.display = "";
+        }
+    });
+
+    // 代理添加用户栏（代理可见）
+    const addBar = document.getElementById("agentAddUserBar");
+    if (addBar) {
+        addBar.style.display = isAdmin ? "none" : "flex";
+    }
+
+    // 页面标题
+    const pageTitle = document.querySelector(".admin-header h1");
+    if (pageTitle) {
+        pageTitle.textContent = isAdmin
+            ? (I18N.get() === "zh" ? "管理员后台" : "Admin Dashboard")
+            : (I18N.get() === "zh" ? "代理工作台" : "Agent Workspace");
+    }
+
+    // 代理默认定位到任务审核
+    if (!isAdmin && (!location.hash || location.hash === "#dashboard")) {
+        history.replaceState(null, "", "#reviews");
+    }
+
+}
+
+
+
+/* ========================================
+   代理管理（二级管理员）
+   ======================================== */
+
+// 代理：通过邮箱添加用户到自己名下
+async function agentAddUser() {
+    const emailInput = document.getElementById("agentUserEmail");
+    const email = (emailInput ? emailInput.value : "").trim();
+    if (!email) { alert("请输入用户邮箱"); return; }
+    try {
+        const { data, error } = await supabaseClient.rpc("agent_add_user", { p_email: email });
+        if (error) throw error;
+        alert("已添加用户到自己名下");
+        if (emailInput) emailInput.value = "";
+        await loadMembers();
+    } catch (e) {
+        alert("添加失败：" + e.message);
+    }
+}
+
+// 代理：移除名下用户
+async function agentRemoveUser(uid) {
+    if (!confirm("确定将该用户从自己名下移除吗？移除后将无法再管理该用户。")) return;
+    try {
+        const { error } = await supabaseClient.rpc("agent_remove_user", { p_user_id: uid });
+        if (error) throw error;
+        alert("已移除");
+        await loadMembers();
+    } catch (e) { alert("移除失败：" + e.message); }
+}
+
+// 管理员：代理列表
+async function loadAgents() {
+    const container = document.getElementById("agentsContainer");
+    if (!container) return;
+    const zh = typeof I18N !== "undefined" && I18N.get() === "zh";
+    container.innerHTML = '<div class="admin-loading-box">' + (zh ? "正在加载..." : "Loading...") + '</div>';
+    try {
+        const { data: agents, error } = await supabaseClient
+            .from("profiles")
+            .select("id, display_name, username, email, phone, status, role, created_at")
+            .eq("role", "agent")
+            .order("created_at", { ascending: false });
+        if (error) throw error;
+
+        const { data: rels, error: relErr } = await supabaseClient
+            .from("agent_relations")
+            .select("agent_id, user_id");
+        if (relErr) throw relErr;
+        const relMap = {};
+        (rels || []).forEach(function (r) {
+            relMap[r.agent_id] = (relMap[r.agent_id] || 0) + 1;
+        });
+
+        if (!agents || agents.length === 0) {
+            container.innerHTML = '<div class="admin-empty-box">' + (zh ? "暂无代理，可在上方输入邮箱添加" : "No agents yet. Add one by email above.") + '</div>';
+            return;
+        }
+
+        container.innerHTML = '<div class="admin-agent-grid">' +
+            agents.map(function (a) {
+                const name = a.display_name || a.username || a.email || "?";
+                const cnt = relMap[a.id] || 0;
+                const active = a.status === "active";
+                const joined = a.created_at ? new Date(a.created_at).toLocaleDateString(zh ? "zh-CN" : "en-GB") : "—";
+                const nameEsc = escapeHtml(name).replace(/'/g, "\\'");
+                return '<div class="admin-agent-card">' +
+                    '<div class="admin-agent-head">' +
+                    '<div class="admin-agent-ava">' + escapeHtml(name.slice(0, 1).toUpperCase()) + '</div>' +
+                    '<div style="flex:1;min-width:0">' +
+                    '<div class="admin-agent-name">' + escapeHtml(name) + '</div>' +
+                    '<div class="admin-agent-mail">' + escapeHtml(a.email || "") + '</div>' +
+                    '</div>' +
+                    '<span class="admin-agent-status ' + (active ? "on" : "off") + '">' + (active ? (zh ? "启用" : "Active") : (zh ? "停用" : "Disabled")) + '</span>' +
+                    '</div>' +
+                    '<div class="admin-agent-stats">' +
+                    '<div><b>' + cnt + '</b><small>' + (zh ? "名下用户" : "Users") + '</small></div>' +
+                    '<div><b>' + escapeHtml(joined) + '</b><small>' + (zh ? "加入" : "Joined") + '</small></div>' +
+                    '</div>' +
+                    '<div class="admin-agent-actions">' +
+                    '<button class="admin-mini-btn" onclick="viewAgentUsers(\'' + a.id + '\',\'' + nameEsc + '\')">👥 ' + (zh ? "名下用户" : "Users") + '</button>' +
+                    '<button class="admin-mini-btn gold" onclick="viewAgentLedger(\'' + a.id + '\',\'' + nameEsc + '\')">💳 ' + (zh ? "流水" : "Ledger") + '</button>' +
+                    '<button class="admin-mini-btn" onclick="toggleAgentStatus(\'' + a.id + '\',\'' + a.status + '\')">' + (active ? "⏸ " + (zh ? "停用" : "Disable") : "▶️ " + (zh ? "启用" : "Enable")) + '</button>' +
+                    '<button class="admin-mini-btn danger" onclick="adminDemoteAgent(\'' + a.id + '\')">🔻 ' + (zh ? "降级" : "Demote") + '</button>' +
+                    '</div>' +
+                    '</div>';
+            }).join("") +
+            '</div>';
+    } catch (e) {
+        container.innerHTML = '<div class="admin-error-box">' + escapeHtml(e.message) + '</div>';
+    }
+}
+
+// 管理员：按邮箱添加代理
+async function adminAddAgent() {
+    const input = document.getElementById("agentAddEmail");
+    const email = (input ? input.value : "").trim();
+    if (!email) { alert("请输入用户邮箱"); return; }
+    try {
+        const { data: users, error: uErr } = await supabaseClient
+            .from("profiles")
+            .select("id, display_name, username, email, role")
+            .eq("email", email);
+        if (uErr) throw uErr;
+        if (!users || users.length === 0) { alert("该邮箱未注册"); return; }
+        const u = users[0];
+        if (u.role === "admin") { alert("不能将管理员设为代理"); return; }
+        if (u.role === "agent") { alert("该用户已是代理"); return; }
+        if (!confirm("确定将 " + (u.display_name || u.username || u.email) + " 设为代理吗？")) return;
+        const { error } = await supabaseClient.rpc("admin_set_role", { p_user_id: u.id, p_role: "agent" });
+        if (error) throw error;
+        alert("已设为代理");
+        if (input) input.value = "";
+        await loadAgents();
+    } catch (e) { alert("添加代理失败：" + e.message); }
+}
+
+// 管理员：降级代理
+async function adminDemoteAgent(uid) {
+    if (!confirm("确定将该代理降级为普通用户吗？其名下用户关系保留但将无法登录管理面板。")) return;
+    try {
+        const { error } = await supabaseClient.rpc("admin_set_role", { p_user_id: uid, p_role: "user" });
+        if (error) throw error;
+        alert("已降级");
+        await loadAgents();
+    } catch (e) { alert("操作失败：" + e.message); }
+}
+
+// 管理员：启用/停用代理
+async function toggleAgentStatus(uid, cur) {
+    const next = cur === "active" ? "suspended" : "active";
+    const zh = typeof I18N !== "undefined" && I18N.get() === "zh";
+    if (!confirm(zh ? "确定" + (next === "active" ? "启用" : "停用") + "该代理吗？" : "Confirm " + (next === "active" ? "enable" : "disable") + " this agent?")) return;
+    try {
+        const { error } = await supabaseClient
+            .from("profiles")
+            .update({ status: next })
+            .eq("id", uid)
+            .eq("role", "agent");
+        if (error) throw error;
+        alert(zh ? "已更新" : "Updated");
+        await loadAgents();
+    } catch (e) { alert("操作失败：" + e.message); }
+}
+
+// 管理员：查看代理名下用户（弹窗）
+async function viewAgentUsers(agentId, agentName) {
+    const zh = typeof I18N !== "undefined" && I18N.get() === "zh";
+    try {
+        const { data: rels, error: rErr } = await supabaseClient
+            .from("agent_relations")
+            .select("user_id, created_at")
+            .eq("agent_id", agentId);
+        if (rErr) throw rErr;
+
+        let rowsHtml = '<div class="admin-empty-note">' + (zh ? "暂无名下用户" : "No users yet") + '</div>';
+        if (rels && rels.length > 0) {
+            const { data: profs } = await supabaseClient
+                .from("profiles")
+                .select("id, display_name, username, email, phone")
+                .in("id", rels.map(function (r) { return r.user_id; }));
+            const pMap = {};
+            (profs || []).forEach(function (p) { pMap[p.id] = p; });
+            rowsHtml = rels.map(function (r) {
+                const p = pMap[r.user_id] || {};
+                const nm = p.display_name || p.username || p.email || "?";
+                const d = r.created_at ? new Date(r.created_at).toLocaleDateString(zh ? "zh-CN" : "en-GB") : "—";
+                return '<div class="admin-tx-row"><div class="admin-tx-main"><b>' + escapeHtml(nm) + '</b><small>' + escapeHtml(p.email || "") + ' · ' + escapeHtml(p.phone || "") + ' · ' + d + '</small></div>' +
+                    '<button class="admin-mini-btn danger" onclick="adminRemoveAgentUser(\'' + agentId + '\',\'' + r.user_id + '\')">✕</button></div>';
+            }).join("");
+        }
+
+        const mask = document.createElement("div");
+        mask.className = "admin-modal-mask";
+        mask.id = "agentModalMask";
+        mask.innerHTML =
+            '<div class="admin-modal-box">' +
+            '<div class="admin-modal-head"><h3>👥 ' + escapeHtml(agentName) + (zh ? " · 名下用户" : " · Users") + '</h3>' +
+            '<button class="admin-modal-close" onclick="closeAgentModal()">✕</button></div>' +
+            '<div class="admin-modal-field" style="margin-bottom:12px"><label>' + (zh ? "通过邮箱添加用户到此代理名下" : "Add user to this agent by email") + '</label>' +
+            '<div style="display:flex;gap:8px"><input id="agentUserEmailFor" class="admin-member-input" style="flex:1" placeholder="user@email.com" />' +
+            '<button class="admin-primary-btn" onclick="adminAddUserToAgent(\'' + agentId + '\')">' + (zh ? "添加" : "Add") + '</button></div></div>' +
+            '<div class="admin-modal-sec"><div class="admin-modal-sec-title">' + (zh ? "用户列表" : "Users") + '</div>' + rowsHtml + '</div>' +
+            '</div>';
+        document.body.appendChild(mask);
+    } catch (e) { alert(e.message); }
+}
+
+// 管理员：给指定代理添加用户
+async function adminAddUserToAgent(agentId) {
+    const input = document.getElementById("agentUserEmailFor");
+    const email = (input ? input.value : "").trim();
+    if (!email) { alert("请输入邮箱"); return; }
+    try {
+        const { data, error } = await supabaseClient.rpc("agent_add_user", { p_email: email, p_agent_id: agentId });
+        if (error) throw error;
+        alert("已添加");
+        closeAgentModal();
+        await loadAgents();
+    } catch (e) { alert("添加失败：" + e.message); }
+}
+
+// 管理员：移除指定代理名下用户
+async function adminRemoveAgentUser(agentId, userId) {
+    if (!confirm("确定将该用户从该代理名下移除吗？")) return;
+    try {
+        const { error } = await supabaseClient.rpc("admin_remove_agent_user", { p_agent_id: agentId, p_user_id: userId });
+        if (error) throw error;
+        alert("已移除");
+        closeAgentModal();
+        await loadAgents();
+    } catch (e) { alert("移除失败：" + e.message); }
+}
+
+// 管理员：查看代理名下流水（弹窗）
+async function viewAgentLedger(agentId, agentName) {
+    const zh = typeof I18N !== "undefined" && I18N.get() === "zh";
+    try {
+        const { data: rels } = await supabaseClient
+            .from("agent_relations")
+            .select("user_id")
+            .eq("agent_id", agentId);
+        const uids = (rels || []).map(function (r) { return r.user_id; });
+        let txs = [];
+        if (uids.length > 0) {
+            const { data } = await supabaseClient
+                .from("wallet_transactions")
+                .select("id, user_id, amount, type, note, created_at")
+                .in("user_id", uids)
+                .order("created_at", { ascending: false })
+                .limit(100);
+            txs = data || [];
+        }
+        const { data: profs } = await supabaseClient
+            .from("profiles")
+            .select("id, display_name, username, email")
+            .in("id", uids);
+        const pMap = {};
+        (profs || []).forEach(function (p) { pMap[p.id] = p.display_name || p.username || p.email || "?"; });
+
+        let totalIn = 0, totalOut = 0;
+        txs.forEach(function (t) { const a = Number(t.amount || 0); if (a >= 0) totalIn += a; else totalOut += a; });
+
+        const typeName = function (t) {
+            if (t === "task_reward") return zh ? "任务佣金" : "Reward";
+            if (t === "withdrawal") return zh ? "提现" : "Withdrawal";
+            if (t === "adjustment") return zh ? "调整" : "Adjustment";
+            if (t === "shopping_reward") return zh ? "购物奖励" : "Shopping";
+            return zh ? "其他" : "Other";
+        };
+
+        const rows = txs.length === 0
+            ? '<div class="admin-empty-note">' + (zh ? "暂无流水" : "No transactions") + '</div>'
+            : txs.map(function (t) {
+                const a = Number(t.amount || 0);
+                const d = t.created_at ? new Date(t.created_at).toLocaleString(zh ? "zh-CN" : "en-GB") : "—";
+                return '<div class="admin-tx-row"><div class="admin-tx-main"><b>' + escapeHtml(pMap[t.user_id] || "?") + ' · ' + escapeHtml(typeName(t.type)) + '</b><small>' + escapeHtml(t.note || "") + ' · ' + d + '</small></div>' +
+                    '<span class="admin-tx-amt ' + (a >= 0 ? "pos" : "neg") + '">' + (a >= 0 ? "+" : "-") + "RM" + Math.abs(a).toFixed(2) + '</span></div>';
+            }).join("");
+
+        const mask = document.createElement("div");
+        mask.className = "admin-modal-mask";
+        mask.id = "agentModalMask";
+        mask.innerHTML =
+            '<div class="admin-modal-box">' +
+            '<div class="admin-modal-head"><h3>💳 ' + escapeHtml(agentName) + (zh ? " · 名下流水" : " · Ledger") + '</h3>' +
+            '<button class="admin-modal-close" onclick="closeAgentModal()">✕</button></div>' +
+            '<div class="admin-agent-stats" style="margin-bottom:12px">' +
+            '<div><b>RM' + totalIn.toFixed(2) + '</b><small>' + (zh ? "收入合计" : "Total in") + '</small></div>' +
+            '<div><b>RM' + Math.abs(totalOut).toFixed(2) + '</b><small>' + (zh ? "支出合计" : "Total out") + '</small></div>' +
+            '<div><b>' + txs.length + '</b><small>' + (zh ? "笔记录" : "Records") + '</small></div>' +
+            '</div>' +
+            '<div class="admin-modal-sec"><div class="admin-modal-sec-title">' + (zh ? "流水明细" : "Transactions") + '</div>' + rows + '</div>' +
+            '</div>';
+        document.body.appendChild(mask);
+    } catch (e) { alert(e.message); }
+}
+
+function closeAgentModal() {
+    const mask = document.getElementById("agentModalMask");
+    if (mask) mask.remove();
+}
 
 
 /* ========================================
@@ -2239,11 +2898,21 @@ async function loadMembers() {
     container.innerHTML =
         '<div class="admin-loading-box"><span data-i18n="common.loading">正在加载...</span></div>';
 
-    const { data: members, error } =
-        await supabaseClient
+    const myIds =
+        await getMyUserIds();
+
+    let membersQuery =
+        supabaseClient
         .from("profiles")
         .select("id, username, display_name, email, phone, balance, membership_level, invite_code, invited_by, created_at, role")
         .order("created_at", { ascending: false });
+
+    if (Array.isArray(myIds) && myIds.length > 0) {
+        membersQuery = membersQuery.in("id", myIds);
+    }
+
+    const { data: members, error } =
+        await membersQuery;
 
     if (error) {
         container.innerHTML = '<div class="admin-loading-box">' + I18N.t("admin.memberEditFailed") + error.message + '</div>';
@@ -2347,6 +3016,9 @@ async function loadMembers() {
             '<div class="admin-member-actions">' +
             '<button class="admin-mini-btn" onclick="openMemberDetail(\'' + m.id + '\')">👁 ' + (zh ? "详情" : "Detail") + '</button>' +
             '<button class="admin-mini-btn gold" onclick="adjustBalance(\'' + m.id + '\')">⚖️ ' + (zh ? "调账" : "Adjust") + '</button>' +
+            (currentAdminRole === "agent" && m.id !== currentAgentUserId
+                ? '<button class="admin-mini-btn danger" onclick="agentRemoveUser(\'' + m.id + '\')">✕ ' + (zh ? "移除" : "Remove") + '</button>'
+                : '') +
             '<button class="admin-member-save" onclick="saveMember(this)" data-uid="' + m.id + '">' + I18N.t("admin.saveMember") + '</button>' +
             '</div>' +
             '</div>' +
@@ -2496,12 +3168,22 @@ async function loadLedger() {
 
     try {
 
-        const { data: txs, error } =
-            await supabaseClient
+        const myIds =
+            await getMyUserIds();
+
+        let txQuery =
+            supabaseClient
             .from("wallet_transactions")
             .select("id, user_id, amount, type, note, created_at")
             .order("created_at", { ascending: false })
             .limit(300);
+
+        if (Array.isArray(myIds) && myIds.length > 0) {
+            txQuery = txQuery.in("user_id", myIds);
+        }
+
+        const { data: txs, error } =
+            await txQuery;
 
         if (error) throw error;
 
@@ -2658,7 +3340,9 @@ async function openMemberDetail(uid) {
         }).join("");
 
         const isAdmin = p.role === "admin";
-        const roleOpts = '<option value="user"' + (!isAdmin ? " selected" : "") + '>' + (zh ? "普通用户" : "User") + '</option>' +
+        const isAgent = p.role === "agent";
+        const roleOpts = '<option value="user"' + (!isAdmin && !isAgent ? " selected" : "") + '>' + (zh ? "普通用户" : "User") + '</option>' +
+                         '<option value="agent"' + (isAgent ? " selected" : "") + '>' + (zh ? "代理" : "Agent") + '</option>' +
                          '<option value="admin"' + (isAdmin ? " selected" : "") + '>' + (zh ? "管理员" : "Admin") + '</option>';
 
         const txRows = (!txs || txs.length === 0)
@@ -2718,7 +3402,9 @@ async function openMemberDetail(uid) {
             '<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:6px">' +
             '<button class="admin-action-success" onclick="saveMemberDetail()">💾 ' + (zh ? "保存修改" : "Save changes") + '</button>' +
             '<button class="admin-mini-btn gold" onclick="adjustBalance(\'' + uid + '\')">⚖️ ' + (zh ? "调账" : "Adjust") + '</button>' +
-            '<button class="admin-mini-btn" onclick="setMemberRole()">🔁 ' + (zh ? "切换角色" : "Switch role") + '</button>' +
+            (currentAdminRole === "admin"
+                ? '<button class="admin-mini-btn" onclick="setMemberRole()">🔁 ' + (zh ? "切换角色" : "Switch role") + '</button>'
+                : '') +
             '</div>' +
 
             '<div class="admin-modal-sec"><div class="admin-modal-sec-title">💳 ' + (zh ? "钱包流水（最近 20 条）" : "Wallet transactions (last 20)") + '</div>' + txRows + '</div>' +
@@ -2784,7 +3470,7 @@ async function setMemberRole() {
     const newRole = document.getElementById("mdRole").value;
     const zh = typeof I18N !== "undefined" && I18N.get() === "zh";
 
-    if (!confirm(zh ? "确定将角色改为 " + (newRole === "admin" ? "管理员" : "普通用户") + " 吗？" : "Set role to " + newRole + "?")) return;
+    if (!confirm(zh ? "确定将角色改为 " + (newRole === "admin" ? "管理员" : newRole === "agent" ? "代理" : "普通用户") + " 吗？" : "Set role to " + newRole + "?")) return;
 
     const { error } =
         await supabaseClient
@@ -2801,6 +3487,7 @@ async function setMemberRole() {
     alert(zh ? "角色已更新" : "Role updated");
     closeMemberDetail();
     await loadMembers();
+    if (currentAdminRole === "admin") await loadAgents();
 
 }
 
@@ -3810,17 +4497,27 @@ async function loadPendingSubmissions(
         }
 
 
-        const {
-            data: claims,
-            error: claimsError
-        } =
-            await supabaseClient
+        const myIds =
+            await getMyUserIds();
+
+        let claimsQuery =
+            supabaseClient
                 .from("task_claims")
                 .select("*")
                 .eq(
                     "status",
                     "submitted"
                 );
+
+        if (Array.isArray(myIds) && myIds.length > 0) {
+            claimsQuery = claimsQuery.in("user_id", myIds);
+        }
+
+        const {
+            data: claims,
+            error: claimsError
+        } =
+            await claimsQuery;
 
 
         if (claimsError) {
