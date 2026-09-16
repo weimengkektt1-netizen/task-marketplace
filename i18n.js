@@ -386,6 +386,7 @@
         "admin.agentsSub": { zh: "管理二级管理员（代理）：新增、编辑权限、查看名下用户与独立流水", en: "Manage agents: add, edit permissions, view their users and isolated ledgers" },
         "admin.agentsAdd": { zh: "添加代理", en: "Add Agent" },
         "admin.agentsAddUser": { zh: "添加用户", en: "Add User" },
+        "admin.createMember": { zh: "新增会员", en: "New Member" },
 
         "admin.backUser": { zh: "← 用户中心", en: "← User Center" },
         "admin.logout": { zh: "🚪 登出", en: "🚪 Log out" },

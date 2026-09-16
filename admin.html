@@ -264,6 +264,16 @@
             color: #fecdd3;
         }
 
+        .admin-mini-btn.warn {
+            border-color: rgba(245, 158, 11, .45);
+            color: #fcd34d;
+        }
+
+        .admin-mini-btn.warn:hover {
+            border-color: #fbbf24;
+            color: #fef3c7;
+        }
+
         .admin-primary-btn {
             padding: 10px 18px;
             border-radius: 10px;
@@ -380,6 +390,44 @@
         .admin-agent-stats small {
             font-size: 11px;
             color: #94a3b8;
+        }
+
+        .admin-tx-filter {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+            background: rgba(0, 0, 0, .18);
+            border: 1px solid rgba(148, 163, 184, .25);
+            border-radius: 10px;
+            padding: 8px 10px;
+            margin-bottom: 12px;
+        }
+
+        .admin-tx-chip {
+            background: rgba(148, 163, 184, .14);
+            color: #e2e8f0;
+            border: 1px solid rgba(148, 163, 184, .3);
+            border-radius: 999px;
+            padding: 4px 12px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all .15s;
+        }
+
+        .admin-tx-chip:hover {
+            background: rgba(99, 102, 241, .35);
+            border-color: rgba(129, 140, 248, .6);
+        }
+
+        .admin-tx-date {
+            background: rgba(15, 23, 42, .6);
+            color: #e2e8f0;
+            border: 1px solid rgba(148, 163, 184, .35);
+            border-radius: 8px;
+            padding: 4px 8px;
+            font-size: 12px;
+            color-scheme: dark;
         }
 
         .admin-agent-actions {
@@ -1839,15 +1887,30 @@
                     </div>
 
 
-                    <button
-                        type="button"
-                        onclick="loadMembers()"
-                        class="admin-refresh-btn"
-                        data-i18n="common.refresh">
+                    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
 
-                        🔄 刷新
+                        <button
+                            type="button"
+                            onclick="openCreateMember()"
+                            class="admin-primary-btn"
+                            id="btnCreateMember"
+                            style="display:none">
 
-                    </button>
+                            ➕ <span data-i18n="admin.createMember">新增会员</span>
+
+                        </button>
+
+                        <button
+                            type="button"
+                            onclick="loadMembers()"
+                            class="admin-refresh-btn"
+                            data-i18n="common.refresh">
+
+                            🔄 刷新
+
+                        </button>
+
+                    </div>
 
                 </div>
 
@@ -1889,10 +1952,12 @@
                         class="admin-tool-select"
                         onchange="loadMembers()">
                         <option value="">全部等级</option>
-                        <option value="basic">普通</option>
-                        <option value="gold">黄金</option>
-                        <option value="platinum">铂金</option>
-                        <option value="diamond">钻石</option>
+                        <option value="basic">初章</option>
+                        <option value="silver">银章</option>
+                        <option value="gold">金章</option>
+                        <option value="platinum">铂章</option>
+                        <option value="diamond">钻章</option>
+                        <option value="radiant">曜章</option>
                     </select>
 
                     <select
@@ -2578,6 +2643,12 @@ function applyRoleLayout(role) {
         addBar.style.display = isAdmin ? "none" : "flex";
     }
 
+    // 新增会员按钮（仅管理员可见）
+    const btnCreate = document.getElementById("btnCreateMember");
+    if (btnCreate) {
+        btnCreate.style.display = isAdmin ? "" : "none";
+    }
+
     // 页面标题
     const pageTitle = document.querySelector(".admin-header h1");
     if (pageTitle) {
@@ -2810,8 +2881,73 @@ async function adminRemoveAgentUser(agentId, userId) {
 }
 
 // 管理员：查看代理名下流水（弹窗）
-async function viewAgentLedger(agentId, agentName) {
+let agentLedgerCtx = { agentId: null, agentName: "", from: null, to: null };
+
+function agentLocalDayStart(offsetDays) {
+    const d = new Date();
+    d.setHours(0, 0, 0, 0);
+    d.setDate(d.getDate() + (offsetDays || 0));
+    return d;
+}
+
+function setAgentLedgerRange(range) {
+
+    const fromEl = document.getElementById("agFrom");
+    const toEl = document.getElementById("agTo");
+    if (!fromEl || !toEl) return;
+
+    if (range === "all") {
+        agentLedgerCtx.from = null;
+        agentLedgerCtx.to = null;
+        fromEl.value = "";
+        toEl.value = "";
+    } else if (range === "today") {
+        const f = agentLocalDayStart(0);
+        agentLedgerCtx.from = f.toISOString();
+        agentLedgerCtx.to = null;
+        fromEl.value = f.toISOString().slice(0, 10);
+        toEl.value = "";
+    } else if (range === "week") {
+        const f = agentLocalDayStart(0);
+        f.setDate(f.getDate() - ((f.getDay() + 6) % 7)); // 本周一
+        agentLedgerCtx.from = f.toISOString();
+        agentLedgerCtx.to = null;
+        fromEl.value = f.toISOString().slice(0, 10);
+        toEl.value = "";
+    } else if (range === "month") {
+        const f = new Date();
+        f.setHours(0, 0, 0, 0);
+        f.setDate(1);
+        agentLedgerCtx.from = f.toISOString();
+        agentLedgerCtx.to = null;
+        fromEl.value = f.toISOString().slice(0, 10);
+        toEl.value = "";
+    }
+
+    renderAgentLedger();
+}
+
+function applyAgentLedgerRange() {
+
+    const fromEl = document.getElementById("agFrom");
+    const toEl = document.getElementById("agTo");
+    if (!fromEl || !toEl) return;
+
+    const f = fromEl.value;
+    const t = toEl.value;
+
+    agentLedgerCtx.from = f ? new Date(f + "T00:00:00").toISOString() : null;
+    agentLedgerCtx.to = t ? new Date(t + "T23:59:59.999").toISOString() : null;
+
+    renderAgentLedger();
+}
+
+async function renderAgentLedger() {
+
     const zh = typeof I18N !== "undefined" && I18N.get() === "zh";
+    const agentId = agentLedgerCtx.agentId;
+    const agentName = agentLedgerCtx.agentName;
+
     try {
         const { data: rels } = await supabaseClient
             .from("agent_relations")
@@ -2820,12 +2956,14 @@ async function viewAgentLedger(agentId, agentName) {
         const uids = (rels || []).map(function (r) { return r.user_id; });
         let txs = [];
         if (uids.length > 0) {
-            const { data } = await supabaseClient
+            let q = supabaseClient
                 .from("wallet_transactions")
                 .select("id, user_id, amount, type, note, created_at")
                 .in("user_id", uids)
-                .order("created_at", { ascending: false })
-                .limit(100);
+                .order("created_at", { ascending: false });
+            if (agentLedgerCtx.from) q = q.gte("created_at", agentLedgerCtx.from);
+            if (agentLedgerCtx.to) q = q.lte("created_at", agentLedgerCtx.to);
+            const { data } = await q.limit(200);
             txs = data || [];
         }
         const { data: profs } = await supabaseClient
@@ -2847,7 +2985,7 @@ async function viewAgentLedger(agentId, agentName) {
         };
 
         const rows = txs.length === 0
-            ? '<div class="admin-empty-note">' + (zh ? "暂无流水" : "No transactions") + '</div>'
+            ? '<div class="admin-empty-note">' + (zh ? "该时间段暂无流水" : "No transactions in range") + '</div>'
             : txs.map(function (t) {
                 const a = Number(t.amount || 0);
                 const d = t.created_at ? new Date(t.created_at).toLocaleString(zh ? "zh-CN" : "en-GB") : "—";
@@ -2855,22 +2993,52 @@ async function viewAgentLedger(agentId, agentName) {
                     '<span class="admin-tx-amt ' + (a >= 0 ? "pos" : "neg") + '">' + (a >= 0 ? "+" : "-") + "RM" + Math.abs(a).toFixed(2) + '</span></div>';
             }).join("");
 
-        const mask = document.createElement("div");
-        mask.className = "admin-modal-mask";
-        mask.id = "agentModalMask";
-        mask.innerHTML =
-            '<div class="admin-modal-box">' +
-            '<div class="admin-modal-head"><h3>💳 ' + escapeHtml(agentName) + (zh ? " · 名下流水" : " · Ledger") + '</h3>' +
-            '<button class="admin-modal-close" onclick="closeAgentModal()">✕</button></div>' +
+        const bodyEl = document.getElementById("agentLedgerBody");
+        if (!bodyEl) return;
+
+        bodyEl.innerHTML =
             '<div class="admin-agent-stats" style="margin-bottom:12px">' +
             '<div><b>RM' + totalIn.toFixed(2) + '</b><small>' + (zh ? "收入合计" : "Total in") + '</small></div>' +
             '<div><b>RM' + Math.abs(totalOut).toFixed(2) + '</b><small>' + (zh ? "支出合计" : "Total out") + '</small></div>' +
             '<div><b>' + txs.length + '</b><small>' + (zh ? "笔记录" : "Records") + '</small></div>' +
             '</div>' +
-            '<div class="admin-modal-sec"><div class="admin-modal-sec-title">' + (zh ? "流水明细" : "Transactions") + '</div>' + rows + '</div>' +
-            '</div>';
-        document.body.appendChild(mask);
+            '<div class="admin-modal-sec"><div class="admin-modal-sec-title">' + (zh ? "流水明细" : "Transactions") + '</div>' + rows + '</div>';
+
     } catch (e) { alert(e.message); }
+}
+
+async function viewAgentLedger(agentId, agentName) {
+
+    const zh = typeof I18N !== "undefined" && I18N.get() === "zh";
+
+    agentLedgerCtx = { agentId: agentId, agentName: agentName, from: null, to: null };
+
+    const mask = document.createElement("div");
+    mask.className = "admin-modal-mask";
+    mask.id = "agentModalMask";
+    mask.innerHTML =
+        '<div class="admin-modal-box">' +
+        '<div class="admin-modal-head"><h3>💳 ' + escapeHtml(agentName) + (zh ? " · 名下流水" : " · Ledger") + '</h3>' +
+        '<button class="admin-modal-close" onclick="closeAgentModal()">✕</button></div>' +
+
+        '<div class="admin-tx-filter">' +
+        '<button class="admin-tx-chip" onclick="setAgentLedgerRange(\'today\')">' + (zh ? "今天" : "Today") + '</button>' +
+        '<button class="admin-tx-chip" onclick="setAgentLedgerRange(\'week\')">' + (zh ? "本周" : "Week") + '</button>' +
+        '<button class="admin-tx-chip" onclick="setAgentLedgerRange(\'month\')">' + (zh ? "本月" : "Month") + '</button>' +
+        '<button class="admin-tx-chip" onclick="setAgentLedgerRange(\'all\')">' + (zh ? "全部" : "All") + '</button>' +
+        '<input type="date" id="agFrom" class="admin-tx-date" />' +
+        '<span style="color:#8b93a7">~</span>' +
+        '<input type="date" id="agTo" class="admin-tx-date" />' +
+        '<button class="admin-refresh-btn" onclick="applyAgentLedgerRange()">🔍 ' + (zh ? "查询" : "Filter") + '</button>' +
+        '</div>' +
+
+        '<div id="agentLedgerBody">' +
+        '<div class="admin-loading-box"><span data-i18n="common.loading">正在加载...</span></div>' +
+        '</div>' +
+        '</div>';
+
+    document.body.appendChild(mask);
+    await renderAgentLedger();
 }
 
 function closeAgentModal() {
@@ -3016,6 +3184,9 @@ async function loadMembers() {
             '<div class="admin-member-actions">' +
             '<button class="admin-mini-btn" onclick="openMemberDetail(\'' + m.id + '\')">👁 ' + (zh ? "详情" : "Detail") + '</button>' +
             '<button class="admin-mini-btn gold" onclick="adjustBalance(\'' + m.id + '\')">⚖️ ' + (zh ? "调账" : "Adjust") + '</button>' +
+            (currentAdminRole === "admin" && m.id !== currentAgentUserId
+                ? '<button class="admin-mini-btn danger" onclick="adminDeleteMember(\'' + m.id + '\')">🗑 ' + (zh ? "删除" : "Delete") + '</button>'
+                : '') +
             (currentAdminRole === "agent" && m.id !== currentAgentUserId
                 ? '<button class="admin-mini-btn danger" onclick="agentRemoveUser(\'' + m.id + '\')">✕ ' + (zh ? "移除" : "Remove") + '</button>'
                 : '') +
@@ -3405,6 +3576,9 @@ async function openMemberDetail(uid) {
             (currentAdminRole === "admin"
                 ? '<button class="admin-mini-btn" onclick="setMemberRole()">🔁 ' + (zh ? "切换角色" : "Switch role") + '</button>'
                 : '') +
+            (currentAdminRole === "admin"
+                ? '<button class="admin-mini-btn warn" onclick="adminResetPassword(\'' + uid + '\')">🔑 ' + (zh ? "重置密码" : "Reset password") + '</button>'
+                : '') +
             '</div>' +
 
             '<div class="admin-modal-sec"><div class="admin-modal-sec-title">💳 ' + (zh ? "钱包流水（最近 20 条）" : "Wallet transactions (last 20)") + '</div>' + txRows + '</div>' +
@@ -3433,6 +3607,157 @@ async function openMemberDetail(uid) {
 function closeMemberDetail() {
     const mask = document.getElementById("memberDetailMask");
     if (mask) mask.remove();
+}
+
+/* ========================================
+   新增会员 / 删除会员 / 重置密码（仅管理员）
+   ======================================== */
+
+function openCreateMember() {
+
+    closeMemberDetail();
+
+    const zh = typeof I18N !== "undefined" && I18N.get() === "zh";
+
+    const mask = document.createElement("div");
+    mask.className = "admin-modal-mask";
+    mask.id = "createMemberMask";
+    mask.innerHTML =
+        '<div class="admin-modal-box">' +
+        '<div class="admin-modal-head"><h3>➕ ' + (zh ? "新增会员" : "Create member") + '</h3>' +
+        '<button class="admin-modal-close" onclick="closeCreateMember()">✕</button></div>' +
+
+        '<div class="admin-modal-grid">' +
+        '<div class="admin-modal-field"><label>' + (zh ? "邮箱（登录账号）" : "Email (login)") + '</label>' +
+        '<input id="cmEmail" type="email" placeholder="user@example.com" /></div>' +
+        '<div class="admin-modal-field"><label>' + (zh ? "密码（至少 6 位）" : "Password (min 6)") + '</label>' +
+        '<input id="cmPassword" type="password" placeholder="Aa112233" /></div>' +
+        '<div class="admin-modal-field"><label>' + (zh ? "昵称" : "Nickname") + '</label>' +
+        '<input id="cmName" placeholder="' + (zh ? "选填" : "optional") + '" /></div>' +
+        '<div class="admin-modal-field"><label>' + (zh ? "手机号" : "Phone") + '</label>' +
+        '<input id="cmPhone" placeholder="' + (zh ? "选填" : "optional") + '" /></div>' +
+        '<div class="admin-modal-field"><label>' + (zh ? "角色" : "Role") + '</label>' +
+        '<select id="cmRole"><option value="user">' + (zh ? "普通用户" : "User") + '</option>' +
+        '<option value="agent">' + (zh ? "代理" : "Agent") + '</option></select></div>' +
+        '</div>' +
+
+        '<div style="display:flex;gap:10px;justify-content:flex-end;margin-top:14px">' +
+        '<button class="admin-refresh-btn" onclick="closeCreateMember()">' + (zh ? "取消" : "Cancel") + '</button>' +
+        '<button class="admin-action-success" onclick="adminCreateMember()">✅ ' + (zh ? "创建会员" : "Create") + '</button>' +
+        '</div>' +
+        '</div>';
+
+    document.body.appendChild(mask);
+}
+
+function closeCreateMember() {
+    const mask = document.getElementById("createMemberMask");
+    if (mask) mask.remove();
+}
+
+async function adminCreateMember() {
+
+    const email = (document.getElementById("cmEmail").value || "").trim();
+    const password = document.getElementById("cmPassword").value || "";
+    const name = (document.getElementById("cmName").value || "").trim();
+    const phone = (document.getElementById("cmPhone").value || "").trim();
+    const role = document.getElementById("cmRole").value;
+
+    const zh = typeof I18N !== "undefined" && I18N.get() === "zh";
+
+    if (!email || email.indexOf("@") < 0) {
+        alert(zh ? "请填写有效的邮箱" : "Please enter a valid email");
+        return;
+    }
+    if (password.length < 6) {
+        alert(zh ? "密码至少需要 6 位" : "Password must be at least 6 characters");
+        return;
+    }
+
+    const { data, error } =
+        await supabaseClient
+        .rpc("admin_create_member", {
+            p_email: email,
+            p_password: password,
+            p_display_name: name || null,
+            p_phone: phone || null,
+            p_role: role
+        });
+
+    if (error) {
+        const msg = error.message || "";
+        if (msg.indexOf("EMAIL_TAKEN") >= 0) alert(zh ? "该邮箱已被注册" : "Email already taken");
+        else if (msg.indexOf("FORBIDDEN") >= 0) alert(zh ? "没有权限" : "Forbidden");
+        else alert((zh ? "创建失败：" : "Create failed: ") + msg);
+        return;
+    }
+
+    closeCreateMember();
+    alert((zh ? "会员创建成功" : "Member created") + "： " + (data && data.email ? data.email : email));
+    await loadMembers();
+    await loadDashboardStats();
+}
+
+async function adminDeleteMember(uid) {
+
+    const zh = typeof I18N !== "undefined" && I18N.get() === "zh";
+
+    if (!confirm(zh
+        ? "确定删除该会员吗？\n\n将永久删除该用户的账号、流水、任务记录等全部数据，且无法恢复！"
+        : "Delete this member permanently?\n\nThis removes the account, transactions and task records. This cannot be undone!")) return;
+
+    const { error } =
+        await supabaseClient
+        .rpc("admin_delete_member", {
+            p_user_id: uid
+        });
+
+    if (error) {
+        const msg = error.message || "";
+        if (msg.indexOf("CANNOT_DELETE_SELF") >= 0) alert(zh ? "不能删除自己" : "Cannot delete yourself");
+        else if (msg.indexOf("CANNOT_DELETE_ADMIN") >= 0) alert(zh ? "不能删除管理员账号" : "Cannot delete an admin");
+        else if (msg.indexOf("USER_CREATED_TASKS") >= 0) alert(zh ? "该用户发布过任务，无法删除" : "This user created tasks; cannot delete");
+        else if (msg.indexOf("USER_NOT_FOUND") >= 0) alert(zh ? "用户不存在" : "User not found");
+        else alert((zh ? "删除失败：" : "Delete failed: ") + msg);
+        return;
+    }
+
+    alert(zh ? "会员已删除" : "Member deleted");
+    await loadMembers();
+    await loadDashboardStats();
+}
+
+async function adminResetPassword(uid) {
+
+    const zh = typeof I18N !== "undefined" && I18N.get() === "zh";
+
+    const pwd = prompt(zh
+        ? "请输入该会员的新密码（至少 6 位）："
+        : "Enter the new password (min 6 characters):");
+
+    if (pwd === null) return;
+
+    if (pwd.length < 6) {
+        alert(zh ? "密码至少需要 6 位" : "Password must be at least 6 characters");
+        return;
+    }
+
+    const { error } =
+        await supabaseClient
+        .rpc("admin_reset_password", {
+            p_user_id: uid,
+            p_new_password: pwd
+        });
+
+    if (error) {
+        const msg = error.message || "";
+        if (msg.indexOf("FORBIDDEN") >= 0) alert(zh ? "没有权限" : "Forbidden");
+        else if (msg.indexOf("USER_NOT_FOUND") >= 0) alert(zh ? "用户不存在" : "User not found");
+        else alert((zh ? "重置失败：" : "Reset failed: ") + msg);
+        return;
+    }
+
+    alert(zh ? "密码已重置成功" : "Password reset successfully");
 }
 
 async function saveMemberDetail() {
