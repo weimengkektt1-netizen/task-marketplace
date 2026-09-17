@@ -295,7 +295,8 @@
         "withdraw.title": { zh: "提现", en: "Withdraw" },
         "withdraw.amount": { zh: "提现金额", en: "Withdrawal Amount" },
         "withdraw.amountHint": { zh: "请输入你希望提现的金额。", en: "Enter the amount you wish to withdraw." },
-        "withdraw.method": { zh: "提现方式", en: "Withdrawal Method" },
+
+        "withdraw.minHint": { zh: "最低提现金额 RM100。", en: "Minimum withdrawal: RM100." },        "withdraw.method": { zh: "提现方式", en: "Withdrawal Method" },
         "withdraw.selectMethod": { zh: "请选择提现方式", en: "Select a withdrawal method" },
         "withdraw.account": { zh: "收款账户", en: "Payee Account" },
         "withdraw.accountPlaceholder": { zh: "请输入银行账号 / 电子钱包账号", en: "Enter bank account / e-wallet account" },
@@ -659,7 +660,8 @@
         "msg.reviewError": { zh: "点评提交失败：", en: "Review failed: " },
         "msg.reviewSuccess": { zh: "点评提交成功，感谢你的反馈！", en: "Review submitted successfully. Thanks!" },
         "msg.withdrawAmountInvalid": { zh: "请输入正确的提现金额。", en: "Please enter a valid withdrawal amount." },
-        "msg.bankRequired": { zh: "请输入银行名称", en: "Please enter the bank name" },
+
+        "msg.withdrawMin": { zh: "最低提现金额为 RM100，请调整提现金额。", en: "The minimum withdrawal amount is RM100. Please adjust your amount." },        "msg.bankRequired": { zh: "请输入银行名称", en: "Please enter the bank name" },
         "msg.accountNameRequired": { zh: "请输入收款人名称", en: "Please enter the payee name" },
         "msg.withdrawMethodRequired": { zh: "请选择提现方式。", en: "Please select a withdrawal method." },
         "msg.withdrawAccountRequired": { zh: "请输入收款账户。", en: "Please enter the receiving account." },

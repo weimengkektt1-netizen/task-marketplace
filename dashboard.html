@@ -833,13 +833,17 @@
                         type="number"
                         id="withdrawAmount"
                         placeholder="0.00"
-                        min="0"
+                        min="100"
                         step="0.01">
 
                 </div>
 
                 <small>
                     <span data-i18n="withdraw.amountHint">请输入你希望提现的金额。</span>
+                </small>
+
+                <small class="withdraw-min-hint">
+                    ⚠️ <span data-i18n="withdraw.minHint">最低提现金额 RM100。</span>
                 </small>
 
             </div>
@@ -3424,6 +3428,15 @@ async function submitWithdrawal() {
     if (!amount || amount <= 0) {
 
         alert(I18N.t("msg.withdrawAmountInvalid"));
+
+        return;
+
+    }
+
+
+    if (amount < 100) {
+
+        alert(I18N.t("msg.withdrawMin"));
 
         return;
 
