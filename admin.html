@@ -3732,6 +3732,13 @@ async function openMemberDetail(uid) {
         const roleOpts = '<option value="user"' + (!isAdmin && !isAgent ? " selected" : "") + '>' + (zh ? "普通用户" : "User") + '</option>' +
                          '<option value="agent"' + (isAgent ? " selected" : "") + '>' + (zh ? "代理" : "Agent") + '</option>' +
                          '<option value="admin"' + (isAdmin ? " selected" : "") + '>' + (zh ? "管理员" : "Admin") + '</option>';
+        // 角色字段：仅总管理员可编辑；代理只读展示（防止越权感/误改）
+        const roleName = isAdmin ? (zh ? "管理员" : "Admin") : isAgent ? (zh ? "代理" : "Agent") : (zh ? "普通用户" : "User");
+        const roleFieldHtml = (currentAdminRole === "admin")
+            ? '<div class="admin-modal-field"><label>' + (zh ? "角色" : "Role") + '</label>' +
+              '<select id="mdRole">' + roleOpts + '</select></div>'
+            : '<div class="admin-modal-field"><label>' + (zh ? "角色" : "Role") + '</label>' +
+              '<input value="' + roleName + '" readonly /></div>';
 
         const txRows = (!txs || txs.length === 0)
             ? '<div class="admin-empty-note">' + (zh ? "暂无流水" : "No transactions") + '</div>'
@@ -3781,8 +3788,7 @@ async function openMemberDetail(uid) {
             '<select id="mdLevel">' + levelOpts + '</select></div>' +
             '<div class="admin-modal-field"><label>' + (zh ? "余额 (RM)" : "Balance (RM)") + '</label>' +
             '<input id="mdBalance" type="number" step="0.01" value="' + Number(p.balance || 0) + '" /></div>' +
-            '<div class="admin-modal-field"><label>' + (zh ? "角色" : "Role") + '</label>' +
-            '<select id="mdRole">' + roleOpts + '</select></div>' +
+            roleFieldHtml +
             '<div class="admin-modal-field"><label>' + (zh ? "邀请码" : "Invite code") + '</label>' +
             '<input value="' + (p.invite_code || "—") + '" readonly /></div>' +
             '</div>' +
