@@ -1691,8 +1691,9 @@ async function refreshUser(u){
     };
     if (!curUser.name) curUser.name = (u.email || "").split("@")[0];
     curRole = "user";
-    const { data } = await sb.from("profiles").select("role, seller_status").eq("id", u.id).maybeSingle();
-    if (data && data.role) curRole = data.role;
+    const { data } = await sb.from("profiles").select("role, seller_status, shophub_role").eq("id", u.id).maybeSingle();
+    if (data && data.shophub_role) curRole = data.shophub_role;
+    else if (data && data.role) curRole = data.role;
     curSellerStatus = (data && data.seller_status) || "";
 }
 async function doLogin(){
@@ -1872,7 +1873,7 @@ async function renderAdminUsers(){
     const kw = (document.getElementById("adminSearch").value || "").trim().toLowerCase();
     wrap.innerHTML = '<div class="empty"><p>加载中…</p></div>';
     const [uRes, oRes] = await Promise.all([
-        sb.from("profiles").select("id, display_name, email, phone, role, seller_status, created_at").order("created_at", {ascending: false}),
+        sb.from("profiles").select("id, display_name, email, phone, role, seller_status, shophub_role, created_at").order("created_at", {ascending: false}),
         sb.from("shop_orders").select("user_id, total, status")
     ]);
     if (uRes.error) { wrap.innerHTML = '<div class="empty"><p>加载失败</p></div>'; return; }
@@ -1885,7 +1886,7 @@ async function renderAdminUsers(){
     });
     let list = uRes.data || [];
     if (adminUserFilter === "sellers") list = list.filter(u => u.seller_status === "active" || u.seller_status === "disabled");
-    else if (adminUserFilter === "buyers") list = list.filter(u => !(u.seller_status === "active" || u.seller_status === "disabled") && u.role !== "admin");
+    else if (adminUserFilter === "buyers") list = list.filter(u => !(u.seller_status === "active" || u.seller_status === "disabled") && u.role !== "admin" && u.shophub_role !== "admin");
     if (kw) {
         list = list.filter(u => String(u.display_name || "").toLowerCase().indexOf(kw) >= 0 || String(u.email || "").toLowerCase().indexOf(kw) >= 0 || String(u.phone || "").indexOf(kw) >= 0);
     }
@@ -1897,7 +1898,7 @@ async function renderAdminUsers(){
     if (!list.length) { wrap.innerHTML = filterBar + '<div class="empty"><p>暂无用户</p></div>'; return; }
     wrap.innerHTML = filterBar + list.map(u => {
         const s = stat[u.id] || {n: 0, v: 0};
-        const isAdmin = u.role === "admin";
+        const isAdmin = u.role === "admin" || u.shophub_role === "admin";
         const isSeller = u.seller_status === "active" || u.seller_status === "disabled";
         const roleTxt = isAdmin ? "管理员" : (isSeller ? "卖家" : "买家");
         const roleCls = isAdmin ? " admin" : (isSeller ? " seller" : " buyer");
@@ -1986,7 +1987,7 @@ async function adminDelProduct(pid){
     renderAdminProducts();
 }
 async function setUserRole(uid, role){
-    const res = await sb.from("profiles").update({role: role}).eq("id", uid);
+    const res = await sb.from("profiles").update({shophub_role: role === "admin" ? "admin" : null}).eq("id", uid);
     if (res.error) { toast("操作失败：" + res.error.message); return; }
     toast(role === "admin" ? "已设为管理员" : "已撤销管理员");
     renderAdminUsers();
