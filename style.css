@@ -1635,6 +1635,55 @@ body {
 }
 
 
+/* 一键锁站（仅特权邮箱可见） */
+
+.admin-lock-btn {
+    width: 100%;
+    padding: 12px;
+    border-radius: 9px;
+    text-decoration: none;
+    border: 1px solid rgba(250, 204, 21, 0.35);
+    background: rgba(250, 204, 21, 0.08);
+    color: #facc15;
+    cursor: pointer;
+    text-align: center;
+    box-sizing: border-box;
+    font-weight: 600;
+    transition: all .2s ease;
+}
+
+.admin-lock-btn:hover {
+    background: rgba(250, 204, 21, 0.16);
+    box-shadow: 0 0 14px rgba(250, 204, 21, 0.25);
+    color: #fde68a;
+}
+
+.admin-lock-option {
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: 12px;
+    text-align: left;
+    cursor: pointer;
+    border: 1px solid rgba(255,255,255,0.12);
+    background: rgba(255,255,255,0.04);
+    color: #e5e7eb;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all .2s ease;
+    box-sizing: border-box;
+}
+
+.admin-lock-option:hover {
+    background: rgba(255,255,255,0.09);
+    transform: translateY(-1px);
+}
+
+.admin-lock-option.on {
+    border-color: rgba(74, 222, 128, 0.4);
+    background: rgba(74, 222, 128, 0.07);
+}
+
+
 /* Main */
 
 .admin-main {

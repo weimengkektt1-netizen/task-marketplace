@@ -1058,6 +1058,15 @@
 
             <div class="admin-sidebar-bottom">
 
+                <div id="ownerLockSection" style="display:none;width:100%;margin-bottom:8px">
+                    <button
+                        type="button"
+                        onclick="openLockModal()"
+                        class="admin-lock-btn">
+                        🔒 一键锁站
+                    </button>
+                </div>
+
                 <a href="dashboard.html"
                    class="admin-back" data-i18n="admin.backUser">
                     ← 用户中心
@@ -2532,6 +2541,24 @@ async function checkAdmin() {
             emailElement.textContent =
                 user.email || I18N.t("admin.fallbackName");
 
+        }
+
+        // 一键锁站：仅特权邮箱显示锁站按钮；锁站期间其他用户（含管理员/代理）不可进入
+        const ownerLockEmail = "weimengkektt1@gmail.com";
+        if (String(user.email || "").toLowerCase() === ownerLockEmail) {
+            const ownerLockSection = document.getElementById("ownerLockSection");
+            if (ownerLockSection) ownerLockSection.style.display = "block";
+        }
+        try {
+            const { data: siteLocked } = await supabaseClient.rpc("site_is_locked");
+            if (siteLocked === true && String(user.email || "").toLowerCase() !== ownerLockEmail) {
+                alert(I18N.get() === "zh" ? "网站维护中，暂时无法访问，请稍后再试。" : "Site is under maintenance. Please try again later.");
+                await supabaseClient.auth.signOut();
+                window.location.href = "dashboard.html";
+                return;
+            }
+        } catch (e) {
+            console.warn("site lock check failed", e);
         }
 
 
@@ -7942,6 +7969,87 @@ async function adminLogout() {
 
     window.location.href =
         "index.html";
+
+}
+
+
+// ========================================
+// 一键锁站（仅 weimengkektt1@gmail.com 可见）
+// ========================================
+
+function openLockModal() {
+
+    closeLockModal();
+
+    const zh = typeof I18N !== "undefined" && I18N.get() === "zh";
+
+    const mask = document.createElement("div");
+    mask.className = "admin-modal-mask";
+    mask.id = "lockSiteMask";
+    mask.innerHTML =
+        '<div class="admin-modal-box" style="max-width:460px">' +
+
+        '<div class="admin-modal-head">' +
+        '<h3>🔒 ' + (zh ? "一键锁站" : "Lock Site") + '</h3>' +
+        '<button class="admin-modal-close" onclick="closeLockModal()">✕</button>' +
+        '</div>' +
+
+        '<p style="margin:0 0 14px;color:#facc15;font-weight:600;font-size:13px">' +
+        (zh ? "⚠️ 此功能仅限月月使用" : "⚠️ This feature is for YueYue only") +
+        '</p>' +
+
+        '<div style="display:flex;flex-direction:column;gap:10px">' +
+
+        '<button type="button" onclick="toggleLockSite(true)" class="admin-lock-option on">' +
+        '🟢 ' + (zh ? "开" : "ON") +
+        '<span style="display:block;font-size:11px;color:#fca5a5;margin-top:3px">' +
+        (zh ? "打开后：整个网站除了您，所有用户包括管理员都无法登录" : "When ON: no one except you (including admins) can log in") +
+        '</span></button>' +
+
+        '<button type="button" onclick="toggleLockSite(false)" class="admin-lock-option">' +
+        '⚪ ' + (zh ? "关" : "OFF") +
+        '<span style="display:block;font-size:11px;color:#86efac;margin-top:3px">' +
+        (zh ? "关闭后：网页恢复正常登录" : "When OFF: normal login is restored") +
+        '</span></button>' +
+
+        '</div>' +
+
+        '</div>';
+
+    document.body.appendChild(mask);
+
+}
+
+function closeLockModal() {
+
+    const mask = document.getElementById("lockSiteMask");
+    if (mask) mask.remove();
+
+}
+
+async function toggleLockSite(on) {
+
+    const zh = typeof I18N !== "undefined" && I18N.get() === "zh";
+
+    if (!confirm(
+        on
+            ? (zh ? "确定要打开锁站吗？打开后所有用户（含管理员）都无法登录。" : "Lock the site? No one except you can log in.")
+            : (zh ? "确定要关闭锁站并恢复正常登录吗？" : "Unlock the site and restore normal login?")
+    )) return;
+
+    const { data, error } =
+        await supabaseClient.rpc("site_set_lock", { p_on: on });
+
+    if (error) {
+        alert((zh ? "操作失败：" : "Failed: ") + error.message);
+        return;
+    }
+
+    alert(on
+        ? (zh ? "已开启锁站，仅您可登录。" : "Site locked. Only you can log in.")
+        : (zh ? "已关闭锁站，网页恢复正常登录。" : "Site unlocked. Normal login restored."));
+
+    closeLockModal();
 
 }
 

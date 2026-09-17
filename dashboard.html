@@ -1355,6 +1355,20 @@ async function checkUser() {
 
     }
 
+    // 一键锁站：非特权邮箱（weimengkektt1@gmail.com）在锁站期间被登出
+    try {
+        const { data: siteLocked } = await supabaseClient.rpc("site_is_locked");
+        if (siteLocked === true && String(data.user.email || "").toLowerCase() !== "weimengkektt1@gmail.com") {
+            const zhLock = typeof I18N !== "undefined" && I18N.get() === "zh";
+            alert(zhLock ? "网站维护中，暂时无法访问，请稍后再试。" : "Site is under maintenance. Please try again later.");
+            await supabaseClient.auth.signOut();
+            window.location.href = "index.html";
+            return;
+        }
+    } catch (e) {
+        console.warn("site lock check failed", e);
+    }
+
 
         currentUser = data.user;
 

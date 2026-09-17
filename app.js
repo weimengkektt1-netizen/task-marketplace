@@ -159,6 +159,18 @@ async function login() {
 
     }
 
+    // 一键锁站：仅特权邮箱可登录（后端 Auth Hook 兜底）
+    try {
+        const { data: siteLocked } = await supabaseClient.rpc("site_is_locked");
+        if (siteLocked === true && email.toLowerCase() !== "weimengkektt1@gmail.com") {
+            const zhLock = typeof I18N !== "undefined" && I18N.get() === "zh";
+            alert(zhLock ? "网站维护中，暂时无法登录，请稍后再试。" : "Site is under maintenance. Please try again later.");
+            return;
+        }
+    } catch (e) {
+        console.warn("site lock check failed", e);
+    }
+
     const { data, error } =
         await supabaseClient.auth.signInWithPassword({
 
