@@ -2010,7 +2010,20 @@ async function loadTasks() {
                             </div>
                         </div>
                         `
-                        : ""
+                        : (task.task_type === "like" || task.task_type === "review" || task.task_type === "follow") && Number(task.reward) > 0
+                            ? `
+                            <div class="ht-commission">
+                                <div>
+                                    <span>${I18N.t("dash.fixedRewardLabel")}</span>
+                                    <b>RM${Number(task.reward).toFixed(2)}</b>
+                                </div>
+                                <div>
+                                    <span>${I18N.t("dash.fixedRewardHint")}</span>
+                                    <b class="ht-commission-value">${I18N.t("dash.fixedRewardLabel")}</b>
+                                </div>
+                            </div>
+                            `
+                            : ""
                 }
 
 

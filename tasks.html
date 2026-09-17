@@ -440,7 +440,7 @@
                 <span data-i18n="tasks.typeShop">🛒 商城任务</span><span class="tf-count" id="tfCountShop">0</span>
             </button>
             <button type="button" class="tf-btn" data-t="review" onclick="setTaskFilter('review')">
-                <span data-i18n="tasks.typeReview">⭐ 评价任务</span><span class="tf-count" id="tfCountReview">0</span>
+                <span data-i18n="tasks.typeReview">⭐ 评论任务</span><span class="tf-count" id="tfCountReview">0</span>
             </button>
             <button type="button" class="tf-btn" data-t="follow" onclick="setTaskFilter('follow')">
                 <span data-i18n="tasks.typeFollow">👁 关注任务</span><span class="tf-count" id="tfCountFollow">0</span>
@@ -879,7 +879,20 @@
                                     </div>
                                 </div>
                                 `
-                                : ""
+                                : (task.task_type === "like" || task.task_type === "review" || task.task_type === "follow") && Number(task.reward) > 0
+                                    ? `
+                                    <div class="ht-commission">
+                                        <div>
+                                            <span>${I18N.t("dash.fixedRewardLabel")}</span>
+                                            <b>RM${Number(task.reward).toFixed(2)}</b>
+                                        </div>
+                                        <div>
+                                            <span>${I18N.t("dash.fixedRewardHint")}</span>
+                                            <b class="ht-commission-value">${I18N.t("dash.fixedRewardLabel")}</b>
+                                        </div>
+                                    </div>
+                                    `
+                                    : ""
                         }
 
                         <div class="ht-slots">

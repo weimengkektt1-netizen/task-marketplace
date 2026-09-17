@@ -1476,7 +1476,7 @@
                                     <label class="admin-type-option">
                                         <input type="radio" name="taskType" value="review" id="taskTypeReview" onchange="onTaskTypeChange()">
                                         <span class="admin-type-icon">⭐</span>
-                                        <span data-i18n="admin.taskTypeReview">评价任务</span>
+                                        <span data-i18n="admin.taskTypeReview">评论任务</span>
                                     </label>
 
                                     <label class="admin-type-option">
@@ -1495,7 +1495,7 @@
                             <div class="admin-form-group full" id="taskLinkGroup">
 
                                 <label>
-                                <span data-i18n="admin.taskLink">任务链接（点赞/评价任务）</span>
+                                <span data-i18n="admin.taskLink">任务链接（点赞/评论任务）</span>
                                 </label>
 
                                 <input
@@ -1504,7 +1504,7 @@
                                     placeholder="https://www.tiktok.com/..." data-i18n-placeholder="admin.taskLinkPh">
 
                                 <small class="admin-form-hint" style="display:block;margin-top:6px;font-size:12px;color:#8a94a6;line-height:1.6;">
-                                    <span data-i18n="admin.taskLinkHint">用户领取任务后自动跳转到该链接，完成点赞/评价后截图提交，管理员审核通过即发放佣金。</span>
+                                    <span data-i18n="admin.taskLinkHint">用户领取任务后自动跳转到该链接，完成点赞/评论后截图提交，管理员审核通过即发放佣金。</span>
                                 </small>
 
                             </div>
@@ -1772,7 +1772,7 @@
                         <option value="" data-i18n="admin.typeAll">全部类型</option>
                         <option value="like" data-i18n="admin.taskTypeLike">点赞任务</option>
                         <option value="shop" data-i18n="admin.taskTypeShop">商城任务</option>
-                        <option value="review" data-i18n="admin.taskTypeReview">评价任务</option>
+                        <option value="review" data-i18n="admin.taskTypeReview">评论任务</option>
                         <option value="follow" data-i18n="admin.taskTypeFollow">关注任务</option>
                     </select>
 
@@ -4685,7 +4685,7 @@ async function uploadTaskImage() {
    ======================================== */
 
 // ========================================
-// 任务类型切换：点赞 / 商城 / 评价 / 关注任务
+// 任务类型切换：点赞 / 商城 / 评论 / 关注任务
 // ========================================
 
 function onTaskTypeChange() {
@@ -8726,7 +8726,7 @@ function escapeJs(
                         <label class="admin-type-option">
                             <input type="radio" name="editTaskType" value="review" id="editTaskTypeReview" onchange="onEditTaskTypeChange()">
                             <span class="admin-type-icon">⭐</span>
-                            <span data-i18n="admin.taskTypeReview">评价任务</span>
+                            <span data-i18n="admin.taskTypeReview">评论任务</span>
                         </label>
                         <label class="admin-type-option">
                             <input type="radio" name="editTaskType" value="follow" id="editTaskTypeFollow" onchange="onEditTaskTypeChange()">
