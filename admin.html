@@ -2769,15 +2769,17 @@ function applyRoleLayout(role) {
         const el = document.getElementById(id);
         if (!el) return;
         if (isAdmin) {
-            el.style.display = "";
+            el.style.display = "block";
+            el.dataset.permHidden = "0";
             return;
         }
         const key = permSectionMap[id];
         if (adminOnlySections.indexOf(id) >= 0) {
-            el.style.display = key ? (agentPerm(key) ? "" : "none") : "none";
+            el.style.display = key ? (agentPerm(key) ? "block" : "none") : "none";
         } else {
-            el.style.display = (key && !agentPerm(key)) ? "none" : "";
+            el.style.display = (key && !agentPerm(key)) ? "none" : "block";
         }
+        el.dataset.permHidden = el.style.display === "none" ? "1" : "0";
     });
 
     // 代理添加用户栏（代理可见）
@@ -2822,6 +2824,69 @@ function applyRoleLayout(role) {
             history.replaceState(null, "", "#" + (first || "reviews"));
         }
     }
+
+    // 折叠切换：只显示当前版块
+    switchAdminSection((location.hash || "#dashboard").replace("#", ""));
+
+    // 注册版块切换监听（仅一次）
+    if (!window.__adminSectionBound) {
+        window.__adminSectionBound = true;
+        window.addEventListener("hashchange", function () {
+            const name = (location.hash || "#dashboard").replace("#", "");
+            switchAdminSection(name);
+        });
+    }
+
+}
+
+
+// ========================================
+// 版块折叠切换：一次只显示一个版块
+// ========================================
+
+const ADMIN_SECTION_ORDER = ["dashboard", "tasks", "create", "reviews", "withdrawals", "refunds", "members", "ledger", "agents", "settings"];
+
+function switchAdminSection(name) {
+
+    const target = ADMIN_SECTION_ORDER.indexOf(name) >= 0 ? name : "dashboard";
+
+    let firstVisible = null;
+
+    document.querySelectorAll(".admin-section").forEach(function (sec) {
+
+        const id = sec.id;
+        if (!id) return;
+
+        // 权限隐藏的版块保持隐藏
+        if (sec.dataset.permHidden === "1") {
+            sec.style.display = "none";
+            return;
+        }
+
+        if (!firstVisible) firstVisible = id;
+        sec.style.display = (id === target) ? "block" : "none";
+
+    });
+
+    // 目标版块被权限隐藏 → 跳到第一个可见版块
+    const targetEl = document.getElementById(target);
+    if (targetEl && targetEl.style.display === "none" && firstVisible) {
+        history.replaceState(null, "", "#" + firstVisible);
+        switchAdminSection(firstVisible);
+        return;
+    }
+
+    // 导航高亮
+    document.querySelectorAll(".admin-nav-item").forEach(function (a) {
+        const t = (a.getAttribute("href") || "").replace("#", "");
+        a.classList.toggle("active", t === target);
+    });
+
+    // 平滑回到顶部
+    if (document.querySelector(".admin-main")) {
+        document.querySelector(".admin-main").scrollTop = 0;
+    }
+    window.scrollTo({ top: 0, behavior: "smooth" });
 
 }
 

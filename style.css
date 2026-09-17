@@ -1747,6 +1747,7 @@ body {
 
 .admin-section {
     margin-bottom: 60px;
+    display: none; /* 折叠：默认隐藏，由版块切换显示 */
 }
 
 
