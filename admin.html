@@ -1835,6 +1835,32 @@
                 </div>
 
 
+                <div class="admin-filter-bar">
+
+                    <input
+                        type="text"
+                        id="reviewSearch"
+                        class="admin-filter-input"
+                        data-i18n-placeholder="admin.filterPlaceholderReview"
+                        placeholder="用户昵称 / 电话 / 任务标题"
+                        oninput="renderReviewList()"
+                    >
+
+                    <select
+                        id="reviewSort"
+                        class="admin-filter-select"
+                        onchange="renderReviewList()">
+                        <option value="time_desc" data-i18n="admin.sortNewest">🕒 最新</option>
+                        <option value="time_asc" data-i18n="admin.sortOldest">🕒 最早</option>
+                        <option value="reward_desc" data-i18n="admin.sortRewardDesc">💰 奖励最高</option>
+                        <option value="reward_asc" data-i18n="admin.sortRewardAsc">💰 奖励最低</option>
+                    </select>
+
+                    <span class="admin-filter-count" id="reviewCount">0 <span data-i18n="admin.filterCount">条</span></span>
+
+                </div>
+
+
                 <div id="pendingSubmissionsContainer">
 
                     <div class="admin-loading-box">
@@ -1882,6 +1908,32 @@
                 </div>
 
 
+                <div class="admin-filter-bar">
+
+                    <input
+                        type="text"
+                        id="withdrawSearch"
+                        class="admin-filter-input"
+                        data-i18n-placeholder="admin.filterPlaceholderWithdraw"
+                        placeholder="用户昵称 / 银行 / 账号"
+                        oninput="renderWithdrawalList()"
+                    >
+
+                    <select
+                        id="withdrawSort"
+                        class="admin-filter-select"
+                        onchange="renderWithdrawalList()">
+                        <option value="time_desc" data-i18n="admin.sortNewest">🕒 最新</option>
+                        <option value="time_asc" data-i18n="admin.sortOldest">🕒 最早</option>
+                        <option value="amount_desc" data-i18n="admin.sortAmountDesc">💰 金额最高</option>
+                        <option value="amount_asc" data-i18n="admin.sortAmountAsc">💰 金额最低</option>
+                    </select>
+
+                    <span class="admin-filter-count" id="withdrawCount">0 <span data-i18n="admin.filterCount">条</span></span>
+
+                </div>
+
+
                 <div id="pendingWithdrawalsContainer">
 
                     <div class="admin-loading-box">
@@ -1924,6 +1976,32 @@
                         🔄 刷新退款
 
                     </button>
+
+                </div>
+
+
+                <div class="admin-filter-bar">
+
+                    <input
+                        type="text"
+                        id="refundSearch"
+                        class="admin-filter-input"
+                        data-i18n-placeholder="admin.filterPlaceholderRefund"
+                        placeholder="用户 / 邮箱 / 任务 / 商品码 / 领取ID"
+                        oninput="renderRefundList()"
+                    >
+
+                    <select
+                        id="refundSort"
+                        class="admin-filter-select"
+                        onchange="renderRefundList()">
+                        <option value="time_desc" data-i18n="admin.sortNewest">🕒 最新</option>
+                        <option value="time_asc" data-i18n="admin.sortOldest">🕒 最早</option>
+                        <option value="amount_desc" data-i18n="admin.sortAmountDesc">💰 金额最高</option>
+                        <option value="amount_asc" data-i18n="admin.sortAmountAsc">💰 金额最低</option>
+                    </select>
+
+                    <span class="admin-filter-count" id="refundCount">0 <span data-i18n="admin.filterCount">条</span></span>
 
                 </div>
 
@@ -5091,6 +5169,9 @@ async function loadPendingSubmissions(
     tasks = null
 ) {
 
+    // 刷新时清空缓存
+    reviewCache = null;
+
     const container =
         document.getElementById(
             "pendingSubmissionsContainer"
@@ -5171,6 +5252,10 @@ async function loadPendingSubmissions(
             !claims ||
             claims.length === 0
         ) {
+
+            reviewCache = null;
+
+            updateReviewCount(0);
 
             container.innerHTML =
                 `
@@ -5303,42 +5388,15 @@ async function loadPendingSubmissions(
         );
 
 
-        container.innerHTML =
-            "";
+        // 保存缓存，供搜索 / 排序使用
+        reviewCache = {
+            claims: claims,
+            taskMap: taskMap,
+            userMap: userMap,
+            submissionMap: submissionMap
+        };
 
-
-        claims.forEach(
-            function (claim) {
-
-                const task =
-                    taskMap[
-                        String(
-                            claim.task_id
-                        )
-                    ] || null;
-
-
-                const submission =
-                    submissionMap[
-                        String(
-                            claim.id
-                        )
-                    ] || null;
-
-
-                container.appendChild(
-                    createPendingSubmissionCard(
-                        claim,
-                        task,
-                        submission,
-                        userMap[
-                            claim.user_id
-                        ] || null
-                    )
-                );
-
-            }
-        );
+        renderReviewList();
 
 
     } catch (error) {
@@ -5363,6 +5421,106 @@ async function loadPendingSubmissions(
 
 }
 
+
+
+/* ========================================
+   任务审核：搜索 + 排序渲染
+   ======================================== */
+
+let reviewCache = null;
+
+function updateReviewCount(n) {
+    const el = document.getElementById("reviewCount");
+    if (el) el.firstChild.textContent = n + " ";
+}
+
+function renderReviewList() {
+
+    const container =
+        document.getElementById(
+            "pendingSubmissionsContainer"
+        );
+
+    if (!container) return;
+
+    if (!reviewCache || !reviewCache.claims || reviewCache.claims.length === 0) {
+        updateReviewCount(0);
+        return;
+    }
+
+    const q = (
+        document.getElementById("reviewSearch") &&
+        document.getElementById("reviewSearch").value || ""
+    ).toLowerCase().trim();
+
+    const sort = (
+        document.getElementById("reviewSort") &&
+        document.getElementById("reviewSort").value || "time_desc"
+    );
+
+    let items = reviewCache.claims.filter(function (claim) {
+
+        if (!q) return true;
+
+        const task = reviewCache.taskMap[String(claim.task_id)];
+        const user = reviewCache.userMap[claim.user_id];
+
+        const title = task ? String(task.title || "").toLowerCase() : "";
+        const uname = user ? String(user.display_name || user.username || "").toLowerCase() : "";
+        const phone = user && user.phone ? String(user.phone).toLowerCase() : "";
+
+        return title.indexOf(q) >= 0 || uname.indexOf(q) >= 0 || phone.indexOf(q) >= 0;
+
+    });
+
+    items.sort(function (a, b) {
+
+        const ra = Number((reviewCache.taskMap[String(a.task_id)] || {}).reward || 0);
+        const rb = Number((reviewCache.taskMap[String(b.task_id)] || {}).reward || 0);
+
+        const ta = new Date(a.updated_at || a.created_at || a.claimed_at || 0).getTime();
+        const tb = new Date(b.updated_at || b.created_at || b.claimed_at || 0).getTime();
+
+        switch (sort) {
+            case "time_asc": return ta - tb;
+            case "reward_desc": return rb - ra;
+            case "reward_asc": return ra - rb;
+            default: return tb - ta;
+        }
+
+    });
+
+    updateReviewCount(items.length);
+
+    if (items.length === 0) {
+
+        container.innerHTML =
+            `
+            <div class="admin-empty-box">
+                ${I18N.t("admin.noFilterResult")}
+            </div>
+            `;
+
+        return;
+
+    }
+
+    container.innerHTML = "";
+
+    items.forEach(function (claim) {
+
+        container.appendChild(
+            createPendingSubmissionCard(
+                claim,
+                reviewCache.taskMap[String(claim.task_id)] || null,
+                reviewCache.submissionMap[String(claim.id)] || null,
+                reviewCache.userMap[claim.user_id] || null
+            )
+        );
+
+    });
+
+}
 
 
 /* ========================================
@@ -5862,6 +6020,9 @@ async function rejectSubmission(
 
 async function loadPendingWithdrawals() {
 
+    // 刷新时清空缓存
+    withdrawalsCache = null;
+
     const container =
         document.getElementById(
             "pendingWithdrawalsContainer"
@@ -5919,6 +6080,10 @@ async function loadPendingWithdrawals() {
             data.length === 0
         ) {
 
+            withdrawalsCache = null;
+
+            updateWithdrawCount(0);
+
             container.innerHTML =
                 `
                 <div class="admin-empty-box">
@@ -5961,21 +6126,13 @@ async function loadPendingWithdrawals() {
         }
 
 
-        data.forEach(
-            function (item) {
+        // 保存缓存，供搜索 / 排序使用
+        withdrawalsCache = {
+            data: data,
+            wUserMap: wUserMap
+        };
 
-                const card =
-                    createWithdrawalCard(
-                        item,
-                        wUserMap[item.user_id] || null
-                    );
-
-                container.appendChild(
-                    card
-                );
-
-            }
-        );
+        renderWithdrawalList();
 
 
     } catch (error) {
@@ -6000,6 +6157,107 @@ async function loadPendingWithdrawals() {
 
 }
 
+
+
+/* ========================================
+   提现审核：搜索 + 排序渲染
+   ======================================== */
+
+let withdrawalsCache = null;
+
+function updateWithdrawCount(n) {
+    const el = document.getElementById("withdrawCount");
+    if (el) el.firstChild.textContent = n + " ";
+}
+
+function renderWithdrawalList() {
+
+    const container =
+        document.getElementById(
+            "pendingWithdrawalsContainer"
+        );
+
+    if (!container) return;
+
+    if (!withdrawalsCache || !withdrawalsCache.data || withdrawalsCache.data.length === 0) {
+        updateWithdrawCount(0);
+        return;
+    }
+
+    const q = (
+        document.getElementById("withdrawSearch") &&
+        document.getElementById("withdrawSearch").value || ""
+    ).toLowerCase().trim();
+
+    const sort = (
+        document.getElementById("withdrawSort") &&
+        document.getElementById("withdrawSort").value || "time_desc"
+    );
+
+    let items = withdrawalsCache.data.filter(function (item) {
+
+        if (!q) return true;
+
+        const user = withdrawalsCache.wUserMap[item.user_id];
+
+        const uname = user ? String(user.display_name || user.username || "").toLowerCase() : "";
+        const uemail = user && user.email ? String(user.email).toLowerCase() : "";
+        const uphone = user && user.phone ? String(user.phone).toLowerCase() : "";
+        const method = item.method ? String(item.method).toLowerCase() : "";
+        const account = item.account ? String(item.account).toLowerCase() : "";
+
+        return uname.indexOf(q) >= 0 || uemail.indexOf(q) >= 0 ||
+               uphone.indexOf(q) >= 0 || method.indexOf(q) >= 0 ||
+               account.indexOf(q) >= 0;
+
+    });
+
+    items.sort(function (a, b) {
+
+        const amtA = Number(a.amount || 0);
+        const amtB = Number(b.amount || 0);
+
+        const ta = new Date(a.created_at || 0).getTime();
+        const tb = new Date(b.created_at || 0).getTime();
+
+        switch (sort) {
+            case "time_asc": return ta - tb;
+            case "amount_desc": return amtB - amtA;
+            case "amount_asc": return amtA - amtB;
+            default: return tb - ta;
+        }
+
+    });
+
+    updateWithdrawCount(items.length);
+
+    if (items.length === 0) {
+
+        container.innerHTML =
+            `
+            <div class="admin-empty-box">
+                ${I18N.t("admin.noFilterResult")}
+            </div>
+            `;
+
+        return;
+
+    }
+
+    container.innerHTML = "";
+
+    items.forEach(function (item) {
+
+        container.appendChild(
+            createWithdrawalCard(
+                item,
+                withdrawalsCache.wUserMap[item.user_id] || null
+            )
+        );
+
+    });
+
+}
 
 
 /* ========================================
@@ -6338,6 +6596,9 @@ async function rejectWithdrawal(
 
 async function loadPendingRefunds() {
 
+    // 刷新时清空缓存
+    refundsCache = null;
+
     const container =
         document.getElementById(
             "pendingRefundsContainer"
@@ -6372,6 +6633,10 @@ async function loadPendingRefunds() {
 
         if (!data || data.length === 0) {
 
+            refundsCache = null;
+
+            updateRefundCount(0);
+
             container.innerHTML =
                 '<div class="admin-empty-box">' +
                 (zh ? "暂无可退款的领取记录" : "No refundable claims") +
@@ -6383,13 +6648,10 @@ async function loadPendingRefunds() {
 
         container.innerHTML = "";
 
-        data.forEach(function (item) {
+        // 保存缓存，供搜索 / 排序使用
+        refundsCache = data;
 
-            container.appendChild(
-                createRefundCard(item)
-            );
-
-        });
+        renderRefundList();
 
     } catch (error) {
 
@@ -6405,6 +6667,98 @@ async function loadPendingRefunds() {
             '</div>';
 
     }
+
+}
+
+
+/* ========================================
+   退款审核：搜索 + 排序渲染
+   ======================================== */
+
+let refundsCache = null;
+
+function updateRefundCount(n) {
+    const el = document.getElementById("refundCount");
+    if (el) el.firstChild.textContent = n + " ";
+}
+
+function renderRefundList() {
+
+    const container =
+        document.getElementById(
+            "pendingRefundsContainer"
+        );
+
+    if (!container) return;
+
+    if (!refundsCache || refundsCache.length === 0) {
+        updateRefundCount(0);
+        return;
+    }
+
+    const q = (
+        document.getElementById("refundSearch") &&
+        document.getElementById("refundSearch").value || ""
+    ).toLowerCase().trim();
+
+    const sort = (
+        document.getElementById("refundSort") &&
+        document.getElementById("refundSort").value || "time_desc"
+    );
+
+    let items = refundsCache.filter(function (item) {
+
+        if (!q) return true;
+
+        const uname = item.user_name ? String(item.user_name).toLowerCase() : "";
+        const uemail = item.user_email ? String(item.user_email).toLowerCase() : "";
+        const title = item.task_title ? String(item.task_title).toLowerCase() : "";
+        const code = item.shop_product_code ? String(item.shop_product_code).toLowerCase() : "";
+        const cid = item.id != null ? String(item.id) : "";
+
+        return uname.indexOf(q) >= 0 || uemail.indexOf(q) >= 0 ||
+               title.indexOf(q) >= 0 || code.indexOf(q) >= 0 ||
+               cid.indexOf(q) >= 0;
+
+    });
+
+    items.sort(function (a, b) {
+
+        const amtA = Number(a.shop_product_price || 0);
+        const amtB = Number(b.shop_product_price || 0);
+
+        const ta = new Date(a.claimed_at || 0).getTime();
+        const tb = new Date(b.claimed_at || 0).getTime();
+
+        switch (sort) {
+            case "time_asc": return ta - tb;
+            case "amount_desc": return amtB - amtA;
+            case "amount_asc": return amtA - amtB;
+            default: return tb - ta;
+        }
+
+    });
+
+    updateRefundCount(items.length);
+
+    if (items.length === 0) {
+
+        container.innerHTML =
+            '<div class="admin-empty-box">' +
+            (typeof I18N !== "undefined" && I18N.get() === "zh" ? "😕 没有符合筛选条件的记录" : "😕 No matching records") +
+            '</div>';
+
+        return;
+
+    }
+
+    container.innerHTML = "";
+
+    items.forEach(function (item) {
+
+        container.appendChild(createRefundCard(item));
+
+    });
 
 }
 
