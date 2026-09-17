@@ -3887,6 +3887,43 @@ async function loadSiteContactLink() {
 
     try {
 
+        // 优先使用所属代理设定的团队客服链接（绑定后自动生效）
+        let agentLink = null;
+
+        try {
+
+            const { data: agentRes } =
+                await supabaseClient
+                    .rpc("get_my_agent_cs_link");
+
+            if (agentRes) {
+
+                agentLink = agentRes;
+
+            }
+
+        } catch (e) {
+
+            console.error("获取代理客服链接失败", e);
+
+        }
+
+        if (agentLink) {
+
+            siteContactLink = agentLink;
+
+            document
+                .querySelectorAll(".wa-float")
+                .forEach(function (a) {
+
+                    a.href = siteContactLink;
+
+                });
+
+            return;
+
+        }
+
         const { data } =
             await supabaseClient
                 .from("settings")

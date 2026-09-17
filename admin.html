@@ -2269,7 +2269,7 @@
                         </h2>
 
                         <p>
-                            <span data-i18n="admin.settingsSub">管理全站通用配置，保存后对所有页面即时生效</span>
+                            <span data-i18n="admin.settingsSub" id="settingsSubText">管理全站通用配置，保存后对所有页面即时生效</span>
                         </p>
 
                     </div>
@@ -2280,7 +2280,7 @@
                 <div class="admin-settings-card">
 
                     <label class="admin-settings-label">
-                        <span data-i18n="admin.contactLinkLabel">💬 联系客服链接</span>
+                        <span data-i18n="admin.contactLinkLabel" id="contactLinkLabelText">💬 联系客服链接</span>
                     </label>
 
                     <div class="admin-settings-row">
@@ -2301,7 +2301,7 @@
 
                     </div>
 
-                    <p class="admin-settings-hint" data-i18n="admin.settingsHint">
+                    <p class="admin-settings-hint" id="settingsHintText" data-i18n="admin.settingsHint">
                         修改后，首页 / 任务大厅 / 仪表盘右下角的联系客服按钮将自动使用新链接。
                     </p>
 
@@ -2349,6 +2349,69 @@ const supabaseClient =
    页面初始化
    ======================================== */
 
+function updateSettingsLabels() {
+
+    const isAdmin =
+        currentAdminRole === "admin";
+
+    const zh =
+        I18N.get() === "zh";
+
+    const label =
+        document.getElementById(
+            "contactLinkLabelText"
+        );
+
+    const hint =
+        document.getElementById(
+            "settingsHintText"
+        );
+
+    const sub =
+        document.getElementById(
+            "settingsSubText"
+        );
+
+    if (!label || !hint || !sub) {
+
+        return;
+
+    }
+
+    if (isAdmin) {
+
+        label.textContent =
+            zh ? "💬 联系客服链接" : "💬 Contact Support Link";
+
+        hint.textContent =
+            zh
+                ? "修改后，首页 / 任务大厅 / 仪表盘右下角的联系客服按钮将自动使用新链接。"
+                : "After saving, the support button on the homepage / task hall / dashboard will use this link.";
+
+        sub.textContent =
+            zh
+                ? "管理全站通用配置，保存后对所有页面即时生效"
+                : "Manage global settings. Changes apply to all pages immediately.";
+
+    } else {
+
+        label.textContent =
+            zh ? "💬 团队客服链接" : "💬 Team Support Link";
+
+        hint.textContent =
+            zh
+                ? "设置后，你名下所有用户的联系客服按钮将使用此链接；未绑定用户仍使用全站链接。"
+                : "After saving, all users under your team will see this support link; unbound users still use the global link.";
+
+        sub.textContent =
+            zh
+                ? "管理你名下用户的联系客服链接"
+                : "Manage the support link for users in your team";
+
+    }
+
+}
+
 async function loadSiteSettings() {
 
     const input =
@@ -2357,6 +2420,34 @@ async function loadSiteSettings() {
         );
 
     if (!input) {
+
+        return;
+
+    }
+
+    // 代理：显示"团队客服链接"（存自己 profile.agent_cs_link）
+    if (currentAdminRole === "agent") {
+
+        try {
+
+            const { data: me, error: meErr } =
+                await supabaseClient
+                    .from("profiles")
+                    .select("agent_cs_link")
+                    .eq("id", currentAgentUserId)
+                    .maybeSingle();
+
+            if (!meErr && me && me.agent_cs_link) {
+
+                input.value = me.agent_cs_link;
+
+            }
+
+        } catch (e) {
+
+            console.error("加载团队客服链接失败", e);
+
+        }
 
         return;
 
@@ -2455,6 +2546,36 @@ async function saveContactLink() {
 
     try {
 
+        // 代理：保存到自己的 agent_cs_link
+        if (currentAdminRole === "agent") {
+
+            const { error } =
+                await supabaseClient
+                    .rpc("agent_set_cs_link", { p_link: value });
+
+            if (error) {
+
+                throw error;
+
+            }
+
+            status.textContent =
+                I18N.t("admin.settingsSaved");
+
+            status.className =
+                "admin-settings-status ok";
+
+            setTimeout(function () {
+
+                status.textContent =
+                    "";
+
+            }, 4000);
+
+            return;
+
+        }
+
         const {
             error
         } =
@@ -2534,6 +2655,8 @@ document.addEventListener(
             await loadSiteSettings();
         }
 
+        updateSettingsLabels();
+
         // 语言切换时重新渲染动态内容
         document.addEventListener(
             "taskhub:langchange",
@@ -2545,7 +2668,10 @@ document.addEventListener(
                 loadPendingRefunds();
                 loadMembers();
                 loadLedger();
-                if (currentAdminRole === "admin") loadAgents();
+                loadAgents();
+
+                loadSiteSettings();
+                updateSettingsLabels();
 
             }
         );
@@ -2877,7 +3003,9 @@ function applyRoleLayout(role) {
     if (pageTitle) {
         pageTitle.textContent = isAdmin
             ? (I18N.get() === "zh" ? "管理员后台" : "Admin Dashboard")
-            : (I18N.get() === "zh" ? "代理工作台" : "Agent Workspace");
+            : (I18N.get() === "zh" ? "管理工作台" : "Management Workspace");
+
+        updateSettingsLabels();
     }
 
     // 代理默认定位到任务审核（若该权限被关闭则跳到第一个可用版块）

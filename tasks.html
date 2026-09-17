@@ -1070,12 +1070,48 @@
         // 启动
         // ========================================
 
-        // 动态客服链接（从 settings 表读取）
+        // 动态客服链接（从 settings 表读取，代理绑定用户优先使用代理链接）
         let siteContactLink = "https://wa.me/601139706264";
 
         async function loadSiteContactLink() {
 
             try {
+
+                let agentLink = null;
+
+                try {
+
+                    const { data: agentRes } =
+                        await supabaseClient
+                            .rpc("get_my_agent_cs_link");
+
+                    if (agentRes) {
+
+                        agentLink = agentRes;
+
+                    }
+
+                } catch (e) {
+
+                    console.error("获取代理客服链接失败", e);
+
+                }
+
+                if (agentLink) {
+
+                    siteContactLink = agentLink;
+
+                    document
+                        .querySelectorAll(".wa-float")
+                        .forEach(function (a) {
+
+                            a.href = siteContactLink;
+
+                        });
+
+                    return;
+
+                }
 
                 const { data } =
                     await supabaseClient
