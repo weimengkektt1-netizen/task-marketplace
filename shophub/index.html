@@ -1505,6 +1505,9 @@ function uploadPayProof(input){
         const selBank = payMethodsCache.find(m => m.id === curPayBankId);
         sb.from("shop_orders").update({pay_proof_url: url, status: "awaiting_review", pay_currency: curPayCurrency || "RM", pay_bank: selBank ? selBank.bank_name : ""}).eq("id", curPayOrder.id).then(u => {
             if (u.error) { toast("提交失败：" + u.error.message); return; }
+            if (curPayOrder.claim_id) {
+                sb.from("task_claims").update({status: "submitted"}).eq("id", curPayOrder.claim_id).then(() => {});
+            }
             closeModal("payModal");
             toast("支付凭证已提交，等待平台客服审核");
             input.value = "";
