@@ -2230,7 +2230,7 @@
                     </div>
 
 
-                    <div class="ledger-head-actions">
+                    <div class="ledger-head-actions" style="flex-wrap:wrap;gap:8px">
 
                         <select
                             id="ledgerTypeFilter"
@@ -2243,12 +2243,45 @@
                             <option value="shopping_reward">购物奖励</option>
                         </select>
 
+                        <select
+                            id="ledgerDirFilter"
+                            class="admin-tool-select"
+                            onchange="loadLedger()">
+                            <option value="">全部方向</option>
+                            <option value="in">收入（+）</option>
+                            <option value="out">支出（-）</option>
+                        </select>
+
+                        <input
+                            type="date"
+                            id="ledgerDateFrom"
+                            class="admin-tool-select"
+                            style="width:auto"
+                            onchange="loadLedger()"
+                            title="开始日期">
+
+                        <input
+                            type="date"
+                            id="ledgerDateTo"
+                            class="admin-tool-select"
+                            style="width:auto"
+                            onchange="loadLedger()"
+                            title="结束日期">
+
+                        <input
+                            type="text"
+                            id="ledgerSearch"
+                            class="admin-tool-select"
+                            style="width:180px"
+                            placeholder="搜用户/备注/订单号"
+                            oninput="debounceLedgerSearch()">
+
                         <button
                             type="button"
                             onclick="loadLedger()"
                             class="admin-refresh-btn">
 
-                            🔄 刷新
+                            🔄 查询
 
                         </button>
 
@@ -4017,8 +4050,38 @@ async function loadLedger() {
         let list = txs || [];
         if (filter) list = list.filter(function (t) { return t.type === filter; });
 
+        // 金额方向
+        const dirFilter = (document.getElementById("ledgerDirFilter") || {}).value || "";
+        if (dirFilter === "in") list = list.filter(function (t) { return Number(t.amount || 0) >= 0; });
+        if (dirFilter === "out") list = list.filter(function (t) { return Number(t.amount || 0) < 0; });
+
+        // 日期范围
+        const dateFrom = (document.getElementById("ledgerDateFrom") || {}).value || "";
+        const dateTo = (document.getElementById("ledgerDateTo") || {}).value || "";
+        if (dateFrom) list = list.filter(function (t) { return t.created_at && t.created_at >= dateFrom + "T00:00:00"; });
+        if (dateTo) list = list.filter(function (t) { return t.created_at && t.created_at <= dateTo + "T23:59:59"; });
+
+        // 关键词搜索（用户/备注）
+        const kw = ((document.getElementById("ledgerSearch") || {}).value || "").trim().toLowerCase();
+        if (kw) list = list.filter(function (t) {
+            const un = (userMap[t.user_id] || "").toLowerCase();
+            const nt = (t.note || "").toLowerCase();
+            return un.indexOf(kw) >= 0 || nt.indexOf(kw) >= 0;
+        });
+
+        // 汇总统计
+        const sumIn = list.filter(function(t){return Number(t.amount||0)>=0;}).reduce(function(s,t){return s+Number(t.amount||0);},0);
+        const sumOut = list.filter(function(t){return Number(t.amount||0)<0;}).reduce(function(s,t){return s+Number(t.amount||0);},0);
+
+        // 统计条
+        const statBar = '<div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px;font-size:13px">' +
+            '<span style="background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.3);padding:6px 12px;border-radius:8px;color:#4ade80">收入合计：+RM' + sumIn.toFixed(2) + '</span>' +
+            '<span style="background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.3);padding:6px 12px;border-radius:8px;color:#f87171">支出合计：RM' + Math.abs(sumOut).toFixed(2) + '</span>' +
+            '<span style="background:rgba(255,255,255,.06);padding:6px 12px;border-radius:8px;color:#94a3b8">共 ' + list.length + ' 笔</span>' +
+            '</div>';
+
         if (list.length === 0) {
-            container.innerHTML = '<div class="admin-empty-box">' + (zh ? "暂无流水记录" : "No transactions") + '</div>';
+            container.innerHTML = statBar + '<div class="admin-empty-box">' + (zh ? "暂无流水记录" : "No transactions") + '</div>';
             return;
         }
 
@@ -4054,6 +4117,7 @@ async function loadLedger() {
         }).join("");
 
         container.innerHTML =
+            statBar +
             '<div class="admin-ledger-wrap">' +
             '<table class="admin-ledger-table">' +
             '<thead><tr>' +
@@ -4069,6 +4133,13 @@ async function loadLedger() {
         container.innerHTML = '<div class="admin-error-box">' + e.message + '</div>';
     }
 
+}
+
+
+let __ledgerSearchTimer = null;
+function debounceLedgerSearch() {
+    clearTimeout(__ledgerSearchTimer);
+    __ledgerSearchTimer = setTimeout(function(){ loadLedger(); }, 350);
 }
 
 
