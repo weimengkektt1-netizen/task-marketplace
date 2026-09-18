@@ -367,6 +367,43 @@
             border: 1px solid rgba(148, 163, 184, .35);
         }
 
+        .admin-agent-perm-tag {
+            font-size: 11px;
+            padding: 3px 9px;
+            border-radius: 999px;
+            flex-shrink: 0;
+            margin-left: 6px;
+            background: linear-gradient(135deg, rgba(99, 102, 241, .22), rgba(139, 92, 246, .22));
+            color: #a5b4fc;
+            border: 1px solid rgba(129, 140, 248, .45);
+            box-shadow: 0 0 10px rgba(99, 102, 241, .25);
+        }
+
+        .admin-perm-default-note {
+            margin-bottom: 12px;
+            padding: 10px 12px;
+            border-radius: 10px;
+            font-size: 12.5px;
+            line-height: 1.6;
+            background: linear-gradient(135deg, rgba(99, 102, 241, .18), rgba(139, 92, 246, .14));
+            border: 1px solid rgba(129, 140, 248, .4);
+            color: #c7d2fe;
+        }
+
+        .admin-perm-default-note.custom {
+            background: rgba(148, 163, 184, .12);
+            border-color: rgba(148, 163, 184, .35);
+            color: #94a3b8;
+        }
+
+        .admin-perm-note.default {
+            padding: 10px 12px;
+            border-radius: 10px;
+            background: rgba(99, 102, 241, .08);
+            border: 1px dashed rgba(129, 140, 248, .35);
+            color: #a5b4fc;
+        }
+
         .admin-agent-stats {
             display: flex;
             gap: 12px;
@@ -3173,6 +3210,7 @@ async function loadAgents() {
                     '<div class="admin-agent-mail">' + escapeHtml(a.email || "") + '</div>' +
                     '</div>' +
                     '<span class="admin-agent-status ' + (active ? "on" : "off") + '">' + (active ? (zh ? "启用" : "Active") : (zh ? "停用" : "Disabled")) + '</span>' +
+                    (isDefaultAgentPerms(a.agent_permissions) ? '<span class="admin-agent-perm-tag">' + (zh ? "默认权限" : "Default Perms") + '</span>' : '') +
                     '</div>' +
                     '<div class="admin-agent-stats">' +
                     '<div><b>' + cnt + '</b><small>' + (zh ? "名下用户" : "Users") + '</small></div>' +
@@ -3208,10 +3246,18 @@ async function adminAddAgent() {
         const u = users[0];
         if (u.role === "admin") { alert("不能将管理员设为代理"); return; }
         if (u.role === "agent") { alert("该用户已是代理"); return; }
-        if (!confirm("确定将 " + (u.display_name || u.username || u.email) + " 设为代理吗？")) return;
+        if (!confirm("确定将 " + (u.display_name || u.username || u.email) + " 设为代理吗？\n将默认套用「代理默认权限架构」（8 项全部开启）。")) return;
         const { error } = await supabaseClient.rpc("admin_set_role", { p_user_id: u.id, p_role: "agent" });
         if (error) throw error;
-        alert("已设为代理");
+        // 新代理户口默认套用默认权限架构
+        if (typeof DEFAULT_AGENT_PERMS !== "undefined") {
+            const { error: permErr } = await supabaseClient
+                .from("profiles")
+                .update({ agent_permissions: DEFAULT_AGENT_PERMS })
+                .eq("id", u.id);
+            if (permErr) throw permErr;
+        }
+        alert("已设为代理（默认权限架构：8 项全部开启）");
         if (input) input.value = "";
         await loadAgents();
     } catch (e) { alert("添加代理失败：" + e.message); }
@@ -3326,6 +3372,33 @@ const AGENT_PERM_KEYS = [
     { key: "settings",    icon: "⚙️", zh: "网站设置", en: "Site Settings" }
 ];
 
+// 代理默认权限架构（以后新开代理户口默认套用此配置：8 项全部开启）
+const DEFAULT_AGENT_PERMS = {
+    tasks: true,
+    create: true,
+    reviews: true,
+    withdrawals: true,
+    refunds: true,
+    members: true,
+    ledger: true,
+    settings: true
+};
+
+// 判断代理当前权限是否为默认架构（空对象 / 缺失键按默认开启 / 全开 = 默认）
+function isDefaultAgentPerms(perms) {
+    const p = (perms && typeof perms === "object") ? perms : {};
+    return AGENT_PERM_KEYS.every(function (k) {
+        return p[k.key] !== false;
+    });
+}
+
+// 返回默认权限架构的展示文案（用于弹窗与卡片标注）
+function defaultAgentPermsNote(zh) {
+    return zh
+        ? "默认权限架构：任务管理 / 发布任务 / 任务审核 / 提现审核 / 退款审核 / 会员管理 / 钱包流水 / 网站设置（全部开启）；仅管理自己名下会员，概览与代理管理为总管理员专属。"
+        : "Default permission: Task Mgmt / Create / Reviews / Withdrawals / Refunds / Members / Ledger / Settings (all on); can only manage own members; Dashboard & Agent Mgmt are admin-only.";
+}
+
 function openAgentPerms(agentId, agentName) {
     const zh = typeof I18N !== "undefined" && I18N.get() === "zh";
     // 从卡片读取当前权限
@@ -3335,6 +3408,7 @@ function openAgentPerms(agentId, agentName) {
         perms = card && card.getAttribute("data-perms") ? JSON.parse(card.getAttribute("data-perms").replace(/&#39;/g, "'")) : {};
     } catch (e) { perms = {}; }
 
+    const isDefault = isDefaultAgentPerms(perms);
     const items = AGENT_PERM_KEYS.map(function (p) {
         const on = perms[p.key] !== false;
         return '<div class="admin-perm-item" data-key="' + p.key + '" onclick="toggleAgentPerm(this)">' +
@@ -3350,9 +3424,13 @@ function openAgentPerms(agentId, agentName) {
         '<div class="admin-modal-box">' +
         '<div class="admin-modal-head"><h3>🔐 ' + escapeHtml(agentName || "") + (zh ? " · 权限设置" : " · Permissions") + '</h3>' +
         '<button class="admin-modal-close" onclick="closeAgentPerms()">✕</button></div>' +
+        (isDefault
+            ? '<div class="admin-perm-default-note">📌 ' + (zh ? "该代理当前使用默认权限架构（8 项全部开启）" : "This agent uses the default permission set (all 8 enabled)") + '</div>'
+            : '<div class="admin-perm-default-note custom">✏️ ' + (zh ? "该代理已自定义权限（非默认架构）" : "Custom permissions (not default)") + '</div>') +
         '<div class="admin-modal-field" style="margin-bottom:8px"><label>' + (zh ? "控制该代理可访问的版块" : "Control which sections this agent can access") + '</label></div>' +
         '<div class="admin-perm-grid">' + items + '</div>' +
         '<div class="admin-perm-note">' + (zh ? "关闭某项后，该代理登录工作台时将看不到对应版块；数据隔离仍按代理名下用户执行。概览与代理管理为总管理员专属，不可授权。" : "When disabled, the agent won't see that section. Data isolation still follows the agent's own users. Dashboard & Agent Management are admin-only.") + '</div>' +
+        '<div class="admin-perm-note default">📌 ' + defaultAgentPermsNote(zh) + '</div>' +
         '<div style="display:flex;justify-content:flex-end;gap:8px;margin-top:16px">' +
         '<button class="admin-primary-btn" onclick="saveAgentPerms(\'' + agentId + '\')">' + (zh ? "保存权限" : "Save Perms") + '</button>' +
         '</div>' +
