@@ -1061,6 +1061,13 @@
                     退款审核
                 </a>
 
+                <a href="#shoporders"
+                   id="navShopOrders"
+                   class="admin-nav-item">
+                    <span>🛒</span>
+                    商城订单
+                </a>
+
 
                 <a href="#members" data-i18n="admin.memberManage"
                    id="navMembers"
@@ -2056,6 +2063,35 @@
 
 
             <!-- ========================================
+                 Shop Orders（商城订单审核）
+                 ======================================== -->
+
+            <section id="shoporders" class="admin-section">
+
+                <div class="admin-review-header">
+                    <div>
+                        <h2>🛒 商城订单审核</h2>
+                        <p>审核会员在 ShopHub 提交的付款凭证（仅自己团队成员）</p>
+                    </div>
+                    <div class="ledger-head-actions">
+                        <select id="soStatusFilter" class="admin-tool-select" onchange="loadShopOrders()">
+                            <option value="awaiting_review">待审核</option>
+                            <option value="completed">已完成</option>
+                            <option value="rejected">已拒绝</option>
+                            <option value="">全部订单</option>
+                        </select>
+                        <button type="button" onclick="loadShopOrders()" class="admin-refresh-btn">🔄 刷新</button>
+                    </div>
+                </div>
+
+                <div id="shopOrdersContainer">
+                    <div class="admin-loading-box">正在加载...</div>
+                </div>
+
+            </section>
+
+
+            <!-- ========================================
                  Members（会员管理）
                  ======================================== -->
 
@@ -2703,6 +2739,7 @@ document.addEventListener(
                 loadPendingSubmissions();
                 loadPendingWithdrawals();
                 loadPendingRefunds();
+                loadShopOrders();
                 loadMembers();
                 loadLedger();
                 loadAgents();
@@ -2870,6 +2907,8 @@ async function checkAdmin() {
         await loadPendingWithdrawals();
 
         await loadPendingRefunds();
+
+        await loadShopOrders();
 
         await loadMembers();
 
@@ -3048,7 +3087,7 @@ function applyRoleLayout(role) {
     // 代理默认定位到任务审核（若该权限被关闭则跳到第一个可用版块）
     if (!isAdmin) {
         const sectionIds = [
-            "reviews", "withdrawals", "refunds", "members", "ledger",
+            "reviews", "withdrawals", "refunds", "shoporders", "members", "ledger",
             "tasks", "create", "settings"
         ];
         const current = (location.hash || "#reviews").replace("#", "");
@@ -3087,7 +3126,7 @@ function applyRoleLayout(role) {
 // 版块折叠切换：一次只显示一个版块
 // ========================================
 
-const ADMIN_SECTION_ORDER = ["dashboard", "tasks", "create", "reviews", "withdrawals", "refunds", "members", "ledger", "agents", "settings"];
+const ADMIN_SECTION_ORDER = ["dashboard", "tasks", "create", "reviews", "withdrawals", "refunds", "shoporders", "members", "ledger", "agents", "settings"];
 
 function switchAdminSection(name) {
 
@@ -3124,6 +3163,11 @@ function switchAdminSection(name) {
         const t = (a.getAttribute("href") || "").replace("#", "");
         a.classList.toggle("active", t === target);
     });
+
+    // 切换到商城订单时加载
+    if (target === "shoporders") {
+        loadShopOrders();
+    }
 
     // 平滑回到顶部
     if (document.querySelector(".admin-main")) {
@@ -6794,6 +6838,134 @@ async function rejectWithdrawal(
 
 }
 
+
+
+/* ========================================
+   商城订单审核（ShopHub 付款审核）
+   ======================================== */
+
+async function loadShopOrders() {
+    const container = document.getElementById("shopOrdersContainer");
+    if (!container) return;
+    const statusFilter = (document.getElementById("soStatusFilter") || {}).value || "";
+    container.innerHTML = '<div class="admin-loading-box">正在加载...</div>';
+
+    try {
+        let q = supabaseClient.from("shop_orders")
+            .select("*")
+            .order("created_at", { ascending: false })
+            .limit(100);
+        if (statusFilter) q = q.eq("status", statusFilter);
+
+        const { data: orders, error } = await q;
+        if (error) throw error;
+
+        // 代理只看自己团队成员的订单
+        let filtered = orders || [];
+        const myIds = await getMyUserIds();
+        if (myIds) {
+            const idSet = new Set(myIds);
+            filtered = filtered.filter(o => idSet.has(o.user_id));
+        }
+
+        if (filtered.length === 0) {
+            container.innerHTML = '<div class="empty-box">暂无订单</div>';
+            return;
+        }
+
+        // 批量查用户昵称
+        const userIds = [...new Set(filtered.map(o => o.user_id).filter(Boolean))];
+        const { data: profiles } = await supabaseClient
+            .from("profiles")
+            .select("id, display_name, email")
+            .in("id", userIds);
+        const pm = {};
+        (profiles || []).forEach(p => { pm[p.id] = p; });
+
+        let html = '<div style="display:flex;flex-direction:column;gap:12px">';
+        filtered.forEach(o => {
+            const buyer = pm[o.user_id] || {};
+            const item = (o.items && o.items[0]) || {};
+            const addr = o.addr || {};
+            const stMap = {
+                awaiting_review: '<span style="color:#fbbf24">🟠 待审核</span>',
+                completed: '<span style="color:#4ade80">🟢 已完成</span>',
+                rejected: '<span style="color:#f87171">🔴 已拒绝</span>',
+                pending_pay: '<span style="color:#94a3b8">⚪ 待付款</span>'
+            };
+            const stHtml = stMap[o.status] || o.status;
+
+            let proofHtml = '';
+            if (o.pay_proof_url) {
+                proofHtml = '<div style="margin-top:8px;display:flex;gap:10px;align-items:flex-start">'
+                    + '<img src="' + o.pay_proof_url + '" onclick="window.open(\'' + o.pay_proof_url + '\')" style="width:80px;height:80px;object-fit:cover;border-radius:8px;cursor:pointer;border:1px solid rgba(255,255,255,0.15)">'
+                    + '<div style="font-size:12px;color:rgba(255,255,255,0.7)">'
+                    + (o.pay_currency ? '支付币种：' + o.pay_currency : '')
+                    + (o.pay_bank ? '<br>收款银行：' + o.pay_bank : '')
+                    + '<br>提交时间：' + new Date(o.created_at).toLocaleString()
+                    + '</div></div>';
+            }
+            if (o.reject_reason) {
+                proofHtml += '<div style="margin-top:6px;color:#f87171;font-size:12px">拒绝原因：' + (o.reject_reason) + '</div>';
+            }
+
+            let btnsHtml = '';
+            if (o.status === "awaiting_review") {
+                btnsHtml = '<div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">'
+                    + '<button onclick="reviewShopOrder(\'' + o.id + '\',\'completed\')" style="background:#22c55e;color:#fff;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:13px">✅ 通过 · 完成订单</button>'
+                    + '<input id="soRej' + o.id + '" placeholder="拒绝原因（必填）" style="flex:1;min-width:150px;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.05);color:#fff;font-size:13px">'
+                    + '<button onclick="reviewShopOrder(\'' + o.id + '\',\'rejected\')" style="background:#ef4444;color:#fff;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:13px">❌ 拒绝</button>'
+                    + '</div>';
+            }
+
+            html += '<div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:14px">'
+                + '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">'
+                + '<div style="font-weight:600">' + (buyer.display_name || buyer.email || o.user_id)
+                + (o.claim_id ? ' <span style="background:#fbbf24;color:#000;font-size:10px;padding:2px 6px;border-radius:4px;margin-left:6px">刷单任务</span>' : '')
+                + '</div>'
+                + stHtml
+                + '</div>'
+                + '<div style="margin-top:6px;font-size:13px;color:rgba(255,255,255,0.6)">订单号：' + o.order_no + '</div>'
+                + '<div style="margin-top:6px;display:flex;gap:10px;align-items:center">'
+                + (item.img ? '<img src="' + item.img + '" style="width:48px;height:48px;object-fit:cover;border-radius:8px">' : '')
+                + '<div style="font-size:13px">'
+                + '<div>' + (item.name || '商品') + (item.sku ? ' · ' + item.sku : '') + '</div>'
+                + '<div style="color:#fbbf24;font-weight:600;margin-top:2px">RM ' + Number(o.total).toFixed(2) + '</div>'
+                + '</div></div>'
+                + proofHtml + btnsHtml
+                + '</div>';
+        });
+        html += '</div>';
+        container.innerHTML = html;
+
+    } catch (e) {
+        container.innerHTML = '<div class="empty-box">加载失败：' + e.message + '</div>';
+    }
+}
+
+async function reviewShopOrder(orderId, status) {
+    let reason = '';
+    if (status === "rejected") {
+        const input = document.getElementById("soRej" + orderId);
+        reason = input ? input.value.trim() : '';
+        if (!reason) { alert("请填写拒绝原因"); return; }
+    }
+    if (!confirm(status === "completed" ? "确认通过该订单？通过后将自动完成刷单任务并发放佣金。" : "确认拒绝该订单？")) return;
+
+    try {
+        const rpcName = (currentAdminRole === "admin") ? "admin_review_shop_order" : "agent_review_shop_order";
+        const { error } = await supabaseClient.rpc(rpcName, {
+            p_order_id: orderId,
+            p_status: status,
+            p_reject_reason: reason || null
+        });
+        if (error) throw error;
+        alert(status === "completed" ? "已通过，订单完成" : "已拒绝该订单");
+        loadShopOrders();
+    } catch (e) {
+        alert("操作失败：" + e.message);
+    }
+}
 
 
 /* ========================================
