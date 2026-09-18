@@ -2256,6 +2256,7 @@ async function loadMyTasks() {
                 reward,
                 shop_product_id,
                 shop_product_code,
+                shop_product_price,
                 task_type,
                 task_link,
                 status
@@ -2492,6 +2493,20 @@ function renderMyTasks() {
             Array.isArray(item.task_reviews) &&
             item.task_reviews.length > 0;
 
+        // 预计佣金
+        let commissionLabel = "";
+        let commissionVal = "";
+        if (isShopTask && item.tasks?.shop_product_price) {
+            commissionLabel = I18N.t("dash.estCommission");
+            commissionVal = "RM" + (Number(item.tasks.shop_product_price) * commissionRate(currentMembershipLevel)).toFixed(2);
+        } else if ((item.tasks?.task_type === "like" || item.tasks?.task_type === "review" || item.tasks?.task_type === "follow") && Number(item.tasks?.reward) > 0) {
+            commissionLabel = I18N.t("dash.fixedRewardLabel");
+            commissionVal = "RM" + Number(item.tasks.reward).toFixed(2);
+        } else if (Number(item.tasks?.reward) > 0) {
+            commissionLabel = I18N.t("dash.estCommission");
+            commissionVal = "RM" + (Number(item.tasks.reward) * commissionRate(currentMembershipLevel)).toFixed(2);
+        }
+
 
         row.className =
             "my-task-row" +
@@ -2526,6 +2541,13 @@ function renderMyTasks() {
                     item.status
                 )}
             </span>
+
+            ${commissionLabel ? `
+            <div class="my-task-commission">
+                <span>${commissionLabel}</span>
+                <b class="my-task-commission-val">${commissionVal}</b>
+            </div>
+            ` : ""}
 
 
             ${
@@ -4797,6 +4819,27 @@ function initTierBackground() {
     border: 1px solid rgba(34, 197, 94, 0.35);
     padding: 8px 14px;
     border-radius: 10px;
+}
+
+.my-task-commission {
+    margin-top: 8px;
+    padding: 8px 12px;
+    border-radius: 10px;
+    background: rgba(250, 204, 21, 0.10);
+    border: 1px solid rgba(250, 204, 21, 0.30);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    font-size: 13px;
+}
+.my-task-commission span {
+    color: rgba(255,255,255,0.65);
+}
+.my-task-commission-val {
+    color: #fbbf24;
+    font-weight: 700;
+    font-size: 15px;
 }
 
 /* ========================================
