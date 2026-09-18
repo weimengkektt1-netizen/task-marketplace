@@ -643,6 +643,20 @@ input,select,textarea{font-family:inherit;outline:none}
         <div id="adminOrders"></div>
     </section>
 
+    <!-- ===== 视图：代理订单审核（仅代理名下会员） ===== -->
+    <section class="view" id="view-agent-orders">
+        <div class="section-head"><h3>订单审核</h3></div>
+        <div class="admin-tip">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg>
+            <span>代理模式：只显示<b>您名下会员</b>的商城订单。核对支付截图，确认收款后点击通过，订单即完成；不通过需填写原因退回。</span>
+        </div>
+        <div class="admin-toolbar">
+            <input class="admin-search" id="agentOrderSearch" placeholder="搜索订单号 / 买家昵称" oninput="renderAgentOrders()">
+            <div class="order-tabs" id="agentOrderTabs"></div>
+        </div>
+        <div id="agentOrders"></div>
+    </section>
+
     <!-- ===== 视图：卖家中心（卖家店铺管理） ===== -->
     <section class="view" id="view-seller">
         <div class="section-head"><h3>卖家中心</h3></div>
@@ -941,6 +955,7 @@ function renderByView(v){
     else if (v === "profile") renderProfile();
     else if (v === "favorites") renderFavs();
     else if (v === "admin") { if (curRole === "admin") renderAdmin(); else { toast("需要管理员权限"); showView("home"); } }
+    else if (v === "agent-orders") { if (curRole === "agent") renderAgentOrders(); else { toast("需要代理权限"); showView("home"); } }
     else if (v.indexOf("seller") === 0) { if (curSellerStatus === "active" || curRole === "admin" || curRole === "agent") renderSeller(); else { toast("需要卖家权限"); showView("home"); } }
 }
 window.addEventListener("hashchange", () => {
@@ -1750,6 +1765,7 @@ function renderUserArea(){
         '<a href="#profile" onclick="showView(\'profile\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4.5 20c1.5-3.4 4.2-5 7.5-5s6 1.6 7.5 5"/></svg>个人中心</a>' +
         (curRole === "admin" ? '<a href="#admin" onclick="showView(\'admin\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/><circle cx="12" cy="15" r="1.6"/></svg>商家中心</a>' : "") +
         (curSellerStatus === "active" || curRole === "agent" ? '<a href="#seller" onclick="showView(\'seller\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12l2 4H4z"/><path d="M5 7v13a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V7"/><path d="M9 11h6"/></svg>卖家中心</a>' : "") +
+        (curRole === "agent" ? '<a href="#agent-orders" onclick="showView(\'agent-orders\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>订单审核</a>' : "") +
         '<button onclick="doLogout()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></svg>退出登录</button>' +
         "</div>";
     area.innerHTML = '<div class="user-chip" id="userChip" onclick="event.stopPropagation();document.getElementById(\'userChip\').classList.toggle(\'open\')">' +
@@ -2228,6 +2244,75 @@ function sellerReview(id, status){
         if (res.error) { toast("操作失败：" + res.error.message); return; }
         toast(status === "completed" ? "已通过，订单完成" : "已拒绝该订单");
         renderSellerOrders(curSellerUid);
+    });
+}
+let agentOrderTab = "awaiting_review";
+function setAgentOrderTab(t){ agentOrderTab = t; renderAgentOrders(); }
+async function renderAgentOrders(){
+    const wrap = document.getElementById("agentOrders");
+    if (!wrap) return;
+    const tabs = [
+        {k:"awaiting_review", t:"待审核"}, {k:"", t:"全部订单"}
+    ];
+    document.getElementById("agentOrderTabs").innerHTML =
+        tabs.map(t => '<button class="order-tab' + (agentOrderTab === t.k ? " on" : "") + '" onclick="setAgentOrderTab(\'' + t.k + '\')">' + t.t + "</button>").join("");
+    wrap.innerHTML = '<div class="empty"><p>加载中…</p></div>';
+    const { data, error } = await sb.from("shop_orders").select("*").order("created_at", {ascending: false});
+    if (error) { wrap.innerHTML = '<div class="empty"><p>加载失败：' + esc(error.message) + "</p></div>"; return; }
+    let list = data || [];
+    if (agentOrderTab) list = list.filter(o => o.status === agentOrderTab);
+    const kw = (document.getElementById("agentOrderSearch").value || "").trim().toLowerCase();
+    const ids = list.map(o => o.user_id).filter((v, i, a) => a.indexOf(v) === i);
+    const { data: pr } = await sb.from("profiles").select("id, display_name, email").in("id", ids);
+    const pm = {}; (pr || []).forEach(p => pm[p.id] = {n: p.display_name, e: p.email});
+    if (kw) {
+        list = list.filter(o => {
+            const b = pm[o.user_id] || {};
+            return o.order_no.toLowerCase().indexOf(kw) >= 0 || String(b.n || "").toLowerCase().indexOf(kw) >= 0 || String(b.e || "").toLowerCase().indexOf(kw) >= 0;
+        });
+    }
+    if (!list.length) { wrap.innerHTML = '<div class="empty"><p>名下会员暂无订单</p></div>'; return; }
+    wrap.innerHTML = list.map(o => {
+        const buyer = pm[o.user_id] || {};
+        const item = (o.items && o.items[0]) || {};
+        const addr = o.addr || {};
+        let proof = "";
+        if (o.pay_currency || o.pay_bank) {
+            proof = '<div class="shop-proof"><div class="proof-info"><b>支付方式：</b>' + esc(o.pay_currency || "—") + (o.pay_bank ? " · " + esc(o.pay_bank) : "") + "</div></div>";
+        }
+        if (o.pay_proof_url) {
+            proof += '<div class="shop-proof"><img src="' + o.pay_proof_url + '" onclick="window.open(\'' + o.pay_proof_url + '\')" alt="支付截图">' +
+                '<div class="proof-info"><b>支付截图</b> · 点击放大核对<br>提交于 ' + esc(new Date(o.created_at).toLocaleString("zh-CN")) + "</div>" +
+                (o.status === "awaiting_review" ? '<div class="admin-btns"><button class="admin-btn approve" onclick="agentReview(\'' + o.id + '\',\'completed\')">通过 · 完成订单</button>' +
+                    '<input class="reject-input" id="arej' + o.id + '" placeholder="拒绝原因"><button class="admin-btn reject" onclick="agentReview(\'' + o.id + '\',\'rejected\')">拒绝</button></div>' : "") +
+                "</div>";
+        }
+        const rej = o.reject_reason ? '<div class="shop-proof"><div class="proof-info" style="color:var(--red)"><b>拒绝原因：</b>' + esc(o.reject_reason) + "</div></div>" : "";
+        return (
+            '<div class="shop-order-card">' +
+            '<div class="shop-order-head" style="cursor:pointer" onclick="openOrderDetail(\'' + o.id + '\')">' +
+            '<span class="shop-buyer"><span class="shop-buyer-avatar">' + esc((buyer.n || "客").charAt(0).toUpperCase()) + "</span>" + esc(buyer.n || "未设置昵称") + "</span>" +
+            '<span>' + esc(o.order_no) + (o.claim_id ? '<i class="shop-task-tag">刷单</i>' : "") + '</span>' +
+            '<span class="order-status ' + orderStatusClass(o.status) + '" style="margin-left:auto">' + orderStatusText(o.status) + "</span></div>" +
+            '<div class="order-prod">' +
+            (item.img ? '<img src="' + item.img + '" onclick="openOrderDetail(\'' + o.id + '\')">' : "") +
+            '<div class="name" onclick="openOrderDetail(\'' + o.id + '\')">' + esc(item.name || "（商品信息）") + (item.sku ? " · " + esc(item.sku) : "") + (o.items && o.items.length > 1 ? " 等 " + o.items.length + " 件" : "") + "</div>" +
+            '<div class="qty">× ' + (o.items || []).reduce((s, i) => s + (i.qty || 0), 0) + "</div>" +
+            "</div>" +
+            '<div class="order-foot" style="padding:10px 16px"><span style="font-size:12px;color:var(--muted)">' + esc(addr.name || "") + " · " + esc(addr.phone || "") + "</span>" +
+            '<div class="total">金额：<b>RM' + fmt(Number(o.total)) + '</b></div></div>' +
+            rej + proof +
+            "</div>"
+        );
+    }).join("");
+}
+function agentReview(id, status){
+    const reason = status === "rejected" ? (document.getElementById("arej" + id).value.trim() || "") : "";
+    if (status === "rejected" && !reason) { toast("请填写拒绝原因"); return; }
+    sb.rpc("agent_review_shop_order", {p_order_id: id, p_status: status, p_reject_reason: reason || null}).then(res => {
+        if (res.error) { toast("操作失败：" + res.error.message); return; }
+        toast(status === "completed" ? "已通过，订单完成" : "已拒绝该订单");
+        renderAgentOrders();
     });
 }
 function openSellerProductModal(pid){
