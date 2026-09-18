@@ -273,6 +273,238 @@
             background: rgba(255, 255, 255, 0.22);
         }
 
+
+        /* ============================================
+           PSD 任务中心浅色风格（本地改造，待确认）
+        ============================================ */
+        body.tasks-body {
+            background: #ffffff !important;
+            color: #111111;
+        }
+        body.tasks-body .tasks-header {
+            background: #ffffff !important;
+            border: 1px solid #ececec !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+        }
+        .tasks-logo-text { color: #111111; }
+        .tasks-logo-icon { box-shadow: none; }
+        .tasks-header .sidebar-toggle,
+        .tasks-header .lang-btn {
+            border-color: #e4e4e4;
+            background: #f7f7f7;
+            color: #222;
+        }
+        .tasks-header .sidebar-toggle:hover,
+        .tasks-header .lang-btn:hover { border-color: #111; color: #111; }
+        .tasks-main .dashboard-section-title .section-label { color: #9a9a9a; }
+        .tasks-main .dashboard-section-title h2 { color: #111; }
+        .tasks-hint { color: #8a8a8a; }
+
+        /* 分类 tab：PSD 下划线式 */
+        .task-filter-bar {
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 0;
+            margin: 0 0 16px;
+            border-bottom: 1px solid #eeeeee;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        .task-filter-bar::-webkit-scrollbar { display: none; }
+        .tf-btn {
+            flex: 1;
+            min-width: max-content;
+            padding: 12px 14px;
+            border-radius: 0;
+            border: none;
+            border-bottom: 2.5px solid transparent;
+            margin-bottom: -1px;
+            background: transparent;
+            color: #9a9a9a;
+            font-size: 14px;
+            font-family: inherit;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: color 0.18s;
+        }
+        .tf-btn:hover { color: #111; }
+        .tf-btn.on {
+            background: transparent;
+            color: #111;
+            border-bottom-color: #111;
+            box-shadow: none;
+            font-weight: 600;
+        }
+        .tf-count {
+            background: #f0f0f0;
+            color: #666;
+            font-size: 10.5px;
+            min-width: 18px;
+            height: 18px;
+            padding: 0 5px;
+            border-radius: 999px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .tf-btn.on .tf-count { background: #111; color: #fff; }
+
+        body.tasks-body .empty-box,
+        body.tasks-body .loading-box {
+            background: #f7f7f7 !important;
+            border: 1px solid #eeeeee !important;
+            border-radius: 12px !important;
+            box-shadow: none !important;
+            backdrop-filter: none !important;
+            color: #888888;
+        }
+
+        /* 表头 */
+        .ht-table-head {
+            display: grid;
+            grid-template-columns: 76px 1fr 112px 132px;
+            gap: 12px;
+            align-items: center;
+            padding: 10px 16px;
+            background: #f7f7f7;
+            border-radius: 8px 8px 0 0;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: #8a8a8a;
+        }
+        .ht-table-head span { text-align: center; }
+        .ht-table-head span:nth-child(2) { text-align: left; }
+
+        /* 任务列表：PSD 行式 */
+        #taskList.dashboard-task-grid {
+            display: block;
+            grid-template-columns: none;
+            gap: 0;
+            border: 1px solid #eeeeee;
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            overflow: hidden;
+            background: #fff;
+        }
+        .ht-row {
+            display: grid;
+            grid-template-columns: 76px 1fr 112px 132px;
+            gap: 12px;
+            align-items: center;
+            padding: 13px 16px;
+            border-bottom: 1px solid #f2f2f2;
+            background: #fff;
+        }
+        .ht-row:last-child { border-bottom: none; }
+        .ht-row:hover { background: #fafafa; }
+        .ht-row-thumb {
+            width: 62px; height: 62px;
+            border-radius: 50%;
+            overflow: hidden;
+            background: #f2f2f2;
+            display: flex; align-items: center; justify-content: center;
+            flex: none;
+        }
+        .ht-row-thumb img { width: 100%; height: 100%; object-fit: cover; }
+        .ht-row-thumb .ph { font-size: 22px; color: #b8b8b8; }
+        .ht-row-name { min-width: 0; text-align: left; }
+        .ht-row-title {
+            display: flex; align-items: center; gap: 7px;
+            font-size: 14.5px; font-weight: 600; color: #111;
+        }
+        .ht-row-type {
+            flex: none;
+            font-size: 10.5px;
+            padding: 2px 8px;
+            border-radius: 999px;
+            color: #fff;
+            background: #111;
+            white-space: nowrap;
+        }
+        .ht-row-type.like { background: #3b82f6; }
+        .ht-row-type.review { background: #f59e0b; }
+        .ht-row-type.follow { background: #10b981; }
+        .ht-row-sub {
+            margin-top: 5px;
+            font-size: 12px;
+            color: #8a8a8a;
+            line-height: 1.5;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+        .ht-row-sub .ht-row-badge {
+            display: inline-block;
+            margin-right: 6px;
+            padding: 1px 7px;
+            border-radius: 999px;
+            font-size: 10.5px;
+            font-weight: 600;
+        }
+        .ht-row-badge.recruiting { background: #e8f5ee; color: #0d9f5f; }
+        .ht-row-badge.limited { background: #fff3e0; color: #e68a00; }
+        .ht-row-badge.ended { background: #f0f0f0; color: #888; }
+        .ht-row-comm { text-align: center; }
+        .ht-row-comm b { display: block; font-size: 16px; font-weight: 700; color: #111; }
+        .ht-row-comm small { display: block; font-size: 11px; color: #9a9a9a; margin-top: 2px; }
+        .ht-row-action { text-align: center; }
+        .ht-row-claim {
+            padding: 9px 18px;
+            border: none;
+            border-radius: 8px;
+            background: #111;
+            color: #fff;
+            font-size: 13.5px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: background 0.18s;
+            white-space: nowrap;
+        }
+        .ht-row-claim:hover { background: #333; }
+        .ht-row-claim:disabled { background: #cccccc; cursor: not-allowed; }
+
+        /* 底部导航（移动端） */
+        .tasks-bottom-nav { display: none; }
+        @media (max-width: 640px) {
+            body.tasks-body .tasks-main { padding-bottom: 92px; }
+            .tasks-bottom-nav {
+                display: flex;
+                position: fixed;
+                left: 0; right: 0; bottom: 0;
+                height: 62px;
+                background: #ffffff;
+                border-top: 1px solid #eeeeee;
+                z-index: 210;
+            }
+            .tasks-bottom-nav a {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 2px;
+                font-size: 11px;
+                color: #9a9a9a;
+                text-decoration: none;
+            }
+            .tasks-bottom-nav a span:first-child { font-size: 19px; line-height: 1; }
+            .tasks-bottom-nav a.on { color: #111; font-weight: 600; }
+            .ht-table-head { grid-template-columns: 52px 1fr 78px 88px; gap: 8px; padding: 9px 10px; font-size: 11px; }
+            .ht-row { grid-template-columns: 52px 1fr 78px 88px; gap: 8px; padding: 11px 10px; }
+            .ht-row-thumb { width: 46px; height: 46px; }
+            .ht-row-claim { padding: 8px 10px; font-size: 12px; }
+            .ht-row-title { font-size: 13px; }
+            .ht-row-comm b { font-size: 14px; }
+            #taskList.dashboard-task-grid { border-left: none; border-right: none; border-radius: 0; }
+            .ht-table-head { border-radius: 0; }
+        }
+
     </style>
 
 </head>
@@ -447,6 +679,13 @@
             </button>
         </div>
 
+        <div class="ht-table-head" id="htTableHead" style="display:none">
+            <span data-i18n="tasks.thImage">任务图</span>
+            <span data-i18n="tasks.thName">任务名</span>
+            <span data-i18n="tasks.thCommission">佣金</span>
+            <span data-i18n="tasks.thAction">操作</span>
+        </div>
+
         <div
             id="taskList"
             class="dashboard-task-grid">
@@ -458,6 +697,21 @@
         </div>
 
     </main>
+
+    <nav class="tasks-bottom-nav" id="tasksBottomNav">
+        <a href="dashboard.html">
+            <span>🏠</span>
+            <span data-i18n="tasks.bnavHome">首页</span>
+        </a>
+        <a href="tasks.html" class="on">
+            <span>🎯</span>
+            <span data-i18n="tasks.bnavTasks">任务中心</span>
+        </a>
+        <a href="dashboard.html#mytasks">
+            <span>👤</span>
+            <span data-i18n="tasks.bnavMine">我的</span>
+        </a>
+    </nav>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -791,6 +1045,10 @@
                 visibleTasks.length === 0
             ) {
 
+                const htHead = document.getElementById("htTableHead");
+
+                if (htHead) htHead.style.display = "none";
+
                 taskList.innerHTML =
                     `<div class="empty-box">
                         ${taskFilterType === "all"
@@ -803,6 +1061,10 @@
             }
 
             taskList.innerHTML = "";
+
+            const htHead = document.getElementById("htTableHead");
+
+            if (htHead) htHead.style.display = "grid";
 
             visibleTasks.forEach(task => {
 
@@ -822,87 +1084,96 @@
                 const card =
                     document.createElement("div");
 
-                card.className =
-                    "dashboard-task-card ht-task-card";
+                const row =
+                    document.createElement("div");
 
-                card.innerHTML = `
+                row.className = "ht-row";
 
-                    <div class="ht-card-media">
+                const typeCls =
+                    task.task_type === "like" ? "like" :
+                    task.task_type === "review" ? "review" :
+                    task.task_type === "follow" ? "follow" : "shop";
+
+                const typeText =
+                    task.task_type === "like" ? I18N.t("tasks.typeLike") :
+                    task.task_type === "review" ? I18N.t("tasks.typeReview") :
+                    task.task_type === "follow" ? I18N.t("tasks.typeFollow") :
+                    I18N.t("tasks.typeShop");
+
+                let commMain = "RM0.00";
+                let commSub = "";
+
+                if (task.shop_product_id && task.shop_product_price) {
+
+                    commMain = "RM" + (Number(task.shop_product_price) * commissionRate(currentMembershipLevel)).toFixed(2);
+
+                    commSub = I18N.t("dash.orderPrice") + " RM" + Number(task.shop_product_price).toFixed(2);
+
+                } else if ((task.task_type === "like" || task.task_type === "review" || task.task_type === "follow") && Number(task.reward) > 0) {
+
+                    commMain = "RM" + Number(task.reward).toFixed(2);
+
+                    commSub = I18N.t("dash.fixedRewardHint");
+
+                } else if (Number(task.reward) > 0) {
+
+                    commMain = "RM" + (Number(task.reward) * commissionRate(currentMembershipLevel)).toFixed(2);
+
+                    commSub = I18N.t("dash.estCommission");
+
+                }
+
+                row.innerHTML = `
+
+                    <div class="ht-row-thumb">
 
                         ${task.image_url
                             ? `<img src="${escapeHtml(task.image_url)}" alt="${escapeHtml(task.title)}" loading="lazy">`
-                            : `<div class="ht-card-placeholder">📋</div>`}
-
-                        <span class="ht-badge ht-badge-${badgeInfo.cls}">
-                            ${badgeInfo.text}
-                        </span>
-
-                        <span class="ht-deadline">
-                            ${deadlineInfo.text}
-                        </span>
+                            : `<div class="ph">📋</div>`}
 
                     </div>
 
-                    <div class="ht-card-body">
+                    <div class="ht-row-name">
 
-                        <h3>
+                        <div class="ht-row-title">
+
                             ${escapeHtml(task.title)}
-                            <span class="ht-type-badge ${task.task_type === "like" ? "like" : task.task_type === "review" ? "review" : task.task_type === "follow" ? "follow" : "shop"}">
-                                ${task.task_type === "like"
-                                    ? I18N.t("tasks.typeLike")
-                                    : task.task_type === "review"
-                                        ? I18N.t("tasks.typeReview")
-                                        : task.task_type === "follow"
-                                            ? I18N.t("tasks.typeFollow")
-                                            : I18N.t("tasks.typeShop")}
-                            </span>
-                        </h3>
 
-                        <p class="ht-card-desc">
-                            ${escapeHtml(
-                                task.description ||
-                                I18N.t("dash.noTaskDesc")
-                            )}
-                        </p>
+                            <span class="ht-row-type ${typeCls}">${typeText}</span>
 
-                        ${
-                            task.shop_product_id && task.shop_product_price
-                                ? `
-                                <div class="ht-commission">
-                                    <div>
-                                        <span>${I18N.t("dash.orderPrice")}</span>
-                                        <b>RM${Number(task.shop_product_price).toFixed(2)}</b>
-                                    </div>
-                                    <div>
-                                        <span>${I18N.t("dash.estCommission")}</span>
-                                        <b class="ht-commission-value">RM${(Number(task.shop_product_price) * commissionRate(currentMembershipLevel)).toFixed(2)}</b>
-                                    </div>
-                                </div>
-                                `
-                                : (task.task_type === "like" || task.task_type === "review" || task.task_type === "follow") && Number(task.reward) > 0
-                                    ? `
-                                    <div class="ht-commission">
-                                        <div>
-                                            <span>${I18N.t("dash.fixedRewardLabel")}</span>
-                                            <b>RM${Number(task.reward).toFixed(2)}</b>
-                                        </div>
-                                        <div>
-                                            <span>${I18N.t("dash.fixedRewardHint")}</span>
-                                            <b class="ht-commission-value">${I18N.t("dash.fixedRewardLabel")}</b>
-                                        </div>
-                                    </div>
-                                    `
-                                    : ""
-                        }
-
-                        <div class="ht-slots">
-                            ${I18N.t("tasks.applied")} ${appliedCount} ·
-                            ${I18N.t("tasks.slotsLeft")} <strong>${task.remaining_slots}</strong>
                         </div>
 
+                        <div class="ht-row-sub">
+
+                            <span class="ht-row-badge ${badgeInfo.cls}">${badgeInfo.text}</span>
+
+                            ${escapeHtml(task.description || I18N.t("dash.noTaskDesc"))}
+
+                        </div>
+
+                        <div class="ht-row-sub">
+
+                            ${deadlineInfo.text}
+
+                            · ${I18N.t("tasks.applied")} ${appliedCount} · ${I18N.t("tasks.slotsLeft")} ${task.remaining_slots}
+
+                        </div>
+
+                    </div>
+
+                    <div class="ht-row-comm">
+
+                        <b>${commMain}</b>
+
+                        <small>${commSub}</small>
+
+                    </div>
+
+                    <div class="ht-row-action">
+
                         <button
-                            class="task-action-btn"
-                            onclick="claimTask(${task.id}, ${task.shop_product_id || "null"}, '${(task.task_link || "").replace(/'/g, "\\'")}')">
+                            class="ht-row-claim"
+                            onclick="claimTask(${task.id}, ${task.shop_product_id || "null"}, '${(task.task_link || "").replace(/'/g, "\'")}')">
 
                             ${
                                 task.task_type === "like"
@@ -922,7 +1193,7 @@
 
                 `;
 
-                taskList.appendChild(card);
+                taskList.appendChild(row);
 
             });
 
