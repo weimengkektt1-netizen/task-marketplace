@@ -1068,6 +1068,13 @@
                     商城订单
                 </a>
 
+                <a href="#sales"
+                   id="navSales"
+                   class="admin-nav-item">
+                    <span>📈</span>
+                    销售统计
+                </a>
+
 
                 <a href="#members" data-i18n="admin.memberManage"
                    id="navMembers"
@@ -2301,6 +2308,32 @@
             </section>
 
 
+            <!-- ========================================
+                 Sales（销售统计）
+                 ======================================== -->
+
+            <section id="sales" class="admin-section">
+
+                <div class="admin-review-header">
+                    <div>
+                        <h2>📈 销售统计</h2>
+                        <p>审核完成的商城订单金额统计</p>
+                    </div>
+                    <div class="ledger-head-actions" style="flex-wrap:wrap;gap:8px">
+                        <input type="date" id="salesDateFrom" class="admin-tool-select" style="width:auto" onchange="loadSales()">
+                        <input type="date" id="salesDateTo" class="admin-tool-select" style="width:auto" onchange="loadSales()">
+                        <button type="button" onclick="loadSales()" class="admin-refresh-btn">🔄 查询</button>
+                    </div>
+                </div>
+
+                <div id="salesSummary" style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px"></div>
+                <div id="salesContainer">
+                    <div class="admin-loading-box">正在加载...</div>
+                </div>
+
+            </section>
+
+
             <section id="agents" class="admin-section">
 
                 <div class="admin-review-header">
@@ -2773,6 +2806,7 @@ document.addEventListener(
                 loadPendingWithdrawals();
                 loadPendingRefunds();
                 loadShopOrders();
+                loadSales();
                 loadMembers();
                 loadLedger();
                 loadAgents();
@@ -2942,6 +2976,8 @@ async function checkAdmin() {
         await loadPendingRefunds();
 
         await loadShopOrders();
+
+        await loadSales();
 
         await loadMembers();
 
@@ -3120,7 +3156,7 @@ function applyRoleLayout(role) {
     // 代理默认定位到任务审核（若该权限被关闭则跳到第一个可用版块）
     if (!isAdmin) {
         const sectionIds = [
-            "reviews", "withdrawals", "refunds", "shoporders", "members", "ledger",
+            "reviews", "withdrawals", "refunds", "shoporders", "sales", "members", "ledger",
             "tasks", "create", "settings"
         ];
         const current = (location.hash || "#reviews").replace("#", "");
@@ -3159,7 +3195,7 @@ function applyRoleLayout(role) {
 // 版块折叠切换：一次只显示一个版块
 // ========================================
 
-const ADMIN_SECTION_ORDER = ["dashboard", "tasks", "create", "reviews", "withdrawals", "refunds", "shoporders", "members", "ledger", "agents", "settings"];
+const ADMIN_SECTION_ORDER = ["dashboard", "tasks", "create", "reviews", "withdrawals", "refunds", "shoporders", "sales", "members", "ledger", "agents", "settings"];
 
 function switchAdminSection(name) {
 
@@ -3200,6 +3236,9 @@ function switchAdminSection(name) {
     // 切换到商城订单时加载
     if (target === "shoporders") {
         loadShopOrders();
+    }
+    if (target === "sales") {
+        loadSales();
     }
 
     // 平滑回到顶部
@@ -6909,6 +6948,135 @@ async function rejectWithdrawal(
 
 }
 
+
+
+/* ========================================
+   销售统计（代理销售额）
+   ======================================== */
+
+async function loadSales() {
+    const container = document.getElementById("salesContainer");
+    const summary = document.getElementById("salesSummary");
+    if (!container) return;
+
+    const dateFrom = (document.getElementById("salesDateFrom") || {}).value || "";
+    const dateTo = (document.getElementById("salesDateTo") || {}).value || "";
+
+    container.innerHTML = '<div class="admin-loading-box">正在加载...</div>';
+
+    try {
+        const myIds = await getMyUserIds();
+
+        let q = supabaseClient
+            .from("shop_orders")
+            .select("id, order_no, total, status, reviewed_by, reviewed_at, user_id, created_at")
+            .eq("status", "completed")
+            .order("reviewed_at", { ascending: false })
+            .limit(500);
+
+        // 代理只看自己审核的订单
+        if (currentAdminRole === "agent") {
+            const { data: me } = await supabaseClient.auth.getUser();
+            if (me && me.user) q = q.eq("reviewed_by", me.user.id);
+        }
+
+        const { data: orders, error } = await q;
+        if (error) throw error;
+
+        let list = orders || [];
+
+        // 日期范围（按审核时间）
+        if (dateFrom) list = list.filter(o => o.reviewed_at && o.reviewed_at >= dateFrom + "T00:00:00");
+        if (dateTo) list = list.filter(o => o.reviewed_at && o.reviewed_at <= dateTo + "T23:59:59");
+
+        // 汇总
+        const totalSales = list.reduce((s, o) => s + Number(o.total || 0), 0);
+        const totalOrders = list.length;
+        const avgOrder = totalOrders > 0 ? totalSales / totalOrders : 0;
+
+        // 按日期分组
+        const byDate = {};
+        list.forEach(o => {
+            const d = o.reviewed_at ? o.reviewed_at.substring(0, 10) : "未知";
+            if (!byDate[d]) byDate[d] = { count: 0, amount: 0 };
+            byDate[d].count++;
+            byDate[d].amount += Number(o.total || 0);
+        });
+        const dates = Object.keys(byDate).sort().reverse();
+
+        // 查买家昵称
+        const buyerIds = [...new Set(list.map(o => o.user_id).filter(Boolean))];
+        const buyerMap = {};
+        if (buyerIds.length > 0) {
+            const { data: profs } = await supabaseClient
+                .from("profiles")
+                .select("id, display_name, email")
+                .in("id", buyerIds);
+            (profs || []).forEach(p => { buyerMap[p.id] = p.display_name || p.email || "?"; });
+        }
+
+        // 查审核人昵称（管理员视角）
+        let reviewerMap = {};
+        if (currentAdminRole === "admin") {
+            const reviewerIds = [...new Set(list.map(o => o.reviewed_by).filter(Boolean))];
+            if (reviewerIds.length > 0) {
+                const { data: revs } = await supabaseClient
+                    .from("profiles")
+                    .select("id, display_name, email")
+                    .in("id", reviewerIds);
+                (revs || []).forEach(p => { reviewerMap[p.id] = p.display_name || p.email || "?"; });
+            }
+        }
+
+        // 统计卡片
+        summary.innerHTML =
+            '<div style="background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.3);padding:14px 18px;border-radius:12px;min-width:160px">' +
+            '<div style="font-size:12px;color:rgba(255,255,255,0.6)">总销售额</div>' +
+            '<div style="font-size:22px;font-weight:700;color:#4ade80;margin-top:4px">RM ' + totalSales.toFixed(2) + '</div></div>' +
+            '<div style="background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.3);padding:14px 18px;border-radius:12px;min-width:160px">' +
+            '<div style="font-size:12px;color:rgba(255,255,255,0.6)">完成订单数</div>' +
+            '<div style="font-size:22px;font-weight:700;color:#60a5fa;margin-top:4px">' + totalOrders + '</div></div>' +
+            '<div style="background:rgba(250,204,21,.12);border:1px solid rgba(250,204,21,.3);padding:14px 18px;border-radius:12px;min-width:160px">' +
+            '<div style="font-size:12px;color:rgba(255,255,255,0.6)">平均客单价</div>' +
+            '<div style="font-size:22px;font-weight:700;color:#fbbf24;margin-top:4px">RM ' + avgOrder.toFixed(2) + '</div></div>';
+
+        if (list.length === 0) {
+            container.innerHTML = '<div class="admin-empty-box">该时间段暂无完成订单</div>';
+            return;
+        }
+
+        // 按日期分组渲染
+        let html = '';
+        dates.forEach(d => {
+            const g = byDate[d];
+            html += '<div style="margin-bottom:16px">' +
+                '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;padding:8px 12px;background:rgba(255,255,255,0.04);border-radius:8px">' +
+                '<b style="font-size:14px">📅 ' + d + '</b>' +
+                '<span style="font-size:13px;color:#4ade80;font-weight:600">RM ' + g.amount.toFixed(2) + ' / ' + g.count + ' 单</span>' +
+                '</div>';
+
+            // 当天订单明细
+            const dayOrders = list.filter(o => (o.reviewed_at ? o.reviewed_at.substring(0,10) : "未知") === d);
+            dayOrders.forEach(o => {
+                const buyer = buyerMap[o.user_id] || "—";
+                const reviewer = currentAdminRole === "admin" ? (reviewerMap[o.reviewed_by] || "—") : "";
+                const item = (o.items && o.items[0]) || {};
+                html += '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;margin-bottom:6px;background:rgba(255,255,255,0.02);border-radius:8px;font-size:13px">' +
+                    '<div><b>' + (item.name || o.order_no) + '</b>' +
+                    '<div style="color:rgba(255,255,255,0.5);font-size:12px;margin-top:2px">订单号：' + o.order_no + ' · 买家：' + buyer +
+                    (reviewer ? ' · 审核：' + reviewer : '') + '</div></div>' +
+                    '<div style="color:#4ade80;font-weight:600">RM ' + Number(o.total).toFixed(2) + '</div>' +
+                    '</div>';
+            });
+            html += '</div>';
+        });
+
+        container.innerHTML = html;
+
+    } catch (e) {
+        container.innerHTML = '<div class="admin-error-box">加载失败：' + e.message + '</div>';
+    }
+}
 
 
 /* ========================================
