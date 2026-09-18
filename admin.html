@@ -2322,6 +2322,9 @@
                     <div class="ledger-head-actions" style="flex-wrap:wrap;gap:8px">
                         <input type="date" id="salesDateFrom" class="admin-tool-select" style="width:auto" onchange="loadSales()">
                         <input type="date" id="salesDateTo" class="admin-tool-select" style="width:auto" onchange="loadSales()">
+                        <select id="salesAgentFilter" class="admin-tool-select" style="width:auto;display:none" onchange="loadSales()">
+                            <option value="">全部代理</option>
+                        </select>
                         <button type="button" onclick="loadSales()" class="admin-refresh-btn">🔄 查询</button>
                     </div>
                 </div>
@@ -6961,11 +6964,30 @@ async function loadSales() {
 
     const dateFrom = (document.getElementById("salesDateFrom") || {}).value || "";
     const dateTo = (document.getElementById("salesDateTo") || {}).value || "";
+    const agentFilterEl = document.getElementById("salesAgentFilter");
+    const agentFilter = agentFilterEl ? agentFilterEl.value : "";
 
     container.innerHTML = '<div class="admin-loading-box">正在加载...</div>';
 
     try {
-        const myIds = await getMyUserIds();
+        // 总管理员：加载代理列表填下拉框
+        if (currentAdminRole === "admin" && agentFilterEl) {
+            agentFilterEl.style.display = "";
+            const { data: agents } = await supabaseClient
+                .from("profiles")
+                .select("id, display_name, email")
+                .eq("role", "agent")
+                .order("display_name");
+            const cur = agentFilterEl.value;
+            agentFilterEl.innerHTML = '<option value="">全部代理</option>';
+            (agents || []).forEach(a => {
+                const opt = document.createElement("option");
+                opt.value = a.id;
+                opt.textContent = (a.display_name || a.email || "?") + " (" + (a.email || "") + ")";
+                agentFilterEl.appendChild(opt);
+            });
+            agentFilterEl.value = cur;
+        }
 
         let q = supabaseClient
             .from("shop_orders")
@@ -6978,6 +7000,9 @@ async function loadSales() {
         if (currentAdminRole === "agent") {
             const { data: me } = await supabaseClient.auth.getUser();
             if (me && me.user) q = q.eq("reviewed_by", me.user.id);
+        } else if (agentFilter) {
+            // 总管理员按代理筛选
+            q = q.eq("reviewed_by", agentFilter);
         }
 
         const { data: orders, error } = await q;
