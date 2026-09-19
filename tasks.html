@@ -1436,12 +1436,7 @@
 
         checkUser();
 
-        // 自动刷新：每 10 秒刷新任务列表
-        setInterval(function () {
-            const active = document.activeElement;
-            if (active && (active.tagName === "INPUT" || active.tagName === "TEXTAREA" || active.tagName === "SELECT")) return;
-            try { if (typeof loadTasks === "function") loadTasks(); } catch (e) { console.warn("auto refresh:", e); }
-        }, 10000);
+        // 自动刷新已取消，改用 Realtime 推送
 
     </script>
 
