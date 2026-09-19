@@ -3291,10 +3291,39 @@ function switchAdminSection(name) {
     // 记录当前版块，供自动刷新使用
     window._currentAdminSection = target;
 
-    // 切换到商城订单时加载
+    // 切换到商城订单时加载 + 订阅 Realtime
     if (target === "shoporders") {
         loadShopOrders();
+        // 订阅 shop_orders 表变化，新订单/状态变化时自动刷新
+        if (window._shopOrdersChannel) {
+            supabaseClient.removeChannel(window._shopOrdersChannel);
+            window._shopOrdersChannel = null;
+        }
+        try {
+            window._shopOrdersChannel = supabaseClient
+                .channel("shop-orders-live")
+                .on("postgres_changes",
+                    { event: "*", schema: "public", table: "shop_orders" },
+                    function() {
+                        // 用户正在输入时不刷新
+                        const a = document.activeElement;
+                        if (a && (a.tagName === "INPUT" || a.tagName === "TEXTAREA" || a.tagName === "SELECT")) return;
+                        loadShopOrders();
+                    }
+                )
+                .subscribe();
+            console.log("✅ Realtime: shop_orders 订阅已启动");
+        } catch(e) {
+            console.warn("Realtime 订阅失败，回退到轮询:", e);
+        }
+    } else {
+        // 离开商城订单时取消订阅
+        if (window._shopOrdersChannel) {
+            supabaseClient.removeChannel(window._shopOrdersChannel);
+            window._shopOrdersChannel = null;
+        }
     }
+
     if (target === "sales") {
         loadSales();
     }
@@ -3314,7 +3343,7 @@ const ADMIN_AUTO_REFRESH_MAP = {
     reviews:     () => typeof loadReviews     === "function" && loadReviews(),
     withdrawals: () => typeof loadWithdrawals === "function" && loadWithdrawals(),
     refunds:     () => typeof loadRefunds      === "function" && loadRefunds(),
-    shoporders:  () => typeof loadShopOrders   === "function" && loadShopOrders(),
+    // shoporders 已用 Realtime 实时推送，不再轮询
     sales:       () => typeof loadSales        === "function" && loadSales(),
     members:     () => typeof loadMembers     === "function" && loadMembers(),
     ledger:      () => typeof loadLedger      === "function" && loadLedger(),
