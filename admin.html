@@ -3276,7 +3276,7 @@ setInterval(function () {
     if (active && (active.tagName === "INPUT" || active.tagName === "TEXTAREA" || active.tagName === "SELECT")) return;
     const fn = ADMIN_AUTO_REFRESH_MAP[cur];
     if (fn) { try { fn(); } catch (e) { console.warn("auto refresh failed:", e); } }
-}, 25000);
+}, 10000);
 
 
 
