@@ -3236,6 +3236,9 @@ function switchAdminSection(name) {
         a.classList.toggle("active", t === target);
     });
 
+    // 记录当前版块，供自动刷新使用
+    window._currentAdminSection = target;
+
     // 切换到商城订单时加载
     if (target === "shoporders") {
         loadShopOrders();
@@ -3251,6 +3254,29 @@ function switchAdminSection(name) {
     window.scrollTo({ top: 0, behavior: "smooth" });
 
 }
+
+// ========== 自动刷新：每 25 秒刷新当前面板数据 ==========
+const ADMIN_AUTO_REFRESH_MAP = {
+    dashboard:   () => typeof loadDashboard   === "function" && loadDashboard(),
+    tasks:       () => typeof loadAdminTasks  === "function" && loadAdminTasks(),
+    reviews:     () => typeof loadReviews     === "function" && loadReviews(),
+    withdrawals: () => typeof loadWithdrawals === "function" && loadWithdrawals(),
+    refunds:     () => typeof loadRefunds      === "function" && loadRefunds(),
+    shoporders:  () => typeof loadShopOrders   === "function" && loadShopOrders(),
+    sales:       () => typeof loadSales        === "function" && loadSales(),
+    members:     () => typeof loadMembers     === "function" && loadMembers(),
+    ledger:      () => typeof loadLedger      === "function" && loadLedger(),
+    agents:      () => typeof loadAgents      === "function" && loadAgents()
+};
+setInterval(function () {
+    const cur = window._currentAdminSection;
+    if (!cur) return;
+    // 用户正在输入/聚焦输入框时不自动刷新，避免打断
+    const active = document.activeElement;
+    if (active && (active.tagName === "INPUT" || active.tagName === "TEXTAREA" || active.tagName === "SELECT")) return;
+    const fn = ADMIN_AUTO_REFRESH_MAP[cur];
+    if (fn) { try { fn(); } catch (e) { console.warn("auto refresh failed:", e); } }
+}, 25000);
 
 
 

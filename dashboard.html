@@ -4536,6 +4536,19 @@ function initTierBackground() {
 }
 
 
+// ========== 自动刷新：每 20 秒刷新用户数据 ==========
+setInterval(function () {
+    // 用户正在输入时不刷新
+    const active = document.activeElement;
+    if (active && (active.tagName === "INPUT" || active.tagName === "TEXTAREA" || active.tagName === "SELECT")) return;
+    try {
+        if (typeof loadTasks === "function") loadTasks();
+        if (typeof loadMyTasks === "function") loadMyTasks();
+        if (typeof loadWalletTransactions === "function") loadWalletTransactions();
+    } catch (e) { console.warn("auto refresh:", e); }
+}, 20000);
+
+
 </script>
 <!-- =========================
      SUBMIT TASK MODAL
