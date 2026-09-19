@@ -4779,22 +4779,6 @@ async function saveMemberDetail() {
         return;
     }
 
-    // 如果是代理，保存收款设置
-    try {
-        const roleVal = document.getElementById("mdRoleVal").value;
-        if (roleVal === "agent") {
-            const qrEl = document.getElementById("mdQrUrl");
-            if (qrEl) {
-                await supabaseClient.from("profiles").update({
-                    agent_qr_url: document.getElementById("mdQrUrl").value,
-                    agent_bank_name: document.getElementById("mdBankName").value,
-                    agent_bank_account: document.getElementById("mdBankAccount").value,
-                    agent_bank_holder: document.getElementById("mdBankHolder").value
-                }).eq("id", uid);
-            }
-        }
-    } catch(e) { console.warn("save agent pay:", e); }
-
     closeMemberDetail();
     await loadMembers();
     await loadDashboardStats();
