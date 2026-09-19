@@ -2503,6 +2503,37 @@
 
                 </div>
 
+                <!-- ===== 代理收款设置 ===== -->
+                <div class="admin-settings-card" id="agentPayCard" style="display:none">
+
+                    <label class="admin-settings-label">
+                        <span>💳 我的收款设置（客户付款时显示此收款码）</span>
+                    </label>
+
+                    <div class="admin-settings-row">
+                        <input type="text" id="agentQrInput" class="admin-tool-input" placeholder="收款码图片URL">
+                        <button type="button" class="admin-settings-save" onclick="saveAgentPay()">💾 保存</button>
+                    </div>
+
+                    <div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap">
+                        <input type="text" id="agentBankName" class="admin-tool-input" placeholder="银行名字（如 Maybank）" style="flex:1;min-width:150px">
+                        <input type="text" id="agentBankAccount" class="admin-tool-input" placeholder="银行账号" style="flex:1;min-width:150px">
+                        <input type="text" id="agentBankHolder" class="admin-tool-input" placeholder="收款人姓名" style="flex:1;min-width:150px">
+                    </div>
+
+                    <div style="margin-top:10px">
+                        <label class="btn" style="cursor:pointer;display:inline-flex;align-items:center;gap:6px;padding:8px 14px;font-size:13px;background:var(--card-bg);border:1px solid var(--border);border-radius:8px">
+                            📷 上传收款码
+                            <input type="file" accept="image/*" class="hidden" onchange="uploadAgentQr(this)">
+                        </label>
+                        <span id="agentQrPreview" style="margin-left:10px"></span>
+                    </div>
+
+                    <p class="admin-settings-hint">设置后，你名下客户在商城付款时将显示此收款码和银行信息。</p>
+                    <div class="admin-settings-status" id="agentPayStatus"></div>
+
+                </div>
+
             </section>
 
 
@@ -2607,6 +2638,7 @@ function updateSettingsLabels() {
 }
 
 async function loadSiteSettings() {
+    loadAgentPay();
 
     const input =
         document.getElementById(
@@ -2683,6 +2715,73 @@ async function loadSiteSettings() {
 
 }
 
+
+
+// ===== 代理收款设置 =====
+async function loadAgentPay() {
+    if (currentAdminRole !== "agent") {
+        document.getElementById("agentPayCard").style.display = "none";
+        return;
+    }
+    document.getElementById("agentPayCard").style.display = "block";
+    try {
+        const { data, error } = await supabaseClient
+            .from("profiles")
+            .select("agent_qr_url, agent_bank_name, agent_bank_account, agent_bank_holder")
+            .eq("id", currentAgentUserId)
+            .maybeSingle();
+        if (!error && data) {
+            document.getElementById("agentQrInput").value = data.agent_qr_url || "";
+            document.getElementById("agentBankName").value = data.agent_bank_name || "";
+            document.getElementById("agentBankAccount").value = data.agent_bank_account || "";
+            document.getElementById("agentBankHolder").value = data.agent_bank_holder || "";
+            if (data.agent_qr_url) {
+                document.getElementById("agentQrPreview").innerHTML = '<img src="'+data.agent_qr_url+'" style="width:60px;height:60px;border-radius:8px;object-fit:cover">';
+            }
+        }
+    } catch(e) { console.error("loadAgentPay:", e); }
+}
+
+async function saveAgentPay() {
+    const status = document.getElementById("agentPayStatus");
+    try {
+        const updates = {
+            agent_qr_url: document.getElementById("agentQrInput").value.trim(),
+            agent_bank_name: document.getElementById("agentBankName").value.trim(),
+            agent_bank_account: document.getElementById("agentBankAccount").value.trim(),
+            agent_bank_holder: document.getElementById("agentBankHolder").value.trim()
+        };
+        const { error } = await supabaseClient
+            .from("profiles")
+            .update(updates)
+            .eq("id", currentAgentUserId);
+        if (error) throw error;
+        status.innerHTML = '<span style="color:#4ade80">✅ 已保存</span>';
+    } catch(e) {
+        status.innerHTML = '<span style="color:#f87171">❌ 保存失败: ' + e.message + '</span>';
+    }
+}
+
+async function uploadAgentQr(input) {
+    const file = input.files[0];
+    if (!file) return;
+    const status = document.getElementById("agentPayStatus");
+    status.textContent = "上传中...";
+    try {
+        const ext = file.name.split(".").pop();
+        const path = "agent_qr_" + Date.now() + "." + ext;
+        const { error: upErr } = await supabaseClient.storage
+            .from("pay-qr")
+            .upload(path, file, { upsert: true });
+        if (upErr) throw upErr;
+        const { data: pub } = supabaseClient.storage.from("pay-qr").getPublicUrl(path);
+        document.getElementById("agentQrInput").value = pub.publicUrl;
+        document.getElementById("agentQrPreview").innerHTML = '<img src="'+pub.publicUrl+'" style="width:60px;height:60px;border-radius:8px;object-fit:cover">';
+        status.textContent = "";
+    } catch(e) {
+        status.innerHTML = '<span style="color:#f87171">❌ 上传失败: ' + e.message + '</span>';
+    }
+}
 
 async function saveContactLink() {
 
