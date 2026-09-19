@@ -1408,56 +1408,12 @@ async function openPayModal(order){
     if (ub) ub.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V4m0 0l-4 4m4-4l4 4"/><path d="M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/></svg> 我已付款 · 上传支付截图';
     document.getElementById("payAmount").textContent = fmt(Number(order.total));
     document.getElementById("payOrderNo").textContent = "订单号 " + order.order_no;
-
-    // 先查当前用户所属代理的收款设置
-    let agentPay = null;
     try {
-        const { data: { user } } = await sb.auth.getUser();
-        if (user) {
-            // 查用户所属代理
-            const { data: rel } = await sb.from("agent_relations").select("agent_id").eq("user_id", user.id).maybeSingle();
-            if (rel && rel.agent_id) {
-                // 查代理的收款设置
-                const { data: prof } = await sb.from("profiles").select("agent_qr_url, agent_bank_name, agent_bank_account, agent_bank_holder").eq("id", rel.agent_id).maybeSingle();
-                if (prof && prof.agent_qr_url) {
-                    agentPay = prof;
-                }
-            }
-        }
-    } catch(e) { console.warn("查代理收款失败:", e); }
-
-    if (agentPay) {
-        // 代理有收款码：直接显示代理的，不显示币种/银行选择
-        payMethodsCache = [];
-        const curRow = document.getElementById("payCurrencyRow");
-        if (curRow) curRow.style.display = "none";
-        const bankRow = document.getElementById("payBanksRow");
-        if (bankRow) bankRow.style.display = "none";
-        const img = document.getElementById("payQrImg");
-        const ph = document.getElementById("payQrPh");
-        const acc = document.getElementById("payAccount");
-        if (agentPay.agent_qr_url) {
-            img.src = agentPay.agent_qr_url;
-            img.classList.remove("hidden");
-            if (ph) ph.classList.add("hidden");
-        }
-        if (acc) {
-            acc.style.display = "block";
-            acc.innerHTML = "<div style='padding:12px;background:var(--card);border-radius:10px;margin-top:12px'>"
-                + (agentPay.agent_bank_name ? "<div style='font-size:13px;color:#888'>银行</div><div style='font-weight:600;margin-bottom:8px'>" + esc(agentPay.agent_bank_name) + "</div>" : "")
-                + (agentPay.agent_bank_account ? "<div style='font-size:13px;color:#888'>账号</div><div style='font-weight:600;margin-bottom:8px'>" + esc(agentPay.agent_bank_account) + "</div>" : "")
-                + (agentPay.agent_bank_holder ? "<div style='font-size:13px;color:#888'>收款人</div><div style='font-weight:600'>" + esc(agentPay.agent_bank_holder) + "</div>" : "")
-                + "</div>";
-        }
-    } else {
-        // 代理没设收款码：显示全局默认付款方式
-        try {
-            const { data: methods } = await sb.from("shop_payment_methods").select("*").eq("enabled", true).order("sort", {ascending: true});
-            payMethodsCache = methods || [];
-        } catch (e) { payMethodsCache = []; }
-        renderPayCurrencyRow();
-        renderPayBanks();
-    }
+        const { data: methods } = await sb.from("shop_payment_methods").select("*").eq("enabled", true).order("sort", {ascending: true});
+        payMethodsCache = methods || [];
+    } catch (e) { payMethodsCache = []; }
+    renderPayCurrencyRow();
+    renderPayBanks();
     openModal("payModal");
 }
 function renderPayCurrencyRow(){
