@@ -3,6 +3,73 @@
 // 用户端基础功能
 // ========================================
 
+// ========================================
+// 全局 Toast 消息系统
+// ========================================
+function showToast(msg, type) {
+    type = type || "info"; // info / success / error / warning
+    let box = document.getElementById("globalToastBox");
+    if (!box) {
+        box = document.createElement("div");
+        box.id = "globalToastBox";
+        box.style.cssText = "position:fixed;top:20px;right:20px;z-index:99999;display:flex;flex-direction:column;gap:10px;max-width:360px";
+        document.body.appendChild(box);
+    }
+    const colors = {
+        info:    "background:rgba(30,41,59,.95);border-left:4px solid #60a5fa",
+        success: "background:rgba(30,41,59,.95);border-left:4px solid #4ade80",
+        error:   "background:rgba(30,41,59,.95);border-left:4px solid #f87171",
+        warning: "background:rgba(30,41,59,.95);border-left:4px solid #fbbf24"
+    };
+    const icons = { info: "ℹ️", success: "✅", error: "❌", warning: "⚠️" };
+    const el = document.createElement("div");
+    el.style.cssText = (colors[type] || colors.info) + ";color:#fff;padding:14px 18px;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.3);font-size:14px;line-height:1.5;animation:toastIn .3s ease;backdrop-filter:blur(10px)";
+    el.innerHTML = '<span style="margin-right:8px">' + (icons[type] || "ℹ️") + '</span>' + msg;
+    box.appendChild(el);
+    // 注入动画 keyframes（只一次）
+    if (!document.getElementById("toastAnim")) {
+        const style = document.createElement("style");
+        style.id = "toastAnim";
+        style.textContent = "@keyframes toastIn{from{transform:translateX(100px);opacity:0}to{transform:translateX(0);opacity:1}}";
+        document.head.appendChild(style);
+    }
+    setTimeout(function() {
+        el.style.transition = "all .3s";
+        el.style.opacity = "0";
+        el.style.transform = "translateX(100px)";
+        setTimeout(function() { el.remove(); }, 300);
+    }, 3000);
+}
+
+// 确认弹窗（替代 confirm）
+function showConfirm(msg, onYes) {
+    if (confirm(msg)) onYes();
+}
+
+// 金额格式化
+function fmtMoney(n) {
+    n = Number(n || 0);
+    return "RM " + n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+// 重写 window.alert → Toast（全站自动生效，不用改 HTML）
+(function() {
+    const _origAlert = window.alert;
+    window.alert = function(msg) {
+        if (!msg) return;
+        const m = String(msg);
+        // 根据内容判断类型
+        let type = "info";
+        if (/成功|已通过|已发放|已保存|已提交|完成|成功/.test(m)) type = "success";
+        if (/失败|错误|error|invalid|不足|无法|拒绝|不能|异常/.test(m)) type = "error";
+        if (/警告|注意|确认/.test(m)) type = "warning";
+        showToast(m, type);
+    };
+    // 保留原始 alert 供需要时使用
+    window._nativeAlert = _origAlert;
+})();
+
+
 
 // ========================================
 // Supabase 配置

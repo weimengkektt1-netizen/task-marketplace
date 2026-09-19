@@ -1447,6 +1447,58 @@
                     </div>
 
 
+                    <!-- 今日销售额 -->
+
+                    <div class="admin-stat-card" style="border-left:3px solid #4ade80">
+
+                        <div class="admin-stat-icon">
+                            📈
+                        </div>
+
+                        <div>
+
+                            <div class="admin-stat-label">
+                                今日销售额
+                            </div>
+
+                            <div
+                                class="admin-stat-value"
+                                id="statTodaySales"
+                                style="color:#4ade80">
+                                RM0.00
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- 今日完成订单 -->
+
+                    <div class="admin-stat-card" style="border-left:3px solid #60a5fa">
+
+                        <div class="admin-stat-icon">
+                            📦
+                        </div>
+
+                        <div>
+
+                            <div class="admin-stat-label">
+                                今日完成订单
+                            </div>
+
+                            <div
+                                class="admin-stat-value"
+                                id="statTodayOrders"
+                                style="color:#60a5fa">
+                                0
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
                 </div>
 
 
@@ -4013,6 +4065,21 @@ async function loadDashboardStats() {
 
         setStat("statTotalFlow", "RM" + totalIn.toFixed(2));
         setStat("statTotalRewards", "RM" + totalRewards.toFixed(2));
+
+        // 今日销售额和完成订单
+        try {
+            const { data: todayOrders } = await supabaseClient
+                .from("shop_orders")
+                .select("total")
+                .eq("status", "completed")
+                .gte("reviewed_at", new Date(dayStartUTC).toISOString());
+            const todaySales = (todayOrders || []).reduce((sum, o) => sum + Number(o.total || 0), 0);
+            setStat("statTodaySales", "RM" + todaySales.toFixed(2));
+            setStat("statTodayOrders", (todayOrders || []).length);
+        } catch (e) {
+            setStat("statTodaySales", "RM0.00");
+            setStat("statTodayOrders", 0);
+        }
 
     } catch (e) {
         console.error("dashboard stats failed", e);
