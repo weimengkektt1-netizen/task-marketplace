@@ -4550,6 +4550,22 @@ async function openMemberDetail(uid) {
             '<input value="' + (p.invite_code || "—") + '" readonly /></div>' +
             '</div>' +
 
+            // 如果是代理，显示收款设置
+            ((p.role === "agent") ?
+            '<div class="admin-modal-sec"><div class="admin-modal-sec-title">💳 ' + (zh ? "收款设置（客户付款时显示）" : "Payment settings") + '</div>' +
+            '<div class="admin-modal-field"><label>' + (zh ? "收款码URL" : "QR Code URL") + '</label>' +
+            '<input id="mdQrUrl" value="' + (p.agent_qr_url || "") + '" /></div>' +
+            '<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px">' +
+            '<div class="admin-modal-field" style="flex:1;min-width:120px"><label>' + (zh ? "银行名" : "Bank") + '</label>' +
+            '<input id="mdBankName" value="' + (p.agent_bank_name || "") + '" /></div>' +
+            '<div class="admin-modal-field" style="flex:1;min-width:120px"><label>' + (zh ? "银行账号" : "Account") + '</label>' +
+            '<input id="mdBankAccount" value="' + (p.agent_bank_account || "") + '" /></div>' +
+            '<div class="admin-modal-field" style="flex:1;min-width:120px"><label>' + (zh ? "收款人" : "Holder") + '</label>' +
+            '<input id="mdBankHolder" value="' + (p.agent_bank_holder || "") + '" /></div>' +
+            '</div>' +
+            '</div>'
+            : '') +
+
             '<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:6px">' +
             '<button class="admin-action-success" onclick="saveMemberDetail()">💾 ' + (zh ? "保存修改" : "Save changes") + '</button>' +
             '<button class="admin-mini-btn gold" onclick="adjustBalance(\'' + uid + '\')">⚖️ ' + (zh ? "调账" : "Adjust") + '</button>' +
@@ -4762,6 +4778,22 @@ async function saveMemberDetail() {
         alert((typeof I18N !== "undefined" && I18N.get() === "zh" ? "保存失败：" : "Save failed: ") + error.message);
         return;
     }
+
+    // 如果是代理，保存收款设置
+    try {
+        const roleVal = document.getElementById("mdRoleVal").value;
+        if (roleVal === "agent") {
+            const qrEl = document.getElementById("mdQrUrl");
+            if (qrEl) {
+                await supabaseClient.from("profiles").update({
+                    agent_qr_url: document.getElementById("mdQrUrl").value,
+                    agent_bank_name: document.getElementById("mdBankName").value,
+                    agent_bank_account: document.getElementById("mdBankAccount").value,
+                    agent_bank_holder: document.getElementById("mdBankHolder").value
+                }).eq("id", uid);
+            }
+        }
+    } catch(e) { console.warn("save agent pay:", e); }
 
     closeMemberDetail();
     await loadMembers();
