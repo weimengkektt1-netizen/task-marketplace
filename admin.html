@@ -3291,42 +3291,56 @@ function switchAdminSection(name) {
     // 记录当前版块，供自动刷新使用
     window._currentAdminSection = target;
 
-    // 切换到商城订单时加载 + 订阅 Realtime
-    if (target === "shoporders") {
-        loadShopOrders();
-        // 订阅 shop_orders 表变化，新订单/状态变化时自动刷新
-        if (window._shopOrdersChannel) {
-            supabaseClient.removeChannel(window._shopOrdersChannel);
-            window._shopOrdersChannel = null;
-        }
-        try {
-            window._shopOrdersChannel = supabaseClient
-                .channel("shop-orders-live")
-                .on("postgres_changes",
-                    { event: "*", schema: "public", table: "shop_orders" },
-                    function() {
-                        // 用户正在输入时不刷新
-                        const a = document.activeElement;
-                        if (a && (a.tagName === "INPUT" || a.tagName === "TEXTAREA" || a.tagName === "SELECT")) return;
-                        loadShopOrders();
-                    }
-                )
-                .subscribe();
-            console.log("✅ Realtime: shop_orders 订阅已启动");
-        } catch(e) {
-            console.warn("Realtime 订阅失败，回退到轮询:", e);
-        }
-    } else {
-        // 离开商城订单时取消订阅
-        if (window._shopOrdersChannel) {
-            supabaseClient.removeChannel(window._shopOrdersChannel);
-            window._shopOrdersChannel = null;
-        }
+    // 通用 Realtime 订阅管理：根据当前面板订阅对应表
+    // 先取消所有旧订阅
+    if (window._realtimeChannels) {
+        window._realtimeChannels.forEach(function(ch) {
+            try { supabaseClient.removeChannel(ch); } catch(e) {}
+        });
+        window._realtimeChannels = [];
     }
 
-    if (target === "sales") {
-        loadSales();
+    // 面板 → (表名数组, 刷新函数) 映射
+    const RT_MAP = {
+        dashboard:   [["tasks","shop_orders","wallet_transactions"], function(){ typeof loadDashboard==="function" && loadDashboard(); }],
+        tasks:       [["tasks","task_claims"],                     function(){ typeof loadAdminTasks==="function" && loadAdminTasks(); }],
+        reviews:     [["reviews","task_claims"],                   function(){ typeof loadReviews==="function" && loadReviews(); }],
+        withdrawals: [["withdrawals"],                             function(){ typeof loadWithdrawals==="function" && loadWithdrawals(); }],
+        refunds:     [["refunds","wallet_transactions"],           function(){ typeof loadRefunds==="function" && loadRefunds(); }],
+        shoporders:  [["shop_orders"],                             function(){ typeof loadShopOrders==="function" && loadShopOrders(); }],
+        sales:       [["shop_orders","wallet_transactions"],       function(){ typeof loadSales==="function" && loadSales(); }],
+        members:     [["profiles"],                                function(){ typeof loadMembers==="function" && loadMembers(); }],
+        ledger:      [["wallet_transactions"],                      function(){ typeof loadLedger==="function" && loadLedger(); }],
+        agents:      [["profiles","agent_users"],                  function(){ typeof loadAgents==="function" && loadAgents(); }]
+    };
+
+    const cfg = RT_MAP[target];
+    if (cfg) {
+        const tables = cfg[0];
+        const reload = cfg[1];
+        tables.forEach(function(tbl, idx) {
+            try {
+                const ch = supabaseClient
+                    .channel("rt-" + target + "-" + idx)
+                    .on("postgres_changes",
+                        { event: "*", schema: "public", table: tbl },
+                        function() {
+                            const a = document.activeElement;
+                            if (a && (a.tagName === "INPUT" || a.tagName === "TEXTAREA" || a.tagName === "SELECT")) return;
+                            reload();
+                        }
+                    )
+                    .subscribe();
+                window._realtimeChannels.push(ch);
+            } catch(e) {
+                console.warn("Realtime 订阅失败:", tbl, e);
+            }
+        });
+        console.log("✅ Realtime: " + target + " 已订阅 " + tables.join(", "));
     }
+
+    if (target === "sales") loadSales();
+    if (target === "shoporders") loadShopOrders();
 
     // 平滑回到顶部
     if (document.querySelector(".admin-main")) {
@@ -3336,19 +3350,8 @@ function switchAdminSection(name) {
 
 }
 
-// ========== 自动刷新：每 25 秒刷新当前面板数据 ==========
-const ADMIN_AUTO_REFRESH_MAP = {
-    dashboard:   () => typeof loadDashboard   === "function" && loadDashboard(),
-    tasks:       () => typeof loadAdminTasks  === "function" && loadAdminTasks(),
-    reviews:     () => typeof loadReviews     === "function" && loadReviews(),
-    withdrawals: () => typeof loadWithdrawals === "function" && loadWithdrawals(),
-    refunds:     () => typeof loadRefunds      === "function" && loadRefunds(),
-    // shoporders 已用 Realtime 实时推送，不再轮询
-    sales:       () => typeof loadSales        === "function" && loadSales(),
-    members:     () => typeof loadMembers     === "function" && loadMembers(),
-    ledger:      () => typeof loadLedger      === "function" && loadLedger(),
-    agents:      () => typeof loadAgents      === "function" && loadAgents()
-};
+// ========== 自动刷新：已全部改用 Realtime 实时推送，不再轮询 ==========
+const ADMIN_AUTO_REFRESH_MAP = {};
 setInterval(function () {
     const cur = window._currentAdminSection;
     if (!cur) return;
