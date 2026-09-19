@@ -1436,7 +1436,24 @@
 
         checkUser();
 
-        // 自动刷新已取消，改用 Realtime 推送
+        // Realtime 实时推送
+        (function initRealtime() {
+            if (typeof supabaseClient === "undefined") return;
+            function safeReload() {
+                var a = document.activeElement;
+                if (a && (a.tagName === "INPUT" || a.tagName === "TEXTAREA" || a.tagName === "SELECT")) return;
+                if (typeof loadTasks === "function") {
+                    try { loadTasks(); } catch(e) { console.warn("realtime:", e); }
+                }
+            }
+            try {
+                supabaseClient
+                    .channel("rt-tasks-page")
+                    .on("postgres_changes", { event: "*", schema: "public", table: "tasks" }, safeReload)
+                    .subscribe();
+                console.log("✅ Realtime: tasks 订阅已启动");
+            } catch(e) { console.warn("tasks realtime failed:", e); }
+        })();
 
     </script>
 

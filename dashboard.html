@@ -4536,7 +4536,56 @@ function initTierBackground() {
 }
 
 
-// ========== 自动刷新已取消，改用 Realtime 推送 ==========
+// ========== Realtime 实时推送 ==========
+(function initRealtime() {
+    if (typeof supabaseClient === "undefined") return;
+
+    function safeReload(fnName) {
+        return function() {
+            var a = document.activeElement;
+            if (a && (a.tagName === "INPUT" || a.tagName === "TEXTAREA" || a.tagName === "SELECT")) return;
+            if (typeof window[fnName] === "function") {
+                try { window[fnName](); } catch(e) { console.warn("realtime reload:", e); }
+            }
+        };
+    }
+
+    // 订阅 tasks（任务列表）
+    try {
+        supabaseClient
+            .channel("rt-dash-tasks")
+            .on("postgres_changes", { event: "*", schema: "public", table: "tasks" }, safeReload("loadTasks"))
+            .subscribe();
+        console.log("✅ Realtime: tasks 订阅已启动");
+    } catch(e) { console.warn("tasks realtime failed:", e); }
+
+    // 订阅 task_claims（我的任务）
+    try {
+        supabaseClient
+            .channel("rt-dash-mytasks")
+            .on("postgres_changes", { event: "*", schema: "public", table: "task_claims" }, safeReload("loadMyTasks"))
+            .subscribe();
+        console.log("✅ Realtime: task_claims 订阅已启动");
+    } catch(e) { console.warn("task_claims realtime failed:", e); }
+
+    // 订阅 wallet_transactions（钱包流水）
+    try {
+        supabaseClient
+            .channel("rt-dash-wallet")
+            .on("postgres_changes", { event: "*", schema: "public", table: "wallet_transactions" }, safeReload("loadWalletTransactions"))
+            .subscribe();
+        console.log("✅ Realtime: wallet_transactions 订阅已启动");
+    } catch(e) { console.warn("wallet_transactions realtime failed:", e); }
+
+    // 订阅 task_reviews（任务审核结果通知）
+    try {
+        supabaseClient
+            .channel("rt-dash-reviews")
+            .on("postgres_changes", { event: "*", schema: "public", table: "task_reviews" }, safeReload("loadMyTasks"))
+            .subscribe();
+        console.log("✅ Realtime: task_reviews 订阅已启动");
+    } catch(e) { console.warn("task_reviews realtime failed:", e); }
+})();
 
 
 </script>
