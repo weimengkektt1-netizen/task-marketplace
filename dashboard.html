@@ -1980,7 +1980,7 @@ async function loadTasks() {
 
                 <h3>
                     ${escapeHtml(task.title)}
-                    <span class="ht-type-badge ${task.task_type === "like" ? "like" : task.task_type === "review" ? "review" : task.task_type === "follow" ? "follow" : "shop"}">
+                    <span class="ht-type-badge ${task.task_type === "like" ? "like" : task.task_type === "review" ? "review" : task.task_type === "follow" ? "follow" : task.task_type === "invite" ? "invite" : "shop"}">
                         ${task.task_type === "like"
                             ? I18N.t("tasks.typeLike")
                             : task.task_type === "review"
