@@ -8506,6 +8506,29 @@ async function deleteTask(
 
     try {
 
+        // 先查出这个任务的所有 claim IDs
+        const { data: claims } = await supabaseClient
+            .from("task_claims")
+            .select("id")
+            .eq("task_id", taskId);
+
+        const claimIds = claims ? claims.map(c => c.id) : [];
+
+        // 有 submissions 就先删
+        if (claimIds.length > 0) {
+            await supabaseClient
+                .from("submissions")
+                .delete()
+                .in("claim_id", claimIds);
+
+            // 再删 task_claims
+            await supabaseClient
+                .from("task_claims")
+                .delete()
+                .eq("task_id", taskId);
+        }
+
+        // 最后删任务
         const {
             error
         } =
