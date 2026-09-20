@@ -676,6 +676,7 @@
             </button>
             <button type="button" class="tf-btn" data-t="follow" onclick="setTaskFilter('follow')">
                 <span data-i18n="tasks.typeFollow">👁 关注任务</span><span class="tf-count" id="tfCountFollow">0</span>
+                <span>👥 邀请好友</span><span class="tf-count" id="tfCountInvite">0</span>
             </button>
         </div>
 
@@ -755,17 +756,17 @@
 
         function updateTaskFilterCounts(tasks) {
 
-            const counts = { all: tasks.length, like: 0, shop: 0, review: 0, follow: 0 };
+            const counts = { all: tasks.length, like: 0, shop: 0, review: 0, follow: 0, invite: 0 };
 
             (tasks || []).forEach(function (t) {
 
-                const k = t.task_type === "like" ? "like" : t.task_type === "review" ? "review" : t.task_type === "follow" ? "follow" : "shop";
+                const k = t.task_type === "like" ? "like" : t.task_type === "review" ? "review" : t.task_type === "follow" ? "follow" : t.task_type === "invite" ? "invite" : "shop";
 
                 counts[k] = (counts[k] || 0) + 1;
 
             });
 
-            ["all", "like", "shop", "review", "follow"].forEach(function (k) {
+            ["all", "like", "shop", "review", "follow", "invite"].forEach(function (k) {
 
                 const el = document.getElementById("tfCount" + k.charAt(0).toUpperCase() + k.slice(1));
 
@@ -776,11 +777,11 @@
         }
 
         function commissionRate(level) {
-            return level === "silver" ? 0.06 :
-                   level === "gold" ? 0.08 :
-                   level === "platinum" ? 0.12 :
-                   level === "diamond" ? 0.15 :
-                   level === "radiant" ? 0.18 : 0.02;
+            return level === "silver" ? 0.15 :
+                   level === "gold" ? 0.23 :
+                   level === "platinum" ? 0.30 :
+                   level === "diamond" ? 0.46 :
+                   level === "radiant" ? 0.65 : 0.10;
         }
 
 
@@ -1092,12 +1093,14 @@
                 const typeCls =
                     task.task_type === "like" ? "like" :
                     task.task_type === "review" ? "review" :
-                    task.task_type === "follow" ? "follow" : "shop";
+                    task.task_type === "follow" ? "follow" :
+                    task.task_type === "invite" ? "invite" : "shop";
 
                 const typeText =
                     task.task_type === "like" ? I18N.t("tasks.typeLike") :
                     task.task_type === "review" ? I18N.t("tasks.typeReview") :
                     task.task_type === "follow" ? I18N.t("tasks.typeFollow") :
+                    task.task_type === "invite" ? "邀请好友任务" :
                     I18N.t("tasks.typeShop");
 
                 let commMain = "RM0.00";
@@ -1108,6 +1111,12 @@
                     commMain = "RM" + (Number(task.shop_product_price) * commissionRate(currentMembershipLevel)).toFixed(2);
 
                     commSub = I18N.t("dash.orderPrice") + " RM" + Number(task.shop_product_price).toFixed(2);
+
+                } else if (task.task_type === "invite" && Number(task.invite_unit_price) > 0) {
+
+                    commMain = "RM" + Number(task.invite_unit_price).toFixed(2);
+
+                    commSub = "邀请好友任务 · 固定奖励";
 
                 } else if ((task.task_type === "like" || task.task_type === "review" || task.task_type === "follow") && Number(task.reward) > 0) {
 
