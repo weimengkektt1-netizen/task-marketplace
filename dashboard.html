@@ -2499,6 +2499,10 @@ function renderMyTasks() {
         if (isShopTask && item.tasks?.shop_product_price) {
             commissionLabel = I18N.t("dash.estCommission");
             commissionVal = "RM" + (Number(item.tasks.shop_product_price) * commissionRate(currentMembershipLevel)).toFixed(2);
+        } else if (item.tasks?.task_type === "invite" && Number(item.tasks?.invite_unit_price) > 0) {
+            // 邀请好友任务：固定总奖励
+            commissionLabel = I18N.t("dash.fixedRewardLabel");
+            commissionVal = "RM" + Number(item.tasks.invite_unit_price).toFixed(2);
         } else if ((item.tasks?.task_type === "like" || item.tasks?.task_type === "review" || item.tasks?.task_type === "follow") && Number(item.tasks?.reward) > 0) {
             commissionLabel = I18N.t("dash.fixedRewardLabel");
             commissionVal = "RM" + Number(item.tasks.reward).toFixed(2);
