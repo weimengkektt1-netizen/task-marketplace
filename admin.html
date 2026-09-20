@@ -1588,10 +1588,31 @@
                                         <span data-i18n="admin.taskTypeFollow">关注任务</span>
                                     </label>
 
+                                    <label class="admin-type-option">
+                                        <input type="radio" name="taskType" value="invite" id="taskTypeInvite" onchange="onTaskTypeChange()">
+                                        <span class="admin-type-icon">👥</span>
+                                        <span data-i18n="admin.taskTypeInvite">邀请好友任务</span>
+                                    </label>
+
                                 </div>
 
                             </div>
 
+
+                            <!-- 邀请好友任务专用 -->
+                            <div class="admin-form-group full" id="inviteSettingsGroup" style="display:none">
+                                <div style="display:flex;gap:12px;flex-wrap:wrap">
+                                    <div style="flex:1;min-width:150px">
+                                        <label>邀请好友数量</label>
+                                        <input type="number" id="inviteCount" min="1" value="3" />
+                                    </div>
+                                    <div style="flex:1;min-width:150px">
+                                        <label>单价（RM/人）</label>
+                                        <input type="number" id="inviteUnitPrice" step="0.1" min="0" value="1.0" />
+                                    </div>
+                                </div>
+                                <small style="color:#888">客户需要邀请对应数量的好友注册，并提交好友电话号码</small>
+                            </div>
 
                             <!-- 任务链接（点赞任务专用） -->
 
@@ -1877,6 +1898,7 @@
                         <option value="shop" data-i18n="admin.taskTypeShop">商城任务</option>
                         <option value="review" data-i18n="admin.taskTypeReview">评论任务</option>
                         <option value="follow" data-i18n="admin.taskTypeFollow">关注任务</option>
+<option value="invite" data-i18n="admin.taskTypeInvite">邀请好友任务</option>
                     </select>
 
                     <select
@@ -5195,6 +5217,11 @@ function onTaskTypeChange() {
 
         });
 
+    const inviteGroup = document.getElementById("inviteSettingsGroup");
+    if (inviteGroup) {
+        inviteGroup.style.display = type === "invite" ? "" : "none";
+    }
+
 }
 
 
@@ -5463,7 +5490,13 @@ async function createTask(event) {
                         taskType,
 
                     task_link:
-                        taskLinkValue
+                        taskLinkValue,
+
+                    invite_count:
+                        taskType === "invite" ? parseInt(document.getElementById("inviteCount").value, 10) : null,
+
+                    invite_unit_price:
+                        taskType === "invite" ? parseFloat(document.getElementById("inviteUnitPrice").value) : null
 
                 });
 

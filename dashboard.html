@@ -2865,6 +2865,26 @@ function submitTask(taskId) {
         taskId;
 
 
+    // 检查是否是邀请好友任务
+    const inviteArea = document.getElementById("invitePhonesArea");
+    const inviteList = document.getElementById("invitePhonesList");
+
+    // 从当前任务列表找任务类型
+    const task = (currentTasks || []).find(t => t.id === taskId);
+    if (task && task.task_type === "invite" && task.invite_count) {
+        inviteArea.style.display = "block";
+        // 动态生成 N 个电话号码输入框
+        let html = "";
+        for (let i = 1; i <= task.invite_count; i++) {
+            html += '<input type="tel" id="invitePhone_' + i + '" placeholder="好友 ' + i + ' 的电话号码" style="margin-bottom:8px;width:100%;padding:10px;border-radius:8px;border:1px solid #ddd">';
+        }
+        inviteList.innerHTML = html;
+    } else {
+        inviteArea.style.display = "none";
+        inviteList.innerHTML = "";
+    }
+
+
     modal.classList.add(
         "active"
     );
@@ -4628,6 +4648,15 @@ function initTierBackground() {
             </p>
 
 
+
+            <!-- 邀请好友任务专用：电话号码输入区 -->
+            <div id="invitePhonesArea" style="display:none">
+                <label>
+                    <span>被邀请好友电话号码</span>
+                </label>
+                <div id="invitePhonesList"></div>
+                <small style="color:#888">请填写被你邀请注册的好友电话号码</small>
+            </div>
 
             <label>
                 <span data-i18n="submit.proof">完成截图</span>
