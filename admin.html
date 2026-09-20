@@ -7924,14 +7924,16 @@ function createTaskCard(
         ttype === "like" ? "like"
             : ttype === "review" ? "review"
                 : ttype === "follow" ? "follow"
-                    : "shop";
+                    : ttype === "invite" ? "invite"
+                        : "shop";
 
 
     const typeLabel =
         ttype === "like" ? I18N.t("admin.taskTypeLike")
             : ttype === "review" ? I18N.t("admin.taskTypeReview")
                 : ttype === "follow" ? I18N.t("admin.taskTypeFollow")
-                    : I18N.t("admin.taskTypeShop");
+                    : ttype === "invite" ? I18N.t("admin.taskTypeInvite")
+                        : I18N.t("admin.taskTypeShop");
 
 
     const claimed =
@@ -8664,6 +8666,12 @@ async function openEditTask(
     document.getElementById("editTaskShopPrice").value =
         task.shop_product_price != null ? task.shop_product_price : "";
 
+    // 填充邀请好友字段
+    document.getElementById("editInviteCount").value =
+        task.invite_count != null ? task.invite_count : 3;
+    document.getElementById("editInviteUnitPrice").value =
+        task.invite_unit_price != null ? task.invite_unit_price : 10.0;
+
     document.getElementById("editTaskReward").value =
         task.reward != null ? task.reward : "";
 
@@ -9099,6 +9107,12 @@ async function saveEditTask() {
         shop_product_id:
             shopIdVal !== "" ? parseInt(shopIdVal, 10) : null,
 
+        invite_count:
+            taskType === "invite" ? parseInt(document.getElementById("editInviteCount").value, 10) : null,
+
+        invite_unit_price:
+            taskType === "invite" ? parseFloat(document.getElementById("editInviteUnitPrice").value) : null,
+
         deadline: deadline
 
     };
@@ -9520,6 +9534,11 @@ function escapeJs(
                             <span class="admin-type-icon">👁</span>
                             <span data-i18n="admin.taskTypeFollow">关注任务</span>
                         </label>
+                        <label class="admin-type-option">
+                            <input type="radio" name="editTaskType" value="invite" id="editTaskTypeInvite" onchange="onEditTaskTypeChange()">
+                            <span class="admin-type-icon">👥</span>
+                            <span data-i18n="admin.taskTypeInvite">邀请好友任务</span>
+                        </label>
                     </div>
                 </div>
 
@@ -9569,6 +9588,18 @@ function escapeJs(
                 <div class="admin-modal-field edit-shop-field">
                     <label><span data-i18n="admin.shopPrice">商品价格（RM）</span></label>
                     <input type="number" id="editTaskShopPrice" step="0.01" min="0" placeholder="例如：89.00">
+                </div>
+
+                <!-- 邀请好友数量 -->
+                <div class="admin-modal-field edit-invite-field">
+                    <label><span>需要邀请好友数量</span></label>
+                    <input type="number" id="editInviteCount" min="1" value="3">
+                </div>
+
+                <!-- 邀请好友总奖励 -->
+                <div class="admin-modal-field edit-invite-field">
+                    <label><span>邀请好友总奖励（RM）</span></label>
+                    <input type="number" id="editInviteUnitPrice" step="0.1" min="0" value="10.0">
                 </div>
 
                 <!-- 任务奖励 -->
