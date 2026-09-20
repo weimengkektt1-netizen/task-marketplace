@@ -2943,11 +2943,11 @@ async function submitProof() {
 
 
     const file =
-        imageInput.files[0];
+        imageInput ? imageInput.files[0] : null;
 
 
     const proofText =
-        descriptionInput.value.trim();
+        descriptionInput ? descriptionInput.value.trim() : "";
 
     // 邀请好友任务：收集电话号码（不管 isInviteTask，只要有输入框就收集）
     let invitePhones = [];
@@ -3184,13 +3184,8 @@ async function submitProof() {
 
 
         // 清空表单
-
-        imageInput.value =
-            "";
-
-
-        descriptionInput.value =
-            "";
+        if (imageInput) imageInput.value = "";
+        if (descriptionInput) descriptionInput.value = "";
 
 
         // 清除当前任务
