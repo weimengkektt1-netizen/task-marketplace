@@ -682,6 +682,15 @@
             </button>
         </div>
 
+        <div style="margin: 12px 0; display: flex; align-items: center; gap: 8px;">
+            <span style="color:#888; font-size: 14px;">排序：</span>
+            <select id="taskSortSelect" onchange="setTaskSort(this.value)" style="padding: 6px 12px; border-radius: 8px; border: 1px solid #ddd; background: #fff;">
+                <option value="random">随机打乱</option>
+                <option value="commission_high">佣金从高到低</option>
+                <option value="commission_low">佣金从低到高</option>
+            </select>
+        </div>
+
         <div class="ht-table-head" id="htTableHead" style="display:none">
             <span data-i18n="tasks.thImage">任务图</span>
             <span data-i18n="tasks.thName">任务名</span>
@@ -735,6 +744,7 @@
 
         // 任务大厅分类筛选
         let taskFilterType = "all";
+let taskSortMode = "random";
 
         function setTaskFilter(type) {
 
@@ -754,6 +764,11 @@
 
             loadTasks();
 
+        }
+
+        function setTaskSort(mode) {
+            taskSortMode = mode || "random";
+            loadTasks();
         }
 
         function updateTaskFilterCounts(tasks) {
@@ -1042,6 +1057,29 @@
                         t => (t.task_type || "shop") === taskFilterType
                     );
 
+            }
+
+            // 排序
+            if (taskSortMode === "random") {
+                // 随机打乱
+                visibleTasks = visibleTasks.sort(() => Math.random() - 0.5);
+            } else {
+                // 计算每个任务的佣金用于排序
+                const getComm = (t) => {
+                    if (t.task_type === "invite" && Number(t.invite_unit_price) > 0) {
+                        return Number(t.invite_unit_price);
+                    } else if (t.shop_product_id && t.shop_product_price) {
+                        return Number(t.shop_product_price) * commissionRate(currentMembershipLevel);
+                    } else if (Number(t.reward) > 0) {
+                        return Number(t.reward);
+                    }
+                    return 0;
+                };
+                if (taskSortMode === "commission_high") {
+                    visibleTasks = visibleTasks.sort((a, b) => getComm(b) - getComm(a));
+                } else {
+                    visibleTasks = visibleTasks.sort((a, b) => getComm(a) - getComm(b));
+                }
             }
 
             if (
