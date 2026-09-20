@@ -2946,7 +2946,7 @@ async function submitProof() {
         imageInput ? imageInput.files[0] : null;
 
 
-    const proofText =
+    let proofText =
         descriptionInput ? descriptionInput.value.trim() : "";
 
     // 邀请好友任务：收集电话号码（不管 isInviteTask，只要有输入框就收集）
