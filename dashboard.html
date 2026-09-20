@@ -4050,12 +4050,12 @@ document.addEventListener(
 // ========================================
 
 const MEMBER_TIERS = [
-    { key: "basic",    rate: 2,  limit: 1,  price: 0,    invite: 0  },
-    { key: "silver",   rate: 6,  limit: 2,  price: 0,    invite: 3  },
-    { key: "gold",     rate: 8,  limit: 5,  price: 0,    invite: 6  },
-    { key: "platinum", rate: 12, limit: 10, price: 49.9, invite: 10 },
-    { key: "diamond",  rate: 15, limit: 20, price: 69.9, invite: -1 },
-    { key: "radiant",  rate: 18, limit: -1, price: 199.9, invite: -1 }
+    { key: "basic",    rate: 10, limit: 1,  price: 0,    invite: 0  },
+    { key: "silver",   rate: 15, limit: 2,  price: 0,    invite: 6  },
+    { key: "gold",     rate: 23, limit: 6,  price: 19.9, invite: -1 },
+    { key: "platinum", rate: 30, limit: 6,  price: 49.9, invite: -1 },
+    { key: "diamond",  rate: 46, limit: 12, price: 125,  invite: -1 },
+    { key: "radiant",  rate: 65, limit: -1, price: 199.9, invite: -1 }
 ];
 
 function tierIcon(key) {
@@ -4116,10 +4116,10 @@ async function loadMembership() {
     if (codeEl && prof.invite_code) codeEl.textContent = prof.invite_code;
 
     const bar = document.getElementById("memberInviteBar");
-    if (bar) bar.style.width = Math.min(100, Math.round(invited / 10 * 100)) + "%";
+    if (bar) bar.style.width = Math.min(100, Math.round(invited / 6 * 100)) + "%";
 
     const cntEl = document.getElementById("memberInviteCount");
-    if (cntEl) cntEl.textContent = I18N.t("member.invited") + " " + invited + " / 10";
+    if (cntEl) cntEl.textContent = I18N.t("member.invited") + " " + invited + " / 6";
 
     wrap.innerHTML = MEMBER_TIERS.map(function (t) {
 
