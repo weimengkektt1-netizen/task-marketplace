@@ -1987,7 +1987,9 @@ async function loadTasks() {
                                 ? I18N.t("tasks.typeReview")
                                 : task.task_type === "follow"
                                     ? I18N.t("tasks.typeFollow")
-                                    : I18N.t("tasks.typeShop")}
+                                    : task.task_type === "invite"
+                                        ? I18N.t("tasks.typeInvite")
+                                        : I18N.t("tasks.typeShop")}
                     </span>
                 </h3>
 

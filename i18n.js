@@ -222,6 +222,7 @@
         "tasks.typeReview": { zh: "⭐ 评论任务", en: "⭐ Review Task" },
         "tasks.claimReview": { zh: "去评论", en: "Go Review" },
         "tasks.typeFollow": { zh: "👁 关注任务", en: "👁 Follow Task" },
+        "tasks.typeInvite": { zh: "👥 邀请任务", en: "👥 Invite Task" },
 
         "tasks.thImage": { zh: "任务图", en: "Image" },
         "tasks.thName": { zh: "任务名", en: "Task" },
