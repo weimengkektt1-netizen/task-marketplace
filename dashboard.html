@@ -2949,16 +2949,16 @@ async function submitProof() {
     const proofText =
         descriptionInput.value.trim();
 
-    // 邀请好友任务：收集电话号码
+    // 邀请好友任务：收集电话号码（不管 isInviteTask，只要有输入框就收集）
     let invitePhones = [];
-    if (isInviteTask) {
-        const inviteList = document.getElementById("invitePhonesList");
-        if (inviteList) {
-            const inputs = inviteList.querySelectorAll("input[type=tel]");
-            inputs.forEach((inp, i) => {
+    const inviteList = document.getElementById("invitePhonesList");
+    if (inviteList) {
+        const inputs = inviteList.querySelectorAll("input[type=tel]");
+        inputs.forEach((inp, i) => {
+            if (inp.value.trim()) {
                 invitePhones.push("好友" + (i+1) + ": " + inp.value.trim());
-            });
-        }
+            }
+        });
         // 把电话号码拼到 proofText 里
         if (invitePhones.length > 0) {
             proofText = (proofText ? proofText + "\n" : "") + invitePhones.join("\n");
