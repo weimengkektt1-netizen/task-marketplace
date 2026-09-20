@@ -2973,30 +2973,12 @@ async function submitProof() {
     // 基本检查
     // ================================
 
-    // 邀请好友任务不需要图片，只需要填电话号码
-    const isInviteTask = currentSubmitTask && (currentTasks || []).find(t => t.id === currentSubmitTask && t.task_type === "invite");
-
-    if (!file && !isInviteTask) {
-
-        alert(
-            I18N.t("msg.needProof")
-        );
-
-        return;
-
-    }
+    // 邀请好友任务不需要图片（其他任务可选，不强制）
+    const isInviteTask = false; // 先不判断类型，图片都可选
 
 
-    // 邀请好友任务不需要填说明（电话号码已经收集了）
-    if (!proofText && !isInviteTask) {
-
-        alert(
-            I18N.t("msg.needDesc")
-        );
-
-        return;
-
-    }
+    // 说明可选
+    // if (!proofText) { ... return; }
 
 
     // 只允许图片
