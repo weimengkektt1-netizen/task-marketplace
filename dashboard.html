@@ -2252,7 +2252,6 @@ async function loadMyTasks() {
     } =
         await supabaseClient
         .from("task_claims")
-    myTasksData = data || []; // 存起来
         .select(`
             *,
             tasks (
