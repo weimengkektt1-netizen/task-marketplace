@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 
 <head>
@@ -833,7 +833,7 @@
                         type="number"
                         id="withdrawAmount"
                         placeholder="0.00"
-                        min="100"
+                        min="250"
                         step="0.01">
 
                 </div>
@@ -843,7 +843,7 @@
                 </small>
 
                 <small class="withdraw-min-hint">
-                    ⚠️ <span data-i18n="withdraw.minHint">最低提现金额 RM100。</span>
+                    ⚠️ <span data-i18n="withdraw.minHint">最低提现金额 RM250。</span>
                 </small>
 
             </div>
@@ -3352,7 +3352,7 @@ async function submitWithdrawal() {
     }
 
 
-    if (amount < 100) {
+    if (amount < 250) {
 
         alert(I18N.t("msg.withdrawMin"));
 
@@ -4978,3 +4978,4 @@ function initTierBackground() {
 </body>
 
 </html>
+
