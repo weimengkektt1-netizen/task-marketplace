@@ -2173,6 +2173,7 @@ async function claimTask(taskId, shopProductCode, shopProductId, taskLink) {
     } =
         await supabaseClient
         .from("task_claims")
+    myTasksData = data || []; // 存起来
         .insert({
 
             task_id:
@@ -2251,6 +2252,7 @@ async function loadMyTasks() {
     } =
         await supabaseClient
         .from("task_claims")
+    myTasksData = data || []; // 存起来
         .select(`
             *,
             tasks (
@@ -2635,6 +2637,7 @@ function renderMyTasks() {
 // ========================================
 
 let currentSubmitTask = null;
+let myTasksData = []; // 存我的任务数据，方便找 task_type
 
 
 // ========================================
@@ -2873,18 +2876,34 @@ function submitTask(taskId) {
         taskId;
 
 
-    // 检查是否是邀请好友任务
-    const inviteArea = document.getElementById("invitePhonesArea");
-    const inviteList = document.getElementById("invitePhonesList");
+    // 找到这个任务的类型
+    const claim = myTasksData.find(c => c.id === taskId);
+    const taskType = claim && claim.tasks ? claim.tasks.task_type : 'shop';
 
-    if (inviteArea && inviteList) {
-        // 默认显示电话号码输入区（邀请任务）
-        inviteArea.style.display = "block";
-        let html = "";
-        for (let i = 1; i <= 5; i++) {
-            html += '<input type="tel" id="invitePhone_' + i + '" placeholder="好友 ' + i + ' 的电话号码" style="margin-bottom:8px;width:100%;padding:10px;border-radius:8px;border:1px solid #ddd">';
+    // 不同任务类型显示不同面板
+    const inviteArea = document.getElementById("invitePhonesArea");
+    const proofUploadArea = document.getElementById("proofUploadArea");
+    const proofTextArea = document.getElementById("proofTextArea");
+
+    if (taskType === 'invite') {
+        // 邀请好友任务：显示电话号码输入区
+        if (inviteArea) {
+            inviteArea.style.display = "block";
+            const inviteList = document.getElementById("invitePhonesList");
+            let html = "";
+            for (let i = 1; i <= 5; i++) {
+                html += '<input type="tel" id="invitePhone_' + i + '" placeholder="好友 ' + i + ' 的电话号码（选填）" style="margin-bottom:8px;width:100%;padding:10px;border-radius:8px;border:1px solid #ddd">';
+            }
+            inviteList.innerHTML = html;
         }
-        inviteList.innerHTML = html;
+        // 隐藏截图上传和说明
+        if (proofUploadArea) proofUploadArea.style.display = "none";
+        if (proofTextArea) proofTextArea.style.display = "none";
+    } else {
+        // 其他任务（点赞/评论/关注/商城）：显示截图上传 + 说明
+        if (inviteArea) inviteArea.style.display = "none";
+        if (proofUploadArea) proofUploadArea.style.display = "block";
+        if (proofTextArea) proofTextArea.style.display = "block";
     }
 
 
@@ -4515,10 +4534,23 @@ function initTierBackground() {
                     <span>被邀请好友电话号码</span>
                 </label>
                 <div id="invitePhonesList"></div>
-                <small style="color:#888">请填写被你邀请注册的好友电话号码</small>
+                <small style="color:#888">请填写被你邀请注册的好友电话号码（选填1~5个）</small>
             </div>
 
-            <!-- 图片和说明已删除，邀请任务只填电话号码 -->
+            <!-- 其他任务专用：截图上传 + 说明 -->
+            <div id="proofUploadArea" style="display:none">
+                <label>
+                    <span data-i18n="submit.uploadProof">上传任务截图</span>
+                </label>
+                <input type="file" id="proofImage" accept="image/*">
+            </div>
+
+            <div id="proofTextArea" style="display:none">
+                <label>
+                    <span data-i18n="submit.notes">任务说明</span>
+                </label>
+                <textarea id="proofText" rows="3" style="width:100%;padding:10px;border-radius:8px;border:1px solid #ddd" placeholder="请说明你完成任务的情况"></textarea>
+            </div>
 
 
 
