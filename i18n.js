@@ -464,6 +464,7 @@
         "admin.taskTypeShop": { zh: "商城任务", en: "Shop Task" },
         "admin.taskTypeReview": { zh: "评论任务", en: "Review Task" },
         "admin.taskTypeFollow": { zh: "关注任务", en: "Follow Task" },
+        "admin.taskTypeInvite": { zh: "邀请好友任务", en: "Invite Friend Task" },
         "admin.editTaskTitle": { zh: "编辑任务", en: "Edit Task" },
         "admin.editTaskSave": { zh: "保存修改", en: "Save Changes" },
         "admin.editTaskCancel": { zh: "取消", en: "Cancel" },
