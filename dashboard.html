@@ -2128,7 +2128,7 @@ async function claimTask(taskId, shopProductCode, shopProductId, taskLink) {
         const mLimit =
             mLevel === "silver" ? 2 :
             mLevel === "gold" ? 6 :
-            mLevel === "platinum" ? 6 :
+            mLevel === "platinum" ? 9 :
             mLevel === "diamond" ? 12 :
             mLevel === "radiant" ? -1 : 1;
 
@@ -3916,7 +3916,7 @@ const MEMBER_TIERS = [
     { key: "basic",    rate: 10, limit: 1,  price: 0,    invite: 0  },
     { key: "silver",   rate: 15, limit: 2,  price: 0,    invite: 6  },
     { key: "gold",     rate: 23, limit: 6,  price: 19.9, invite: -1 },
-    { key: "platinum", rate: 30, limit: 6,  price: 49.9, invite: -1 },
+    { key: "platinum", rate: 30, limit: 9,  price: 49.9, invite: -1 },
     { key: "diamond",  rate: 46, limit: 12, price: 125,  invite: -1 },
     { key: "radiant",  rate: 65, limit: -1, price: 199.9, invite: -1 }
 ];
