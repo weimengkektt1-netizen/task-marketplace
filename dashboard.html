@@ -2974,35 +2974,13 @@ async function submitProof() {
     const isInviteTask = false; // 先不判断类型，图片都可选
 
 
-    // 说明可选
-    // if (!proofText) { ... return; }
+    // 说明不需要
 
 
-    // 只允许图片
-    if (file && !file.type.startsWith("image/")) {
-
-        alert(
-            I18N.t("msg.imageOnly")
-        );
-
-        return;
-
-    }
+    // 文件类型不需要检查
 
 
-    // 限制图片大小 10MB
-
-    if (file && file.size >
-        10 * 1024 * 1024
-    ) {
-
-        alert(
-            I18N.t("msg.imageTooLarge")
-        );
-
-        return;
-
-    }
+    // 文件大小不需要检查
 
 
     const submitButton =
