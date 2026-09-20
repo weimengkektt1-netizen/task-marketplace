@@ -1106,7 +1106,7 @@
 
             <div class="member-invite-progress">
                 <div class="member-invite-bar"><span id="memberInviteBar"></span></div>
-                <div class="member-invite-labels"><span class="invite-milestone"><span class="invite-milestone-ico tier-silver"><img class="tier-svg" src="assets/tier/silver.png" alt=""></span> 3</span><span class="invite-milestone"><span class="invite-milestone-ico tier-gold"><img class="tier-svg" src="assets/tier/gold.png" alt=""></span> 6</span><span class="invite-milestone"><span class="invite-milestone-ico tier-platinum"><img class="tier-svg" src="assets/tier/platinum.png" alt=""></span> 10</span></div>
+                <div class="member-invite-labels"><span class="invite-milestone"><span class="invite-milestone-ico tier-silver"><img class="tier-svg" src="assets/tier/silver.png" alt=""></span> 6</span><span class="invite-milestone"><span class="invite-milestone-ico tier-gold"><img class="tier-svg" src="assets/tier/gold.png" alt=""></span> 付费</span><span class="invite-milestone"><span class="invite-milestone-ico tier-platinum"><img class="tier-svg" src="assets/tier/platinum.png" alt=""></span> 付费</span></div>
                 <div class="member-invite-count" id="memberInviteCount">0 / 10</div>
             </div>
 
@@ -1331,11 +1331,11 @@ let currentUser = null;
 let currentMembershipLevel = "basic";
 
 function commissionRate(level) {
-    return level === "silver" ? 0.06 :
-           level === "gold" ? 0.08 :
-           level === "platinum" ? 0.12 :
-           level === "diamond" ? 0.15 :
-           level === "radiant" ? 0.18 : 0.02;
+    return level === "silver" ? 0.15 :
+           level === "gold" ? 0.23 :
+           level === "platinum" ? 0.30 :
+           level === "diamond" ? 0.46 :
+           level === "radiant" ? 0.65 : 0.10;
 }
 
 
@@ -2127,9 +2127,9 @@ async function claimTask(taskId, shopProductCode, shopProductId, taskLink) {
 
         const mLimit =
             mLevel === "silver" ? 2 :
-            mLevel === "gold" ? 5 :
-            mLevel === "platinum" ? 10 :
-            mLevel === "diamond" ? 20 :
+            mLevel === "gold" ? 6 :
+            mLevel === "platinum" ? 6 :
+            mLevel === "diamond" ? 12 :
             mLevel === "radiant" ? -1 : 1;
 
         if (mLimit > 0) {
