@@ -2952,12 +2952,31 @@ async function submitProof() {
     const proofText =
         descriptionInput.value.trim();
 
+    // 邀请好友任务：收集电话号码
+    let invitePhones = [];
+    if (isInviteTask) {
+        const inviteList = document.getElementById("invitePhonesList");
+        if (inviteList) {
+            const inputs = inviteList.querySelectorAll("input[type=tel]");
+            inputs.forEach((inp, i) => {
+                invitePhones.push("好友" + (i+1) + ": " + inp.value.trim());
+            });
+        }
+        // 把电话号码拼到 proofText 里
+        if (invitePhones.length > 0) {
+            proofText = (proofText ? proofText + "\n" : "") + invitePhones.join("\n");
+        }
+    }
+
 
     // ================================
     // 基本检查
     // ================================
 
-    if (!file) {
+    // 邀请好友任务不需要图片，只需要填电话号码
+    const isInviteTask = currentSubmitTask && (currentTasks || []).find(t => t.id === currentSubmitTask && t.task_type === "invite");
+
+    if (!file && !isInviteTask) {
 
         alert(
             I18N.t("msg.needProof")
@@ -2968,7 +2987,8 @@ async function submitProof() {
     }
 
 
-    if (!proofText) {
+    // 邀请好友任务不需要填说明（电话号码已经收集了）
+    if (!proofText && !isInviteTask) {
 
         alert(
             I18N.t("msg.needDesc")
@@ -2980,12 +3000,7 @@ async function submitProof() {
 
 
     // 只允许图片
-
-    if (
-        !file.type.startsWith(
-            "image/"
-        )
-    ) {
+    if (file && !file.type.startsWith("image/")) {
 
         alert(
             I18N.t("msg.imageOnly")
@@ -2998,8 +3013,7 @@ async function submitProof() {
 
     // 限制图片大小 10MB
 
-    if (
-        file.size >
+    if (file && file.size >
         10 * 1024 * 1024
     ) {
 
@@ -3059,12 +3073,18 @@ async function submitProof() {
 
 
         // ================================
-        // 生成图片文件名
+        // 生成图片文件名（只有有文件才上传）
         // ================================
 
+        let proofUrl = "";
+        let filePath = "";
+
+        if (!file) {
+            // 没有图片（邀请好友任务），跳过上传
+            // 直接跳到提交
+        } else {
         const originalName =
-            file.name ||
-            "proof";
+            file ? (file.name || "proof") : "";
 
 
         const extension =
@@ -3162,17 +3182,18 @@ async function submitProof() {
             );
 
 
-        const proofUrl =
-            publicUrlData.publicUrl;
+            proofUrl =
+                publicUrlData.publicUrl;
 
 
-        if (!proofUrl) {
+            if (!proofUrl) {
 
-            throw new Error(
-                I18N.t("msg.noProofUrl")
-            );
+                throw new Error(
+                    I18N.t("msg.noProofUrl")
+                );
 
-        }
+            }
+        } // end if (file)
 
 
         // ================================
