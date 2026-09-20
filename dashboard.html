@@ -2173,7 +2173,6 @@ async function claimTask(taskId, shopProductCode, shopProductId, taskLink) {
     } =
         await supabaseClient
         .from("task_claims")
-    myTasksData = data || []; // 存起来
         .insert({
 
             task_id:
@@ -2636,7 +2635,7 @@ function renderMyTasks() {
 // ========================================
 
 let currentSubmitTask = null;
-let myTasksData = []; // 存我的任务数据，方便找 task_type
+let myClaimsData = []; // 存我的任务数据，方便找 task_type
 
 
 // ========================================
@@ -2876,7 +2875,7 @@ function submitTask(taskId) {
 
 
     // 找到这个任务的类型
-    const claim = myTasksData.find(c => c.id === taskId);
+    const claim = myClaimsData.find(c => c.id === taskId);
     const taskType = claim && claim.tasks ? claim.tasks.task_type : 'shop';
 
     // 不同任务类型显示不同面板
