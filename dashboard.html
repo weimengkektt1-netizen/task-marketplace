@@ -1873,7 +1873,7 @@ async function loadTasks() {
     }
 
 
-    // 排除当前用户已领取的任务
+    // 排除当前用户已领取的任务（已取消的不算）
     const {
         data: myClaims
     } =
@@ -1883,7 +1883,8 @@ async function loadTasks() {
         .eq(
             "user_id",
             currentUser.id
-        );
+        )
+        .not("status", "eq", "cancelled");
 
 
     const claimedIds =
@@ -2560,7 +2561,16 @@ function renderMyTasks() {
 
             ${
                 item.status === "claimed"
-                    ? (isLikeTask
+                    ? `
+                            <div class="my-task-actions">
+                                <button
+                                    class="task-action-btn"
+                                    style="background:#ff4444;color:white;"
+                                    onclick="cancelTask(${item.id})">
+                                    ❌ 取消任务
+                                </button>
+                            </div>
+                        ` + (isLikeTask
                         ? `
                             <div class="my-task-actions">
                                 <button
@@ -2636,6 +2646,28 @@ function renderMyTasks() {
 
 let currentSubmitTask = null;
 
+
+
+// ========================================
+// 取消任务
+// ========================================
+async function cancelTask(claimId) {
+    if (!confirm("确定要取消这个任务吗？取消后可以重新接取其他任务。")) return;
+    
+    const { error } = await supabaseClient
+        .from('task_claims')
+        .update({ status: 'cancelled' })
+        .eq('id', claimId)
+        .eq('user_id', (await supabaseClient.auth.getUser()).data.user.id);
+    
+    if (error) {
+        alert("取消失败：" + error.message);
+        return;
+    }
+    
+    alert("✅ 任务已取消");
+    loadMyTasks();
+}
 
 // ========================================
 // 刷单任务：前往 ShopHub 商城完成下单（携带领取记录）
@@ -4978,4 +5010,5 @@ function initTierBackground() {
 </body>
 
 </html>
+
 
