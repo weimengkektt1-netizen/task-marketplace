@@ -1,3 +1,4 @@
+﻿<!-- version: 20260921-fix2 -->
 <!DOCTYPE html>
 <html lang="zh-CN">
 
@@ -3505,6 +3506,30 @@ async function agentAddUser() {
     }
 }
 
+
+// 代理：重置团队成员密码
+async function agentResetPassword(userId) {
+    const newPwd = prompt("请输入新密码（至少6个字符）：");
+    if (!newPwd || newPwd.length < 6) {
+        alert("密码至少需要6个字符");
+        return;
+    }
+    
+    if (!confirm("确定要重置该用户的密码吗？")) return;
+    
+    const { data, error } = await supabaseClient.rpc("agent_reset_user_password", {
+        p_user_id: userId,
+        p_new_password: newPwd
+    });
+    
+    if (error) {
+        alert("重置失败：" + error.message);
+        return;
+    }
+    
+    alert("✅ 密码已重置为：" + newPwd);
+}
+
 // 代理：移除名下用户
 async function agentRemoveUser(uid) {
     if (!confirm("确定将该用户从自己名下移除吗？移除后将无法再管理该用户。")) return;
@@ -4132,6 +4157,7 @@ async function loadMembers() {
                 : '') +
             (currentAdminRole === "agent" && m.id !== currentAgentUserId
                 ? '<button class="admin-mini-btn danger" onclick="agentRemoveUser(\'' + m.id + '\')">✕ ' + (zh ? "移除" : "Remove") + '</button>'
+                  + '<button class="admin-mini-btn" onclick="agentResetPassword(\'' + m.id + '\')">🔑 ' + (zh ? "重置密码" : "Reset Pwd") + '</button>'
                 : '') +
             '<button class="admin-member-save" onclick="saveMember(this)" data-uid="' + m.id + '">' + I18N.t("admin.saveMember") + '</button>' +
             '</div>' +
@@ -9749,3 +9775,4 @@ function escapeJs(
 
 </body>
 </html>
+
