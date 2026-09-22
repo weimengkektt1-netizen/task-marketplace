@@ -4170,6 +4170,7 @@ async function loadMembers() {
             '<button class="admin-mini-btn" onclick="openMemberDetail(\'' + m.id + '\')">👁 ' + (zh ? "详情" : "Detail") + '</button>' +
             '<button class="admin-mini-btn gold" onclick="adjustBalance(\'' + m.id + '\')">⚖️ ' + (zh ? "调账" : "Adjust") + '</button>' +
             '<button class="admin-mini-btn" style="background:#3b82f6;color:white" onclick="resetDailyClaims(\'' + m.id + '\')">🔄 ' + (zh ? "重置今日次数" : "Reset Daily") + '</button>' +
+            '<button class="admin-mini-btn" style="background:#dc2626;color:white" onclick="wipeUserData(\'' + m.id + '\', \'' + m.email + '\')">🧹 ' + (zh ? "清除数据" : "Wipe Data") + '</button>' +
             (currentAdminRole === "admin" && m.id !== currentAgentUserId
                 ? '<button class="admin-mini-btn danger" onclick="adminDeleteMember(\'' + m.id + '\')">🗑 ' + (zh ? "删除" : "Delete") + '</button>'
                 : '') +
@@ -9787,4 +9788,6 @@ function escapeJs(
 
 </body>
 </html>
+
+
 
