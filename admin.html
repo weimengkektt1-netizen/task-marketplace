@@ -3547,6 +3547,25 @@ async function agentResetPassword(userId) {
     alert("✅ 密码已重置为：" + newPwd);
 }
 
+// 管理员：清除用户所有数据
+async function wipeUserData(userId, userEmail) {
+    if (!confirm(`⚠️ 警告！确定要清除用户 ${userEmail} 的所有数据吗？\n\n这将删除：\n• 所有任务领取记录\n• 所有商城订单\n• 所有钱包流水\n• 所有提现记录\n• 余额清零，会员等级重置为初章\n\n此操作不可恢复！`)) return;
+    
+    if (!confirm("再次确认：真的要清空这个账号的所有数据吗？")) return;
+    
+    const { data, error } = await supabaseClient.rpc("admin_wipe_user_data", {
+        p_user_id: userId
+    });
+    
+    if (error) {
+        alert("❌ 清除失败：" + error.message);
+        return;
+    }
+    
+    alert(`✅ 已清空用户 ${userEmail} 的所有数据！\n\n删除了：\n• ${data.deleted_claims} 条任务记录\n• ${data.deleted_orders} 条订单\n• ${data.deleted_transactions} 条流水\n• ${data.deleted_withdrawals} 条提现记录`);
+    loadMembers();
+}
+
 // 代理：移除名下用户
 async function agentRemoveUser(uid) {
     if (!confirm("确定将该用户从自己名下移除吗？移除后将无法再管理该用户。")) return;
@@ -9788,6 +9807,7 @@ function escapeJs(
 
 </body>
 </html>
+
 
 
 
