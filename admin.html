@@ -3507,6 +3507,23 @@ async function agentAddUser() {
 }
 
 
+
+// 重置用户今日领取任务次数
+async function resetDailyClaims(userId) {
+    if (!confirm("确定要重置该用户今日的领取任务次数吗？\n（今日已领取的任务将被标记为已取消，不占用名额）")) return;
+    
+    const { data, error } = await supabaseClient.rpc("admin_reset_daily_claims", {
+        p_user_id: userId
+    });
+    
+    if (error) {
+        alert("重置失败：" + error.message);
+        return;
+    }
+    
+    alert("✅ 今日领取次数已重置");
+}
+
 // 代理：重置团队成员密码
 async function agentResetPassword(userId) {
     const newPwd = prompt("请输入新密码（至少6个字符）：");
@@ -4152,6 +4169,7 @@ async function loadMembers() {
             '<div class="admin-member-actions">' +
             '<button class="admin-mini-btn" onclick="openMemberDetail(\'' + m.id + '\')">👁 ' + (zh ? "详情" : "Detail") + '</button>' +
             '<button class="admin-mini-btn gold" onclick="adjustBalance(\'' + m.id + '\')">⚖️ ' + (zh ? "调账" : "Adjust") + '</button>' +
+            '<button class="admin-mini-btn" style="background:#3b82f6;color:white" onclick="resetDailyClaims(\'' + m.id + '\')">🔄 ' + (zh ? "重置今日次数" : "Reset Daily") + '</button>' +
             (currentAdminRole === "admin" && m.id !== currentAgentUserId
                 ? '<button class="admin-mini-btn danger" onclick="adminDeleteMember(\'' + m.id + '\')">🗑 ' + (zh ? "删除" : "Delete") + '</button>'
                 : '') +
@@ -6599,16 +6617,9 @@ async function rejectSubmission(
     claimId
 ) {
 
-    if (
-        !confirm(
-            I18N.t("admin.rejectConfirm")
-        )
-    ) {
-
-        return;
-
-    }
-
+    // 弹出输入框，让管理员填拒绝理由
+    const reason = prompt("请输入拒绝理由（会显示给用户）：", "");
+    if (reason === null) return; // 用户点取消
 
     try {
 
@@ -6619,7 +6630,8 @@ async function rejectSubmission(
             await supabaseClient
                 .from("task_claims")
                 .update({
-                    status: "rejected"
+                    status: "rejected",
+                    reject_reason: reason || "任务不符合要求"
                 })
                 .eq(
                     "id",
