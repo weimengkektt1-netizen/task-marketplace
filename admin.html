@@ -4777,7 +4777,11 @@ async function openMemberDetail(uid) {
                 const st = c.status;
                 const stTxt = st === "approved" ? (zh ? "已完成" : "Done") : st === "submitted" ? (zh ? "待审核" : "Pending") : st === "rejected" ? (zh ? "已驳回" : "Rejected") : st === "claimed" ? (zh ? "进行中" : "In progress") : st;
                 const d = c.claimed_at ? new Date(c.claimed_at).toLocaleString(zh ? "zh-CN" : "en-GB") : "—";
-                return '<div class="admin-tx-row"><div class="admin-tx-main"><b>' + title + '</b><small>' + stTxt + ' · ' + d + '</small></div></div>';
+                const canCancel = (st === 'claimed' || st === 'submitted');
+                const cancelBtn = canCancel 
+                    ? '<button class="admin-mini-btn danger" style="margin-left:8px" onclick="adminCancelClaim(' + c.id + ', \'' + title.replace(/'/g, "\\'") + '\')">❌ ' + (zh ? '取消' : 'Cancel') + '</button>'
+                    : '';
+                return '<div class="admin-tx-row"><div class="admin-tx-main"><b>' + title + '</b><small>' + stTxt + ' · ' + d + cancelBtn + '</small></div></div>';
             }).join("");
 
         const invitedRows = (!invitedList || invitedList.length === 0)
@@ -4860,6 +4864,27 @@ async function openMemberDetail(uid) {
         alert(e.message);
     }
 
+}
+
+
+// 管理员/代理：取消用户的任务
+async function adminCancelClaim(claimId, taskTitle) {
+    if (!confirm('确定要取消这个任务吗？\n任务：' + taskTitle + '\n\n取消后该用户的每日任务名额会释放。')) return;
+    
+    const { error } = await supabaseClient
+        .from('task_claims')
+        .update({ status: 'cancelled' })
+        .eq('id', claimId);
+    
+    if (error) {
+        alert('❌ 取消失败：' + error.message);
+        return;
+    }
+    
+    alert('✅ 任务已取消');
+    // 刷新详情
+    const uid = document.getElementById('mdUid').value;
+    openMemberDetail(uid);
 }
 
 function closeMemberDetail() {
