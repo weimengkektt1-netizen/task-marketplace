@@ -2098,6 +2098,7 @@ async function claimTask(taskId, shopProductCode, shopProductId, taskLink) {
             "user_id",
             currentUser.id
         )
+        .not("status", "eq", "cancelled")
         .maybeSingle();
 
 
@@ -2551,6 +2552,12 @@ function renderMyTasks() {
                     item.status
                 )}
             </span>
+
+            ${item.status === "rejected" && item.reject_reason ? `
+            <div style="margin-top:8px;padding:8px 12px;background:rgba(239,68,68,0.1);border-left:3px solid #ef4444;border-radius:6px;font-size:13px;color:#fca5a5;">
+                ❌ 拒绝理由：${escapeHtml(item.reject_reason)}
+            </div>
+            ` : ""}
 
             ${commissionLabel ? `
             <div class="my-task-commission">
