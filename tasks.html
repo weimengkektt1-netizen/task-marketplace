@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh">
 
 <head>
@@ -1320,7 +1320,7 @@ let taskSortMode = "random";
                             .from("task_claims")
                             .select("id", { count: "exact" })
                             .eq("user_id", currentUser.id)
-                            .gte("claimed_at", new Date(dayStartUTC).toISOString());
+                            .gte("claimed_at", new Date(dayStartUTC).toISOString()).not("status", "eq", "cancelled");
 
                     if ((todayCount || 0) >= mLimit) {
 
