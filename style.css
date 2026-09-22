@@ -4894,90 +4894,104 @@ body.dashboard-body .sidebar {
 }
 
 
-/* ===== Admin 会员管理（新增区块，删除即可回滚） ===== */
+/* ===== Admin 会员管理（优化版 - 紧凑排版） ===== */
 .admin-member-table {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 6px;
 }
 
 .admin-member-head,
 .admin-member-card {
     display: grid;
-    grid-template-columns: 2.2fr 1fr 1fr 1.3fr 1fr 1fr 0.9fr;
-    gap: 12px;
+    grid-template-columns: 2fr 0.9fr 0.9fr 1.1fr 0.8fr 0.9fr 1.5fr;
+    gap: 10px;
     align-items: center;
 }
 
 .admin-member-head {
-    padding: 10px 16px;
-    font-size: 11px;
-    letter-spacing: 0.1em;
+    padding: 8px 14px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.45);
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    border-radius: 12px;
+    color: rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    backdrop-filter: blur(12px);
 }
 
 .admin-member-card {
-    padding: 14px 16px;
-    border-radius: 16px;
+    padding: 10px 14px;
+    border-radius: 12px;
     background: linear-gradient(165deg, rgba(31, 36, 47, 0.88), rgba(19, 23, 32, 0.94));
-    border: 1px solid rgba(255, 255, 255, 0.07);
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.22);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    transition: all 0.2s ease;
+}
+
+.admin-member-card:hover {
+    border-color: rgba(139, 92, 246, 0.3);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+    transform: translateY(-1px);
 }
 
 .admin-member-main {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
     min-width: 0;
 }
 
 .admin-member-avatar {
-    width: 40px;
-    height: 40px;
+    width: 32px;
+    height: 32px;
     flex: none;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 800;
-    font-size: 16px;
+    font-size: 13px;
     color: #fff;
-    border-radius: 12px;
+    border-radius: 10px;
     background: linear-gradient(150deg, #8b5cf6, #6366f1);
-    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.35);
+    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
 }
 
 .admin-member-info {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 1px;
     min-width: 0;
     overflow: hidden;
 }
 
 .admin-member-name {
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 700;
     color: #fff;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    line-height: 1.3;
 }
 
 .admin-member-mail {
-    font-size: 11px;
-    color: rgba(255, 255, 255, 0.5);
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.45);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    line-height: 1.2;
 }
 
 .admin-member-cell {
-    font-size: 13px;
-    color: rgba(255, 255, 255, 0.8);
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.75);
     min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -4987,20 +5001,21 @@ body.dashboard-body .sidebar {
 .admin-member-select,
 .admin-member-input {
     width: 100%;
-    padding: 7px 10px;
-    border-radius: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.14);
-    background: rgba(255, 255, 255, 0.07);
+    padding: 5px 8px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.06);
     color: #fff;
-    font-size: 13px;
+    font-size: 12px;
     outline: none;
     box-sizing: border-box;
+    transition: all 0.2s;
 }
 
 .admin-member-select:focus,
 .admin-member-input:focus {
-    border-color: rgba(139, 92, 246, 0.6);
-    background: rgba(139, 92, 246, 0.12);
+    border-color: rgba(139, 92, 246, 0.5);
+    background: rgba(139, 92, 246, 0.08);
 }
 
 .admin-member-select option {
@@ -5009,38 +5024,38 @@ body.dashboard-body .sidebar {
 }
 
 .admin-member-invite {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-}
-
-.admin-member-invite code {
-    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-    font-size: 12px;
-    font-weight: 700;
-    color: #c7bfff;
-    letter-spacing: 0.06em;
+    font-family: 'Monaco', 'Menlo', monospace;
+    font-size: 11px;
+    color: #a78bfa;
+    background: rgba(139, 92, 246, 0.08);
+    padding: 3px 8px;
+    border-radius: 6px;
+    display: inline-block;
 }
 
 .admin-member-invite small {
-    font-size: 11px;
-    color: rgba(255, 255, 255, 0.5);
+    display: block;
+    font-size: 9px;
+    color: rgba(255, 255, 255, 0.4);
+    margin-top: 2px;
 }
 
 .admin-member-save {
-    padding: 8px 14px;
-    border-radius: 10px;
+    padding: 5px 10px;
+    border-radius: 8px;
     border: none;
     background: linear-gradient(120deg, #8b5cf6, #6366f1);
     color: #fff;
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 700;
     cursor: pointer;
-    transition: filter 0.2s;
+    transition: all 0.2s;
+    white-space: nowrap;
 }
 
 .admin-member-save:hover {
     filter: brightness(1.12);
+    transform: translateY(-1px);
 }
 
 .admin-member-save:disabled {
@@ -5048,14 +5063,58 @@ body.dashboard-body .sidebar {
     cursor: wait;
 }
 
-@media (max-width: 1100px) {
+.admin-member-actions {
+    display: flex;
+    gap: 5px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 2px;
+}
+
+.admin-mini-btn {
+    padding: 4px 8px;
+    border-radius: 6px;
+    border: none;
+    font-size: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+}
+
+.admin-mini-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-1px);
+}
+
+.admin-mini-btn.gold {
+    background: rgba(251, 191, 36, 0.12);
+    color: #fcd34d;
+}
+
+.admin-mini-btn.gold:hover {
+    background: rgba(251, 191, 36, 0.2);
+}
+
+.admin-mini-btn.danger {
+    background: rgba(239, 68, 68, 0.12);
+    color: #fca5a5;
+}
+
+.admin-mini-btn.danger:hover {
+    background: rgba(239, 68, 68, 0.2);
+}
+
+@media (max-width: 1200px) {
     .admin-member-table {
         overflow-x: auto;
         padding-bottom: 6px;
     }
     .admin-member-head,
     .admin-member-card {
-        grid-template-columns: 200px 110px 110px 140px 110px 110px 90px;
+        grid-template-columns: 200px 100px 100px 130px 90px 100px 180px;
         min-width: 900px;
     }
 }
