@@ -1025,12 +1025,17 @@
         border-radius: 10px !important;
     }
 
-    /* 审核任务面板强迫症级紧凑优化 */
+    /* 审核任务面板强迫症级紧凑优化 - 左右分栏布局 */
+    .admin-review-card {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
     .admin-review-card .admin-task-top {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 8px !important;
+        margin-bottom: 0 !important;
         padding-bottom: 6px;
         border-bottom: 1px solid rgba(255,255,255,0.08);
     }
@@ -1039,51 +1044,52 @@
         font-size: 15px !important;
         line-height: 1.2 !important;
     }
-    .admin-review-card .admin-task-top .reward {
+    .admin-review-card .top-right {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .admin-review-card .reward {
         font-size: 16px !important;
         font-weight: 600;
     }
-    .admin-review-card .meta-info {
+    .admin-review-card .review-content {
         display: flex;
-        gap: 16px;
-        font-size: 11px;
-        opacity: 0.7;
-        margin-bottom: 8px;
-        flex-wrap: wrap;
+        gap: 12px;
+    }
+    .admin-review-card .content-left {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        min-width: 0;
+    }
+    .admin-review-card .content-right {
+        width: 220px;
+        flex-shrink: 0;
     }
     .admin-review-card .user-info-row {
         display: flex;
         align-items: center;
         gap: 10px;
-        margin-bottom: 8px;
-        padding: 6px 8px;
+        padding: 5px 8px;
         background: rgba(255,255,255,0.04);
         border-radius: 6px;
+        font-size: 13px;
     }
-    .admin-review-card .proof-section {
-        margin: 8px 0 !important;
-    }
-    .admin-review-card .proof-section img {
-        max-height: 180px !important;
-        border-radius: 6px;
-        margin-top: 4px;
-        border: 1px solid rgba(255,255,255,0.1);
-    }
-    .admin-review-card .note-text {
+    .admin-review-card .note-section {
         font-size: 13px;
         line-height: 1.4;
         padding: 6px 8px;
         background: rgba(255,255,255,0.03);
         border-radius: 6px;
-        margin: 6px 0;
     }
-    .admin-review-card .action-buttons {
-        display: flex;
-        gap: 8px;
-        justify-content: flex-end;
-        padding-top: 8px;
-        border-top: 1px solid rgba(255,255,255,0.08);
-        margin-top: 8px;
+    .admin-review-card .proof-img {
+        width: 100%;
+        max-height: 140px;
+        object-fit: cover;
+        border-radius: 6px;
+        border: 1px solid rgba(255,255,255,0.1);
     }
 
     /* 列表项更紧凑 */
