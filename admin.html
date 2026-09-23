@@ -6652,136 +6652,36 @@ function createPendingSubmissionCard(
         `
 
         <div class="admin-task-top">
+            <div style="display:flex;align-items:center;gap:8px;">
+                <span class="admin-task-status status-open" style="font-size:11px;padding:2px 8px;border-radius:4px;">${I18N.t("admin.pending")}</span>
+                <h4 style="margin:0;font-size:15px;">${escapeHtml(taskTitle)}</h4>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;">
+                <span style="font-weight:600;font-size:16px;">RM ${reward}</span>
+                <button type="button" class="admin-small-btn" onclick="approveSubmission(${Number(claim.id)})" style="padding:4px 12px;font-size:12px;">${I18N.t("admin.approveBtn")}</button>
+                <button type="button" class="admin-small-btn danger" onclick="rejectSubmission(${Number(claim.id)})" style="padding:4px 12px;font-size:12px;">${I18N.t("admin.rejectBtn")}</button>
+            </div>
+        </div>
 
-            <div>
-
-                <div
-                    class="admin-task-status status-open"
-                >
-                    ${I18N.t("admin.pending")}
+        <div style="display:flex;gap:12px;margin-top:10px;">
+            <div style="flex:1;display:flex;flex-direction:column;gap:8px;min-width:0;">
+                <div style="display:flex;align-items:center;gap:10px;padding:6px 8px;background:rgba(255,255,255,0.04);border-radius:6px;font-size:13px;">
+                    <div class="admin-user-avatar" style="width:28px;height:28px;font-size:13px;">${escapeHtml(userInitial)}</div>
+                    <span>${I18N.t("admin.userName")}: <strong>${escapeHtml(userDisplay)}</strong></span>
+                    <span style="opacity:0.7;font-size:12px;">${I18N.t("admin.userPhone")}: ${escapeHtml(userPhone)}</span>
                 </div>
-
-                <h3>
-                    ${escapeHtml(
-                        taskTitle
-                    )}
-                </h3>
-
-            </div>
-
-
-            <div class="admin-task-reward">
-                RM ${reward}
-            </div>
-
-        </div>
-
-
-        <div class="admin-user-bar">
-
-            <div class="admin-user-avatar">
-                ${escapeHtml(
-                    userInitial
-                )}
-            </div>
-
-            <div class="admin-user-meta">
-
-                <div class="admin-user-line">
-                    ${I18N.t("admin.userName")}
-                    <strong>
-                        ${escapeHtml(
-                            userDisplay
-                        )}
-                    </strong>
+                <div style="padding:6px 8px;background:rgba(255,255,255,0.03);border-radius:6px;font-size:13px;line-height:1.4;">
+                    <strong style="font-size:12px;opacity:0.7;">${I18N.t("admin.proofDesc")}:</strong>
+                    <div style="margin-top:2px;">${escapeHtml(proofText)}</div>
                 </div>
-
-                <div class="admin-user-line">
-                    ${I18N.t("admin.userPhone")}
-                    <strong>
-                        ${escapeHtml(
-                            userPhone
-                        )}
-                    </strong>
+                <div style="display:flex;gap:15px;font-size:11px;opacity:0.6;">
+                    <span>${I18N.t("admin.claimId")}: ${claim.id}</span>
+                    <span>${I18N.t("admin.submitTime")}: ${escapeHtml(formattedTime)}</span>
                 </div>
-
             </div>
-
-        </div>
-
-
-        <div class="admin-task-description">
-
-            <strong>
-                ${I18N.t("admin.proofDesc")}
-            </strong>
-
-            <div class="admin-proof-text"
-                 style="margin-top:8px;">
-                ${escapeHtml(
-                    proofText
-                )}
+            <div style="width:200px;flex-shrink:0;">
+                ${proofUrl ? `<img src="${escapeHtml(proofUrl)}" style="width:100%;max-height:140px;object-fit:cover;border-radius:6px;border:1px solid rgba(255,255,255,0.1);" onclick="window.open('${escapeJs(proofUrl)}','_blank')">` : `<div style="font-size:12px;color:#f59e0b;padding:20px;text-align:center;background:rgba(255,255,255,0.03);border-radius:6px;">${I18N.t("admin.noProof")}</div>`}
             </div>
-
-        </div>
-
-
-        ${proofHtml}
-
-
-        <div class="admin-task-info">
-
-            <div>
-                ${I18N.t("admin.userId")}
-                ${escapeHtml(
-                    claim.user_id
-                )}
-            </div>
-
-            <div>
-                ${I18N.t("admin.claimId")}
-                ${escapeHtml(
-                    claim.id
-                )}
-            </div>
-
-            <div>
-                ${I18N.t("admin.submitTime")}
-                ${escapeHtml(
-                    formattedTime
-                )}
-            </div>
-
-        </div>
-
-
-        <div class="admin-task-actions">
-
-            <button
-                type="button"
-                class="admin-small-btn"
-                onclick="approveSubmission(
-                    ${Number(
-                        claim.id
-                    )}
-                )"
-            >
-                ${I18N.t("admin.approveBtn")}
-            </button>
-
-
-            <button
-                type="button"
-                class="admin-small-btn danger"
-                onclick="rejectSubmission(
-                    ${Number(
-                        claim.id
-                    )}
-                )"
-            >
-                ${I18N.t("admin.rejectBtn")}
-            </button>
-
         </div>
 
         `;
