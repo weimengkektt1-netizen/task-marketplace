@@ -1,4 +1,4 @@
-﻿<!-- version: 20260921-fix2 -->
+<!-- version: 20260921-fix2 -->
 <!DOCTYPE html>
 <html lang="zh-CN">
 
@@ -3595,8 +3595,8 @@ function switchAdminSection(name) {
         window._realtimeChannels.forEach(function(ch) {
             try { supabaseClient.removeChannel(ch); } catch(e) {}
         });
-        window._realtimeChannels = [];
     }
+    window._realtimeChannels = [];
 
     // 面板 → (表名数组, 刷新函数) 映射
     const RT_MAP = {
