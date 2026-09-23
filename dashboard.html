@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 
 <head>
@@ -3291,9 +3291,21 @@ async function submitProof() {
         }
 
 
-        // 图片上传暂时关闭
+        // 上传截图到 Storage
         let proofUrl = "";
         let filePath = "";
+        if (file) {
+            const fileExt = file.name.split(".").pop();
+            filePath = `${user.id}/${Date.now()}_${Math.random().toString(36).slice(2)}.${fileExt}`;
+            const { error: uploadError } = await supabaseClient.storage
+                .from("task-proofs")
+                .upload(filePath, file, { cacheControl: "3600", upsert: false });
+            if (uploadError) throw new Error("截图上传失败: " + uploadError.message);
+            const { data: urlData } = supabaseClient.storage
+                .from("task-proofs")
+                .getPublicUrl(filePath);
+            proofUrl = urlData.publicUrl;
+        }
 
 
         // ================================
