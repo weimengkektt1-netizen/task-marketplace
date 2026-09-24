@@ -9415,7 +9415,6 @@ async function saveEditTask() {
     const desc =
         document.getElementById("editTaskDescription").value.trim();
 
-    let reward = 0;
     const maxClaims =
         parseInt(
             document.getElementById("editTaskMaxClaims").value,
@@ -9430,7 +9429,6 @@ async function saveEditTask() {
 
     }
 
-    if (taskType !== 'shop' && taskType !== 'invite' && (!Number.isFinite(reward) || reward <= 0)) {
 
     if (!Number.isInteger(maxClaims) || maxClaims <= 0) {
 
@@ -9449,10 +9447,14 @@ async function saveEditTask() {
         (typeInput && typeInput.value) ||
         "shop";
 
-    // 普通任务才校验奖励>0，商城/邀请任务自动计算奖励，跳过校验
-    if (taskType !== "shop" && taskType !== "invite" && (!Number.isFinite(reward) || reward <= 0)) {
-        alert(I18N.t("admin.needReward"));
-        return;
+    // 计算奖励：商城/邀请任务自动计算，reward=0；普通任务读取输入框
+    let reward = 0;
+    if (taskType !== "shop" && taskType !== "invite") {
+        reward = parseFloat(document.getElementById("editTaskReward").value) || 0;
+        if (!Number.isFinite(reward) || reward <= 0) {
+            alert(I18N.t("admin.needReward"));
+            return;
+        }
     }
 
 
