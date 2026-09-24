@@ -8988,6 +8988,7 @@ async function openEditTask(
         );
 
     if (typeRadio) typeRadio.checked = true;
+    if (typeof onEditTaskTypeChange === "function") onEditTaskTypeChange();
 
     document.getElementById("editTaskTitle").value =
         task.title || "";
