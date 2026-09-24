@@ -8060,12 +8060,13 @@ async function cancelRefundTask(claimId) {
         .update({ status: "cancelled" })
         .eq("id", claimId);
     if (error) {
-        alert("取消失败：" + error.message);
-        return;
+    }
+    // 直接从前端缓存过滤掉这条记录，立即从列表消失
+    if (refundsCache) {
+        refundsCache = refundsCache.filter(item => item.id !== claimId);
+        renderRefundList();
     }
     alert("✅ 退款申请已取消");
-    loadPendingRefunds();
-
 }
 
 
