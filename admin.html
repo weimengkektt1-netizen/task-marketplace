@@ -6688,6 +6688,20 @@ function createPendingSubmissionCard(
 
 
     return card;
+}
+
+async function cancelRefundTask(claimId) {
+    if (!confirm("确认要取消这条退款申请吗？取消后该记录将从退款列表移除")) return;
+    const { error } = await supabaseClient
+        .from("task_claims")
+        .update({ status: "cancelled" })
+        .eq("id", claimId);
+    if (error) {
+        alert("取消失败：" + error.message);
+        return;
+    }
+    alert("✅ 退款申请已取消");
+    loadPendingRefunds();
 
 }
 
@@ -7274,6 +7288,20 @@ function createWithdrawalCard(
 
 
     return card;
+}
+
+async function cancelRefundTask(claimId) {
+    if (!confirm("确认要取消这条退款申请吗？取消后该记录将从退款列表移除")) return;
+    const { error } = await supabaseClient
+        .from("task_claims")
+        .update({ status: "cancelled" })
+        .eq("id", claimId);
+    if (error) {
+        alert("取消失败：" + error.message);
+        return;
+    }
+    alert("✅ 退款申请已取消");
+    loadPendingRefunds();
 
 }
 
@@ -8017,6 +8045,20 @@ function createRefundCard(item) {
         `;
 
     return card;
+}
+
+async function cancelRefundTask(claimId) {
+    if (!confirm("确认要取消这条退款申请吗？取消后该记录将从退款列表移除")) return;
+    const { error } = await supabaseClient
+        .from("task_claims")
+        .update({ status: "cancelled" })
+        .eq("id", claimId);
+    if (error) {
+        alert("取消失败：" + error.message);
+        return;
+    }
+    alert("✅ 退款申请已取消");
+    loadPendingRefunds();
 
 }
 
@@ -8370,6 +8412,20 @@ function createTaskCard(
 
 
     return card;
+}
+
+async function cancelRefundTask(claimId) {
+    if (!confirm("确认要取消这条退款申请吗？取消后该记录将从退款列表移除")) return;
+    const { error } = await supabaseClient
+        .from("task_claims")
+        .update({ status: "cancelled" })
+        .eq("id", claimId);
+    if (error) {
+        alert("取消失败：" + error.message);
+        return;
+    }
+    alert("✅ 退款申请已取消");
+    loadPendingRefunds();
 
 }
 
