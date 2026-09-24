@@ -8905,6 +8905,7 @@ let editTaskImageChanged = false; // false=保留原图 | "file"=上传新图 | 
 
 
 function onEditTaskTypeChange() {
+function onEditTaskTypeChange() {
 
     const typeInput =
         document.querySelector(
@@ -8915,31 +8916,39 @@ function onEditTaskTypeChange() {
         (typeInput && typeInput.value) ||
         "shop";
 
-    const linkField =
-        document.getElementById(
-            "editTaskLinkField"
-        );
-
+    // 任务链接字段：仅点赞/评论/关注显示
+    const linkField = document.getElementById("editTaskLinkField");
     if (linkField) {
-
-        linkField.style.display =
-            (type === "like" || type === "review" || type === "follow")
-                ? ""
-                : "none";
-
+        linkField.style.display = (type === "like" || type === "review" || type === "follow") ? "" : "none";
     }
 
-    document
-        .querySelectorAll(
-            ".edit-shop-field"
-        )
-        .forEach(el => {
+    // 商城字段：仅商城任务显示
+    document.querySelectorAll(".edit-shop-field").forEach(el => {
+        el.style.display = type === "shop" ? "" : "none";
+    });
 
-            el.style.display =
-                type === "shop" ? "" : "none";
+    // 邀请好友字段：仅邀请好友任务显示
+    document.querySelectorAll(".edit-invite-field").forEach(el => {
+        el.style.display = type === "invite" ? "" : "none";
+    });
 
-        });
-
+    // 奖励输入框：商城/邀请好友任务隐藏，其他任务显示
+    const editNormalRewardGroup = document.getElementById("editNormalRewardGroup");
+    const editShopRewardGroup = document.getElementById("editShopRewardGroup");
+    if (editNormalRewardGroup && editShopRewardGroup) {
+        if (type === "shop" || type === "invite") {
+            editNormalRewardGroup.style.display = "none";
+            editShopRewardGroup.style.display = "";
+            if (type === "shop") {
+                editShopRewardGroup.querySelector("div").innerText = "✅ 商城任务佣金根据用户会员等级按订单金额比例自动计算，无需修改";
+            } else {
+                editShopRewardGroup.querySelector("div").innerText = "✅ 邀请好友任务奖励为固定单价，按邀请成功人数自动发放，无需修改";
+            }
+        } else {
+            editNormalRewardGroup.style.display = "";
+            editShopRewardGroup.style.display = "none";
+        }
+    }
 }
 
 
