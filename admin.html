@@ -1276,24 +1276,49 @@
         }
 
         /* 任务卡片横向紧凑布局 */
+        /* 任务卡片紧凑美观布局 */
         .admin-task-card {
             display: flex !important;
             flex-direction: row !important;
             align-items: center !important;
-            gap: 12px !important;
-            padding: 10px 14px !important;
+            gap: 14px !important;
+            padding: 12px 16px !important;
+            margin-bottom: 8px !important;
+            border-radius: 10px !important;
+            background: rgba(30, 41, 59, 0.5) !important;
+            border: 1px solid rgba(148, 163, 184, 0.1) !important;
+            transition: all 0.2s ease !important;
+        }
+        .admin-task-card:hover {
+            background: rgba(30, 41, 59, 0.8) !important;
+            border-color: rgba(59, 130, 246, 0.3) !important;
+            transform: translateY(-1px) !important;
         }
         .admin-task-card h3 {
+            font-size: 14px !important;
+            font-weight: 600 !important;
+            color: #f1f5f9 !important;
+            margin: 0 !important;
             white-space: nowrap !important;
             overflow: hidden !important;
             text-overflow: ellipsis !important;
-            margin-bottom: 3px !important;
         }
         .admin-task-card p {
+            font-size: 12px !important;
+            color: #94a3b8 !important;
+            margin: 0 !important;
             white-space: nowrap !important;
             overflow: hidden !important;
             text-overflow: ellipsis !important;
-            margin: 2px 0 !important;
+        }
+        .admin-task-card .task-actions {
+            display: flex !important;
+            gap: 6px !important;
+        }
+        .admin-task-card .task-actions button {
+            padding: 5px 10px !important;
+            font-size: 12px !important;
+            border-radius: 6px !important;
         }
 </style>
 </head>
