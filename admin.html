@@ -9316,7 +9316,6 @@ async function saveEditTask() {
     const desc =
         document.getElementById("editTaskDescription").value.trim();
 
-    const reward =
     let reward = 0;
     if (taskType !== "shop" && taskType !== "invite") {
         reward = parseFloat(document.getElementById("editTaskReward").value) || 0;
