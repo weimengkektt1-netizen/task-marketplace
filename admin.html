@@ -9430,7 +9430,7 @@ async function saveEditTask() {
 
     }
 
-    if (!Number.isFinite(reward) || reward <= 0) {
+    if (taskType !== 'shop' && taskType !== 'invite' && (!Number.isFinite(reward) || reward <= 0)) {
 
         alert(I18N.t("admin.needReward"));
 
