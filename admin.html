@@ -9416,9 +9416,6 @@ async function saveEditTask() {
         document.getElementById("editTaskDescription").value.trim();
 
     let reward = 0;
-    if (taskType !== "shop" && taskType !== "invite") {
-        reward = parseFloat(document.getElementById("editTaskReward").value) || 0;
-    }
     const maxClaims =
         parseInt(
             document.getElementById("editTaskMaxClaims").value,
