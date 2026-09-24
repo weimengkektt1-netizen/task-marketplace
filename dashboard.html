@@ -2078,28 +2078,47 @@ async function loadTasks() {
 
 
     // 排除当前用户已领取的任务（已取消的不算）
+    // 商城任务：已完成(approved/completed)或已取消(cancelled)可再次接取，仅排除进行中(claimed/submitted)的领取
     const {
         data: myClaims
     } =
         await supabaseClient
         .from("task_claims")
-        .select("task_id")
+        .select("task_id, status")
         .eq(
             "user_id",
             currentUser.id
-        )
-        .not("status", "eq", "cancelled");
+        );
 
 
-    const claimedIds =
+    // 商城任务判定（默认任务类型即商城任务）
+    const isShopTask =
+        (t) =>
+            (t.task_type || "shop") === "shop" ||
+            !!(t.shop_product_id || t.shop_product_code);
+
+    // 进行中的领取（claimed/submitted）对应任务一律隐藏
+    const activeClaimedIds =
         new Set(
-            (myClaims || []).map(c => c.task_id)
+            (myClaims || [])
+                .filter(c => c.status === "claimed" || c.status === "submitted")
+                .map(c => c.task_id)
+        );
+
+    // 非商城任务：保持原逻辑（已取消的不算，其余状态隐藏）
+    const nonShopClaimedIds =
+        new Set(
+            (myClaims || [])
+                .filter(c => c.status !== "cancelled")
+                .map(c => c.task_id)
         );
 
 
     const visibleTasks =
         (data || []).filter(
-            t => !claimedIds.has(t.id)
+            t => isShopTask(t)
+                ? !activeClaimedIds.has(t.id)
+                : !nonShopClaimedIds.has(t.id)
         );
 
 
@@ -2288,12 +2307,17 @@ async function loadTasks() {
 
 async function claimTask(taskId, shopProductCode, shopProductId, taskLink) {
 
+    // 商城任务：已完成(approved/completed)或已取消(cancelled)可再次接取，
+    // 仅当存在进行中(claimed/submitted)的领取时禁止重复接取
+    const isShopClaim =
+        !!(shopProductCode || shopProductId);
+
     const {
-        data: existing
+        data: myClaimsForTask
     } =
         await supabaseClient
         .from("task_claims")
-        .select("id")
+        .select("id, status")
         .eq(
             "task_id",
             taskId
@@ -2301,18 +2325,42 @@ async function claimTask(taskId, shopProductCode, shopProductId, taskLink) {
         .eq(
             "user_id",
             currentUser.id
-        )
-        .not("status", "eq", "cancelled")
-        .maybeSingle();
-
-
-    if (existing) {
-
-        alert(
-            I18N.t("msg.claimedAlready")
         );
 
-        return;
+
+    if (isShopClaim) {
+
+        const hasActive =
+            (myClaimsForTask || []).some(
+                c => c.status === "claimed" || c.status === "submitted"
+            );
+
+        if (hasActive) {
+
+            alert(
+                I18N.t("msg.claimedAlready")
+            );
+
+            return;
+
+        }
+
+    } else {
+
+        const existing =
+            (myClaimsForTask || []).find(
+                c => c.status !== "cancelled"
+            );
+
+        if (existing) {
+
+            alert(
+                I18N.t("msg.claimedAlready")
+            );
+
+            return;
+
+        }
 
     }
 
