@@ -9317,7 +9317,6 @@ async function saveEditTask() {
         document.getElementById("editTaskDescription").value.trim();
 
     const reward =
-    // 商城/邀请好友任务佣金自动计算，reward存0；其他任务读管理员填写的奖励
     let reward = 0;
     if (taskType !== "shop" && taskType !== "invite") {
         reward = parseFloat(document.getElementById("editTaskReward").value) || 0;
