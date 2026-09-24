@@ -9432,12 +9432,6 @@ async function saveEditTask() {
 
     if (taskType !== 'shop' && taskType !== 'invite' && (!Number.isFinite(reward) || reward <= 0)) {
 
-        alert(I18N.t("admin.needReward"));
-
-        return;
-
-    }
-
     if (!Number.isInteger(maxClaims) || maxClaims <= 0) {
 
         alert(I18N.t("admin.needClaims"));
@@ -9454,6 +9448,12 @@ async function saveEditTask() {
     const taskType =
         (typeInput && typeInput.value) ||
         "shop";
+
+    // 普通任务才校验奖励>0，商城/邀请任务自动计算奖励，跳过校验
+    if (taskType !== "shop" && taskType !== "invite" && (!Number.isFinite(reward) || reward <= 0)) {
+        alert(I18N.t("admin.needReward"));
+        return;
+    }
 
 
     // 图片处理
