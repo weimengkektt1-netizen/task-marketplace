@@ -5562,6 +5562,26 @@ function onTaskTypeChange() {
         inviteGroup.style.display = type === "invite" ? "" : "none";
     }
 
+    
+    // 切换奖励输入框显示：商城/邀请好友任务自动计算，其他任务显示手动输入框
+    const normalRewardGroup = document.getElementById("normalRewardGroup");
+    const shopRewardGroup = document.getElementById("shopRewardGroup");
+    if (normalRewardGroup && shopRewardGroup) {
+        if (type === "shop" || type === "invite") {
+            normalRewardGroup.style.display = "none";
+            shopRewardGroup.style.display = "";
+            if (type === "shop") {
+                shopRewardGroup.querySelector("div").innerText = "✅ 商城任务佣金根据用户会员等级按订单金额比例自动计算发放，无需手动填写";
+            } else {
+                shopRewardGroup.querySelector("div").innerText = "✅ 邀请好友任务奖励为固定单价，按邀请成功人数自动发放，无需手动填写";
+            }
+            document.getElementById("taskReward").required = false;
+        } else {
+            normalRewardGroup.style.display = "";
+            shopRewardGroup.style.display = "none";
+            document.getElementById("taskReward").required = true;
+        }
+    }
 }
 
 
@@ -5651,13 +5671,11 @@ async function createTask(event) {
             : "";
 
 
-    const reward =
-        rewardElement
-            ? parseFloat(
-                rewardElement.value
-            )
-            : 0;
-
+    // 商城/邀请好友任务佣金自动计算，reward存0；其他任务读管理员填写的奖励
+    let reward = 0;
+    if (taskType !== "shop" && taskType !== "invite") {
+        reward = rewardElement ? parseFloat(rewardElement.value) || 0 : 0;
+    }
 
     const maxClaims =
         maxClaimsElement
@@ -8998,6 +9016,24 @@ async function openEditTask(
     document.getElementById("editTaskReward").value =
         task.reward != null ? task.reward : "";
 
+    
+    // 编辑弹窗里根据任务类型切换奖励输入框/提示
+    const editNormalRewardGroup = document.getElementById("editNormalRewardGroup");
+    const editShopRewardGroup = document.getElementById("editShopRewardGroup");
+    if (editNormalRewardGroup && editShopRewardGroup) {
+        if (task.task_type === "shop" || task.task_type === "invite") {
+            editNormalRewardGroup.style.display = "none";
+            editShopRewardGroup.style.display = "";
+            if (task.task_type === "shop") {
+                editShopRewardGroup.querySelector("div").innerText = "✅ 商城任务佣金根据用户会员等级按订单金额比例自动计算，无需修改";
+            } else {
+                editShopRewardGroup.querySelector("div").innerText = "✅ 邀请好友任务奖励为固定单价，按邀请成功人数自动发放，无需修改";
+            }
+        } else {
+            editNormalRewardGroup.style.display = "";
+            editShopRewardGroup.style.display = "none";
+        }
+    }
     document.getElementById("editTaskMaxClaims").value =
         task.max_claims != null ? task.max_claims : "";
 
@@ -9281,10 +9317,11 @@ async function saveEditTask() {
         document.getElementById("editTaskDescription").value.trim();
 
     const reward =
-        parseFloat(
-            document.getElementById("editTaskReward").value
-        );
-
+    // 商城/邀请好友任务佣金自动计算，reward存0；其他任务读管理员填写的奖励
+    let reward = 0;
+    if (taskType !== "shop" && taskType !== "invite") {
+        reward = parseFloat(document.getElementById("editTaskReward").value) || 0;
+    }
     const maxClaims =
         parseInt(
             document.getElementById("editTaskMaxClaims").value,
