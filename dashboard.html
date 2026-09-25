@@ -2281,7 +2281,7 @@ async function loadTasks() {
                                 : task.task_type === "follow"
                                     ? I18N.t("tasks.claimFollow")
                                     : (task.shop_product_code || task.shop_product_id)
-                                        ? I18N.t("dash.shopTask")
+                                        ? "去购物下单"
                                         : I18N.t("dash.claim")
                     }
 
