@@ -5804,7 +5804,7 @@ async function createTask(event) {
     }
 
 
-    if (
+    if (taskType !== "shop" && taskType !== "invite" && (!Number.isFinite(reward) || reward <= 0)) {
         !Number.isFinite(reward) ||
         reward <= 0
     ) {
