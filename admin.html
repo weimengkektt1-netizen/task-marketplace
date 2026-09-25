@@ -8299,11 +8299,10 @@ function createTaskCard(
             : "-";
 
 
-    const reward =
-        Number(
-            task.reward || 0
-        ).toFixed(2);
-
+    let reward =
+        task.task_type === "shop" && task.shop_product_price
+            ? Number(task.shop_product_price).toFixed(2)
+            : Number(task.reward || 0).toFixed(2);
 
     const ttype =
         task.task_type || "shop";

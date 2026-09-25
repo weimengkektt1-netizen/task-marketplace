@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh">
 
 <head>
@@ -1068,7 +1068,7 @@ let taskSortMode = "random";
                 const getComm = (t) => {
                     if (t.task_type === "invite" && Number(t.invite_unit_price) > 0) {
                         return Number(t.invite_unit_price);
-                    } else if (t.shop_product_id && t.shop_product_price) {
+                    } else if (t.task_type === "shop" && t.shop_product_price) {
                         return Number(t.shop_product_price) * commissionRate(currentMembershipLevel);
                     } else if (Number(t.reward) > 0) {
                         return Number(t.reward);
@@ -1146,7 +1146,7 @@ let taskSortMode = "random";
                 let commMain = "RM0.00";
                 let commSub = "";
 
-                if (task.shop_product_id && task.shop_product_price) {
+                if (task.task_type === "shop" && task.shop_product_price) {
 
                     commMain = "RM" + (Number(task.shop_product_price) * commissionRate(currentMembershipLevel)).toFixed(2);
 
