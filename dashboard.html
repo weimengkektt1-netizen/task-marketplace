@@ -2227,7 +2227,7 @@ async function loadTasks() {
 
 
                 ${
-                    (task.shop_product_code || task.shop_product_id) && task.shop_product_price
+                    task.task_type === "shop" && task.shop_product_price
                         ? `
                         <div class="ht-commission">
                             <div>
