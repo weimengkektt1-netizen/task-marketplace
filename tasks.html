@@ -746,6 +746,9 @@
         let taskFilterType = "all";
 let taskSortMode = "random";
 
+        // 任务类型可见性（管理员可在后台配置哪些类型对会员显示）
+        let taskTypeVisibility = null;
+
         function setTaskFilter(type) {
 
             taskFilterType = type || "all";
@@ -1043,6 +1046,22 @@ let taskSortMode = "random";
                 visibleTasks =
                     visibleTasks.filter(
                         t => !claimedIds.has(t.id)
+                    );
+
+            }
+
+            // 任务类型可见性过滤（管理员后台配置，默认全部显示）
+            if (taskTypeVisibility) {
+
+                visibleTasks =
+                    visibleTasks.filter(
+                        function (tt) {
+
+                            const k = tt.task_type || "shop";
+
+                            return taskTypeVisibility[k] !== false;
+
+                        }
                     );
 
             }
@@ -1475,6 +1494,107 @@ let taskSortMode = "random";
 
         }
 
+        async function loadTaskTypeVisibility() {
+
+            try {
+
+                const {
+                    data
+                } =
+                    await supabaseClient
+                        .from("settings")
+                        .select("value")
+                        .eq("key", "task_type_visibility")
+                        .maybeSingle();
+
+                let vis = null;
+
+                if (data && data.value) {
+
+                    try {
+
+                        vis = JSON.parse(data.value);
+
+                    } catch (e) {
+
+                        vis = null;
+
+                    }
+
+                }
+
+                taskTypeVisibility = vis;
+
+            } catch (e) {
+
+                console.error("加载任务类型可见性失败", e);
+
+                taskTypeVisibility = null;
+
+            }
+
+            applyTaskTypeVisibilityUI();
+
+            return taskTypeVisibility;
+
+        }
+
+        function applyTaskTypeVisibilityUI() {
+
+            const bar =
+                document.getElementById("taskFilterBar");
+
+            if (!bar) {
+
+                return;
+
+            }
+
+            bar
+                .querySelectorAll(".tf-btn")
+                .forEach(function (btn) {
+
+                    const k = btn.getAttribute("data-t");
+
+                    if (k === "all") {
+
+                        return;
+
+                    }
+
+                    const show =
+                        !taskTypeVisibility ||
+                        taskTypeVisibility[k] !== false;
+
+                    btn.style.display =
+                        show ? "" : "none";
+
+                    if (!show && taskFilterType === k) {
+
+                        taskFilterType = "all";
+
+                    }
+
+                });
+
+            // 若当前选中类型被隐藏，重置高亮到“全部”
+            if (taskFilterType === "all") {
+
+                bar
+                    .querySelectorAll(".tf-btn")
+                    .forEach(function (btn) {
+
+                        btn.classList.toggle(
+                            "on",
+                            btn.getAttribute("data-t") === "all"
+                        );
+
+                    });
+
+            }
+
+        }
+
         loadSiteContactLink();
 
         // 切换语言后重渲染动态任务卡片
@@ -1483,7 +1603,12 @@ let taskSortMode = "random";
             loadTasks
         );
 
-        checkUser();
+        loadTaskTypeVisibility()
+            .then(function () {
+
+                checkUser();
+
+            });
 
         // Realtime 实时推送
         (function initRealtime() {

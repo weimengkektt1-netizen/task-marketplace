@@ -2222,6 +2222,38 @@
                 </div>
 
 
+                <!-- ===== 任务类型管理（控制任务大厅显示） ===== -->
+                <div class="admin-settings-card" style="margin-bottom:16px;padding:14px">
+                    <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:4px">
+                        <label class="admin-settings-label" style="margin:0">
+                            <span id="taskTypeMgrTitle">🧭 任务类型管理</span>
+                        </label>
+                        <button type="button" class="admin-settings-save" onclick="saveTaskTypeVisibility()">💾 <span id="taskTypeMgrSaveBtn">保存</span></button>
+                    </div>
+                    <p class="admin-settings-hint" id="taskTypeMgrHint" style="margin:6px 0 10px">
+                        控制任务大厅对所有人显示哪些任务种类；关闭的类型将不在任务大厅显示，也不显示其分类。
+                    </p>
+                    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px" id="taskTypeVisibilityGrid">
+                        <label class="admin-type-toggle" data-t="shop" style="display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:10px;border:1px solid rgba(148,163,184,.3);background:rgba(15,23,42,.5);cursor:pointer">
+                            <input type="checkbox" data-t="shop" checked> <span>🛒 商城任务</span>
+                        </label>
+                        <label class="admin-type-toggle" data-t="invite" style="display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:10px;border:1px solid rgba(148,163,184,.3);background:rgba(15,23,42,.5);cursor:pointer">
+                            <input type="checkbox" data-t="invite" checked> <span>👥 邀请好友</span>
+                        </label>
+                        <label class="admin-type-toggle" data-t="like" style="display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:10px;border:1px solid rgba(148,163,184,.3);background:rgba(15,23,42,.5);cursor:pointer">
+                            <input type="checkbox" data-t="like" checked> <span>👍 点赞任务</span>
+                        </label>
+                        <label class="admin-type-toggle" data-t="review" style="display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:10px;border:1px solid rgba(148,163,184,.3);background:rgba(15,23,42,.5);cursor:pointer">
+                            <input type="checkbox" data-t="review" checked> <span>⭐ 评论任务</span>
+                        </label>
+                        <label class="admin-type-toggle" data-t="follow" style="display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:10px;border:1px solid rgba(148,163,184,.3);background:rgba(15,23,42,.5);cursor:pointer">
+                            <input type="checkbox" data-t="follow" checked> <span>👁 关注任务</span>
+                        </label>
+                    </div>
+                    <div class="admin-settings-status" id="taskTypeMgrStatus"></div>
+                </div>
+
+
                 <div class="admin-task-toolbar">
                     <input
                         type="text"
@@ -2999,6 +3031,38 @@ function updateSettingsLabels() {
 
     }
 
+    const mgrTitle =
+        document.getElementById("taskTypeMgrTitle");
+
+    const mgrHint =
+        document.getElementById("taskTypeMgrHint");
+
+    const mgrSave =
+        document.getElementById("taskTypeMgrSaveBtn");
+
+    if (mgrTitle) {
+
+        mgrTitle.textContent =
+            zh ? "🧭 任务类型管理" : "🧭 Task Type Visibility";
+
+    }
+
+    if (mgrHint) {
+
+        mgrHint.textContent =
+            zh
+                ? "控制任务大厅对所有人显示哪些任务种类；关闭的类型将不在任务大厅显示，也不显示其分类。"
+                : "Control which task types are shown to everyone in the task hall; hidden types won't appear or show their filter tab.";
+
+    }
+
+    if (mgrSave) {
+
+        mgrSave.textContent =
+            zh ? "保存" : "Save";
+
+    }
+
 }
 
 async function loadSiteSettings() {
@@ -3145,6 +3209,162 @@ async function uploadAgentQr(input) {
     } catch(e) {
         status.innerHTML = '<span style="color:#f87171">❌ 上传失败: ' + e.message + '</span>';
     }
+}
+
+async function loadTaskTypeVisibility() {
+
+    const grid =
+        document.getElementById(
+            "taskTypeVisibilityGrid"
+        );
+
+    if (!grid) {
+
+        return;
+
+    }
+
+    try {
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient
+                .from("settings")
+                .select("value")
+                .eq("key", "task_type_visibility")
+                .maybeSingle();
+
+        if (error) {
+
+            throw error;
+
+        }
+
+        let vis = null;
+
+        if (data && data.value) {
+
+            try {
+
+                vis = JSON.parse(data.value);
+
+            } catch (e) {
+
+                vis = null;
+
+            }
+
+        }
+
+        grid
+            .querySelectorAll("input[type=checkbox]")
+            .forEach(function (cb) {
+
+                const k = cb.getAttribute("data-t");
+
+                cb.checked =
+                    !vis || vis[k] !== false;
+
+            });
+
+    } catch (e) {
+
+        console.error(
+            "加载任务类型可见性失败",
+            e
+        );
+
+    }
+
+}
+
+async function saveTaskTypeVisibility() {
+
+    const status =
+        document.getElementById(
+            "taskTypeMgrStatus"
+        );
+
+    if (!status) {
+
+        return;
+
+    }
+
+    const grid =
+        document.getElementById(
+            "taskTypeVisibilityGrid"
+        );
+
+    const vis = {};
+
+    grid
+        .querySelectorAll("input[type=checkbox]")
+        .forEach(function (cb) {
+
+            vis[cb.getAttribute("data-t")] =
+                cb.checked;
+
+        });
+
+    status.textContent = "保存中...";
+
+    status.className = "admin-settings-status";
+
+    try {
+
+        const {
+            error
+        } =
+            await supabaseClient
+                .from("settings")
+                .upsert(
+                    {
+                        key: "task_type_visibility",
+                        value: JSON.stringify(vis),
+                        updated_at:
+                            new Date().toISOString()
+                    }, {
+                        onConflict: "key"
+                    }
+                );
+
+        if (error) {
+
+            throw error;
+
+        }
+
+        const zh = I18N.get() === "zh";
+
+        status.textContent =
+            zh
+                ? "✅ 已保存，任务大厅将按此配置显示"
+                : "✅ Saved. The task hall will follow this config.";
+
+        status.className =
+            "admin-settings-status ok";
+
+        setTimeout(function () {
+
+            status.textContent = "";
+
+        }, 4000);
+
+    } catch (e) {
+
+        console.error(e);
+
+        status.textContent =
+            "❌ 保存失败：" + e.message;
+
+        status.className =
+            "admin-settings-status error";
+
+    }
+
 }
 
 async function saveContactLink() {
@@ -3310,6 +3530,7 @@ document.addEventListener(
 
         if (currentAdminRole === "admin") {
             await loadSiteSettings();
+            loadTaskTypeVisibility();
         }
 
         updateSettingsLabels();
