@@ -2117,7 +2117,7 @@ async function loadTasks() {
         );
 
 
-    const visibleTasks =
+    let visibleTasks =
         (data || []).filter(
             t => isShopTask(t)
                 ? !activeClaimedIds.has(t.id)
