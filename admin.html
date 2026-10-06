@@ -2222,8 +2222,8 @@
                 </div>
 
 
-                <!-- ===== 任务类型管理（控制任务大厅显示） ===== -->
-                <div class="admin-settings-card" style="margin-bottom:16px;padding:14px">
+                <!-- ===== 任务类型管理（控制任务大厅显示，仅特权管理员可管理） ===== -->
+                <div class="admin-settings-card" id="taskTypeManagerPanel" style="display:none;margin-bottom:16px;padding:14px">
                     <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:4px">
                         <label class="admin-settings-label" style="margin:0">
                             <span id="taskTypeMgrTitle">🧭 任务类型管理</span>
@@ -3213,6 +3213,12 @@ async function uploadAgentQr(input) {
 
 async function loadTaskTypeVisibility() {
 
+    if (currentAdminEmail !== "admin@gmail.com") {
+
+        return;
+
+    }
+
     const grid =
         document.getElementById(
             "taskTypeVisibilityGrid"
@@ -3281,6 +3287,12 @@ async function loadTaskTypeVisibility() {
 }
 
 async function saveTaskTypeVisibility() {
+
+    if (currentAdminEmail !== "admin@gmail.com") {
+
+        return;
+
+    }
 
     const status =
         document.getElementById(
@@ -3530,7 +3542,11 @@ document.addEventListener(
 
         if (currentAdminRole === "admin") {
             await loadSiteSettings();
-            loadTaskTypeVisibility();
+            if (currentAdminEmail === "admin@gmail.com") {
+                const taskTypePanel = document.getElementById("taskTypeManagerPanel");
+                if (taskTypePanel) taskTypePanel.style.display = "";
+                loadTaskTypeVisibility();
+            }
         }
 
         updateSettingsLabels();
@@ -3568,6 +3584,7 @@ document.addEventListener(
 let currentAdminRole = "user";
 let currentAgentUserId = null;
 let currentAgentPerms = {};
+let currentAdminEmail = "";
 
 async function getMyUserIds() {
 
@@ -3613,6 +3630,9 @@ async function checkAdmin() {
 
         }
 
+
+        currentAdminEmail =
+            String(user.email || "").toLowerCase();
 
         const emailElement =
             document.getElementById(
