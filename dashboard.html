@@ -1534,6 +1534,9 @@ let currentUser = null;
 // 当前用户会员等级（用于刷单任务展示预计佣金）
 let currentMembershipLevel = "basic";
 
+// 任务类型可见性（管理员可在后台配置哪些类型对会员显示）
+let taskTypeVisibility = null;
+
 function commissionRate(level) {
     return level === "silver" ? 0.15 :
            level === "gold" ? 0.23 :
@@ -2121,6 +2124,22 @@ async function loadTasks() {
                 : !nonShopClaimedIds.has(t.id)
         );
 
+    // 任务类型可见性过滤（管理员后台配置，默认全部显示）
+    if (taskTypeVisibility) {
+
+        visibleTasks =
+            visibleTasks.filter(
+                function (tt) {
+
+                    const k = tt.task_type || "shop";
+
+                    return taskTypeVisibility[k] !== false;
+
+                }
+            );
+
+    }
+
 
     if (
         visibleTasks.length === 0
@@ -2227,7 +2246,7 @@ async function loadTasks() {
 
 
                 ${
-                    task.task_type === "shop" && task.shop_product_price
+                    (task.shop_product_code || task.shop_product_id) && task.shop_product_price
                         ? `
                         <div class="ht-commission">
                             <div>
@@ -2281,7 +2300,7 @@ async function loadTasks() {
                                 : task.task_type === "follow"
                                     ? I18N.t("tasks.claimFollow")
                                     : (task.shop_product_code || task.shop_product_id)
-                                        ? "去购物下单"
+                                        ? I18N.t("dash.shopTask")
                                         : I18N.t("dash.claim")
                     }
 
@@ -4126,6 +4145,54 @@ async function logout() {
 
 
 // ========================================
+// 任务类型可见性（从 settings 表读取，管理员后台配置）
+// ========================================
+
+async function loadTaskTypeVisibility() {
+
+    try {
+
+        const {
+            data
+        } =
+            await supabaseClient
+                .from("settings")
+                .select("value")
+                .eq("key", "task_type_visibility")
+                .maybeSingle();
+
+        let vis = null;
+
+        if (data && data.value) {
+
+            try {
+
+                vis = JSON.parse(data.value);
+
+            } catch (e) {
+
+                vis = null;
+
+            }
+
+        }
+
+        taskTypeVisibility = vis;
+
+    } catch (e) {
+
+        console.error("加载任务类型可见性失败", e);
+
+        taskTypeVisibility = null;
+
+    }
+
+    return taskTypeVisibility;
+
+}
+
+
+// ========================================
 // 动态客服链接（从 settings 表读取）
 // ========================================
 
@@ -4206,7 +4273,12 @@ async function loadSiteContactLink() {
 // START
 // ========================================
 
-checkUser();
+loadTaskTypeVisibility()
+    .then(function () {
+
+        checkUser();
+
+    });
 
 loadSiteContactLink();
 
